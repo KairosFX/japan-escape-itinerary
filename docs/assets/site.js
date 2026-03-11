@@ -91,6 +91,69 @@ const SEARCH_ITEMS = [
   }
 ];
 
+const TERM_ITEMS = {
+  "visibility-led": {
+    title: "Visibility-Led",
+    text: "For the Fuji block, the clearest mountain view decides the order. If Fuji is visible, go to the strongest viewpoint first and move the rest around it."
+  },
+  shinkansen: {
+    title: "Shinkansen",
+    text: "Japan's high-speed bullet train. In this route it matters most for the Shin-Osaka to Odawara move on the Hakone transfer day."
+  },
+  "ic-card": {
+    title: "IC Card",
+    text: "A rechargeable tap card like ICOCA, Suica, or PASMO that makes local transit cleaner than buying single tickets over and over."
+  },
+  ryokan: {
+    title: "Ryokan",
+    text: "A traditional inn, often with a set meal, tatami room, and a calmer overnight pace that fits Hakone especially well."
+  },
+  konbini: {
+    title: "Konbini",
+    text: "Japanese convenience stores. They are the backup plan for onigiri, drinks, desserts, and late food when energy or time gets tight."
+  },
+  "hachiko-side": {
+    title: "Hachiko Side",
+    text: "The easiest first-side of Shibuya for the Crossing and a simple meet point if the group wants a low-confusion Tokyo start."
+  },
+  "hakone-freepass": {
+    title: "Hakone Freepass",
+    text: "A bundled transport pass for the Hakone area. The area-only version fits this route better than the Tokyo round-trip version."
+  },
+  "coin-lockers": {
+    title: "Coin Lockers",
+    text: "Station lockers or luggage counters used to drop bags before sightseeing. Big stations are usually the safest and fastest places to rely on them."
+  },
+  "yoshida-udon": {
+    title: "Yoshida Udon",
+    text: "A Mount Fuji area noodle specialty known for firmer noodles and a practical local-lunch feel around the Kawaguchiko and Fujiyoshida side."
+  },
+  izakaya: {
+    title: "Izakaya",
+    text: "A casual Japanese pub-style place built around shared plates, drinks, and a flexible dinner pace that works well in Osaka or Tokyo."
+  },
+  "late-backup": {
+    title: "Late Backup",
+    text: "The simple fallback plan when the day runs long: convenience-store snacks, ramen, dessert, or one easy meal instead of a complicated last-minute search."
+  },
+  onsen: {
+    title: "Onsen",
+    text: "A hot-spring bathing area. The core rules are wash first, keep towels out of the bath, and leave phones away from the water area."
+  },
+  sumimasen: {
+    title: "Sumimasen",
+    text: "The most useful all-purpose polite opener. Use it to say excuse me, get attention, or start a quick question."
+  },
+  "no-photo-signs": {
+    title: "No-Photo Signs",
+    text: "Many temple halls, shops, and bath areas quietly prohibit photos. Treat posted signs as the final answer."
+  },
+  "queue-lines": {
+    title: "Queue Lines",
+    text: "Japan stations and attractions rely on orderly queues. Stand in line cleanly, let people off first, and avoid crowding the doors."
+  }
+};
+
 function initReveal() {
   const revealElements = [...document.querySelectorAll(".reveal")];
   if (!revealElements.length || !("IntersectionObserver" in window)) {
@@ -167,9 +230,49 @@ function initSearch() {
   });
 }
 
+function initTermGroups() {
+  const groups = [...document.querySelectorAll("[data-term-group]")];
+  if (!groups.length) {
+    return;
+  }
+
+  groups.forEach((group) => {
+    const panel = group.querySelector("[data-term-panel]");
+    const buttons = [...group.querySelectorAll("[data-term]")];
+    if (!panel || !buttons.length) {
+      return;
+    }
+
+    const renderTerm = (key) => {
+      const item = TERM_ITEMS[key];
+      if (!item) {
+        return;
+      }
+
+      buttons.forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.term === key);
+        button.setAttribute("aria-pressed", button.dataset.term === key ? "true" : "false");
+      });
+
+      panel.innerHTML = `
+        <strong>${item.title}</strong>
+        <span>${item.text}</span>
+      `;
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => renderTerm(button.dataset.term));
+    });
+
+    const initial = buttons.find((button) => button.classList.contains("is-active")) || buttons[0];
+    renderTerm(initial.dataset.term);
+  });
+}
+
 window.addEventListener("scroll", updateScrollProgress, { passive: true });
 window.addEventListener("DOMContentLoaded", () => {
   updateScrollProgress();
   initReveal();
   initSearch();
+  initTermGroups();
 });

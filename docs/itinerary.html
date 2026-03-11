@@ -39,6 +39,10 @@
         <p class="hero-lead">
           This page keeps the route itself clean: where you stay, what each day is trying to do, and how the transfer-heavy sections fit without breaking the tone of the trip.
         </p>
+        <div class="quick-callout">
+          <strong>Low-Signal Fallback</strong>
+          <span>Screenshot the Day 4 transfer chain and the line “Day 6 is visibility-led” so the route still works if the page loads slowly.</span>
+        </div>
         <div class="hero-actions">
           <a class="button-primary" href="#day-flow">Jump To Day Flow</a>
           <a class="button-secondary" href="#move-days">Jump To Move Days</a>
@@ -161,28 +165,28 @@
 
       <div class="image-grid">
         <a class="image-card" href="#osaka-start">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/D%C5%8Dtonbori_at_night%2C_Osaka_%2819551420339%29.jpg?width=1200" alt="Dotonbori at night in Osaka" loading="lazy">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/D%C5%8Dtonbori_at_night%2C_Osaka_%2819551420339%29.jpg?width=960" alt="Dotonbori at night in Osaka" loading="lazy" decoding="async" fetchpriority="low">
           <div class="image-card-copy">
             <strong>Osaka First</strong>
             <span>Energy, food, and low-pressure wandering before the route gets technical.</span>
           </div>
         </a>
         <a class="image-card" href="#kyoto-day">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fushimi_Inari%2C_Kyoto%2C_20240818_1400_4476.jpg?width=1200" alt="Fushimi Inari in Kyoto" loading="lazy">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fushimi_Inari%2C_Kyoto%2C_20240818_1400_4476.jpg?width=960" alt="Fushimi Inari in Kyoto" loading="lazy" decoding="async" fetchpriority="low">
           <div class="image-card-copy">
             <strong>Kyoto Contrast</strong>
             <span>Temple and shrine texture without a hotel change.</span>
           </div>
         </a>
         <a class="image-card" href="#hakone-move">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hakone_Ashi_Lake_Torii.jpg?width=1200" alt="Lake Ashi torii in Hakone" loading="lazy">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hakone_Ashi_Lake_Torii.jpg?width=960" alt="Lake Ashi torii in Hakone" loading="lazy" decoding="async" fetchpriority="low">
           <div class="image-card-copy">
             <strong>Hakone Pivot</strong>
             <span>The overnight that keeps the route elegant instead of mechanical.</span>
           </div>
         </a>
         <a class="image-card" href="#fuji-visibility">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Fuji_from_Lake_Kawaguchi_s2.jpg?width=1200" alt="Mount Fuji from Lake Kawaguchi" loading="lazy">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Fuji_from_Lake_Kawaguchi_s2.jpg?width=960" alt="Mount Fuji from Lake Kawaguchi" loading="lazy" decoding="async" fetchpriority="low">
           <div class="image-card-copy">
             <strong>Fuji Window</strong>
             <span>The route's most weather-sensitive payoff.</span>
@@ -241,6 +245,18 @@
             <li><strong>Day 7:</strong> keep Tokyo centralized in Shibuya.</li>
           </ul>
         </aside>
+      </div>
+
+      <div class="term-box" data-term-group>
+        <strong>Tap The Move-Day Terms</strong>
+        <span>If the group is skimming fast, these are the route words worth decoding in one tap.</span>
+        <div class="term-strip">
+          <button class="term-chip is-active" type="button" data-term="visibility-led" aria-pressed="true">visibility-led</button>
+          <button class="term-chip" type="button" data-term="shinkansen" aria-pressed="false">shinkansen</button>
+          <button class="term-chip" type="button" data-term="ic-card" aria-pressed="false">IC card</button>
+          <button class="term-chip" type="button" data-term="coin-lockers" aria-pressed="false">coin lockers</button>
+        </div>
+        <div class="term-panel" data-term-panel aria-live="polite"></div>
       </div>
     </section>
 

@@ -112,14 +112,16 @@
     }
 
     .topbar {
-      position: sticky;
+      position: fixed;
       top: 12px;
       z-index: 25;
-      width: min(1220px, calc(100% - 32px));
-      margin: 14px auto 0;
-      padding: 14px 18px;
+      right: 16px;
+      width: auto;
+      max-width: calc(100% - 24px);
+      margin: 0;
+      padding: 12px 14px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       gap: 16px;
       border: 1px solid rgba(255, 255, 255, 0.92);
@@ -127,6 +129,21 @@
       background: rgba(255, 250, 243, 0.78);
       backdrop-filter: blur(16px);
       box-shadow: 0 14px 40px rgba(24, 49, 61, 0.08);
+      transition: padding var(--trans-fast), background var(--trans-fast), box-shadow var(--trans-fast);
+    }
+
+    .topbar::after {
+      content: "Open Guide";
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(31, 95, 107, 0.08);
+      color: var(--sea);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
     .brand {
@@ -161,9 +178,14 @@
 
     .nav-links {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       justify-content: end;
       gap: 8px;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transition: max-width var(--trans-fast), opacity var(--trans-fast);
     }
 
     .nav-links a {
@@ -180,9 +202,29 @@
       color: var(--sea);
     }
 
+    .topbar:hover,
+    .topbar:focus-within {
+      padding: 14px 18px;
+      background: rgba(255, 250, 243, 0.94);
+      box-shadow: 0 18px 42px rgba(24, 49, 61, 0.1);
+    }
+
+    .topbar:hover::after,
+    .topbar:focus-within::after {
+      content: "";
+      padding: 0;
+    }
+
+    .topbar:hover .nav-links,
+    .topbar:focus-within .nav-links {
+      max-width: 980px;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     .page {
       width: min(1220px, calc(100% - 32px));
-      margin: 22px auto 60px;
+      margin: 88px auto 60px;
       position: relative;
       z-index: 1;
       display: grid;
@@ -1373,7 +1415,10 @@
       .topbar {
         position: static;
         width: min(100% - 20px, 1220px);
+        max-width: none;
+        right: auto;
         border-radius: 24px;
+        padding: 14px 18px;
       }
 
       .page {
@@ -1390,6 +1435,18 @@
       .hero-actions,
       .quick-links {
         justify-content: start;
+      }
+
+      .topbar::after {
+        display: none;
+      }
+
+      .nav-links {
+        max-width: none;
+        opacity: 1;
+        overflow: visible;
+        pointer-events: auto;
+        flex-wrap: wrap;
       }
 
       .hero-summary-strip {

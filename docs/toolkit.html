@@ -39,6 +39,10 @@
         <p class="hero-lead">
           This is the page to open when someone asks what to wear, how much cash to carry, what to book ahead, or how to keep a long transfer day from becoming messy.
         </p>
+        <div class="quick-callout">
+          <strong>Arrival Cue</strong>
+          <span>Check weather first, keep one layer easy to grab, and save tomorrow’s transfer details before the trip gets busy.</span>
+        </div>
         <div class="hero-actions">
           <a class="button-primary" href="#weather-packing">Weather And Packing</a>
           <a class="button-secondary" href="#shinkansen">Transit Notes</a>
@@ -149,28 +153,28 @@
 
       <div class="image-grid">
         <a class="image-card" href="#weather-packing">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tsutenkaku%2C_Osaka.jpg?width=1200" alt="Osaka city scene" loading="lazy">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tsutenkaku%2C_Osaka.jpg?width=960" alt="Osaka city scene" loading="lazy" decoding="async" fetchpriority="low">
           <div class="image-card-copy">
             <strong>Osaka And Kyoto</strong>
             <span>Usually the easiest packing read: city layers, walking shoes, and rain backup.</span>
           </div>
         </a>
         <a class="image-card" href="#weather-packing">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lake_torii_%40_Hakone_Shrine_%2813776519615%29.jpg?width=1200" alt="Hakone shrine gate by the lake" loading="lazy">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lake_torii_%40_Hakone_Shrine_%2813776519615%29.jpg?width=960" alt="Hakone shrine gate by the lake" loading="lazy" decoding="async" fetchpriority="low">
           <div class="image-card-copy">
             <strong>Hakone Shift</strong>
             <span>Cooler, mistier, and more wind-sensitive than the big-city part of the route.</span>
           </div>
         </a>
         <a class="image-card" href="#weather-packing">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chureito_Pagoda.jpg?width=1200" alt="Chureito Pagoda with Mount Fuji" loading="lazy">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chureito_Pagoda.jpg?width=960" alt="Chureito Pagoda with Mount Fuji" loading="lazy" decoding="async" fetchpriority="low">
           <div class="image-card-copy">
             <strong>Fuji Window</strong>
             <span>The coldest and most visibility-sensitive stop, especially at exposed viewpoints.</span>
           </div>
         </a>
         <a class="image-card" href="#shinkansen">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_crossing_%2812214%29.jpg?width=1200" alt="Shibuya Crossing in Tokyo" loading="lazy">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_crossing_%2812214%29.jpg?width=960" alt="Shibuya Crossing in Tokyo" loading="lazy" decoding="async" fetchpriority="low">
           <div class="image-card-copy">
             <strong>Tokyo Finish</strong>
             <span>Back to city logic, but still easier if you leave room for shopping and a night layer.</span>
@@ -254,6 +258,19 @@
           <h3>Drop Bags Before Old Streets</h3>
           <p>Higashiyama, Gion, and other temple-side walks feel much better if luggage is already stored and the day reads like a day trip, not a move day.</p>
         </div>
+      </div>
+
+      <div class="term-box" data-term-group>
+        <strong>Tap The Station Terms</strong>
+        <span>These are the practical phrases most likely to matter when someone is already walking toward the gates.</span>
+        <div class="term-strip">
+          <button class="term-chip is-active" type="button" data-term="shinkansen" aria-pressed="true">shinkansen</button>
+          <button class="term-chip" type="button" data-term="ic-card" aria-pressed="false">IC card</button>
+          <button class="term-chip" type="button" data-term="hakone-freepass" aria-pressed="false">Hakone Freepass</button>
+          <button class="term-chip" type="button" data-term="hachiko-side" aria-pressed="false">Hachiko side</button>
+          <button class="term-chip" type="button" data-term="coin-lockers" aria-pressed="false">coin lockers</button>
+        </div>
+        <div class="term-panel" data-term-panel aria-live="polite"></div>
       </div>
     </section>
 

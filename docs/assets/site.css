@@ -96,14 +96,16 @@ p {
 }
 
 .topbar {
-  position: sticky;
+  position: fixed;
   top: 12px;
   z-index: 40;
-  width: min(1240px, calc(100% - 32px));
-  margin: 14px auto 0;
-  padding: 14px 18px;
+  right: 16px;
+  width: auto;
+  max-width: calc(100% - 24px);
+  margin: 0;
+  padding: 12px 14px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: 16px;
   border: 1px solid rgba(255, 255, 255, 0.92);
@@ -111,6 +113,21 @@ p {
   background: rgba(255, 250, 243, 0.8);
   backdrop-filter: blur(14px);
   box-shadow: 0 14px 36px rgba(24, 49, 61, 0.08);
+  transition: padding var(--trans-fast), box-shadow var(--trans-fast), background var(--trans-fast);
+}
+
+.topbar::after {
+  content: "Open Guide";
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(31, 95, 107, 0.08);
+  color: var(--sea);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .brand {
@@ -144,9 +161,14 @@ p {
 
 .nav-links {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: end;
   gap: 8px;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: max-width var(--trans-fast), opacity var(--trans-fast);
 }
 
 .nav-links a {
@@ -164,9 +186,29 @@ p {
   color: var(--sea);
 }
 
+.topbar:hover,
+.topbar:focus-within {
+  padding: 14px 18px;
+  background: rgba(255, 250, 243, 0.94);
+  box-shadow: 0 18px 40px rgba(24, 49, 61, 0.1);
+}
+
+.topbar:hover::after,
+.topbar:focus-within::after {
+  content: "";
+  padding: 0;
+}
+
+.topbar:hover .nav-links,
+.topbar:focus-within .nav-links {
+  max-width: 980px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .page-shell {
   width: min(1240px, calc(100% - 32px));
-  margin: 22px auto 54px;
+  margin: 88px auto 54px;
   display: grid;
   gap: 24px;
   position: relative;
@@ -640,6 +682,68 @@ h1 {
   line-height: 1.64;
 }
 
+.term-box {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.term-box > strong {
+  font-size: 0.96rem;
+}
+
+.term-box > span {
+  color: var(--muted);
+  line-height: 1.58;
+  font-size: 0.93rem;
+}
+
+.term-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.term-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--sea);
+  cursor: pointer;
+  transition: transform var(--trans-fast), background var(--trans-fast), color var(--trans-fast), box-shadow var(--trans-fast);
+}
+
+.term-chip:hover,
+.term-chip.is-active {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--crimson), #b55447);
+  color: white;
+  box-shadow: 0 12px 24px rgba(156, 61, 51, 0.16);
+}
+
+.term-panel {
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.term-panel strong {
+  display: block;
+  font-size: 0.98rem;
+}
+
+.term-panel span {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  line-height: 1.62;
+  font-size: 0.94rem;
+}
+
 .footer-note {
   padding: 16px 2px 0;
   color: var(--muted);
@@ -689,7 +793,10 @@ h1 {
   .topbar {
     position: static;
     width: min(100% - 20px, 1240px);
+    max-width: none;
+    right: auto;
     border-radius: 24px;
+    padding: 14px 18px;
   }
 
   .page-shell {
@@ -706,6 +813,18 @@ h1 {
   .hero-actions,
   .search-tags {
     justify-content: start;
+  }
+
+  .topbar::after {
+    display: none;
+  }
+
+  .nav-links {
+    max-width: none;
+    opacity: 1;
+    overflow: visible;
+    pointer-events: auto;
+    flex-wrap: wrap;
   }
 
   .glance-strip,
@@ -725,6 +844,21 @@ h1 {
   .section-header > p,
   .section-copy p {
     margin-top: 12px;
+  }
+
+  .glance-card span,
+  .info-card span,
+  .metric-card span,
+  .sticky-glance span,
+  .quick-callout span,
+  .note-band,
+  .term-panel span {
+    font-size: 0.98rem;
+  }
+
+  .term-chip {
+    width: 100%;
+    justify-content: center;
   }
 
   h1 {
