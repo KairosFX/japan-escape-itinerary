@@ -1,4 +1,11 @@
+document.documentElement.classList.add("js");
+
 const SEARCH_ITEMS = [
+  {
+    title: "Interactive Route Map",
+    text: "Custom Japan route atlas with clickable Osaka, Kyoto, Hakone, Fuji, and Tokyo stop pins.",
+    href: "./index.html#route-atlas"
+  },
   {
     title: "Recommendation Engine",
     text: "Rank the route around food, scenery, nightlife, budget, weather, and transfer tolerance.",
@@ -394,6 +401,154 @@ const PREVIEW_GALLERIES = {
         creditLabel: "Shibuya Night (HDR).jpg",
         creditLink: "https://commons.wikimedia.org/wiki/File:Shibuya_Night_(HDR).jpg",
         creditText: "Guwashi999, CC BY 2.0"
+      }
+    ]
+  }
+};
+
+const ROUTE_ATLAS_ITEMS = {
+  osaka: {
+    kicker: "Arrival base",
+    title: "Osaka sets the opening mood",
+    description:
+      "The route starts in Osaka because it turns arrival energy into food, signs, and a low-pressure first-night win instead of immediate logistics friction.",
+    href: "./itinerary.html#osaka-start",
+    image: PREVIEW_GALLERIES.osaka.images[1].src,
+    alt: PREVIEW_GALLERIES.osaka.images[1].alt,
+    previewLabel: "Preview Osaka",
+    badges: [
+      { label: "food", tone: "food" },
+      { label: "night", tone: "night" },
+      { label: "easy", tone: "easy" }
+    ],
+    facts: [
+      {
+        label: "Route role",
+        text: "Osaka stabilizes the beginning of the trip so the later scenic sections feel earned instead of rushed."
+      },
+      {
+        label: "Vibe signal",
+        text: "Neon, food, and forgiving late options make it the softest landing in the whole plan."
+      },
+      {
+        label: "Best move",
+        text: "Keep the first night compact and save the real pace for the next morning."
+      }
+    ]
+  },
+  kyoto: {
+    kicker: "Contrast day",
+    title: "Kyoto changes the texture without changing hotels",
+    description:
+      "Kyoto is the deliberate contrast stop. The point is one concentrated cultural day that resets the mood without adding another hotel move.",
+    href: "./itinerary.html#kyoto-day",
+    image: PREVIEW_GALLERIES.kyoto.images[0].src,
+    alt: PREVIEW_GALLERIES.kyoto.images[0].alt,
+    previewLabel: "Preview Kyoto",
+    badges: [
+      { label: "culture", tone: "culture" },
+      { label: "photo", tone: "photo" },
+      { label: "walking", tone: "easy" }
+    ],
+    facts: [
+      {
+        label: "Route role",
+        text: "Kyoto is here to change the tone, not replace Osaka as the base."
+      },
+      {
+        label: "Best lane",
+        text: "One focused district cluster works better than a citywide chase."
+      },
+      {
+        label: "Payoff",
+        text: "Temple atmosphere and slower streets create the sharpest contrast in the trip."
+      }
+    ]
+  },
+  hakone: {
+    kicker: "Scenic pivot",
+    title: "Hakone breaks the eastbound move and makes it feel human",
+    description:
+      "Hakone turns the route's biggest transfer wall into an atmospheric overnight. That one decision keeps the trip from feeling like pure transit math.",
+    href: "./itinerary.html#hakone-move",
+    image: PREVIEW_GALLERIES.hakone.images[0].src,
+    alt: PREVIEW_GALLERIES.hakone.images[0].alt,
+    previewLabel: "Preview Hakone",
+    badges: [
+      { label: "reset", tone: "reset" },
+      { label: "onsen", tone: "onsen" },
+      { label: "scenic", tone: "photo" }
+    ],
+    facts: [
+      {
+        label: "Route role",
+        text: "Hakone absorbs the heaviest movement day and converts it into a calmer overnight."
+      },
+      {
+        label: "Best use",
+        text: "Protect the transfer first and let any extra sightseeing feel like bonus value."
+      },
+      {
+        label: "Why it works",
+        text: "The lake and onsen atmosphere reset the trip before Fuji and Tokyo."
+      }
+    ]
+  },
+  fuji: {
+    kicker: "Weather play",
+    title: "Fuji is the place where flexibility becomes the strategy",
+    description:
+      "This is the highest photo payoff in the route, but only if you let weather win. Good visibility should overrule any rigid sequence you wrote down earlier.",
+    href: "./itinerary.html#fuji-visibility",
+    image: PREVIEW_GALLERIES.fuji.images[0].src,
+    alt: PREVIEW_GALLERIES.fuji.images[0].alt,
+    previewLabel: "Preview Fuji",
+    badges: [
+      { label: "photo", tone: "photo" },
+      { label: "weather", tone: "weather" },
+      { label: "flex", tone: "easy" }
+    ],
+    facts: [
+      {
+        label: "Route role",
+        text: "Fuji is the only stop where conditions should be allowed to change the order."
+      },
+      {
+        label: "Best move",
+        text: "Check the sky early and hit the clearest viewpoint first."
+      },
+      {
+        label: "Risk control",
+        text: "Keep meals and side stops practical so the scenic window stays protected."
+      }
+    ]
+  },
+  tokyo: {
+    kicker: "Finale district",
+    title: "Tokyo closes the trip cleanly when you keep it district-first",
+    description:
+      "The trip ends best in one strong Tokyo district. Shibuya gives shopping, dinner, and skyline closure without fragmenting the last day across the whole city.",
+    href: "./itinerary.html#tokyo-finish",
+    image: PREVIEW_GALLERIES.tokyo.images[2].src,
+    alt: PREVIEW_GALLERIES.tokyo.images[2].alt,
+    previewLabel: "Preview Tokyo",
+    badges: [
+      { label: "night", tone: "night" },
+      { label: "shopping", tone: "shopping" },
+      { label: "easy", tone: "easy" }
+    ],
+    facts: [
+      {
+        label: "Route role",
+        text: "Tokyo is the pressure-release ending, not another place to overpack with logistics."
+      },
+      {
+        label: "Best move",
+        text: "Anchor the day around one skyline slot or one dinner and let the rest flex."
+      },
+      {
+        label: "Payoff",
+        text: "Shibuya stacks recognizable city energy fast, which is ideal on the final day."
       }
     ]
   }
@@ -851,6 +1006,96 @@ function updateToggleChips(scope = document) {
   scope.querySelectorAll(".toggle-chip").forEach((chip) => {
     const input = chip.querySelector("input");
     chip.classList.toggle("is-active", Boolean(input?.checked));
+  });
+}
+
+function renderRouteBadges(items = []) {
+  return items
+    .map((item) => `<span class="best-for-chip is-${item.tone}">${item.label}</span>`)
+    .join("");
+}
+
+function initRouteModules() {
+  const modules = [...document.querySelectorAll("[data-route-module]")];
+  if (!modules.length) {
+    return;
+  }
+
+  const boardObserver = "IntersectionObserver" in window
+    ? new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-live");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.3 }
+      )
+    : null;
+
+  modules.forEach((module) => {
+    const board = module.querySelector("[data-route-board]");
+    const pins = [...module.querySelectorAll("[data-route-stop]")];
+    const kicker = module.querySelector("[data-route-kicker]");
+    const title = module.querySelector("[data-route-title]");
+    const description = module.querySelector("[data-route-description]");
+    const image = module.querySelector("[data-route-image]");
+    const badges = module.querySelector("[data-route-badges]");
+    const facts = module.querySelector("[data-route-facts]");
+    const previewButton = module.querySelector("[data-route-preview]");
+    const link = module.querySelector("[data-route-link]");
+
+    if (!board || !pins.length || !kicker || !title || !description || !image || !badges || !facts || !previewButton || !link) {
+      return;
+    }
+
+    const renderStop = (key) => {
+      const item = ROUTE_ATLAS_ITEMS[key];
+      if (!item) {
+        return;
+      }
+
+      pins.forEach((pin) => {
+        const isActive = pin.dataset.routeStop === key;
+        pin.classList.toggle("is-active", isActive);
+        pin.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+
+      kicker.textContent = item.kicker;
+      title.textContent = item.title;
+      description.textContent = item.description;
+      image.src = item.image;
+      image.alt = item.alt;
+      badges.innerHTML = renderRouteBadges(item.badges);
+      facts.innerHTML = item.facts
+        .map(
+          (fact) => `
+            <div class="route-fact">
+              <strong>${fact.label}</strong>
+              <span>${fact.text}</span>
+            </div>
+          `
+        )
+        .join("");
+      previewButton.dataset.previewGallery = key;
+      previewButton.textContent = item.previewLabel;
+      link.href = item.href;
+    };
+
+    pins.forEach((pin) => {
+      pin.addEventListener("click", () => renderStop(pin.dataset.routeStop));
+    });
+
+    const initialKey = pins.find((pin) => pin.classList.contains("is-active"))?.dataset.routeStop ?? pins[0].dataset.routeStop;
+    renderStop(initialKey);
+
+    if (boardObserver) {
+      boardObserver.observe(board);
+    } else {
+      board.classList.add("is-live");
+    }
   });
 }
 
@@ -1443,6 +1688,7 @@ window.addEventListener("DOMContentLoaded", () => {
   initReveal();
   initSearch();
   initTermGroups();
+  initRouteModules();
   initRecommendationEngine();
   initPreviewModal();
 });
