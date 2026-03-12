@@ -48,8 +48,8 @@
           This page pairs the food with the city it belongs to, so someone can scroll fast and still know what to eat, where it fits, and roughly how much cash to keep on hand.
         </p>
         <div class="hero-actions">
-          <a class="button-primary" href="#city-foods">Jump To City Foods</a>
-          <a class="button-secondary" href="#dish-shortlist">Jump To Dish Shortlist</a>
+          <a class="button-primary" href="#food-carousel">Jump To Food Slider</a>
+          <a class="button-secondary" href="#city-foods">Jump To City Foods</a>
         </div>
         <div class="glance-strip">
           <div class="glance-card">
@@ -78,6 +78,100 @@
         <div class="glance-card">
           <strong>Visibility Rule</strong>
           <span>On the Fuji day, keep lunch practical so food does not eat the clear-weather window.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel section reveal section-nav-panel">
+      <nav class="page-section-nav" data-section-nav aria-label="Food page sections">
+        <a class="section-pill" href="#food-carousel">Food slider</a>
+        <a class="section-pill" href="#city-foods">City foods</a>
+        <a class="section-pill" href="#dish-shortlist">Dish shortlist</a>
+      </nav>
+    </section>
+
+    <section class="panel section reveal" id="food-carousel">
+      <div class="section-header">
+        <div class="section-copy">
+          <span class="eyebrow">Food Slider</span>
+          <h2>See The Food Mood Before You Read The Details</h2>
+          <div class="section-divider"></div>
+        </div>
+        <p>This slider keeps the page image-first. Use the arrows or let it rotate on its own, then jump into the matching city card when one stop clearly wins the appetite argument.</p>
+      </div>
+
+      <div class="feature-slider" data-slider data-slider-interval="5600">
+        <div class="slider-stage">
+          <article class="feature-slide is-active" data-slide>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/D%C5%8Dtonbori_at_night%2C_Osaka_%2819551420339%29.jpg?width=1600" alt="Dotonbori at night in Osaka" loading="lazy" decoding="async">
+            <div class="feature-slide-copy">
+              <span class="eyebrow">Osaka</span>
+              <h3>Takoyaki, okonomiyaki, kushikatsu, and the easiest first-night appetite</h3>
+              <p>Osaka is the loose, neon, low-pressure food opener. It is where the tired arrival becomes a functioning trip again.</p>
+              <div class="route-spotlight-actions">
+                <a class="button-primary" href="#osaka-food">Open Osaka food</a>
+                <button class="button-secondary" type="button" data-preview-gallery="osaka">Preview city</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="feature-slide" data-slide>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fushimi_Inari%2C_Kyoto%2C_20240818_1400_4476.jpg?width=1600" alt="Fushimi Inari in Kyoto" loading="lazy" decoding="async">
+            <div class="feature-slide-copy">
+              <span class="eyebrow">Kyoto</span>
+              <h3>Matcha sweets, soba, tofu, and a slower specialty lane</h3>
+              <p>Kyoto is less about grazing chaos and more about one deliberate meal, tea breaks, and older-street atmosphere around the food.</p>
+              <div class="route-spotlight-actions">
+                <a class="button-primary" href="#kyoto-food">Open Kyoto food</a>
+                <button class="button-secondary" type="button" data-preview-gallery="kyoto">Preview city</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="feature-slide" data-slide>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lake_torii_%40_Hakone_Shrine_%2813776519615%29.jpg?width=1600" alt="Hakone shrine torii by the lake" loading="lazy" decoding="async">
+            <div class="feature-slide-copy">
+              <span class="eyebrow">Hakone</span>
+              <h3>Ryokan dinner energy, earlier meals, and buy-your-snacks-now logic</h3>
+              <p>Hakone works best when the meal is part of the reset. Eat early, keep it easy, and do not expect city-night flexibility.</p>
+              <div class="route-spotlight-actions">
+                <a class="button-primary" href="#hakone-food">Open Hakone food</a>
+                <button class="button-secondary" type="button" data-preview-gallery="hakone">Preview city</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="feature-slide" data-slide>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Fuji_from_Lake_Kawaguchi_s2.jpg?width=1600" alt="Mount Fuji from Lake Kawaguchi" loading="lazy" decoding="async">
+            <div class="feature-slide-copy">
+              <span class="eyebrow">Mt. Fuji Area</span>
+              <h3>Yoshida udon and compact scenic-day eating that protects the clear view</h3>
+              <p>The Fuji meal should support the visibility window. Keep it practical, quick enough, and easy to pivot if the mountain opens up.</p>
+              <div class="route-spotlight-actions">
+                <a class="button-primary" href="#fuji-food">Open Fuji food</a>
+                <button class="button-secondary" type="button" data-preview-gallery="fuji">Preview city</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="feature-slide" data-slide>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_Night_%28HDR%29.jpg?width=1600" alt="Shibuya at night in Tokyo" loading="lazy" decoding="async">
+            <div class="feature-slide-copy">
+              <span class="eyebrow">Tokyo</span>
+              <h3>Final dinner, dessert backup, and the broadest last-night range</h3>
+              <p>Tokyo is where the route can end with a better meal, better dessert options, and the least friction if the group still wants city energy.</p>
+              <div class="route-spotlight-actions">
+                <a class="button-primary" href="#tokyo-food">Open Tokyo food</a>
+                <button class="button-secondary" type="button" data-preview-gallery="tokyo">Preview city</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="slider-controls">
+          <button class="slider-arrow" type="button" data-slider-prev aria-label="Previous slide">&lt;</button>
+          <div class="slider-dots" data-slider-dots aria-label="Food slider navigation"></div>
+          <button class="slider-arrow" type="button" data-slider-next aria-label="Next slide">&gt;</button>
         </div>
       </div>
     </section>
@@ -136,9 +230,17 @@
 
       <div class="card-grid">
         <article class="page-card city-info-card" id="osaka-food">
+          <div class="city-card-media">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/D%C5%8Dtonbori_at_night%2C_Osaka_%2819551420339%29.jpg?width=1280" alt="Dotonbori at night in Osaka" loading="lazy" decoding="async">
+          </div>
           <span class="kicker">Osaka</span>
           <h3>Street-Food Start</h3>
           <p>Best first-night food city for takoyaki, okonomiyaki, kushikatsu, gyoza, and loose late wandering.</p>
+          <div class="best-for-strip">
+            <span class="best-for-chip is-food">takoyaki</span>
+            <span class="best-for-chip is-night">late</span>
+            <span class="best-for-chip is-easy">easy</span>
+          </div>
           <ul>
             <li><strong>Areas:</strong> Dotonbori for the bright crawl, Shinsekai for kushikatsu and retro-night energy.</li>
             <li><strong>Sit-down idea:</strong> Namba or Ura-Namba for okonomiyaki, izakaya, or yakiniku.</li>
@@ -147,9 +249,17 @@
         </article>
 
         <article class="page-card city-info-card" id="kyoto-food">
+          <div class="city-card-media">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fushimi_Inari%2C_Kyoto%2C_20240818_1400_4476.jpg?width=1280" alt="Fushimi Inari in Kyoto" loading="lazy" decoding="async">
+          </div>
           <span class="kicker">Kyoto</span>
           <h3>Slower Specialty Day</h3>
           <p>Better for matcha, sweets, tofu, soba, and one deliberate sit-down meal than for chaotic late-night snacking.</p>
+          <div class="best-for-strip">
+            <span class="best-for-chip is-culture">matcha</span>
+            <span class="best-for-chip is-photo">tea</span>
+            <span class="best-for-chip is-easy">slow</span>
+          </div>
           <ul>
             <li><strong>Areas:</strong> Nishiki Market for tasting and browsing, Gion or Higashiyama for a calmer meal.</li>
             <li><strong>Sit-down idea:</strong> Soba lunch or tofu-forward dinner in the old-street side of the city.</li>
@@ -158,9 +268,17 @@
         </article>
 
         <article class="page-card city-info-card" id="hakone-food">
+          <div class="city-card-media">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hakone_Ashi_Lake_Torii.jpg?width=1280" alt="Lake Ashi torii in Hakone" loading="lazy" decoding="async">
+          </div>
           <span class="kicker">Hakone</span>
           <h3>Eat Early, Keep It Easy</h3>
           <p>Hakone is the place to lean into ryokan food, station snacks, and earlier dinner timing rather than big late-night freedom.</p>
+          <div class="best-for-strip">
+            <span class="best-for-chip is-onsen">ryokan</span>
+            <span class="best-for-chip is-reset">reset</span>
+            <span class="best-for-chip is-easy">early</span>
+          </div>
           <ul>
             <li><strong>Areas:</strong> Hakone-Yumoto is the safest practical snack and buy-what-you-need zone.</li>
             <li><strong>Sit-down idea:</strong> Use the included ryokan meal or an earlier local dinner before options narrow.</li>
@@ -169,9 +287,17 @@
         </article>
 
         <article class="page-card city-info-card" id="fuji-food">
+          <div class="city-card-media">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Fuji_from_Lake_Kawaguchi_s2.jpg?width=1280" alt="Mount Fuji from Lake Kawaguchi" loading="lazy" decoding="async">
+          </div>
           <span class="kicker">Mt. Fuji Area</span>
           <h3>Practical Scenic-Day Food</h3>
           <p>Keep Day 6 meals reliable and compact so the clear-weather window stays protected.</p>
+          <div class="best-for-strip">
+            <span class="best-for-chip is-weather">visibility</span>
+            <span class="best-for-chip is-photo">photo</span>
+            <span class="best-for-chip is-easy">quick</span>
+          </div>
           <ul>
             <li><strong>Areas:</strong> Shimoyoshida around the Chureito side or Kawaguchiko for easier fallback cafes.</li>
             <li><strong>Must-try:</strong> Yoshida udon is the cleanest local callout if you want one specific Fuji-area dish.</li>
@@ -180,9 +306,17 @@
         </article>
 
         <article class="page-card city-info-card" id="tokyo-food">
+          <div class="city-card-media">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_Night_%28HDR%29.jpg?width=1280" alt="Shibuya at night in Tokyo" loading="lazy" decoding="async">
+          </div>
           <span class="kicker">Tokyo</span>
           <h3>Strong Final Dinner City</h3>
           <p>Shibuya alone is enough for sushi, tonkatsu, ramen, gyoza, dessert, and late-night fallback food without complicating the last day.</p>
+          <div class="best-for-strip">
+            <span class="best-for-chip is-night">night</span>
+            <span class="best-for-chip is-shopping">dessert</span>
+            <span class="best-for-chip is-food">finale</span>
+          </div>
           <ul>
             <li><strong>Areas:</strong> Stay in Shibuya for the main route. Add other districts only if time expands.</li>
             <li><strong>Sit-down idea:</strong> A Shibuya dinner before or after Shibuya Sky keeps the final day clean.</li>
@@ -243,6 +377,20 @@
             <span>Dinner, dessert, and one last late-city walk.</span>
           </div>
         </a>
+        <a class="image-card" href="#hakone-food">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Hakone_Ashi_Lake_Torii.jpg?width=960" alt="Lake Ashi in Hakone" loading="lazy" decoding="async" fetchpriority="low">
+          <div class="image-card-copy">
+            <strong>Hakone Reset Meal</strong>
+            <span>Earlier dinner, calmer mood, and backup snacks before things close down.</span>
+          </div>
+        </a>
+        <a class="image-card" href="#city-foods">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tsutenkaku%2C_Osaka.jpg?width=960" alt="Tsutenkaku in Osaka" loading="lazy" decoding="async" fetchpriority="low">
+          <div class="image-card-copy">
+            <strong>Street-Food Districts</strong>
+            <span>Use the city cards below to match district energy to the right kind of meal.</span>
+          </div>
+        </a>
       </div>
     </section>
 
@@ -268,10 +416,34 @@
       </div>
     </section>
 
-    <div class="footer-note">
+  <div class="footer-note">
       If the group only needs essentials, send <a href="./quick_snapshot.html">the snapshot page</a>. If they want the route context behind the food timing, send <a href="./itinerary.html">the itinerary page</a>.
     </div>
   </main>
+
+  <div class="preview-modal" id="preview-modal" hidden>
+    <div class="preview-backdrop" data-close-preview></div>
+    <div class="preview-panel" role="dialog" aria-modal="true" aria-labelledby="preview-title">
+      <div class="preview-media">
+        <div class="preview-stage">
+          <img id="preview-image" alt="">
+        </div>
+        <div class="preview-thumbs" id="preview-thumbs"></div>
+      </div>
+      <div class="preview-copy">
+        <button class="preview-close" type="button" data-close-preview aria-label="Close preview">x</button>
+        <span class="eyebrow" id="preview-eyebrow">City Preview</span>
+        <h3 id="preview-title"></h3>
+        <p id="preview-description"></p>
+        <div class="preview-meta" id="preview-meta"></div>
+        <div class="preview-facts" id="preview-facts"></div>
+        <div class="preview-actions">
+          <a class="button-secondary" id="preview-link" href="./guide.html">Open related guide section</a>
+        </div>
+        <div class="preview-credit" id="preview-credit"></div>
+      </div>
+    </div>
+  </div>
 
   <script src="./assets/site.js" defer></script>
 </body>

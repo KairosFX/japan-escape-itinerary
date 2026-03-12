@@ -12,6 +12,26 @@ const SEARCH_ITEMS = [
     href: "./index.html#trip-profile"
   },
   {
+    title: "Live Route Weather",
+    text: "Check current conditions, packing cues, and same-day timing for Osaka, Kyoto, Hakone, Fuji, and Tokyo.",
+    href: "./index.html#trip-weather"
+  },
+  {
+    title: "Fuji Fog And Visibility Index",
+    text: "Use the live forecast to see which upcoming day has the best clarity for Mount Fuji.",
+    href: "./index.html#trip-weather"
+  },
+  {
+    title: "Japan Explorer",
+    text: "Search major route hubs and regional add-ons with interactive filters and category notes.",
+    href: "./index.html#japan-explorer"
+  },
+  {
+    title: "Official Reads And Brochures",
+    text: "Open JNTO articles, travel brochures, and a lightweight flight launcher.",
+    href: "./index.html#official-watch"
+  },
+  {
     title: "City Preview Deck",
     text: "Open preview images for Osaka, Kyoto, Hakone, Fuji, and Tokyo before locking in the route.",
     href: "./index.html#visual-previews"
@@ -405,6 +425,341 @@ const PREVIEW_GALLERIES = {
     ]
   }
 };
+
+const NAV_TRANSLATIONS = {
+  en: {
+    "./index.html": "Home",
+    "./itinerary.html": "Itinerary",
+    "./food.html": "Food",
+    "./toolkit.html": "Toolkit",
+    "./culture.html": "Culture",
+    "./quick_snapshot.html": "Snapshot",
+    "./guide.html": "Full Guide"
+  },
+  ja: {
+    "./index.html": "ホーム",
+    "./itinerary.html": "旅程",
+    "./food.html": "食事",
+    "./toolkit.html": "準備",
+    "./culture.html": "文化",
+    "./quick_snapshot.html": "要点",
+    "./guide.html": "完全ガイド"
+  }
+};
+
+const PAGE_SUBTITLE_TRANSLATIONS = {
+  en: {
+    "index.html": "Main trip hub",
+    "itinerary.html": "Itinerary",
+    "food.html": "Food guide",
+    "toolkit.html": "Toolkit",
+    "culture.html": "Culture notes",
+    "quick_snapshot.html": "Snapshot",
+    "guide.html": "Full guide"
+  },
+  ja: {
+    "index.html": "メイントリップ",
+    "itinerary.html": "旅程",
+    "food.html": "食事ガイド",
+    "toolkit.html": "準備ガイド",
+    "culture.html": "文化メモ",
+    "quick_snapshot.html": "要点ページ",
+    "guide.html": "完全ガイド"
+  }
+};
+
+const WEATHER_STOPS = [
+  {
+    key: "osaka",
+    name: "Osaka",
+    lat: 34.6937,
+    lon: 135.5023,
+    guideHref: "./food.html#osaka-food",
+    timing: "Best after dark for food streets and low-pressure wandering."
+  },
+  {
+    key: "kyoto",
+    name: "Kyoto",
+    lat: 35.0116,
+    lon: 135.7681,
+    guideHref: "./itinerary.html#kyoto-day",
+    timing: "Best early when the walking lanes are calmer and cooler."
+  },
+  {
+    key: "hakone",
+    name: "Hakone",
+    lat: 35.2323,
+    lon: 139.1069,
+    guideHref: "./itinerary.html#hakone-move",
+    timing: "Treat late afternoon as ryokan and reset time if the air turns misty."
+  },
+  {
+    key: "fuji",
+    name: "Mt. Fuji Area",
+    lat: 35.4974,
+    lon: 138.7559,
+    guideHref: "./itinerary.html#fuji-visibility",
+    timing: "Clearer morning windows usually matter more here than strict lunch timing."
+  },
+  {
+    key: "tokyo",
+    name: "Tokyo",
+    lat: 35.6762,
+    lon: 139.6503,
+    guideHref: "./itinerary.html#tokyo-finish",
+    timing: "Late afternoon into night is usually the cleanest Tokyo payoff."
+  }
+];
+
+const WEATHER_CODE_LABELS = {
+  0: "Clear",
+  1: "Mostly clear",
+  2: "Partly cloudy",
+  3: "Overcast",
+  45: "Fog",
+  48: "Rime fog",
+  51: "Light drizzle",
+  53: "Drizzle",
+  55: "Dense drizzle",
+  56: "Freezing drizzle",
+  57: "Dense freezing drizzle",
+  61: "Light rain",
+  63: "Rain",
+  65: "Heavy rain",
+  66: "Freezing rain",
+  67: "Heavy freezing rain",
+  71: "Light snow",
+  73: "Snow",
+  75: "Heavy snow",
+  77: "Snow grains",
+  80: "Rain showers",
+  81: "Showers",
+  82: "Heavy showers",
+  85: "Snow showers",
+  86: "Heavy snow showers",
+  95: "Thunderstorm",
+  96: "Storm and hail",
+  99: "Severe storm"
+};
+
+const DESTINATION_DIRECTORY_ITEMS = [
+  {
+    key: "osaka",
+    name: "Osaka",
+    region: "Kansai",
+    filter: "kansai",
+    prefecture: "Osaka Prefecture",
+    image: PREVIEW_GALLERIES.osaka.images[1].src,
+    alt: PREVIEW_GALLERIES.osaka.images[1].alt,
+    summary: "Food-first, arrival-friendly, and the easiest city in the route for turning travel fatigue into actual momentum.",
+    tags: ["food", "night", "easy"],
+    highlights: ["Dotonbori", "Shinsekai", "Umeda", "Namba", "Shinsaibashi"],
+    bestTime: "After dark, when the signs and casual food lanes are doing most of the work.",
+    crowd: "Late afternoon to evening is busiest, but it still tolerates loose wandering better than most cities.",
+    guideHref: "./food.html#osaka-food",
+    secondaryHref: "./itinerary.html#osaka-start",
+    primaryLabel: "Open food notes",
+    secondaryLabel: "Open itinerary",
+    categories: {
+      hotels: "Namba for food, Umeda for rail access, or Shin-Osaka if move-day convenience matters most.",
+      shopping: "Shinsaibashi, Amerikamura, and big station-linked malls keep shopping easy even in bad weather.",
+      entertainment: "Dotonbori walks, neon streets, retro Shinsekai, and forgiving late-night energy.",
+      restaurants: "Takoyaki, kushikatsu, okonomiyaki, ramen, izakaya, and strong convenience-store backup."
+    }
+  },
+  {
+    key: "kyoto",
+    name: "Kyoto",
+    region: "Kansai",
+    filter: "kansai",
+    prefecture: "Kyoto Prefecture",
+    image: PREVIEW_GALLERIES.kyoto.images[1].src,
+    alt: PREVIEW_GALLERIES.kyoto.images[1].alt,
+    summary: "Culture-heavy, walk-heavy, and best when the city is treated as one concentrated lane rather than a checklist sprint.",
+    tags: ["culture", "tea", "photo"],
+    highlights: ["Gion", "Higashiyama", "Nishiki Market", "Arashiyama", "Fushimi Inari"],
+    bestTime: "Early morning through lunch, before the crowd pressure builds in the temple lanes.",
+    crowd: "Midday crowding rises quickly in the iconic areas, so early starts pay off.",
+    guideHref: "./food.html#kyoto-food",
+    secondaryHref: "./itinerary.html#kyoto-day",
+    primaryLabel: "Open food notes",
+    secondaryLabel: "Open itinerary",
+    categories: {
+      hotels: "Stay simple with a Kyoto day trip unless you are building a Kyoto-led version of the route.",
+      shopping: "Nishiki Market, craft stores in old-street districts, and calmer tea or ceramics shopping.",
+      entertainment: "Temple lanes, lantern streets, river walks, and slower detail rather than nightlife pressure.",
+      restaurants: "Matcha sweets, soba, tofu meals, teahouse breaks, and one deliberate sit-down meal."
+    }
+  },
+  {
+    key: "hakone",
+    name: "Hakone",
+    region: "Kanto",
+    filter: "kanto",
+    prefecture: "Kanagawa",
+    image: PREVIEW_GALLERIES.hakone.images[0].src,
+    alt: PREVIEW_GALLERIES.hakone.images[0].alt,
+    summary: "Onsen reset, scenic overnight, and the best place in the route to slow down the transfer rhythm on purpose.",
+    tags: ["onsen", "reset", "lake"],
+    highlights: ["Hakone-Yumoto", "Lake Ashi", "Hakone Shrine", "Open-air museum", "Ropeway"],
+    bestTime: "Late afternoon into evening if the goal is to settle into the ryokan pace without forcing extra transit.",
+    crowd: "Transit hubs are most compressed late morning; evenings are quieter but options close earlier.",
+    guideHref: "./food.html#hakone-food",
+    secondaryHref: "./itinerary.html#hakone-move",
+    primaryLabel: "Open food notes",
+    secondaryLabel: "Open itinerary",
+    categories: {
+      hotels: "Ryokan stays matter most here. Prioritize bath quality, meal timing, and easy bag drop.",
+      shopping: "Hakone-Yumoto is the safest practical corridor for snacks, gifts, and last-minute supplies.",
+      entertainment: "Lake Ashi, ropeway views, shrine stops, and onsen time instead of late-night city activity.",
+      restaurants: "Ryokan dinners, earlier meals, station snacks, and konbini backup before everything narrows."
+    }
+  },
+  {
+    key: "fuji",
+    name: "Mt. Fuji Area",
+    region: "Chubu",
+    filter: "chubu",
+    prefecture: "Yamanashi / Shizuoka",
+    image: PREVIEW_GALLERIES.fuji.images[1].src,
+    alt: PREVIEW_GALLERIES.fuji.images[1].alt,
+    summary: "Highest photo payoff, highest weather pressure, and the stop where visibility needs to outrank stubborn planning.",
+    tags: ["scenic", "weather", "photo"],
+    highlights: ["Kawaguchiko", "Chureito", "Oshino Hakkai", "Shimoyoshida", "Lake viewpoints"],
+    bestTime: "Morning is usually the cleanest visual lane, especially when cloud cover builds later.",
+    crowd: "Popular viewpoints get compressed quickly after the clearest window becomes obvious.",
+    guideHref: "./food.html#fuji-food",
+    secondaryHref: "./itinerary.html#fuji-visibility",
+    primaryLabel: "Open food notes",
+    secondaryLabel: "Open itinerary",
+    categories: {
+      hotels: "Kawaguchiko lakeside stays keep the morning options cleaner than overcomplicated hopping.",
+      shopping: "Treat shopping as secondary here. Protect the mountain view first, then buy gifts later.",
+      entertainment: "Pagoda angles, lakeside walks, water-village detail, and scenic movement between viewpoints.",
+      restaurants: "Yoshida udon, practical cafes, and compact meals that do not steal the clear-weather window."
+    }
+  },
+  {
+    key: "tokyo",
+    name: "Tokyo",
+    region: "Kanto",
+    filter: "kanto",
+    prefecture: "Tokyo Metropolis",
+    image: PREVIEW_GALLERIES.tokyo.images[2].src,
+    alt: PREVIEW_GALLERIES.tokyo.images[2].alt,
+    summary: "Best used as a district-first finale. Tokyo pays off fastest when the last day stays concentrated instead of sprawling.",
+    tags: ["shopping", "night", "finale"],
+    highlights: ["Shibuya", "Shinjuku", "Asakusa", "Ginza", "teamLab side trips"],
+    bestTime: "Late afternoon into night, when shopping and skyline plans can stack cleanly in one zone.",
+    crowd: "Always active, but district-first planning prevents the day from dissolving into transit.",
+    guideHref: "./food.html#tokyo-food",
+    secondaryHref: "./itinerary.html#tokyo-finish",
+    primaryLabel: "Open food notes",
+    secondaryLabel: "Open itinerary",
+    categories: {
+      hotels: "Shibuya and Shinjuku keep the final-day logistics easy and the nightlife options broad.",
+      shopping: "Shibuya, Shinjuku, Ginza, and station-linked retail if weather turns against you.",
+      entertainment: "Crossing views, skyline decks, arcades, neighborhood wandering, and broader late-night range.",
+      restaurants: "Final dinner splurge, dessert backup, ramen, sushi, gyoza, and endless fallback lanes."
+    }
+  },
+  {
+    key: "kansai-addons",
+    name: "Kansai Add-Ons",
+    region: "West Japan",
+    filter: "west",
+    prefecture: "Nara / Kobe / Himeji",
+    image: PREVIEW_GALLERIES.kyoto.images[0].src,
+    alt: PREVIEW_GALLERIES.kyoto.images[0].alt,
+    summary: "Use this lane when one Kansai city is not enough and you want famous side trips without rebuilding the whole trip.",
+    tags: ["nara", "kobe", "himeji"],
+    highlights: ["Nara deer park", "Kobe harbor", "Himeji Castle", "Uji", "Arima side trips"],
+    bestTime: "Strong as day trips from Osaka or Kyoto if the group wants one extra iconic west-Japan image set.",
+    crowd: "Weekend pressure is highest in the classic heritage and deer-park areas.",
+    guideHref: "https://www.japan.travel/en/destinations/kansai/",
+    secondaryHref: "./guide.html",
+    primaryLabel: "Open JNTO region guide",
+    secondaryLabel: "Open full guide",
+    categories: {
+      hotels: "Keep your base in Osaka or Kyoto unless the add-on city becomes the actual goal of the trip.",
+      shopping: "Kobe and Uji are the strongest add-on shopping lanes without turning the day into pure retail.",
+      entertainment: "Castle reads, harbor fronts, deer-park spectacle, and richer day-trip contrast.",
+      restaurants: "Kobe beef splurge, Uji tea sweets, Nara snacks, and calmer regional dining than Osaka nights."
+    }
+  },
+  {
+    key: "kanto-addons",
+    name: "Kanto Add-Ons",
+    region: "Kanto",
+    filter: "kanto",
+    prefecture: "Yokohama / Nikko / Kamakura",
+    image: PREVIEW_GALLERIES.tokyo.images[0].src,
+    alt: PREVIEW_GALLERIES.tokyo.images[0].alt,
+    summary: "For people who want Tokyo plus one cleaner side idea instead of forcing every famous east-Japan stop into the finale.",
+    tags: ["nikko", "yokohama", "kamakura"],
+    highlights: ["Nikko temples", "Yokohama waterfront", "Kamakura shrines", "Enoshima coast", "day trips"],
+    bestTime: "Best as an add-on when Tokyo is staying longer than one final day or when the group wants less neon and more texture.",
+    crowd: "Day-trip routes can bottleneck on weekends, so earlier departures matter more here.",
+    guideHref: "https://www.japan.travel/en/destinations/kanto/",
+    secondaryHref: "./guide.html",
+    primaryLabel: "Open JNTO region guide",
+    secondaryLabel: "Open full guide",
+    categories: {
+      hotels: "Stay in Tokyo and use rail lines outward unless the whole trip is shifting toward Kanto depth.",
+      shopping: "Yokohama malls and Tokyo districts cover most of the shopping needs without overcomplicating the route.",
+      entertainment: "Temple depth in Nikko, seaside air in Kamakura, and harbor-night contrast in Yokohama.",
+      restaurants: "Tokyo remains the strongest food base, with Yokohama and Kamakura as side dishes rather than replacements."
+    }
+  },
+  {
+    key: "chubu-addons",
+    name: "Chubu Scenic Add-Ons",
+    region: "Chubu",
+    filter: "chubu",
+    prefecture: "Kanazawa / Takayama / Nagano",
+    image: PREVIEW_GALLERIES.fuji.images[0].src,
+    alt: PREVIEW_GALLERIES.fuji.images[0].alt,
+    summary: "Mountain texture, preserved streets, and slower scenic depth if you want more than the core Fuji window.",
+    tags: ["kanazawa", "takayama", "nagano"],
+    highlights: ["Kanazawa gardens", "Takayama old town", "Nagano temples", "Matsumoto", "alpine reads"],
+    bestTime: "Best when the trip wants scenic atmosphere beyond the single Mount Fuji gamble.",
+    crowd: "Seasonal peaks matter here, especially around foliage, alpine weekends, and heritage districts.",
+    guideHref: "https://www.japan.travel/en/destinations/chubu/",
+    secondaryHref: "./guide.html",
+    primaryLabel: "Open JNTO region guide",
+    secondaryLabel: "Open full guide",
+    categories: {
+      hotels: "Traditional inns and slower scenic stays work better here than frantic one-night box-checking.",
+      shopping: "Crafts, regional sweets, lacquerware, and slower market-style browsing instead of mega-district retail.",
+      entertainment: "Garden pacing, old-town walks, mountain windows, and more deliberate scenic texture.",
+      restaurants: "Regional noodles, Hida-style beef, local sweets, and slower meals that fit the scenery."
+    }
+  },
+  {
+    key: "north-south",
+    name: "North And South Extensions",
+    region: "Hokkaido / Kyushu / Okinawa",
+    filter: "north-south",
+    prefecture: "Sapporo / Fukuoka / Naha",
+    image: null,
+    alt: "",
+    summary: "Use this lane when the trip is expanding beyond the Osaka-Tokyo spine and you need one broader read on Japan's biggest regional mood shifts.",
+    tags: ["sapporo", "fukuoka", "naha"],
+    highlights: ["Sapporo snow and seafood", "Fukuoka food lanes", "Beppu onsen", "Naha base", "Okinawa beaches"],
+    bestTime: "Best when the trip is being redesigned around climate, food, or island energy instead of just adding one more stop.",
+    crowd: "Season and flight timing matter much more here than on the core Osaka-Tokyo route.",
+    guideHref: "https://www.japan.travel/en/destinations/",
+    secondaryHref: "https://brochure.japan.travel/en/",
+    primaryLabel: "Open JNTO destination hub",
+    secondaryLabel: "Open brochure library",
+    categories: {
+      hotels: "Choose one strong base city first: Sapporo for Hokkaido, Fukuoka for Kyushu, Naha for Okinawa.",
+      shopping: "Fukuoka and Sapporo are easiest for city shopping; Okinawa is stronger for resort and beach rhythm.",
+      entertainment: "Snow festivals, seafood markets, onsen towns, island beaches, and very different weather moods.",
+      restaurants: "Seafood in Hokkaido, tonkotsu ramen in Fukuoka, and island food in Okinawa change the trip immediately."
+    }
+  }
+];
 
 const ROUTE_ATLAS_ITEMS = {
   osaka: {
@@ -982,6 +1337,844 @@ function initTermGroups() {
 
     const initial = buttons.find((button) => button.classList.contains("is-active")) || buttons[0];
     renderTerm(initial.dataset.term);
+  });
+}
+
+function safeStorageGet(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeStorageSet(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Ignore storage failures and keep the UI usable.
+  }
+}
+
+function getCurrentPageFile() {
+  const file = window.location.pathname.split("/").pop();
+  return file || "index.html";
+}
+
+function initLocaleSwitch() {
+  const topbars = [...document.querySelectorAll(".topbar")];
+  if (!topbars.length) {
+    return;
+  }
+
+  const pageFile = getCurrentPageFile();
+  const applyLocale = (locale) => {
+    const labels = NAV_TRANSLATIONS[locale] ?? NAV_TRANSLATIONS.en;
+
+    topbars.forEach((topbar) => {
+      topbar.querySelectorAll(".nav-links a").forEach((link) => {
+        const href = link.getAttribute("href");
+        if (href && labels[href]) {
+          link.textContent = labels[href];
+        }
+      });
+
+      const subtitle = topbar.querySelector(".brand-copy span");
+      if (subtitle) {
+        subtitle.textContent = PAGE_SUBTITLE_TRANSLATIONS[locale]?.[pageFile] ?? PAGE_SUBTITLE_TRANSLATIONS.en[pageFile] ?? subtitle.textContent;
+      }
+
+      topbar.querySelectorAll("[data-locale-button]").forEach((button) => {
+        const isActive = button.dataset.localeButton === locale;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+    });
+
+    document.documentElement.lang = locale === "ja" ? "ja" : "en";
+    document.documentElement.dataset.locale = locale;
+    safeStorageSet("japan-escape-locale", locale);
+  };
+
+  topbars.forEach((topbar) => {
+    if (topbar.querySelector(".locale-switch")) {
+      return;
+    }
+
+    const switcher = document.createElement("div");
+    switcher.className = "locale-switch";
+    switcher.innerHTML = `
+      <button class="locale-button" type="button" data-locale-button="en" aria-pressed="false">
+        <span aria-hidden="true">🇺🇸</span>
+        <strong>EN</strong>
+      </button>
+      <button class="locale-button" type="button" data-locale-button="ja" aria-pressed="false">
+        <span aria-hidden="true">🇯🇵</span>
+        <strong>JP</strong>
+      </button>
+    `;
+
+    switcher.querySelectorAll("[data-locale-button]").forEach((button) => {
+      button.addEventListener("click", () => applyLocale(button.dataset.localeButton));
+    });
+
+    topbar.append(switcher);
+  });
+
+  applyLocale(safeStorageGet("japan-escape-locale") || "en");
+}
+
+function isSameDocumentHashLink(anchor) {
+  const href = anchor?.getAttribute("href");
+  if (!href || !href.includes("#")) {
+    return false;
+  }
+
+  try {
+    const url = new URL(anchor.href, window.location.href);
+    return url.pathname === window.location.pathname && Boolean(url.hash);
+  } catch {
+    return false;
+  }
+}
+
+function getHashTarget(hash = window.location.hash) {
+  if (!hash) {
+    return null;
+  }
+
+  const id = decodeURIComponent(hash.replace(/^#/, ""));
+  return document.getElementById(id);
+}
+
+function activateTarget(target) {
+  document.querySelectorAll(".is-current-target").forEach((element) => element.classList.remove("is-current-target"));
+
+  if (!target) {
+    return;
+  }
+
+  target.classList.add("is-current-target");
+  target.classList.remove("is-targeted");
+  void target.offsetWidth;
+  target.classList.add("is-targeted");
+
+  window.clearTimeout(target._targetTimer);
+  target._targetTimer = window.setTimeout(() => {
+    target.classList.remove("is-targeted");
+  }, 1250);
+}
+
+function initHashHighlights() {
+  const syncTarget = () => {
+    const target = getHashTarget();
+    if (target) {
+      activateTarget(target);
+    }
+  };
+
+  document.addEventListener("click", (event) => {
+    const anchor = event.target.closest("a");
+    if (!anchor || !isSameDocumentHashLink(anchor)) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      window.setTimeout(syncTarget, 80);
+    });
+  });
+
+  window.addEventListener("hashchange", syncTarget);
+  syncTarget();
+}
+
+function initSectionNavs() {
+  const navs = [...document.querySelectorAll("[data-section-nav]")];
+  if (!navs.length) {
+    return;
+  }
+
+  navs.forEach((nav) => {
+    const links = [...nav.querySelectorAll('a[href*="#"]')].filter(isSameDocumentHashLink);
+    const sections = links
+      .map((link) => getHashTarget(new URL(link.href, window.location.href).hash))
+      .filter(Boolean);
+
+    if (!links.length || !sections.length) {
+      return;
+    }
+
+    const setActive = (id) => {
+      links.forEach((link) => {
+        const hash = new URL(link.href, window.location.href).hash;
+        link.classList.toggle("is-active", hash === `#${id}`);
+      });
+    };
+
+    const observer = "IntersectionObserver" in window
+      ? new IntersectionObserver(
+          (entries) => {
+            const visibleEntries = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((left, right) => right.intersectionRatio - left.intersectionRatio);
+
+            if (visibleEntries[0]) {
+              setActive(visibleEntries[0].target.id);
+            }
+          },
+          {
+            rootMargin: "-30% 0px -52% 0px",
+            threshold: [0.2, 0.4, 0.6, 0.85]
+          }
+        )
+      : null;
+
+    sections.forEach((section) => observer?.observe(section));
+    links.forEach((link) => {
+      link.addEventListener("click", () => {
+        const hash = new URL(link.href, window.location.href).hash;
+        if (hash) {
+          setActive(hash.replace("#", ""));
+        }
+      });
+    });
+
+    setActive((getHashTarget()?.id) || sections[0].id);
+  });
+}
+
+function getWeatherLabel(code) {
+  return WEATHER_CODE_LABELS[code] ?? "Mixed conditions";
+}
+
+function formatShortDateLabel(value) {
+  if (!value) {
+    return "Unknown day";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric"
+  }).format(new Date(`${value}T12:00:00`));
+}
+
+function formatHourLabel(hour) {
+  const suffix = hour >= 12 ? "pm" : "am";
+  const normalized = hour % 12 || 12;
+  return `${normalized}${suffix}`;
+}
+
+function getPackingAdvice(temperature, rainChance, windSpeed) {
+  if (rainChance >= 55) {
+    return "Bring an umbrella and a light shell.";
+  }
+
+  if (temperature <= 8) {
+    return "Use a real warm layer, not just a thin overshirt.";
+  }
+
+  if (temperature <= 16 || windSpeed >= 22) {
+    return "Bring a light jacket or overshirt.";
+  }
+
+  if (temperature >= 28) {
+    return "Dress light and keep water easy to reach.";
+  }
+
+  return "Light layers are enough.";
+}
+
+function getWeatherRouteAdvice(stop, forecast) {
+  if (stop.key === "fuji") {
+    return "Let the clearest visibility window win.";
+  }
+
+  if (forecast.rain >= 55) {
+    return "Shift toward indoor anchors or tighter districts.";
+  }
+
+  if (stop.key === "hakone") {
+    return "Keep the ryokan pace intact if mist builds later.";
+  }
+
+  if (stop.key === "kyoto") {
+    return "Start earlier so the walking lanes stay easier.";
+  }
+
+  if (stop.key === "tokyo") {
+    return "Tokyo still pays off later in the day.";
+  }
+
+  return "This stop can stay loose unless the rain spikes.";
+}
+
+function analyzeFujiForecast(data) {
+  const hourly = data.hourly ?? {};
+  const times = hourly.time ?? [];
+  const visibility = hourly.visibility ?? [];
+  const lowCloud = hourly.cloud_cover_low ?? [];
+  const cloudCover = hourly.cloud_cover ?? [];
+  const rainChance = hourly.precipitation_probability ?? [];
+  const weatherCodes = hourly.weather_code ?? [];
+  const buckets = new Map();
+
+  times.forEach((time, index) => {
+    const date = new Date(time);
+    const hour = date.getHours();
+    if (hour < 6 || hour > 17) {
+      return;
+    }
+
+    const dayKey = time.slice(0, 10);
+    const visibilityScore = clamp((visibility[index] ?? 9000) / 18000, 0, 1);
+    const lowCloudScore = 1 - clamp((lowCloud[index] ?? 58) / 100, 0, 1);
+    const cloudScore = 1 - clamp((cloudCover[index] ?? 62) / 100, 0, 1);
+    const rainScore = 1 - clamp((rainChance[index] ?? 40) / 100, 0, 1);
+    const weatherPenalty = [45, 48, 51, 53, 55, 61, 63, 65, 80, 81, 82, 95, 96, 99].includes(weatherCodes[index]) ? 0.08 : 0;
+    const score = clamp(
+      (visibilityScore * 0.42) +
+      (lowCloudScore * 0.24) +
+      (cloudScore * 0.18) +
+      (rainScore * 0.16) -
+      weatherPenalty,
+      0,
+      1
+    );
+
+    const bucket = buckets.get(dayKey) ?? [];
+    bucket.push({
+      hour,
+      score,
+      visibility: visibility[index] ?? 0,
+      rain: rainChance[index] ?? 0,
+      cloud: cloudCover[index] ?? 0
+    });
+    buckets.set(dayKey, bucket);
+  });
+
+  const days = [...buckets.entries()]
+    .slice(0, 5)
+    .map(([date, samples]) => {
+      const ranked = [...samples].sort((left, right) => right.score - left.score);
+      const topSamples = ranked.slice(0, Math.min(3, ranked.length));
+      const averageScore = topSamples.reduce((sum, sample) => sum + sample.score, 0) / Math.max(topSamples.length, 1);
+      const bestHour = ranked[0]?.hour ?? 9;
+      const fogRisk = Math.round((1 - averageScore) * 100);
+      const clarity = Math.round(averageScore * 100);
+
+      return {
+        date,
+        label: formatShortDateLabel(date),
+        clarity,
+        fogRisk,
+        bestHour,
+        note: fogRisk <= 34 ? "Low fog risk" : fogRisk <= 58 ? "Moderate fog risk" : "High fog risk"
+      };
+    });
+
+  const bestDay = [...days].sort((left, right) => right.clarity - left.clarity)[0] ?? null;
+  return { days, bestDay };
+}
+
+function buildWeatherUrl(stop) {
+  const params = new URLSearchParams({
+    latitude: String(stop.lat),
+    longitude: String(stop.lon),
+    current: "temperature_2m,apparent_temperature,weather_code,wind_speed_10m,relative_humidity_2m",
+    hourly: "precipitation_probability,cloud_cover,cloud_cover_low,visibility,weather_code",
+    daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset",
+    forecast_days: "6",
+    timezone: "auto"
+  });
+
+  return `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+}
+
+async function fetchStopWeather(stop) {
+  const response = await fetch(buildWeatherUrl(stop), { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Weather request failed for ${stop.name}`);
+  }
+
+  const data = await response.json();
+  const current = data.current ?? {};
+  const daily = data.daily ?? {};
+  const forecast = {
+    stop,
+    currentTemp: Math.round(current.temperature_2m ?? 0),
+    apparentTemp: Math.round(current.apparent_temperature ?? current.temperature_2m ?? 0),
+    condition: getWeatherLabel(current.weather_code ?? daily.weather_code?.[0]),
+    high: Math.round(daily.temperature_2m_max?.[0] ?? current.temperature_2m ?? 0),
+    low: Math.round(daily.temperature_2m_min?.[0] ?? current.temperature_2m ?? 0),
+    rain: Math.round(daily.precipitation_probability_max?.[0] ?? 0),
+    wind: Math.round(current.wind_speed_10m ?? 0),
+    humidity: Math.round(current.relative_humidity_2m ?? 0)
+  };
+
+  forecast.packing = getPackingAdvice(forecast.apparentTemp, forecast.rain, forecast.wind);
+  forecast.routeAdvice = getWeatherRouteAdvice(stop, forecast);
+  forecast.timing = stop.timing;
+  forecast.fuji = stop.key === "fuji" ? analyzeFujiForecast(data) : null;
+
+  return forecast;
+}
+
+function renderWeatherLoadingState() {
+  return WEATHER_STOPS
+    .map(
+      (stop) => `
+        <article class="weather-card">
+          <span class="weather-stop-label">${stop.name}</span>
+          <strong>Loading live read...</strong>
+          <p>Checking current conditions and next-step advice.</p>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function renderWeatherCard(forecast) {
+  if (forecast.error) {
+    return `
+      <article class="weather-card">
+        <span class="weather-stop-label">${forecast.stop.name}</span>
+        <strong>Live data unavailable</strong>
+        <p>Use the static trip rule for now: ${forecast.stop.timing}</p>
+        <div class="weather-meta">
+          <span><strong>Fallback:</strong> ${forecast.stop.key === "fuji" ? "Keep Fuji flexible." : "Dress in layers and re-check later."}</span>
+        </div>
+      </article>
+    `;
+  }
+
+  return `
+    <article class="weather-card">
+      <span class="weather-stop-label">${forecast.stop.name}</span>
+      <strong>${forecast.condition}</strong>
+      <div class="weather-temp-line">
+        <span class="weather-temp">${forecast.currentTemp}&deg;</span>
+        <span class="weather-condition">Feels like ${forecast.apparentTemp}&deg;</span>
+      </div>
+      <div class="weather-chip-row">
+        <span class="weather-chip">High ${forecast.high}&deg;</span>
+        <span class="weather-chip">Low ${forecast.low}&deg;</span>
+        <span class="weather-chip">Rain ${forecast.rain}%</span>
+      </div>
+      <p>${forecast.packing}</p>
+      <div class="weather-meta">
+        <span><strong>Right move:</strong> ${forecast.routeAdvice}</span>
+        <span><strong>Timing:</strong> ${forecast.timing}</span>
+      </div>
+    </article>
+  `;
+}
+
+function renderFujiForecast(panel, forecast) {
+  if (!panel) {
+    return;
+  }
+
+  const planner = forecast?.fuji;
+  if (!planner?.bestDay) {
+    panel.innerHTML = `
+      <span class="eyebrow">Fuji visibility index</span>
+      <h3>Forecast unavailable right now</h3>
+      <p>The live Fuji read could not load. Default back to the site rule: do not lock the order until the same-day mountain view is clear.</p>
+      <div class="fuji-forecast-list">
+        <div class="fuji-day-card">
+          <strong>Fallback move</strong>
+          <span>Keep the Fuji block movable and re-check in the morning.</span>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  panel.innerHTML = `
+    <span class="eyebrow">Fuji visibility index</span>
+    <h3>${planner.bestDay.label} is the current strongest Fuji window</h3>
+    <p>The index blends forecast visibility, cloud cover, and rain pressure. Lower fog risk and higher clarity mean the mountain is more likely to pay off cleanly.</p>
+    <div class="fuji-index-meter"><span style="width: ${planner.bestDay.clarity}%"></span></div>
+    <div class="fuji-score-line">
+      <span class="fuji-score-pill">${planner.bestDay.clarity}% clarity</span>
+      <span class="fuji-score-pill">${planner.bestDay.fogRisk}% fog risk</span>
+      <span class="fuji-score-pill">Best window ${formatHourLabel(planner.bestDay.bestHour)}</span>
+    </div>
+    <div class="fuji-forecast-list">
+      ${planner.days
+        .map(
+          (day) => `
+            <div class="fuji-day-card">
+              <strong>${day.label}</strong>
+              <span>${day.note}. Aim around ${formatHourLabel(day.bestHour)} if the sky is cooperating.</span>
+              <div class="fuji-score-line">
+                <span class="fuji-score-pill">${day.clarity}% clarity</span>
+                <span class="fuji-score-pill">${day.fogRisk}% fog risk</span>
+              </div>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function initWeatherDashboard() {
+  const grid = document.querySelector("[data-weather-grid]");
+  const panel = document.querySelector("[data-fuji-forecast]");
+  const refreshButton = document.querySelector("[data-refresh-weather]");
+
+  if (!grid || !panel) {
+    return;
+  }
+
+  let isLoading = false;
+
+  const loadWeather = async () => {
+    if (isLoading) {
+      return;
+    }
+
+    isLoading = true;
+    grid.innerHTML = renderWeatherLoadingState();
+    if (refreshButton) {
+      refreshButton.disabled = true;
+      refreshButton.textContent = "Refreshing...";
+    }
+
+    const results = await Promise.allSettled(WEATHER_STOPS.map((stop) => fetchStopWeather(stop)));
+    const forecasts = results.map((result, index) => {
+      if (result.status === "fulfilled") {
+        return result.value;
+      }
+
+      return {
+        stop: WEATHER_STOPS[index],
+        error: true
+      };
+    });
+
+    grid.innerHTML = forecasts.map(renderWeatherCard).join("");
+    renderFujiForecast(panel, forecasts.find((forecast) => forecast.stop.key === "fuji"));
+
+    if (refreshButton) {
+      refreshButton.disabled = false;
+      refreshButton.textContent = "Refresh live read";
+    }
+    isLoading = false;
+  };
+
+  refreshButton?.addEventListener("click", loadWeather);
+  loadWeather();
+}
+
+function renderDirectoryMedia(item, detail = false) {
+  if (item.image) {
+    return detail
+      ? `<img src="${item.image}" alt="${item.alt}">`
+      : `<img src="${item.image}" alt="${item.alt}" loading="lazy" decoding="async">`;
+  }
+
+  return `
+    <div class="destination-graphic${detail ? " is-detail" : ""}">
+      <span class="weather-label">${item.region}</span>
+      <strong>${item.name}</strong>
+      <span>${item.prefecture}</span>
+    </div>
+  `;
+}
+
+function renderDirectoryCard(item, isActive) {
+  return `
+    <button class="destination-card${isActive ? " is-active" : ""}" type="button" data-destination-key="${item.key}" aria-pressed="${isActive ? "true" : "false"}">
+      ${renderDirectoryMedia(item)}
+      <div class="destination-card-copy">
+        <span class="badge badge-soft">${item.region}</span>
+        <strong>${item.name}</strong>
+        <span>${item.summary}</span>
+        <div class="destination-card-meta">
+          ${item.tags.slice(0, 3).map((tag) => `<span class="destination-pill">${tag}</span>`).join("")}
+        </div>
+      </div>
+    </button>
+  `;
+}
+
+function renderDirectoryDetail(item, container) {
+  if (!container || !item) {
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="destination-detail-media${item.image ? "" : " is-illustrated"}">
+      ${renderDirectoryMedia(item, true)}
+    </div>
+    <div class="destination-detail-copy">
+      <span class="eyebrow">${item.region}</span>
+      <h3>${item.name}</h3>
+      <p>${item.summary}</p>
+      <div class="destination-meta">
+        <span class="destination-pill">${item.prefecture}</span>
+        ${item.tags.map((tag) => `<span class="destination-pill">${tag}</span>`).join("")}
+      </div>
+      <div class="destination-facts">
+        <div class="route-fact">
+          <strong>Best time to use it</strong>
+          <span>${item.bestTime}</span>
+        </div>
+        <div class="route-fact">
+          <strong>Crowd read</strong>
+          <span>${item.crowd}</span>
+        </div>
+        <div class="route-fact">
+          <strong>Highlights</strong>
+          <span>${item.highlights.join(", ")}.</span>
+        </div>
+      </div>
+      <div class="destination-category-grid">
+        <div class="destination-category">
+          <strong>Hotels</strong>
+          <span>${item.categories.hotels}</span>
+        </div>
+        <div class="destination-category">
+          <strong>Shopping</strong>
+          <span>${item.categories.shopping}</span>
+        </div>
+        <div class="destination-category">
+          <strong>Entertainment</strong>
+          <span>${item.categories.entertainment}</span>
+        </div>
+        <div class="destination-category">
+          <strong>Restaurants</strong>
+          <span>${item.categories.restaurants}</span>
+        </div>
+      </div>
+      <div class="route-spotlight-actions">
+        <a class="button-primary" href="${item.guideHref}"${item.guideHref.startsWith("http") ? ' target="_blank" rel="noreferrer"' : ""}>${item.primaryLabel}</a>
+        <a class="button-secondary" href="${item.secondaryHref}"${item.secondaryHref.startsWith("http") ? ' target="_blank" rel="noreferrer"' : ""}>${item.secondaryLabel}</a>
+      </div>
+    </div>
+  `;
+}
+
+function initDestinationExplorer() {
+  const explorer = document.querySelector("[data-destination-explorer]");
+  const grid = document.getElementById("destination-grid");
+  const detail = document.getElementById("destination-detail");
+  const searchInput = document.getElementById("destination-search");
+  const filterButtons = [...document.querySelectorAll("[data-region-filter]")];
+
+  if (!explorer || !grid || !detail || !searchInput || !filterButtons.length) {
+    return;
+  }
+
+  let activeFilter = "all";
+  let activeKey = DESTINATION_DIRECTORY_ITEMS[0]?.key ?? null;
+
+  const getFilteredItems = () => {
+    const query = searchInput.value.trim().toLowerCase();
+    return DESTINATION_DIRECTORY_ITEMS.filter((item) => {
+      const filterMatch = activeFilter === "all" || item.filter === activeFilter;
+      const haystack = `${item.name} ${item.region} ${item.prefecture} ${item.summary} ${item.highlights.join(" ")} ${item.tags.join(" ")} ${Object.values(item.categories).join(" ")}`.toLowerCase();
+      const queryMatch = !query || haystack.includes(query);
+      return filterMatch && queryMatch;
+    });
+  };
+
+  const renderExplorer = () => {
+    const items = getFilteredItems();
+    if (!items.length) {
+      grid.innerHTML = `
+        <div class="note-band">
+          No direct match. Try broader terms like Kansai, Nikko, island, ramen, night, or scenery.
+        </div>
+      `;
+      return;
+    }
+
+    if (!items.find((item) => item.key === activeKey)) {
+      activeKey = items[0].key;
+    }
+
+    grid.innerHTML = items.map((item) => renderDirectoryCard(item, item.key === activeKey)).join("");
+    renderDirectoryDetail(items.find((item) => item.key === activeKey), detail);
+
+    grid.querySelectorAll("[data-destination-key]").forEach((card) => {
+      const activate = () => {
+        if (activeKey === card.dataset.destinationKey) {
+          return;
+        }
+        activeKey = card.dataset.destinationKey;
+        renderExplorer();
+      };
+
+      card.addEventListener("click", activate);
+      card.addEventListener("focus", activate);
+      card.addEventListener("mouseenter", activate);
+    });
+  };
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      activeFilter = button.dataset.regionFilter;
+      filterButtons.forEach((candidate) => {
+        const isActive = candidate === button;
+        candidate.classList.toggle("is-active", isActive);
+        candidate.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+      renderExplorer();
+    });
+  });
+
+  searchInput.addEventListener("input", renderExplorer);
+  renderExplorer();
+}
+
+function formatSkyscannerDate(value) {
+  if (!value) {
+    return "";
+  }
+
+  const [year, month, day] = value.split("-");
+  return `${year.slice(-2)}${month}${day}`;
+}
+
+function getDefaultTravelDate(offsetDays) {
+  const date = new Date();
+  date.setHours(12, 0, 0, 0);
+  date.setDate(date.getDate() + offsetDays);
+  return date.toISOString().slice(0, 10);
+}
+
+function initFlightForms() {
+  const forms = [...document.querySelectorAll("[data-flight-form]")];
+  if (!forms.length) {
+    return;
+  }
+
+  forms.forEach((form) => {
+    const departInput = form.elements.depart;
+    const returnInput = form.elements.return;
+
+    if (departInput instanceof HTMLInputElement && !departInput.value) {
+      departInput.value = getDefaultTravelDate(42);
+    }
+
+    if (returnInput instanceof HTMLInputElement && !returnInput.value) {
+      returnInput.value = getDefaultTravelDate(49);
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const from = String(form.elements.from?.value || "").trim().toLowerCase();
+      const to = String(form.elements.to?.value || "").trim().toLowerCase();
+      const depart = formatSkyscannerDate(String(form.elements.depart?.value || ""));
+      const returnDate = formatSkyscannerDate(String(form.elements.return?.value || ""));
+
+      if (!from || !to || !depart) {
+        return;
+      }
+
+      const url = returnDate
+        ? `https://www.skyscanner.com/transport/flights/${from}/${to}/${depart}/${returnDate}/`
+        : `https://www.skyscanner.com/transport/flights/${from}/${to}/${depart}/`;
+
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+  });
+}
+
+function initSliders() {
+  const sliders = [...document.querySelectorAll("[data-slider]")];
+  if (!sliders.length) {
+    return;
+  }
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  sliders.forEach((slider) => {
+    const slides = [...slider.querySelectorAll("[data-slide]")];
+    const dotsRoot = slider.querySelector("[data-slider-dots]");
+    const prevButton = slider.querySelector("[data-slider-prev]");
+    const nextButton = slider.querySelector("[data-slider-next]");
+    const interval = Number(slider.dataset.sliderInterval || 0);
+
+    if (!slides.length || !dotsRoot || !prevButton || !nextButton) {
+      return;
+    }
+
+    let activeIndex = slides.findIndex((slide) => slide.classList.contains("is-active"));
+    let timerId = null;
+
+    if (activeIndex < 0) {
+      activeIndex = 0;
+    }
+
+    const renderDots = () => {
+      dotsRoot.innerHTML = slides
+        .map(
+          (_, index) => `
+            <button class="slider-dot${index === activeIndex ? " is-active" : ""}" type="button" data-slider-dot="${index}" aria-label="Go to slide ${index + 1}" aria-pressed="${index === activeIndex ? "true" : "false"}"></button>
+          `
+        )
+        .join("");
+
+      dotsRoot.querySelectorAll("[data-slider-dot]").forEach((dot) => {
+        dot.addEventListener("click", () => {
+          activeIndex = Number(dot.dataset.sliderDot);
+          renderSlides();
+          restartAutoPlay();
+        });
+      });
+    };
+
+    const renderSlides = () => {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle("is-active", index === activeIndex);
+      });
+      renderDots();
+    };
+
+    const stopAutoPlay = () => {
+      if (timerId) {
+        window.clearInterval(timerId);
+        timerId = null;
+      }
+    };
+
+    const restartAutoPlay = () => {
+      stopAutoPlay();
+      if (prefersReducedMotion || interval < 2500 || slides.length < 2) {
+        return;
+      }
+
+      timerId = window.setInterval(() => {
+        activeIndex = (activeIndex + 1) % slides.length;
+        renderSlides();
+      }, interval);
+    };
+
+    prevButton.addEventListener("click", () => {
+      activeIndex = (activeIndex - 1 + slides.length) % slides.length;
+      renderSlides();
+      restartAutoPlay();
+    });
+
+    nextButton.addEventListener("click", () => {
+      activeIndex = (activeIndex + 1) % slides.length;
+      renderSlides();
+      restartAutoPlay();
+    });
+
+    slider.addEventListener("mouseenter", stopAutoPlay);
+    slider.addEventListener("mouseleave", restartAutoPlay);
+    slider.addEventListener("focusin", stopAutoPlay);
+    slider.addEventListener("focusout", restartAutoPlay);
+
+    renderSlides();
+    restartAutoPlay();
   });
 }
 
@@ -1685,10 +2878,17 @@ function initPreviewModal() {
 window.addEventListener("scroll", updateScrollProgress, { passive: true });
 window.addEventListener("DOMContentLoaded", () => {
   updateScrollProgress();
+  initLocaleSwitch();
   initReveal();
+  initSectionNavs();
+  initHashHighlights();
   initSearch();
   initTermGroups();
   initRouteModules();
   initRecommendationEngine();
+  initWeatherDashboard();
+  initDestinationExplorer();
+  initFlightForms();
+  initSliders();
   initPreviewModal();
 });

@@ -135,6 +135,17 @@
       </div>
     </section>
 
+    <section class="panel section reveal section-nav-panel">
+      <nav class="page-section-nav" data-section-nav aria-label="Homepage sections">
+        <a class="section-pill" href="#route-atlas">Route map</a>
+        <a class="section-pill" href="#trip-profile">Trip profile</a>
+        <a class="section-pill" href="#trip-weather">Live weather</a>
+        <a class="section-pill" href="#japan-explorer">Explorer</a>
+        <a class="section-pill" href="#official-watch">Articles</a>
+        <a class="section-pill" href="#visual-previews">Previews</a>
+      </nav>
+    </section>
+
     <section class="panel section reveal" id="route-atlas">
       <div class="section-header">
         <div class="section-copy">
@@ -549,6 +560,243 @@
           </div>
 
           <div class="recommendation-list" id="recommendation-list" aria-live="polite"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel section reveal" id="trip-weather">
+      <div class="section-header">
+        <div class="section-copy">
+          <span class="eyebrow">Live Route Weather</span>
+          <h2>Read The Conditions Before You Lock The Order</h2>
+          <div class="section-divider"></div>
+        </div>
+        <p>The weather layer pulls live forecast data for the five route anchors, then turns it into practical trip advice instead of a wall of numbers. Fuji gets its own clarity and fog-risk read.</p>
+      </div>
+
+      <div class="weather-layout">
+        <div class="weather-main">
+          <div class="weather-callout">
+            <div>
+              <strong>What This Is Doing</strong>
+              <span>Current temperature, quick condition, packing cue, and a same-day timing tip for each stop. Refresh it before a move day or before committing to Fuji.</span>
+            </div>
+            <button class="button-pill" type="button" data-refresh-weather>Refresh live read</button>
+          </div>
+
+          <div class="weather-grid" data-weather-grid>
+            <article class="weather-card">
+              <span class="weather-stop-label">Osaka</span>
+              <strong>Loading live read...</strong>
+              <span>Checking current route conditions.</span>
+            </article>
+            <article class="weather-card">
+              <span class="weather-stop-label">Kyoto</span>
+              <strong>Loading live read...</strong>
+              <span>Checking current route conditions.</span>
+            </article>
+            <article class="weather-card">
+              <span class="weather-stop-label">Hakone</span>
+              <strong>Loading live read...</strong>
+              <span>Checking current route conditions.</span>
+            </article>
+            <article class="weather-card">
+              <span class="weather-stop-label">Mt. Fuji Area</span>
+              <strong>Loading live read...</strong>
+              <span>Checking current route conditions.</span>
+            </article>
+            <article class="weather-card">
+              <span class="weather-stop-label">Tokyo</span>
+              <strong>Loading live read...</strong>
+              <span>Checking current route conditions.</span>
+            </article>
+          </div>
+        </div>
+
+        <aside class="weather-focus-panel" data-fuji-forecast>
+          <span class="eyebrow">Fuji visibility index</span>
+          <h3>Waiting on forecast data</h3>
+          <p>The Fuji recommendation will update once the live weather forecast loads. The index rewards clearer visibility, lower cloud cover, and lower rain pressure.</p>
+          <div class="fuji-forecast-list">
+            <div class="fuji-day-card">
+              <strong>Best day to aim for</strong>
+              <span>Checking the next few days now.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel section reveal" id="japan-explorer">
+      <div class="section-header">
+        <div class="section-copy">
+          <span class="eyebrow">Japan Explorer</span>
+          <h2>Search Major Destinations And Read The Fit Fast</h2>
+          <div class="section-divider"></div>
+        </div>
+        <p>This is the broader discovery layer: major Japan stops, region filters, and one detail panel that spells out what each place is strongest at without making you open ten tabs.</p>
+      </div>
+
+      <div class="explorer-toolbar">
+        <label class="search-panel explorer-search-panel" for="destination-search">
+          <span>Search major destinations</span>
+          <input id="destination-search" type="search" autocomplete="off" placeholder="Try Osaka, Nikko, Okinawa, Kanazawa, or night views">
+        </label>
+        <div class="explorer-filter-strip" aria-label="Destination region filters">
+          <button class="filter-chip is-active" type="button" data-region-filter="all" aria-pressed="true">All</button>
+          <button class="filter-chip" type="button" data-region-filter="kansai" aria-pressed="false">Kansai</button>
+          <button class="filter-chip" type="button" data-region-filter="kanto" aria-pressed="false">Kanto</button>
+          <button class="filter-chip" type="button" data-region-filter="chubu" aria-pressed="false">Chubu</button>
+          <button class="filter-chip" type="button" data-region-filter="west" aria-pressed="false">West Japan</button>
+          <button class="filter-chip" type="button" data-region-filter="north-south" aria-pressed="false">North + South</button>
+        </div>
+      </div>
+
+      <div class="explorer-layout" data-destination-explorer>
+        <div class="destination-grid" id="destination-grid" aria-live="polite"></div>
+
+        <aside class="destination-detail" id="destination-detail">
+          <div class="destination-detail-media">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/D%C5%8Dtonbori_at_night%2C_Osaka_%2819551420339%29.jpg?width=1280" alt="Dotonbori at night in Osaka">
+          </div>
+          <div class="destination-detail-copy">
+            <span class="eyebrow">Featured destination</span>
+            <h3>Osaka</h3>
+            <p>Start with Osaka if you want food, easy arrivals, nightlife, and a forgiving first-night base.</p>
+            <div class="destination-meta">
+              <span class="destination-pill">Kansai</span>
+              <span class="destination-pill">Food</span>
+              <span class="destination-pill">Night</span>
+            </div>
+            <div class="destination-facts">
+              <div class="route-fact">
+                <strong>Best time</strong>
+                <span>After dark when the signage and streets are doing most of the emotional work.</span>
+              </div>
+              <div class="route-fact">
+                <strong>Good for</strong>
+                <span>Loose arrivals, casual eating, and turning a tired group into a functioning group.</span>
+              </div>
+            </div>
+            <div class="destination-category-grid">
+              <div class="destination-category">
+                <strong>Hotels</strong>
+                <span>Namba, Umeda, or Shin-Osaka depending on whether food, shopping, or transit matters most.</span>
+              </div>
+              <div class="destination-category">
+                <strong>Shopping</strong>
+                <span>Shinsaibashi, Umeda, and station-linked malls keep it easy in bad weather too.</span>
+              </div>
+              <div class="destination-category">
+                <strong>Entertainment</strong>
+                <span>Dotonbori, neon walks, retro Shinsekai, and late low-pressure wandering.</span>
+              </div>
+              <div class="destination-category">
+                <strong>Restaurants</strong>
+                <span>Takoyaki, kushikatsu, okonomiyaki, ramen, and strong casual late-night fallback.</span>
+              </div>
+            </div>
+            <div class="route-spotlight-actions">
+              <a class="button-primary" href="./itinerary.html#osaka-start">Open local guide</a>
+              <a class="button-secondary" href="./food.html#osaka-food">Open food notes</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel section reveal" id="official-watch">
+      <div class="section-header">
+        <div class="section-copy">
+          <span class="eyebrow">Official Reads</span>
+          <h2>Articles, Seasonal Watch, Brochures, And Flight Planning</h2>
+          <div class="section-divider"></div>
+        </div>
+        <p>The links here stay lightweight and official. They are meant to help with timing, regional research, and travel planning without embedding heavy third-party widgets.</p>
+      </div>
+
+      <div class="official-layout">
+        <div class="official-feature-stack">
+          <article class="article-feature-card">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fushimi_Inari%2C_Kyoto%2C_20240818_1400_4476.jpg?width=1280" alt="Fushimi Inari in Kyoto" loading="lazy" decoding="async">
+            <div class="article-feature-copy">
+              <span class="badge">Official seasonal watch</span>
+              <strong>Track bloom timing with the JNTO cherry blossom forecast</strong>
+              <span>Use this for seasonal timing when trip dates are still moving and you want one reliable starting point before the route gets locked.</span>
+              <div class="route-spotlight-actions">
+                <a class="button-primary" href="https://www.japan.travel/en/see-and-do/cherry-blossom-forecast/" target="_blank" rel="noreferrer">Open JNTO forecast</a>
+                <a class="button-secondary" href="./toolkit.html#weather-packing">Open site weather notes</a>
+              </div>
+            </div>
+          </article>
+
+          <div class="link-grid official-link-grid">
+            <a class="link-card" href="https://www.japan.travel/en/destinations/kanto/" target="_blank" rel="noreferrer">
+              <strong>Kanto Region Guide</strong>
+              <span>Official region read for Tokyo, Kanagawa, Nikko-side add-ons, and eastern-route planning.</span>
+              <small>JNTO</small>
+            </a>
+            <a class="link-card" href="https://www.japan.travel/en/destinations/kansai/" target="_blank" rel="noreferrer">
+              <strong>Kansai Region Guide</strong>
+              <span>Use this when comparing Osaka, Kyoto, Nara, Kobe, or a stronger west-Japan food and culture swing.</span>
+              <small>JNTO</small>
+            </a>
+            <a class="link-card" href="https://www.japan.travel/en/destinations/kanto/tokyo/" target="_blank" rel="noreferrer">
+              <strong>Tokyo Official Read</strong>
+              <span>Good for neighborhood inspiration, time allocation, and deciding how hard to lean into Tokyo at the end.</span>
+              <small>JNTO</small>
+            </a>
+            <a class="link-card" href="https://brochure.japan.travel/en/" target="_blank" rel="noreferrer">
+              <strong>Travel Brochures</strong>
+              <span>Official brochure library for regional overviews, travel ideas, and printable planning material.</span>
+              <small>JNTO brochures</small>
+            </a>
+          </div>
+        </div>
+
+        <aside class="tool-stack">
+          <div class="tool-card">
+            <span class="eyebrow">Free Flight Launcher</span>
+            <h3>Open a quick airfare search without embedding a heavy widget</h3>
+            <p>Enter airport codes, pick your Japan arrival airport, and launch a lightweight external search in a new tab.</p>
+            <form class="flight-form" data-flight-form>
+              <label for="flight-from">
+                <span>From airport code</span>
+                <input id="flight-from" name="from" type="text" maxlength="4" placeholder="SEA" value="SEA" autocomplete="off">
+              </label>
+              <label for="flight-to">
+                <span>Japan airport</span>
+                <select id="flight-to" name="to">
+                  <option value="KIX">Osaka / KIX</option>
+                  <option value="HND">Tokyo / HND</option>
+                  <option value="NRT">Tokyo / NRT</option>
+                  <option value="ITM">Osaka / ITM</option>
+                  <option value="FUK">Fukuoka / FUK</option>
+                  <option value="CTS">Sapporo / CTS</option>
+                </select>
+              </label>
+              <label for="flight-depart">
+                <span>Depart</span>
+                <input id="flight-depart" name="depart" type="date">
+              </label>
+              <label for="flight-return">
+                <span>Return</span>
+                <input id="flight-return" name="return" type="date">
+              </label>
+              <button class="button-primary" type="submit">Search flights</button>
+            </form>
+            <div class="note-band">This launches an external search page instead of pulling in an ad-heavy widget. Use airport codes for the cleanest result.</div>
+          </div>
+
+          <div class="tool-card">
+            <strong>Planning extras worth opening</strong>
+            <ul class="brochure-list">
+              <li><a href="https://www.japan.travel/en/" target="_blank" rel="noreferrer">Japan Travel official home</a></li>
+              <li><a href="https://www.japan.travel/en/destinations/chubu/yamanashi/" target="_blank" rel="noreferrer">Yamanashi and Fuji-side inspiration</a></li>
+              <li><a href="https://www.japan.travel/en/destinations/kanto/kanagawa/" target="_blank" rel="noreferrer">Kanagawa and Hakone-side inspiration</a></li>
+              <li><a href="https://www.japan.travel/en/plan/" target="_blank" rel="noreferrer">Plan your trip overview</a></li>
+            </ul>
+          </div>
         </aside>
       </div>
     </section>
