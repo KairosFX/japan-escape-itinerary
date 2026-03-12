@@ -522,14 +522,14 @@ const UI_COPY = {
     mapTrackingSelected: "Tracking live position · {distance} km to selected point",
     mapGpsLiveAt: "GPS live at {lat}, {lon}",
     mapDistanceAway: "{distance} km away",
-    edgeTop: "Top",
-    edgePrevious: "Previous section",
-    edgeNext: "Next section",
-    edgeBottom: "Bottom",
+    recommendationTop: "Top",
+    recommendationMatchSuffix: "match",
+    recommendationOpenPrefix: "Open",
     footerHelpful: "Helpful links",
     footerRelated: "Related sites",
     footerAbout: "About",
     footerAboutText: "Japan Escape is a visual planning hub for this trip: route flow, weather logic, food reads, and share-ready pages without heavy app clutter.",
+    footerBrochures: "Japan Brochures",
     footerWho: "Who we are",
     footerContact: "Contact us",
     footerPrivacy: "Privacy Policy",
@@ -601,18 +601,18 @@ const UI_COPY = {
     mapTrackingSelected: "現在地を追跡中 · 選択地点まで {distance} km",
     mapGpsLiveAt: "現在地 {lat}, {lon}",
     mapDistanceAway: "{distance} km先",
-    edgeTop: "上へ",
-    edgePrevious: "前のセクション",
-    edgeNext: "次のセクション",
-    edgeBottom: "下へ",
+    recommendationTop: "おすすめ",
+    recommendationMatchSuffix: "一致",
+    recommendationOpenPrefix: "開く",
     footerHelpful: "便利なリンク",
     footerRelated: "関連サイト",
     footerAbout: "このサイトについて",
     footerAboutText: "Japan Escape は、この旅行のための視覚重視の計画ハブです。ルート、天気判断、食事メモ、共有向けページを重いアプリ化なしでまとめています。",
+    footerBrochures: "公式パンフレット",
     footerWho: "私たちについて",
     footerContact: "お問い合わせ",
     footerPrivacy: "プライバシーポリシー",
-    footerCookie: "Cookie Policy",
+    footerCookie: "Cookie ポリシー",
     footerTerms: "利用規約",
     footerSitemap: "サイトマップ",
     footerCopyright: "Copyright © 2026 Japan Escape. All rights reserved.",
@@ -709,6 +709,24 @@ const PAGE_JA_TRANSLATIONS = {
       selector: "#live-map .section-header > p",
       text: "この地図レイヤーは実用重視です。現在地、ルート・カテゴリの切り替え、距離の把握、そして実際のナビ用に Google マップへ1クリックで渡せます。"
     },
+    { selector: "#trip-profile .section-copy .eyebrow", text: "おすすめエンジン" },
+    { selector: "#trip-profile .section-copy h2", text: "本当に重視する条件で旅を並べ替える" },
+    {
+      selector: "#trip-profile .section-header > p",
+      text: "このエンジンは食事、景色、夜の強さ、ペース、予算、天気、人数、そして温泉・買い物・文化・乗り換えのやさしさまで反映します。"
+    },
+    { selector: "#trip-weather .section-copy .eyebrow", text: "ライブ天気" },
+    { selector: "#trip-weather .section-copy h2", text: "順番を固定する前に、実際の天気を読む" },
+    {
+      selector: "#trip-weather .section-header > p",
+      text: "5つの主要地点の予報を、旅行中に使える判断へ変換して表示します。富士は視界と霧リスクも別で見ます。"
+    },
+    { selector: "#japan-explorer .section-copy .eyebrow", text: "Japan Explorer" },
+    { selector: "#japan-explorer .section-copy h2", text: "主要な都市と追加候補を、開きすぎずに比較する" },
+    {
+      selector: "#japan-explorer .section-header > p",
+      text: "ここは発見用の層です。主要都市を検索し、地域で絞り、1つの詳細パネルで相性を読み取れます。"
+    },
     { selector: "[data-map-filter=\"all\"]", text: "すべて" },
     { selector: "[data-map-filter=\"route\"]", text: "ルート" },
     { selector: "[data-map-filter=\"food\"]", text: "食事" },
@@ -752,6 +770,32 @@ const PAGE_JA_TRANSLATIONS = {
       selector: "#official-watch .section-header > p",
       text: "ここにあるリンクは軽量で信頼できるものだけです。時期確認、地域調査、旅行準備を、重い埋め込みなしで使えます。"
     },
+    { selector: "#visual-previews .section-copy .eyebrow", text: "プレビューデッキ" },
+    { selector: "#visual-previews .section-copy h2", text: "決め切る前に、画像で各都市の空気をつかむ" },
+    {
+      selector: "#visual-previews .section-header > p",
+      text: "各カードから複数画像のプレビューを開き、その都市に対応するページへすぐ飛べます。"
+    },
+    { selector: "#visual-previews [data-preview-city=\"osaka\"] strong", text: "大阪" },
+    { selector: "#visual-previews [data-preview-city=\"osaka\"] .image-card-copy span:last-child", text: "到着直後でも使いやすい、ネオンと食事のやわらかいスタートです。" },
+    { selector: "#visual-previews [data-preview-city=\"osaka\"] .image-card-actions button", text: "画像を見る" },
+    { selector: "#visual-previews [data-preview-city=\"osaka\"] .image-card-actions a", text: "停止点を開く" },
+    { selector: "#visual-previews [data-preview-city=\"kyoto\"] strong", text: "京都" },
+    { selector: "#visual-previews [data-preview-city=\"kyoto\"] .image-card-copy span:last-child", text: "寺社のリズムと、より意図的な文化の対比を入れる日です。" },
+    { selector: "#visual-previews [data-preview-city=\"kyoto\"] .image-card-actions button", text: "画像を見る" },
+    { selector: "#visual-previews [data-preview-city=\"kyoto\"] .image-card-actions a", text: "停止点を開く" },
+    { selector: "#visual-previews [data-preview-city=\"hakone\"] strong", text: "箱根" },
+    { selector: "#visual-previews [data-preview-city=\"hakone\"] .image-card-copy span:last-child", text: "湖、旅館、温泉で東への長い移動日に呼吸を戻す場所です。" },
+    { selector: "#visual-previews [data-preview-city=\"hakone\"] .image-card-actions button", text: "画像を見る" },
+    { selector: "#visual-previews [data-preview-city=\"hakone\"] .image-card-actions a", text: "停止点を開く" },
+    { selector: "#visual-previews [data-preview-city=\"fuji\"] strong", text: "富士山エリア" },
+    { selector: "#visual-previews [data-preview-city=\"fuji\"] .image-card-copy span:last-child", text: "写真の見返りが最大ですが、順番より視界の良さを優先するパートです。" },
+    { selector: "#visual-previews [data-preview-city=\"fuji\"] .image-card-actions button", text: "画像を見る" },
+    { selector: "#visual-previews [data-preview-city=\"fuji\"] .image-card-actions a", text: "停止点を開く" },
+    { selector: "#visual-previews [data-preview-city=\"tokyo\"] strong", text: "東京" },
+    { selector: "#visual-previews [data-preview-city=\"tokyo\"] .image-card-copy span:last-child", text: "買い物、夜景、最後の食事を一地区で強く締めるための終点です。" },
+    { selector: "#visual-previews [data-preview-city=\"tokyo\"] .image-card-actions button", text: "画像を見る" },
+    { selector: "#visual-previews [data-preview-city=\"tokyo\"] .image-card-actions a", text: "停止点を開く" },
     { selector: ".official-link-grid a:last-child strong", text: "トラベルパンフレット" },
     {
       selector: ".official-link-grid a:last-child span",
@@ -772,7 +816,9 @@ const PAGE_JA_TRANSLATIONS = {
     {
       selector: ".tool-stack .tool-card:first-child .note-band",
       text: "広告の多い埋め込みウィジェットは使わず、外部検索ページを開きます。空港コードを入れると見やすくなります。"
-    }
+    },
+    { selector: "label[for=\"site-search\"]", text: "旅行ガイドを検索" },
+    { selector: "#site-search", placeholder: "富士、新幹線、餃子、温泉、京都、スナップショットで検索" }
   ],
   "itinerary.html": [
     { selector: ".hero .eyebrow", text: "旅の設計" },
@@ -805,7 +851,36 @@ const PAGE_JA_TRANSLATIONS = {
     { selector: ".hero-actions a:nth-child(2)", text: "都市別フードへ" },
     { selector: ".section-pill[href=\"#food-carousel\"]", text: "フードスライダー" },
     { selector: ".section-pill[href=\"#city-foods\"]", text: "都市別フード" },
-    { selector: ".section-pill[href=\"#dish-shortlist\"]", text: "料理一覧" }
+    { selector: ".section-pill[href=\"#food-links\"]", text: "公式リンク" },
+    { selector: ".section-pill[href=\"#dish-shortlist\"]", text: "料理一覧" },
+    { selector: ".hero .glance-card:nth-of-type(1) strong", text: "強い食の街" },
+    { selector: ".hero .glance-card:nth-of-type(1) span", text: "大阪と東京が、遅い時間までの食の勢いを最も持っています。" },
+    { selector: ".hero .glance-card:nth-of-type(2) strong", text: "予算感" },
+    { selector: ".hero .glance-card:nth-of-type(2) span", text: "1日 3,500 円から 7,000 円ほどで、普段の食事はかなり組みやすいです。" },
+    { selector: "#food-carousel .section-copy .eyebrow", text: "フードスライダー" },
+    { selector: "#food-carousel .section-copy h2", text: "細かく読む前に、まず食の空気感を見る" },
+    { selector: "#food-carousel .section-header > p", text: "このスライダーは画像先行です。気になる都市がはっきりしたら、そのまま下のカードへ進んでください。" },
+    { selector: "#city-foods .section-copy .eyebrow", text: "都市別フード" },
+    { selector: "#city-foods .section-copy h2", text: "食べ物を、正しい都市と一緒に見る" },
+    { selector: "#city-foods .section-header > p", text: "このカード群は速く使うための並びです。大阪で何を食べるか、箱根ではどれだけ実用的に保つかがすぐ見えます。" },
+    { selector: "#food-links .section-copy .eyebrow", text: "公式フード情報" },
+    { selector: "#food-links .section-copy h2", text: "さらに食の背景を読む" },
+    { selector: "#food-links .section-header > p", text: "食事の細かい決め打ちの前に、公式の地域情報を見たいときに使ってください。" },
+    { selector: "#food-links .link-card:nth-child(1) strong", text: "JNTO 食と飲み物" },
+    { selector: "#food-links .link-card:nth-child(2) strong", text: "大阪公式観光" },
+    { selector: "#food-links .link-card:nth-child(3) strong", text: "大阪公式読み物" },
+    { selector: "#food-links .link-card:nth-child(4) strong", text: "京都の食と飲み物" },
+    { selector: "#food-links .link-card:nth-child(5) strong", text: "京都公式読み物" },
+    { selector: "#food-links .link-card:nth-child(6) strong", text: "富士・山梨読み物" },
+    { selector: "#food-links .link-card:nth-child(7) strong", text: "東京公式読み物" },
+    { selector: "#food-links .link-card:nth-child(8) strong", text: "GO TOKYO" },
+    { selector: "#food-links .link-card:nth-child(9) strong", text: "パンフレットパック" },
+    { selector: "#food-visuals .section-copy .eyebrow", text: "フード画像" },
+    { selector: "#food-visuals .section-copy h2", text: "都市ごとの食の空気感" },
+    { selector: "#food-visuals .section-header > p", text: "どの街でどんな食の気分になるかを、画像で先に確認するためのブロックです。" },
+    { selector: "#dish-shortlist .section-copy .eyebrow", text: "料理一覧" },
+    { selector: "#dish-shortlist .section-copy h2", text: "覚えておきたい料理" },
+    { selector: "#dish-shortlist .section-header > p", text: "長い説明より検索語が欲しい人向けの短い一覧です。" }
   ],
   "toolkit.html": [
     { selector: ".hero .eyebrow", text: "準備ガイド" },
@@ -815,7 +890,18 @@ const PAGE_JA_TRANSLATIONS = {
       text: "何を着るか、現金をどれくらい持つか、何を事前予約するか、長い移動日をどう崩さず乗り切るかを確認するページです。"
     },
     { selector: ".hero-actions a:nth-child(1)", text: "天気と持ち物へ" },
-    { selector: ".hero-actions a:nth-child(2)", text: "移動メモへ" }
+    { selector: ".hero-actions a:nth-child(2)", text: "移動メモへ" },
+    { selector: ".hero .quick-callout strong", text: "到着時の合図" },
+    { selector: ".hero .quick-callout span", text: "まず天気を確認し、1枚すぐ使える上着を残し、翌日の移動情報は早めに保存してください。" },
+    { selector: "#weather-packing .section-copy .eyebrow", text: "天気と持ち物" },
+    { selector: "#weather-packing .section-copy h2", text: "年間を通したざっくりした見方" },
+    { selector: "#weather-packing .section-header > p", text: "ここにある数字は計画用の目安で、日付そのものの予報ではありません。" },
+    { selector: "#shinkansen .section-copy .eyebrow", text: "移動" },
+    { selector: "#shinkansen .section-copy h2", text: "切符、パス、移動日の早見表" },
+    { selector: "#shinkansen .section-header > p", text: "このブロックは、移動しながらでも読める速さを優先しています。" },
+    { selector: "#official-links .section-copy .eyebrow", text: "クイックリンク" },
+    { selector: "#official-links .section-copy h2", text: "公式予約と情報リンク" },
+    { selector: "#official-links .section-header > p", text: "移動が重い日より前に、スマホへ入れておきたいリンクです。" }
   ],
   "culture.html": [
     { selector: ".hero .eyebrow", text: "文化メモ" },
@@ -825,7 +911,31 @@ const PAGE_JA_TRANSLATIONS = {
       text: "初めての人向けの大事なポイントを短く実用的にまとめています。気持ちよく動くためのマナー、温泉や寺社で気をつけること、役立つ表現、写真の立ち位置です。"
     },
     { selector: ".hero-actions a:nth-child(1)", text: "クイック参照へ" },
-    { selector: ".hero-actions a:nth-child(2)", text: "写真ヒントへ" }
+    { selector: ".hero-actions a:nth-child(2)", text: "写真ヒントへ" },
+    { selector: "#quick-ref .section-copy .eyebrow", text: "クイック参照" },
+    { selector: "#quick-ref .section-copy h2", text: "まず覚える4つのこと" },
+    { selector: "#quick-ref .section-header > p", text: "開いて10秒で答えが欲しい人向けの最短ブロックです。" },
+    { selector: "#guide-images .section-copy .eyebrow", text: "ガイド画像" },
+    { selector: "#guide-images .section-copy h2", text: "視覚で覚える短いヒント" },
+    { selector: "#guide-images .section-header > p", text: "段落よりも1枚の視覚合図のほうが早い時のための画像です。" },
+    { selector: "#guide-images .image-card:nth-child(1) strong", text: "電車では静かに" },
+    { selector: "#guide-images .image-card:nth-child(2) strong", text: "掲示を優先" },
+    { selector: "#guide-images .image-card:nth-child(3) strong", text: "まず脇へ" },
+    { selector: "#guide-images .image-card:nth-child(4) strong", text: "ホテルの位置を保存" },
+    { selector: "#guide-images .image-card:nth-child(5) strong", text: "整列する" },
+    { selector: "#guide-images .image-card:nth-child(6) strong", text: "小さなごみ袋を持つ" },
+    { selector: "#etiquette .section-copy .eyebrow", text: "マナー" },
+    { selector: "#etiquette .section-copy h2", text: "気持ちよく動くための基本" },
+    { selector: "#etiquette .section-header > p", text: "全部覚える必要はありません。悪目立ちしやすい行動を避ければ十分です。" },
+    { selector: "#onsen-etiquette .section-copy .eyebrow", text: "温泉の基本" },
+    { selector: "#onsen-etiquette .section-copy h2", text: "お風呂時間を気楽にする" },
+    { selector: "#onsen-etiquette .section-header > p", text: "箱根でいちばん役に立つ短いルールは、先に体を洗い、機器を持ち込まず、静かに使うことです。" },
+    { selector: "#phrases .section-copy .eyebrow", text: "便利な表現" },
+    { selector: "#phrases .section-copy h2", text: "本当に使える短い日本語" },
+    { selector: "#phrases .section-header > p", text: "長く作るより、短く、丁寧に、ゆっくり言うほうがうまくいきます。" },
+    { selector: "#photo-prompts .section-copy .eyebrow", text: "写真のヒント" },
+    { selector: "#photo-prompts .section-copy h2", text: "都市ごとに1枚の記憶写真" },
+    { selector: "#photo-prompts .section-header > p", text: "本格的な撮影計画ではなく、誰でも1枚きれいに残せるための短い合図です。" }
   ],
   "japan_trip_brochure.html": [
     { selector: ".hero .eyebrow", text: "パンフレット" },
@@ -833,7 +943,39 @@ const PAGE_JA_TRANSLATIONS = {
     {
       selector: ".hero .hero-lead",
       text: "共有しやすく、印刷しやすい導線を一か所に集めたローカルのパンフレットページです。"
-    }
+    },
+    { selector: ".hero .quick-callout strong", text: "おすすめの使い方" },
+    { selector: ".hero .quick-callout span", text: "まずこのページを送り、必要なら要点ページか完全ガイドへ進んでください。" },
+    { selector: "#brochure-pack .section-copy .eyebrow", text: "メインパック" },
+    { selector: "#brochure-pack .section-copy h2", text: "必要な形式をすぐ開く" },
+    { selector: "#brochure-pack .section-header > p", text: "相手が何を必要としているかに合わせて、いちばん送りやすい入口を選んでください。" },
+    { selector: "#brochure-links .section-copy .eyebrow", text: "公式情報" },
+    { selector: "#brochure-links .section-copy h2", text: "パンフレットと追加の計画リンク" },
+    { selector: "#brochure-links .section-header > p", text: "ローカルのパンフレットパックと一緒に、公式の旅行情報も見たいときに使います。" },
+    { selector: "#brochure-links .link-card:nth-child(1) strong", text: "JNTO パンフレットライブラリ" },
+    { selector: "#brochure-links .link-card:nth-child(2) strong", text: "京都ダウンロード資料" },
+    { selector: "#brochure-links .link-card:nth-child(3) strong", text: "GO TOKYO パンフレット棚" }
+  ],
+  "site_info.html": [
+    { selector: ".hero .eyebrow", text: "サイト情報" },
+    { selector: ".hero h1", text: "プライバシー、Cookie、利用規約、サイトマップ" },
+    {
+      selector: ".hero .hero-lead",
+      text: "フッターのリンクが仮置きにならないよう、基本のサイト情報を1ページにまとめています。"
+    },
+    { selector: ".hero .quick-callout strong", text: "連絡先" },
+    { selector: ".hero-actions a:nth-child(1)", text: "ホームへ戻る" },
+    { selector: ".hero-actions a:nth-child(2)", text: "パンフレットを開く" },
+    { selector: "#who-we-are .section-copy .eyebrow", text: "概要" },
+    { selector: "#who-we-are .section-copy h2", text: "私たちについて" },
+    { selector: "#privacy-policy .section-copy .eyebrow", text: "ポリシー" },
+    { selector: "#privacy-policy .section-copy h2", text: "プライバシーポリシー" },
+    { selector: "#cookie-policy .section-copy .eyebrow", text: "ポリシー" },
+    { selector: "#cookie-policy .section-copy h2", text: "Cookie ポリシー" },
+    { selector: "#terms-of-use .section-copy .eyebrow", text: "ポリシー" },
+    { selector: "#terms-of-use .section-copy h2", text: "利用規約" },
+    { selector: "#sitemap .section-copy .eyebrow", text: "一覧" },
+    { selector: "#sitemap .section-copy h2", text: "サイトマップ" }
   ]
 };
 
@@ -2319,9 +2461,10 @@ function initTopbarPreviews() {
 
   topbars.forEach((topbar) => {
     const nav = topbar.querySelector(".nav-links");
-    if (!nav || topbar.querySelector(".nav-preview")) {
+    if (!nav || topbar.dataset.navPreviewBound === "true") {
       return;
     }
+    topbar.dataset.navPreviewBound = "true";
 
     const preview = document.createElement("div");
     preview.className = "nav-preview";
@@ -2338,11 +2481,26 @@ function initTopbarPreviews() {
     const image = preview.querySelector(".nav-preview-image");
     const title = preview.querySelector(".nav-preview-copy strong");
     const text = preview.querySelector(".nav-preview-copy span");
+    let activeLink = null;
 
-    const showPreview = (href) => {
+    const positionPreview = (link) => {
+      if (!link) {
+        return;
+      }
+
+      const previewWidth = preview.offsetWidth || 320;
+      const rect = link.getBoundingClientRect();
+      const rawLeft = rect.left + (rect.width / 2) - (previewWidth / 2);
+      const clampedLeft = Math.max(16, Math.min(window.innerWidth - previewWidth - 16, rawLeft));
+      preview.style.left = `${clampedLeft}px`;
+      preview.style.top = `${rect.bottom + 12}px`;
+    };
+
+    const showPreview = (href, link = null) => {
       const item = NAV_PREVIEW_CONTENT[href];
       if (!item || !image || !title || !text) {
         preview.classList.remove("is-visible");
+        activeLink = null;
         return;
       }
 
@@ -2352,6 +2510,15 @@ function initTopbarPreviews() {
       title.textContent = ui(item.titleKey, {}, locale);
       text.textContent = ui(item.textKey, {}, locale);
       preview.classList.add("is-visible");
+      activeLink = link;
+      if (link) {
+        window.requestAnimationFrame(() => positionPreview(link));
+      }
+    };
+
+    const hidePreview = () => {
+      preview.classList.remove("is-visible");
+      activeLink = null;
     };
 
     nav.querySelectorAll("a").forEach((link) => {
@@ -2360,27 +2527,117 @@ function initTopbarPreviews() {
         return;
       }
 
-      link.addEventListener("pointerenter", () => showPreview(href));
-      link.addEventListener("focus", () => showPreview(href));
+      link.addEventListener("pointerenter", () => showPreview(href, link));
+      link.addEventListener("focus", () => showPreview(href, link));
     });
 
-    topbar.addEventListener("pointerleave", () => preview.classList.remove("is-visible"));
+    topbar.addEventListener("pointerleave", hidePreview);
     topbar.addEventListener("focusout", () => {
       window.setTimeout(() => {
         if (!topbar.contains(document.activeElement)) {
-          preview.classList.remove("is-visible");
+          hidePreview();
         }
       }, 0);
     });
 
     document.addEventListener("locale:changed", () => {
-      const activeLink = nav.querySelector("a:hover, a:focus");
       if (activeLink) {
-        showPreview(activeLink.getAttribute("href"));
+        showPreview(activeLink.getAttribute("href"), activeLink);
       }
     });
 
-    topbar.append(preview);
+    const syncPosition = () => {
+      if (activeLink && preview.classList.contains("is-visible")) {
+        positionPreview(activeLink);
+      }
+    };
+
+    window.addEventListener("resize", syncPosition);
+    window.addEventListener("scroll", syncPosition, { passive: true });
+
+    document.body.append(preview);
+  });
+}
+
+function initStoryCardLoops() {
+  const cards = [...document.querySelectorAll(".image-story-card[data-preview-city]")];
+  if (!cards.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  cards.forEach((card, cardIndex) => {
+    const key = card.dataset.previewCity;
+    const gallery = PREVIEW_GALLERIES[key];
+    const baseImage = card.querySelector("img");
+
+    if (!gallery || gallery.images.length < 2 || !(baseImage instanceof HTMLImageElement)) {
+      return;
+    }
+
+    baseImage.classList.add("story-image-base");
+    const swapImage = document.createElement("img");
+    swapImage.className = "story-image-swap";
+    swapImage.alt = "";
+    swapImage.setAttribute("aria-hidden", "true");
+    baseImage.insertAdjacentElement("afterend", swapImage);
+
+    let activeIndex = Math.max(
+      0,
+      gallery.images.findIndex((image) => image.src === baseImage.getAttribute("src"))
+    );
+    let isAnimating = false;
+    let timerId = null;
+
+    const runSwap = () => {
+      if (document.hidden || isAnimating) {
+        return;
+      }
+
+      const nextIndex = (activeIndex + 1) % gallery.images.length;
+      const nextImage = gallery.images[nextIndex];
+      if (!nextImage) {
+        return;
+      }
+
+      isAnimating = true;
+      swapImage.src = nextImage.src;
+      swapImage.alt = nextImage.alt;
+      card.classList.add("is-swapping");
+
+      window.setTimeout(() => {
+        baseImage.src = nextImage.src;
+        baseImage.alt = nextImage.alt;
+        activeIndex = nextIndex;
+        card.classList.remove("is-swapping");
+        isAnimating = false;
+      }, 520);
+    };
+
+    const startLoop = () => {
+      if (timerId) {
+        window.clearInterval(timerId);
+      }
+      timerId = window.setInterval(runSwap, 4600 + (cardIndex * 240));
+    };
+
+    const stopLoop = () => {
+      if (timerId) {
+        window.clearInterval(timerId);
+        timerId = null;
+      }
+    };
+
+    card.addEventListener("pointerenter", stopLoop);
+    card.addEventListener("pointerleave", startLoop);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        stopLoop();
+      } else {
+        startLoop();
+      }
+    });
+
+    startLoop();
   });
 }
 
@@ -3680,6 +3937,8 @@ function initSliders() {
 
     let activeIndex = slides.findIndex((slide) => slide.classList.contains("is-active"));
     let timerId = null;
+    let touchStartX = null;
+    let touchDeltaX = 0;
 
     if (activeIndex < 0) {
       activeIndex = 0;
@@ -3745,6 +4004,34 @@ function initSliders() {
     slider.addEventListener("mouseleave", restartAutoPlay);
     slider.addEventListener("focusin", stopAutoPlay);
     slider.addEventListener("focusout", restartAutoPlay);
+    slider.addEventListener("touchstart", (event) => {
+      touchStartX = event.changedTouches[0]?.clientX ?? null;
+      touchDeltaX = 0;
+      stopAutoPlay();
+    }, { passive: true });
+    slider.addEventListener("touchmove", (event) => {
+      if (touchStartX === null) {
+        return;
+      }
+      touchDeltaX = (event.changedTouches[0]?.clientX ?? touchStartX) - touchStartX;
+    }, { passive: true });
+    slider.addEventListener("touchend", () => {
+      if (touchStartX === null) {
+        return;
+      }
+
+      if (touchDeltaX <= -36) {
+        activeIndex = (activeIndex + 1) % slides.length;
+        renderSlides();
+      } else if (touchDeltaX >= 36) {
+        activeIndex = (activeIndex - 1 + slides.length) % slides.length;
+        renderSlides();
+      }
+
+      touchStartX = null;
+      touchDeltaX = 0;
+      restartAutoPlay();
+    }, { passive: true });
 
     renderSlides();
     restartAutoPlay();
@@ -3769,9 +4056,9 @@ function buildSiteFooterMarkup() {
         <h3>${ui("footerRelated")}</h3>
         <div class="site-footer-list">
           <a href="https://www.japan.travel/en/" target="_blank" rel="noreferrer">Japan Travel</a>
+          <a href="https://www.japan.travel/brochures/eng/" target="_blank" rel="noreferrer">${ui("footerBrochures")}</a>
           <a href="https://smart-ex.jp/en/index.php" target="_blank" rel="noreferrer">SmartEX</a>
           <a href="https://www.odakyu.jp/english/passes/hakone/" target="_blank" rel="noreferrer">Hakone Freepass</a>
-          <a href="./site_info.html#sitemap">Site map</a>
         </div>
       </section>
       <section class="site-footer-column">
@@ -3779,7 +4066,7 @@ function buildSiteFooterMarkup() {
         <p>${ui("footerAboutText")}</p>
         <div class="site-footer-list">
           <a href="./site_info.html#who-we-are">${ui("footerWho")}</a>
-          <a href="mailto:alex.narb28@gmail.com">${ui("footerContact")}</a>
+          <a href="mailto:186529170+KairosFX@users.noreply.github.com">${ui("footerContact")}</a>
         </div>
       </section>
     </div>
@@ -3816,73 +4103,6 @@ function initSiteFooter() {
 
   renderFooter();
   document.addEventListener("locale:changed", renderFooter);
-}
-
-function initEdgeNavigator() {
-  const nav = document.querySelector("[data-section-nav]");
-  if (!nav || document.querySelector(".edge-nav")) {
-    return;
-  }
-
-  const pairs = [...nav.querySelectorAll('a[href*="#"]')]
-    .filter(isSameDocumentHashLink)
-    .map((link) => {
-      const hash = new URL(link.href, window.location.href).hash;
-      const section = getHashTarget(hash);
-      return section ? { link, section } : null;
-    })
-    .filter(Boolean);
-
-  if (!pairs.length) {
-    return;
-  }
-
-  const edgeNav = document.createElement("div");
-  edgeNav.className = "edge-nav";
-  edgeNav.innerHTML = `
-    <button type="button" data-edge-nav="top" title="${ui("edgeTop")}" aria-label="${ui("edgeTop")}">↑</button>
-    <button type="button" data-edge-nav="prev" title="${ui("edgePrevious")}" aria-label="${ui("edgePrevious")}">←</button>
-    <button type="button" data-edge-nav="next" title="${ui("edgeNext")}" aria-label="${ui("edgeNext")}">→</button>
-    <button type="button" data-edge-nav="bottom" title="${ui("edgeBottom")}" aria-label="${ui("edgeBottom")}">↓</button>
-  `;
-  document.body.append(edgeNav);
-
-  const topButton = edgeNav.querySelector('[data-edge-nav="top"]');
-  const prevButton = edgeNav.querySelector('[data-edge-nav="prev"]');
-  const nextButton = edgeNav.querySelector('[data-edge-nav="next"]');
-  const bottomButton = edgeNav.querySelector('[data-edge-nav="bottom"]');
-
-  const getActiveIndex = () => {
-    const activeIndex = pairs.findIndex(({ link }) => link.classList.contains("is-active"));
-    return activeIndex >= 0 ? activeIndex : 0;
-  };
-
-  const scrollToSection = (index) => {
-    pairs[index]?.section.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const syncButtons = () => {
-    const activeIndex = getActiveIndex();
-    prevButton.disabled = activeIndex <= 0;
-    nextButton.disabled = activeIndex >= pairs.length - 1;
-    topButton.title = ui("edgeTop");
-    topButton.setAttribute("aria-label", ui("edgeTop"));
-    prevButton.title = ui("edgePrevious");
-    prevButton.setAttribute("aria-label", ui("edgePrevious"));
-    nextButton.title = ui("edgeNext");
-    nextButton.setAttribute("aria-label", ui("edgeNext"));
-    bottomButton.title = ui("edgeBottom");
-    bottomButton.setAttribute("aria-label", ui("edgeBottom"));
-  };
-
-  topButton.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
-  bottomButton.addEventListener("click", () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" }));
-  prevButton.addEventListener("click", () => scrollToSection(Math.max(getActiveIndex() - 1, 0)));
-  nextButton.addEventListener("click", () => scrollToSection(Math.min(getActiveIndex() + 1, pairs.length - 1)));
-
-  document.addEventListener("sectionnav:changed", syncButtons);
-  document.addEventListener("locale:changed", syncButtons);
-  syncButtons();
 }
 
 function clamp(value, min, max) {
@@ -4245,6 +4465,7 @@ function buildMatchScale(scoredItems) {
 function renderRecommendations(scoredItems, elements) {
   const topItems = scoredItems.slice(0, 4);
   const toMatch = buildMatchScale(scoredItems);
+  const locale = getActiveLocale();
 
   elements.list.innerHTML = topItems
     .map((entry, index) => {
@@ -4258,22 +4479,22 @@ function renderRecommendations(scoredItems, elements) {
         .join("");
 
       return `
-        <article class="recommendation-card">
+        <a class="recommendation-card" href="${entry.item.href}">
           <div class="recommendation-head">
             <div class="recommendation-title-block">
-              <span class="recommendation-rank"><small>Top</small><strong>#${index + 1}</strong></span>
+              <span class="recommendation-rank"><small>${ui("recommendationTop", {}, locale)}</small><strong>#${index + 1}</strong></span>
               <div>
                 <strong>${entry.item.title}</strong>
                 <span>${entry.item.page} · ${entry.item.text}</span>
               </div>
             </div>
-            <span class="match-pill">${match}% match</span>
+            <span class="match-pill">${match}% ${ui("recommendationMatchSuffix", {}, locale)}</span>
           </div>
           <div class="recommendation-tags">${tags}</div>
           <ul class="recommendation-reasons">${reasons}</ul>
           <div class="recommendation-score"><span style="width: ${match}%"></span></div>
-          <a class="recommendation-link" href="${entry.item.href}">Open ${entry.item.page}</a>
-        </article>
+          <span class="recommendation-link">${ui("recommendationOpenPrefix", {}, locale)} ${entry.item.page}</span>
+        </a>
       `;
     })
     .join("");
@@ -4583,7 +4804,6 @@ window.addEventListener("DOMContentLoaded", () => {
   initSiteFooter();
   initReveal();
   initSectionNavs();
-  initEdgeNavigator();
   initHashHighlights();
   initSearch();
   initTermGroups();
@@ -4594,5 +4814,6 @@ window.addEventListener("DOMContentLoaded", () => {
   initDestinationExplorer();
   initFlightForms();
   initSliders();
+  initStoryCardLoops();
   initPreviewModal();
 });

@@ -60,7 +60,7 @@ body::after {
   inset: -12%;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.4;
+  opacity: 0.52;
   background:
     radial-gradient(circle at 18% 22%, rgba(204, 155, 72, 0.18), transparent 30%),
     radial-gradient(circle at 82% 18%, rgba(31, 95, 107, 0.16), transparent 28%),
@@ -75,9 +75,9 @@ body::before {
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  opacity: 0.18;
+  opacity: 0.24;
   background:
-    linear-gradient(180deg, rgba(255, 248, 239, 0.78), rgba(243, 234, 219, 0.82)),
+    linear-gradient(180deg, rgba(255, 248, 239, 0.64), rgba(243, 234, 219, 0.72)),
     url("https://commons.wikimedia.org/wiki/Special:FilePath/Chureito_Pagoda.jpg?width=1920") center center / cover no-repeat;
 }
 
@@ -234,6 +234,7 @@ main section[id] {
   opacity: 1;
   overflow: visible;
   pointer-events: auto;
+  position: relative;
 }
 
 .nav-links a {
@@ -259,9 +260,10 @@ main section[id] {
 }
 
 .nav-preview {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 42;
   width: min(360px, calc(100vw - 32px));
   opacity: 0;
   transform: translateY(-8px);
@@ -310,6 +312,10 @@ main section[id] {
   color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.52;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .page-shell {
@@ -495,6 +501,7 @@ h1 {
 .sticky-glance,
 .search-panel,
 .quick-callout {
+  display: block;
   padding: 20px;
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -528,9 +535,9 @@ h1 {
 }
 
 .section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+  align-items: start;
   gap: 20px;
   margin-bottom: 26px;
 }
@@ -948,7 +955,7 @@ html.js .route-map-board.is-live .route-progress {
   position: absolute;
   left: var(--x);
   top: var(--y);
-  z-index: 1;
+  z-index: 2;
   display: grid;
   gap: 10px;
   justify-items: center;
@@ -1001,9 +1008,9 @@ html.js .route-map-board.is-live .route-pin {
 .route-pin-copy {
   min-width: 0;
   padding: 10px 12px;
-  border: 1px solid rgba(31, 95, 107, 0.12);
+  border: 1px solid rgba(31, 95, 107, 0.18);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 14px 24px rgba(24, 49, 61, 0.08);
   text-align: center;
   backdrop-filter: blur(10px);
@@ -2332,11 +2339,20 @@ html.js .route-map-board.is-live .route-pin {
 }
 
 .status-pill {
+  display: block;
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 20px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 241, 229, 0.9));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
+  transition: transform var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast);
+}
+
+.status-pill:hover,
+.glance-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(31, 95, 107, 0.22);
+  box-shadow: var(--shadow-soft);
 }
 
 .status-pill strong {
@@ -2496,11 +2512,19 @@ html.js .route-map-board.is-live .route-pin {
 .engine-summary-card,
 .signal-board,
 .recommendation-card {
+  display: block;
   padding: 20px;
   border: 1px solid var(--line);
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 241, 229, 0.94));
   box-shadow: var(--shadow-soft);
+  transition: transform var(--trans-fast), box-shadow var(--trans-fast), border-color var(--trans-fast);
+}
+
+a.recommendation-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(31, 95, 107, 0.24);
+  box-shadow: var(--shadow-lift);
 }
 
 .control-card {
@@ -2731,28 +2755,38 @@ html.js .route-map-board.is-live .route-pin {
 
 .recommendation-rank {
   flex: 0 0 auto;
-  min-width: 62px;
-  padding: 10px 12px;
+  min-width: 74px;
+  min-height: 74px;
+  padding: 10px 12px 12px;
   display: grid;
-  gap: 4px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, var(--crimson), var(--gold));
+  place-items: center;
+  gap: 5px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 44%),
+    linear-gradient(145deg, #8f392f, #d59a3e 58%, #e3b96b);
   color: white;
   text-align: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 12px 24px rgba(156, 61, 51, 0.16);
 }
 
 .recommendation-rank small {
   display: block;
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  color: rgba(255, 248, 241, 0.96);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .recommendation-rank strong {
   display: block;
-  font-size: 1.05rem;
+  font-size: 1.38rem;
   line-height: 1;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.14);
 }
 
 .recommendation-title-block strong {
@@ -2833,7 +2867,7 @@ html.js .route-map-board.is-live .route-pin {
 
 .image-story-card {
   position: relative;
-  min-height: 390px;
+  min-height: 368px;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 26px;
@@ -2844,7 +2878,8 @@ html.js .route-map-board.is-live .route-pin {
   transition: transform var(--trans-fast), box-shadow var(--trans-fast), border-color var(--trans-fast);
 }
 
-.image-story-card img {
+.image-story-card img,
+.story-image-swap {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -2852,6 +2887,23 @@ html.js .route-map-board.is-live .route-pin {
   object-fit: cover;
   transition: transform 520ms ease, filter 520ms ease;
   filter: saturate(1.08) contrast(1.03);
+}
+
+.story-image-swap {
+  opacity: 0;
+  transform: translateX(12%);
+  pointer-events: none;
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+
+.image-story-card.is-swapping .story-image-base {
+  opacity: 0;
+  transform: translateX(-12%);
+}
+
+.image-story-card.is-swapping .story-image-swap {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .image-story-card:hover {
@@ -2868,22 +2920,25 @@ html.js .route-map-board.is-live .route-pin {
   display: grid;
   align-content: end;
   min-height: 100%;
-  padding: 20px 18px 104px;
+  padding: 18px 16px 92px;
 }
 
 .image-story-card .image-card-copy strong {
   display: block;
-  font-size: 1.28rem;
+  font-size: 1.22rem;
+  line-height: 1.08;
 }
 
 .image-story-card .image-card-copy span:last-child {
   display: block;
-  margin-top: 10px;
+  margin-top: 8px;
   color: rgba(255, 255, 255, 0.9);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .story-gradient {
@@ -2909,15 +2964,19 @@ html.js .route-map-board.is-live .route-pin {
   inset: auto 16px 16px 16px;
   z-index: 1;
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
 .image-card-actions .button-pill {
   justify-content: center;
+  min-width: 0;
+  padding: 11px 12px;
   background: rgba(255, 255, 255, 0.14);
   color: white;
   border-color: rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(14px);
+  font-size: 0.88rem;
 }
 
 .image-card-actions .button-pill:hover {
@@ -2932,6 +2991,12 @@ html.js .route-map-board.is-live .route-pin {
 .image-story-card.is-suggested {
   border-color: rgba(156, 61, 51, 0.36);
   box-shadow: 0 24px 44px rgba(156, 61, 51, 0.24);
+}
+
+.image-story-card a,
+.image-story-card button {
+  position: relative;
+  z-index: 2;
 }
 
 .image-story-card.is-suggested::after {
@@ -3416,6 +3481,10 @@ html.js .route-map-board.is-live .route-pin {
   .map-stat-grid {
     grid-template-columns: 1fr 1fr;
   }
+
+  .preview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 760px) {
@@ -3431,6 +3500,10 @@ html.js .route-map-board.is-live .route-pin {
   .image-card-actions,
   .preview-actions {
     flex-direction: column;
+  }
+
+  .image-card-actions {
+    grid-template-columns: 1fr;
   }
 
   .toggle-chip,
@@ -3616,44 +3689,6 @@ html.js .route-map-board.is-live .route-pin {
   font-size: 0.85rem;
 }
 
-.edge-nav {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 72;
-  display: grid;
-  grid-template-columns: repeat(2, 52px);
-  gap: 10px;
-}
-
-.edge-nav button {
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(31, 95, 107, 0.12);
-  border-radius: 18px;
-  background: rgba(255, 250, 243, 0.94);
-  color: var(--sea);
-  box-shadow: var(--shadow-soft);
-  font-size: 1.1rem;
-  font-weight: 800;
-  backdrop-filter: blur(12px);
-  transition: transform var(--trans-fast), background var(--trans-fast), color var(--trans-fast), box-shadow var(--trans-fast), border-color var(--trans-fast);
-}
-
-.edge-nav button:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: var(--shadow-lift);
-}
-
-.edge-nav button:disabled {
-  opacity: 0.42;
-  transform: none;
-  box-shadow: var(--shadow-soft);
-}
-
 .reveal {
   opacity: 0;
   transform: translateY(22px);
@@ -3799,7 +3834,7 @@ html.js .route-map-board.is-live .route-pin {
   }
 
   .preview-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .sticky-glance {
@@ -3886,12 +3921,6 @@ html.js .route-map-board.is-live .route-pin {
   .site-footer-meta,
   .site-footer-policies {
     display: grid;
-  }
-
-  .edge-nav {
-    right: 12px;
-    bottom: 12px;
-    grid-template-columns: repeat(2, 48px);
   }
 
   .route-map-board {
@@ -4000,6 +4029,15 @@ html.js .route-map-board.is-live .route-pin {
   .reveal {
     opacity: 1;
     transform: none;
+  }
+
+  html.js .route-progress {
+    stroke-dashoffset: 0;
+  }
+
+  html.js .route-pin {
+    opacity: 1;
+    transform: translate(-50%, -50%);
   }
 
   .button-primary:hover,
