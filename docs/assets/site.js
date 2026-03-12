@@ -51,6 +51,13 @@ const SEARCH_ITEMS = [
     href: "./japan_trip_brochure.html"
   },
   {
+    title: "Official News Desk",
+    text: "Current national and local headlines for rail, Osaka, Tokyo, and Kyoto.",
+    titleJa: "公式ニュースデスク",
+    textJa: "鉄道、大阪、東京、京都の全国・地域ヘッドラインをまとめています。",
+    href: "./index.html#official-news"
+  },
+  {
     title: "City Preview Deck",
     text: "Open preview images for Osaka, Kyoto, Hakone, Fuji, and Tokyo before locking in the route.",
     titleJa: "都市プレビューデッキ",
@@ -592,6 +599,14 @@ const UI_COPY = {
     searchCategorySnapshot: "Snapshot",
     searchCategoryGuide: "Full guide",
     searchCategoryBrochure: "Brochures",
+    searchFilterLabel: "Select filter",
+    searchFilterAll: "All formats",
+    searchFilterVisual: "Visual",
+    searchFilterLive: "Live",
+    searchFilterPlanning: "Planning",
+    searchFilterOfficial: "Official",
+    searchFilterPrintable: "Printable",
+    searchDownloads: "Open downloads",
     searchNoMatchTitle: "No direct match",
     searchNoMatchText: "Try broader terms like Fuji, shinkansen, ramen, onsen, Kyoto, or snapshot.",
     searchSmartGuide: "Open smart guide",
@@ -599,6 +614,17 @@ const UI_COPY = {
     searchPrint: "Print page",
     searchSeeMore: "See more",
     searchSeeLess: "Show less",
+    assistantLauncher: "Guide bot",
+    assistantLaunchHint: "Open trip help",
+    assistantTitle: "Need a fast route through the site?",
+    assistantIntro: "I can walk the order for you: plan shape, weather, image previews, then the share-ready page.",
+    assistantJourney: "Walk the whole site",
+    assistantShortcuts: "Quick jumps",
+    assistantOpenStep: "Open this step",
+    assistantNext: "Next step",
+    assistantBack: "Back",
+    assistantClose: "Close",
+    assistantProgress: "Step {current} of {total}",
     footerHelpful: "Helpful links",
     footerRelated: "Related sites",
     footerAbout: "About",
@@ -627,7 +653,10 @@ const UI_COPY = {
     navPreviewTextGuide: "All-in-one long-scroll guide with richer interactive sections.",
     brochureCardTitle: "Travel Brochures",
     brochureCardText: "Open the local brochure pack with printable route summaries, fast links, and share-ready pages.",
-    brochureCardLabel: "Local brochures"
+    brochureCardLabel: "Local brochures",
+    welcomeTitle: "Japan Escape",
+    welcomeText: "Loading the route, previews, weather, and planning layers.",
+    transitionText: "Opening the next page"
   },
   ja: {
     weatherLoadingTitle: "ライブ情報を読み込み中...",
@@ -693,6 +722,14 @@ const UI_COPY = {
     searchCategorySnapshot: "要点",
     searchCategoryGuide: "完全ガイド",
     searchCategoryBrochure: "パンフレット",
+    searchFilterLabel: "絞り込み",
+    searchFilterAll: "すべての形式",
+    searchFilterVisual: "ビジュアル",
+    searchFilterLive: "ライブ",
+    searchFilterPlanning: "計画",
+    searchFilterOfficial: "公式",
+    searchFilterPrintable: "印刷向け",
+    searchDownloads: "ダウンロードへ",
     searchNoMatchTitle: "一致する項目がありません",
     searchNoMatchText: "富士、新幹線、ラーメン、温泉、京都、要点など広めの言葉で試してください。",
     searchSmartGuide: "スマートガイドへ",
@@ -700,6 +737,17 @@ const UI_COPY = {
     searchPrint: "このページを印刷",
     searchSeeMore: "もっと見る",
     searchSeeLess: "閉じる",
+    assistantLauncher: "ガイドボット",
+    assistantLaunchHint: "旅行ヘルプを開く",
+    assistantTitle: "サイト内の最短ルートを案内しますか？",
+    assistantIntro: "旅の骨格、天気、画像プレビュー、共有用ページの順で案内できます。",
+    assistantJourney: "サイト全体を案内する",
+    assistantShortcuts: "すぐ開く",
+    assistantOpenStep: "この手順を開く",
+    assistantNext: "次の手順",
+    assistantBack: "戻る",
+    assistantClose: "閉じる",
+    assistantProgress: "{total} 中 {current} 手順目",
     footerHelpful: "便利なリンク",
     footerRelated: "関連サイト",
     footerAbout: "このサイトについて",
@@ -728,9 +776,90 @@ const UI_COPY = {
     navPreviewTextGuide: "長い1ページに情報をまとめた、より深いインタラクティブ版です。",
     brochureCardTitle: "トラベルパンフレット",
     brochureCardText: "印刷しやすい要約、すぐ開けるリンク、共有向けページをまとめたローカルのパンフレット集を開きます。",
-    brochureCardLabel: "ローカルパンフ"
+    brochureCardLabel: "ローカルパンフ",
+    welcomeTitle: "Japan Escape",
+    welcomeText: "ルート、画像、天気、食事メモをすばやく開く準備をしています。",
+    transitionText: "次のページへ移動しています"
   }
 };
+
+const SMART_GUIDE_JOURNEY = [
+  {
+    key: "plan",
+    href: "./index.html#trip-profile",
+    title: "Build the trip shape first",
+    titleJa: "最初に旅の骨格を決める",
+    text: "Start in the recommendation engine. Decide whether food, scenery, nightlife, or transfer ease should drive the route.",
+    textJa: "最初はおすすめエンジンです。食、景色、夜、移動のしやすさのどれを軸にするかを先に決めます。"
+  },
+  {
+    key: "weather",
+    href: "./index.html#trip-weather",
+    title: "Check the live weather logic",
+    titleJa: "次にライブ天気を確認する",
+    text: "Use the current read before you lock Fuji or Hakone. The weather should decide which scenic move is safe to commit.",
+    textJa: "富士や箱根を固定する前にライブ天気を見ます。景色の判断は天気に従わせるのが安全です。"
+  },
+  {
+    key: "previews",
+    href: "./index.html#visual-previews",
+    title: "Use image previews for buy-in",
+    titleJa: "画像プレビューで納得感を作る",
+    text: "Open the city preview cards before sharing links. Images sell the mood faster than long logistics paragraphs.",
+    textJa: "リンクを送る前に都市プレビューを開きます。長い説明より、画像のほうが空気感を早く伝えられます。"
+  },
+  {
+    key: "snapshot",
+    href: "./quick_snapshot.html",
+    title: "Send the lighter share page last",
+    titleJa: "最後に軽い共有ページを送る",
+    text: "Use Snapshot when the group wants essentials only, then switch to the full guide only if someone wants the deeper version.",
+    textJa: "グループが要点だけ欲しい時は要点ページを使い、もっと深い情報が必要な時だけ完全ガイドに進みます。"
+  }
+];
+
+const SMART_GUIDE_SHORTCUTS = [
+  {
+    key: "plan",
+    href: "./index.html#trip-profile",
+    title: "Trip profile",
+    titleJa: "プロフィール",
+    text: "Start with the recommendation engine.",
+    textJa: "おすすめエンジンから始めます。"
+  },
+  {
+    key: "weather",
+    href: "./index.html#trip-weather",
+    title: "Live weather",
+    titleJa: "ライブ天気",
+    text: "Check Fuji and Hakone before locking the route.",
+    textJa: "富士と箱根を固定する前に確認します。"
+  },
+  {
+    key: "previews",
+    href: "./index.html#visual-previews",
+    title: "Image previews",
+    titleJa: "画像プレビュー",
+    text: "Show the mood before you share links.",
+    textJa: "リンク共有前に空気感を見せます。"
+  },
+  {
+    key: "snapshot",
+    href: "./quick_snapshot.html",
+    title: "Printable snapshot",
+    titleJa: "印刷向け要点",
+    text: "Open the faster mobile and print view.",
+    textJa: "モバイルと印刷向けの軽い表示です。"
+  },
+  {
+    key: "guide",
+    href: "./guide.html",
+    title: "Full guide",
+    titleJa: "完全ガイド",
+    text: "Jump to the all-in-one version.",
+    textJa: "一体型の詳しい版へ進みます。"
+  }
+];
 
 const NAV_PREVIEW_CONTENT = {
   "./index.html": {
@@ -810,9 +939,9 @@ const PAGE_JA_TRANSLATIONS = {
     { selector: ".section-pill[href=\"#official-watch\"]", text: "記事" },
     { selector: ".section-pill[href=\"#visual-previews\"]", text: "プレビュー" },
     { selector: "#route-atlas .section-copy .eyebrow", text: "ビジュアルハイライト" },
-    { selector: "#smart-guide .section-copy .eyebrow", text: "スマートガイド" },
-    { selector: "#smart-guide .section-copy h2", text: "サイトを正しい順番で使う" },
-    { selector: "#smart-guide .section-header > p", text: "まず旅の論理を作り、次に天気を確認し、画像で雰囲気を共有してから、必要なページだけを送るのが最短です。" },
+    { selector: "#smart-guide .section-copy .eyebrow", text: "サイトの流れ" },
+    { selector: "#smart-guide .section-copy h2", text: "サイトを手動でたどる順番" },
+    { selector: "#smart-guide .section-header > p", text: "こちらは手動版の流れです。入口のガイドボットが対話で案内し、このセクションはその4手順を一覧で見せます。" },
     { selector: "#smart-guide .smart-step-card:nth-child(1) .smart-step-count", text: "手順 01" },
     { selector: "#smart-guide .smart-step-card:nth-child(1) strong", text: "まず旅の骨格を決める" },
     { selector: "#smart-guide .smart-step-card:nth-child(1) span", text: "おすすめエンジンで、食・景色・夜・移動のしやすさのどれを軸にするかを先に決めます。" },
@@ -2559,6 +2688,52 @@ function getSearchCategoryLabel(category, locale = getActiveLocale()) {
   return ui(key, {}, locale);
 }
 
+function getSearchFilters(item) {
+  const href = item.href || "";
+  const category = getSearchCategory(item);
+  const title = item.title.toLowerCase();
+  const filters = new Set();
+
+  if (href.includes("#route-atlas") || href.includes("#visual-previews") || title.includes("preview") || title.includes("photo")) {
+    filters.add("visual");
+  }
+
+  if (href.includes("#trip-weather") || href.includes("#live-map") || title.includes("live") || title.includes("visibility")) {
+    filters.add("live");
+  }
+
+  if (href.includes("#official-watch") || category === "brochure") {
+    filters.add("official");
+  }
+
+  if (category === "snapshot" || category === "brochure" || href.includes("#downloads")) {
+    filters.add("printable");
+  }
+
+  if (category === "itinerary" || category === "toolkit" || category === "guide" || category === "home") {
+    filters.add("planning");
+  }
+
+  if (!filters.size) {
+    filters.add("planning");
+  }
+
+  return [...filters];
+}
+
+function getSearchFilterLabel(filter, locale = getActiveLocale()) {
+  const key = {
+    all: "searchFilterAll",
+    visual: "searchFilterVisual",
+    live: "searchFilterLive",
+    planning: "searchFilterPlanning",
+    official: "searchFilterOfficial",
+    printable: "searchFilterPrintable"
+  }[filter] || "searchFilterAll";
+
+  return ui(key, {}, locale);
+}
+
 function getLocalizedSearchItem(item, locale = getActiveLocale()) {
   return {
     title: locale === "ja" ? item.titleJa ?? item.title : item.title,
@@ -2645,11 +2820,12 @@ function buildSearchResultsMarkup(items, locale = getActiveLocale()) {
     .map(
       (item) => {
         const copy = getLocalizedSearchItem(item, locale);
+        const filterLabel = getSearchFilterLabel(getSearchFilters(item)[0], locale);
         return `
         <a class="search-result" href="${item.href}">
           <strong>${copy.title}</strong>
           <span>${copy.text}</span>
-          <small class="search-result-meta">${getSearchCategoryLabel(getSearchCategory(item), locale)}</small>
+          <small class="search-result-meta">${getSearchCategoryLabel(getSearchCategory(item), locale)} · ${filterLabel}</small>
         </a>
       `;
       }
@@ -2661,7 +2837,7 @@ function renderSearchResults(items, resultsElement, locale = getActiveLocale()) 
   resultsElement.innerHTML = buildSearchResultsMarkup(items, locale);
 }
 
-function bindSearchPanel({ input, categorySelect, resultsElement, initialCount = 6, expandedCount = 12 }) {
+function bindSearchPanel({ input, categorySelect, filterSelect, resultsElement, initialCount = 6, expandedCount = 12 }) {
   if (!(input instanceof HTMLInputElement) || !resultsElement) {
     return;
   }
@@ -2671,13 +2847,15 @@ function bindSearchPanel({ input, categorySelect, resultsElement, initialCount =
   const render = () => {
     const query = input.value.trim().toLowerCase();
     const category = categorySelect instanceof HTMLSelectElement ? categorySelect.value : "all";
+    const filter = filterSelect instanceof HTMLSelectElement ? filterSelect.value : "all";
     const locale = getActiveLocale();
     const matches = SEARCH_ITEMS
       .map((item, index) => ({ item, score: getSearchScore(item, query, locale), index }))
       .filter(({ item, score }) => {
         const matchesQuery = !query || score > 0;
         const matchesCategory = category === "all" || getSearchCategory(item) === category;
-        return matchesQuery && matchesCategory;
+        const matchesFilter = filter === "all" || getSearchFilters(item).includes(filter);
+        return matchesQuery && matchesCategory && matchesFilter;
       })
       .sort((left, right) => {
         if (query) {
@@ -2724,6 +2902,11 @@ function bindSearchPanel({ input, categorySelect, resultsElement, initialCount =
     render();
   });
 
+  filterSelect?.addEventListener("change", () => {
+    expanded = false;
+    render();
+  });
+
   resultsElement.addEventListener("click", (event) => {
     const toggle = event.target.closest("[data-search-results-more]");
     if (!toggle) {
@@ -2758,8 +2941,11 @@ function initTopbarSearch() {
     const input = root.querySelector("[data-topbar-search-input]");
     const categoryLabel = root.querySelector("[data-topbar-search-category-label]");
     const categorySelect = root.querySelector("[data-topbar-search-category]");
+    const filterLabel = root.querySelector("[data-topbar-search-filter-label]");
+    const filterSelect = root.querySelector("[data-topbar-search-filter]");
     const smartGuide = root.querySelector("[data-topbar-smart-guide]");
     const snapshot = root.querySelector("[data-topbar-snapshot]");
+    const downloads = root.querySelector("[data-topbar-downloads]");
     const print = root.querySelector("[data-topbar-print]");
 
     if (toggle) {
@@ -2779,11 +2965,22 @@ function initTopbarSearch() {
         option.textContent = getSearchCategoryLabel(option.value, locale);
       });
     }
+    if (filterLabel) {
+      filterLabel.textContent = ui("searchFilterLabel", {}, locale);
+    }
+    if (filterSelect instanceof HTMLSelectElement) {
+      [...filterSelect.options].forEach((option) => {
+        option.textContent = getSearchFilterLabel(option.value, locale);
+      });
+    }
     if (smartGuide) {
       smartGuide.textContent = ui("searchSmartGuide", {}, locale);
     }
     if (snapshot) {
       snapshot.textContent = ui("searchSnapshot", {}, locale);
+    }
+    if (downloads) {
+      downloads.textContent = ui("searchDownloads", {}, locale);
     }
     if (print) {
       print.textContent = ui("searchPrint", {}, locale);
@@ -2810,7 +3007,7 @@ function initTopbarSearch() {
               placeholder="${ui("searchPlaceholder", {}, "en")}">
             <div class="search-results" data-topbar-search-results aria-live="polite"></div>
           </label>
-          <div>
+          <div class="topbar-search-meta">
             <label class="search-panel">
               <span data-topbar-search-category-label>${ui("searchCategoryLabel", {}, "en")}</span>
               <select data-topbar-search-category>
@@ -2825,9 +3022,21 @@ function initTopbarSearch() {
                 <option value="brochure">${ui("searchCategoryBrochure", {}, "en")}</option>
               </select>
             </label>
+            <label class="search-panel">
+              <span data-topbar-search-filter-label>${ui("searchFilterLabel", {}, "en")}</span>
+              <select data-topbar-search-filter>
+                <option value="all">${ui("searchFilterAll", {}, "en")}</option>
+                <option value="visual">${ui("searchFilterVisual", {}, "en")}</option>
+                <option value="live">${ui("searchFilterLive", {}, "en")}</option>
+                <option value="planning">${ui("searchFilterPlanning", {}, "en")}</option>
+                <option value="official">${ui("searchFilterOfficial", {}, "en")}</option>
+                <option value="printable">${ui("searchFilterPrintable", {}, "en")}</option>
+              </select>
+            </label>
             <div class="topbar-search-actions">
-              <a class="button-pill" href="./index.html#smart-guide" data-topbar-smart-guide>${ui("searchSmartGuide", {}, "en")}</a>
+              <button class="button-pill" type="button" data-topbar-smart-guide data-open-smart-guide>${ui("searchSmartGuide", {}, "en")}</button>
               <a class="button-pill" href="./quick_snapshot.html" data-topbar-snapshot>${ui("searchSnapshot", {}, "en")}</a>
+              <a class="button-pill" href="./japan_trip_brochure.html#downloads" data-topbar-downloads>${ui("searchDownloads", {}, "en")}</a>
               <button class="button-pill" type="button" data-topbar-print>${ui("searchPrint", {}, "en")}</button>
             </div>
           </div>
@@ -2841,6 +3050,7 @@ function initTopbarSearch() {
     const panel = wrapper.querySelector("[data-topbar-search-panel]");
     const input = wrapper.querySelector("[data-topbar-search-input]");
     const category = wrapper.querySelector("[data-topbar-search-category]");
+    const filter = wrapper.querySelector("[data-topbar-search-filter]");
     const results = wrapper.querySelector("[data-topbar-search-results]");
     const print = wrapper.querySelector("[data-topbar-print]");
     let closeTimer = null;
@@ -2910,7 +3120,7 @@ function initTopbarSearch() {
     });
 
     print?.addEventListener("click", () => window.print());
-    bindSearchPanel({ input, categorySelect: category, resultsElement: results, initialCount: 4, expandedCount: 10 });
+    bindSearchPanel({ input, categorySelect: category, filterSelect: filter, resultsElement: results, initialCount: 4, expandedCount: 10 });
     updateLocale(wrapper);
     document.addEventListener("locale:changed", () => updateLocale(wrapper));
   });
@@ -2989,9 +3199,352 @@ function safeStorageSet(key, value) {
   }
 }
 
+function safeSessionGet(key) {
+  try {
+    return window.sessionStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSessionSet(key, value) {
+  try {
+    window.sessionStorage.setItem(key, value);
+  } catch {
+    // Ignore storage failures and keep the UI usable.
+  }
+}
+
+function openSmartGuideTarget(href) {
+  if (!href) {
+    return;
+  }
+
+  let url;
+  try {
+    url = new URL(href, window.location.href);
+  } catch {
+    return;
+  }
+
+  const samePage = url.origin === window.location.origin && url.pathname === window.location.pathname;
+  if (samePage) {
+    if (url.hash) {
+      history.replaceState(null, "", url.href);
+      const target = document.querySelector(url.hash);
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+        target.classList.add("is-targeted");
+        window.setTimeout(() => target.classList.remove("is-targeted"), 1200);
+      }
+    }
+    return;
+  }
+
+  window.location.href = url.href;
+}
+
+function initSmartGuideAssistant() {
+  if (document.querySelector(".smart-guide-assistant")) {
+    return;
+  }
+
+  const assistant = document.createElement("div");
+  assistant.className = "smart-guide-assistant";
+  assistant.innerHTML = `
+    <button class="smart-guide-launcher" type="button" aria-expanded="false" data-guide-launcher>
+      <span class="smart-guide-avatar" aria-hidden="true">JE</span>
+      <span class="smart-guide-launcher-copy">
+        <strong data-guide-launcher-title>${ui("assistantLauncher", {}, "en")}</strong>
+        <small data-guide-launcher-hint>${ui("assistantLaunchHint", {}, "en")}</small>
+      </span>
+    </button>
+    <section class="smart-guide-panel" hidden data-guide-panel aria-live="polite" aria-label="Smart guide assistant"></section>
+  `;
+
+  document.body.append(assistant);
+
+  const launcher = assistant.querySelector("[data-guide-launcher]");
+  const launcherTitle = assistant.querySelector("[data-guide-launcher-title]");
+  const launcherHint = assistant.querySelector("[data-guide-launcher-hint]");
+  const panel = assistant.querySelector("[data-guide-panel]");
+  let mode = "home";
+  let stepIndex = 0;
+
+  const getLocalizedValue = (item, baseKey) => (getActiveLocale() === "ja" ? item[`${baseKey}Ja`] ?? item[baseKey] : item[baseKey]);
+
+  const render = () => {
+    if (!(panel instanceof HTMLElement)) {
+      return;
+    }
+
+    const locale = getActiveLocale();
+    panel.setAttribute("aria-label", ui("assistantLauncher", {}, locale));
+    if (launcherTitle) {
+      launcherTitle.textContent = ui("assistantLauncher", {}, locale);
+    }
+    if (launcherHint) {
+      launcherHint.textContent = ui("assistantLaunchHint", {}, locale);
+    }
+
+    if (mode === "journey") {
+      const step = SMART_GUIDE_JOURNEY[stepIndex] ?? SMART_GUIDE_JOURNEY[0];
+      panel.innerHTML = `
+        <div class="smart-guide-panel-header">
+          <div class="smart-guide-panel-copy">
+            <span class="smart-guide-kicker">${ui("assistantJourney", {}, locale)}</span>
+            <strong>${getLocalizedValue(step, "title")}</strong>
+          </div>
+          <button class="smart-guide-close" type="button" data-guide-action="close" aria-label="${ui("assistantClose", {}, locale)}">×</button>
+        </div>
+        <div class="smart-guide-message">
+          <span class="smart-guide-progress">${ui("assistantProgress", { current: String(stepIndex + 1), total: String(SMART_GUIDE_JOURNEY.length) }, locale)}</span>
+          <p>${getLocalizedValue(step, "text")}</p>
+        </div>
+        <div class="smart-guide-action-grid is-compact">
+          <button class="smart-guide-action is-primary" type="button" data-guide-action="open-step">${ui("assistantOpenStep", {}, locale)}</button>
+          <button class="smart-guide-action" type="button" data-guide-action="next-step">${ui("assistantNext", {}, locale)}</button>
+          <button class="smart-guide-action" type="button" data-guide-action="home">${ui("assistantBack", {}, locale)}</button>
+        </div>
+      `;
+      return;
+    }
+
+    panel.innerHTML = `
+      <div class="smart-guide-panel-header">
+        <div class="smart-guide-panel-copy">
+          <span class="smart-guide-kicker">${ui("assistantLauncher", {}, locale)}</span>
+          <strong>${ui("assistantTitle", {}, locale)}</strong>
+        </div>
+        <button class="smart-guide-close" type="button" data-guide-action="close" aria-label="${ui("assistantClose", {}, locale)}">×</button>
+      </div>
+      <div class="smart-guide-message">
+        <p>${ui("assistantIntro", {}, locale)}</p>
+      </div>
+      <div class="smart-guide-meta">
+        <span class="smart-guide-pill">${ui("assistantJourney", {}, locale)}</span>
+        <span class="smart-guide-pill">${ui("assistantShortcuts", {}, locale)}</span>
+      </div>
+      <div class="smart-guide-action-grid">
+        <button class="smart-guide-action is-primary" type="button" data-guide-action="journey">${ui("assistantJourney", {}, locale)}</button>
+        ${SMART_GUIDE_SHORTCUTS.map((item) => `
+          <button class="smart-guide-action" type="button" data-guide-action="shortcut" data-guide-target="${item.href}">
+            <strong>${getLocalizedValue(item, "title")}</strong>
+            <small>${getLocalizedValue(item, "text")}</small>
+          </button>
+        `).join("")}
+      </div>
+    `;
+  };
+
+  const open = (nextMode = "home") => {
+    mode = nextMode === "journey" ? "journey" : "home";
+    if (mode === "journey") {
+      stepIndex = 0;
+    }
+    render();
+    assistant.classList.add("is-open");
+    panel.hidden = false;
+    launcher?.classList.add("is-hidden");
+    if (launcher instanceof HTMLButtonElement) {
+      launcher.setAttribute("aria-expanded", "true");
+    }
+    safeSessionSet("japan-escape-guide-opened", "true");
+  };
+
+  const close = () => {
+    assistant.classList.remove("is-open");
+    if (panel instanceof HTMLElement) {
+      panel.hidden = true;
+    }
+    launcher?.classList.remove("is-hidden");
+    if (launcher instanceof HTMLButtonElement) {
+      launcher.setAttribute("aria-expanded", "false");
+    }
+  };
+
+  launcher?.addEventListener("click", () => open("home"));
+
+  panel?.addEventListener("click", (event) => {
+    const trigger = event.target.closest("[data-guide-action]");
+    if (!(trigger instanceof HTMLElement)) {
+      return;
+    }
+
+    const action = trigger.dataset.guideAction;
+    if (action === "close") {
+      close();
+      return;
+    }
+    if (action === "home") {
+      mode = "home";
+      render();
+      return;
+    }
+    if (action === "journey") {
+      open("journey");
+      return;
+    }
+    if (action === "next-step") {
+      stepIndex = (stepIndex + 1) % SMART_GUIDE_JOURNEY.length;
+      render();
+      return;
+    }
+    if (action === "open-step") {
+      close();
+      openSmartGuideTarget(SMART_GUIDE_JOURNEY[stepIndex]?.href);
+      return;
+    }
+    if (action === "shortcut") {
+      close();
+      openSmartGuideTarget(trigger.dataset.guideTarget);
+    }
+  });
+
+  document.addEventListener("smart-guide:open", (event) => {
+    open(event.detail?.mode);
+  });
+
+  document.addEventListener("click", (event) => {
+    const trigger = event.target.closest("[data-open-smart-guide]");
+    if (trigger) {
+      event.preventDefault();
+      open(trigger.dataset.guideMode);
+      return;
+    }
+
+    if (assistant.classList.contains("is-open") && !assistant.contains(event.target)) {
+      close();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && assistant.classList.contains("is-open")) {
+      close();
+    }
+  });
+
+  document.addEventListener("locale:changed", render);
+  render();
+}
+
 function getCurrentPageFile() {
   const file = window.location.pathname.split("/").pop();
   return file || "index.html";
+}
+
+function initExperienceLayer() {
+  if (document.querySelector(".experience-overlay")) {
+    return;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "experience-overlay";
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <div class="experience-petals" aria-hidden="true">
+      ${new Array(10).fill(0).map((_, index) => `<span class="experience-petal" style="--petal-index:${index};"></span>`).join("")}
+    </div>
+    <div class="experience-card">
+      <strong data-experience-title>${ui("welcomeTitle", {}, "en")}</strong>
+      <span data-experience-text>${ui("welcomeText", {}, "en")}</span>
+    </div>
+  `;
+
+  document.body.append(overlay);
+
+  const title = overlay.querySelector("[data-experience-title]");
+  const text = overlay.querySelector("[data-experience-text]");
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let hideTimer = null;
+
+  const updateCopy = (mode = "welcome") => {
+    const locale = getActiveLocale();
+    if (title) {
+      title.textContent = ui("welcomeTitle", {}, locale);
+    }
+    if (text) {
+      text.textContent = ui(mode === "transition" ? "transitionText" : "welcomeText", {}, locale);
+    }
+  };
+
+  const hide = () => {
+    window.clearTimeout(hideTimer);
+    overlay.classList.remove("is-visible");
+    overlay.classList.add("is-hidden");
+    window.setTimeout(() => {
+      if (!overlay.classList.contains("is-visible")) {
+        overlay.hidden = true;
+      }
+    }, prefersReducedMotion ? 120 : 420);
+  };
+
+  const show = (mode = "welcome", autoHideMs = 1300) => {
+    updateCopy(mode);
+    overlay.dataset.mode = mode;
+    overlay.hidden = false;
+    overlay.classList.remove("is-hidden");
+    overlay.classList.add("is-visible");
+    window.clearTimeout(hideTimer);
+    if (typeof autoHideMs === "number" && autoHideMs > 0) {
+      hideTimer = window.setTimeout(hide, autoHideMs);
+    }
+  };
+
+  document.addEventListener("locale:changed", () => {
+    updateCopy(overlay.dataset.mode || "welcome");
+  });
+
+  if (!safeSessionGet("japan-escape-welcome-seen")) {
+    safeSessionSet("japan-escape-welcome-seen", "true");
+    show("welcome", prefersReducedMotion ? 420 : 1500);
+    if (!safeSessionGet("japan-escape-guide-auto-opened")) {
+      safeSessionSet("japan-escape-guide-auto-opened", "true");
+      window.setTimeout(() => {
+        document.dispatchEvent(new CustomEvent("smart-guide:open", { detail: { mode: "home" } }));
+      }, prefersReducedMotion ? 620 : 1820);
+    }
+  }
+
+  document.addEventListener("click", (event) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    const anchor = event.target.closest("a[href]");
+    if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download")) {
+      return;
+    }
+
+    const href = anchor.getAttribute("href");
+    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("javascript:")) {
+      return;
+    }
+
+    let url;
+    try {
+      url = new URL(anchor.href, window.location.href);
+    } catch {
+      return;
+    }
+
+    if (url.origin !== window.location.origin || url.pathname === window.location.pathname) {
+      return;
+    }
+
+    event.preventDefault();
+    show("transition", prefersReducedMotion ? 120 : 360);
+    window.setTimeout(() => {
+      window.location.href = url.href;
+    }, prefersReducedMotion ? 40 : 280);
+  });
 }
 
 function getOrCreateTopbarUtility(topbar) {
@@ -4693,6 +5246,7 @@ function initBrochureBrowser() {
 
   const searchInput = root.querySelector("[data-brochure-search]");
   const categorySelect = root.querySelector("[data-brochure-category]");
+  const filterSelect = root.querySelector("[data-brochure-filter]");
   const cards = [...root.querySelectorAll("[data-resource-card]")];
   const emptyState = root.querySelector("[data-brochure-empty]");
 
@@ -4703,14 +5257,17 @@ function initBrochureBrowser() {
   const render = () => {
     const query = searchInput.value.trim().toLowerCase();
     const category = categorySelect.value;
+    const filter = filterSelect instanceof HTMLSelectElement ? filterSelect.value : "all";
     let visibleCount = 0;
 
     cards.forEach((card) => {
       const keywords = `${card.dataset.resourceTitle || ""} ${card.dataset.resourceKeywords || ""}`.toLowerCase();
       const categories = String(card.dataset.resourceCategory || "").split(/\s+/).filter(Boolean);
+      const filters = String(card.dataset.resourceFilter || "").split(/\s+/).filter(Boolean);
       const matchesQuery = !query || keywords.includes(query);
       const matchesCategory = category === "all" || categories.includes(category);
-      const isVisible = matchesQuery && matchesCategory;
+      const matchesFilter = filter === "all" || filters.includes(filter);
+      const isVisible = matchesQuery && matchesCategory && matchesFilter;
       card.hidden = !isVisible;
       if (isVisible) {
         visibleCount += 1;
@@ -4724,6 +5281,7 @@ function initBrochureBrowser() {
 
   searchInput.addEventListener("input", render);
   categorySelect.addEventListener("change", render);
+  filterSelect?.addEventListener("change", render);
   render();
 }
 
@@ -5641,6 +6199,8 @@ window.addEventListener("DOMContentLoaded", () => {
   updateScrollProgress();
   initThemeToggle();
   initLocaleSwitch();
+  initSmartGuideAssistant();
+  initExperienceLayer();
   initTopbarSearch();
   initTopbarPreviews();
   initSiteFooter();

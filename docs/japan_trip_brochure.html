@@ -88,7 +88,7 @@
       <div class="section-header">
         <div class="section-copy">
           <span class="eyebrow" data-i18n-en="Brochure Search" data-i18n-ja="パンフレット検索">Brochure Search</span>
-          <h2 data-i18n-en="Search By Keyword And Filter By Category" data-i18n-ja="キーワード検索とカテゴリ絞り込み">Search By Keyword And Filter By Category</h2>
+          <h2 data-i18n-en="Search By Keyword, Category, And Filter" data-i18n-ja="キーワード・カテゴリ・フィルターで検索">Search By Keyword, Category, And Filter</h2>
           <div class="section-divider"></div>
         </div>
         <p data-i18n-en="Use this browser first when you already know the kind of file, page, or official resource you need." data-i18n-ja="必要なページや資料の種類が分かっているなら、まずこの検索ブラウザから入るのが最短です。">Use this browser first when you already know the kind of file, page, or official resource you need.</p>
@@ -117,10 +117,20 @@
             <option value="rail" data-i18n-en="Rail and passes" data-i18n-ja="鉄道とパス">Rail and passes</option>
           </select>
         </label>
+        <label class="search-panel" for="brochure-filter">
+          <span data-i18n-en="Select filter" data-i18n-ja="フィルターを選ぶ">Select filter</span>
+          <select id="brochure-filter" data-brochure-filter>
+            <option value="all" data-i18n-en="All formats" data-i18n-ja="すべての形式">All formats</option>
+            <option value="route" data-i18n-en="Route pages" data-i18n-ja="ルートページ">Route pages</option>
+            <option value="printable" data-i18n-en="Printable" data-i18n-ja="印刷向け">Printable</option>
+            <option value="official" data-i18n-en="Official" data-i18n-ja="公式">Official</option>
+            <option value="booking" data-i18n-en="Booking" data-i18n-ja="予約">Booking</option>
+          </select>
+        </label>
       </div>
 
       <div class="resource-grid">
-        <a class="link-card resource-card" href="./index.html" data-resource-card data-resource-title="Main Hub recommendation engine route map weather live map" data-resource-keywords="main hub recommendation engine homepage route weather previews" data-resource-category="local planning">
+        <a class="link-card resource-card" href="./index.html" data-resource-card data-resource-title="Main Hub recommendation engine route map weather live map" data-resource-keywords="main hub recommendation engine homepage route weather previews" data-resource-category="local planning" data-resource-filter="route">
           <div class="resource-card-media">
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/D%C5%8Dtonbori_at_night%2C_Osaka_%2819551420339%29.jpg?width=1280" alt="Osaka at night" loading="lazy" decoding="async">
           </div>
@@ -131,7 +141,7 @@
           </div>
         </a>
 
-        <a class="link-card resource-card" href="./quick_snapshot.html" data-resource-card data-resource-title="Quick Snapshot essentials print PDF mobile" data-resource-keywords="snapshot essentials print pdf mobile route summary" data-resource-category="local downloads">
+        <a class="link-card resource-card" href="./quick_snapshot.html" data-resource-card data-resource-title="Quick Snapshot essentials print PDF mobile" data-resource-keywords="snapshot essentials print pdf mobile route summary" data-resource-category="local downloads" data-resource-filter="route printable">
           <div class="resource-card-media">
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chureito_Pagoda.jpg?width=1280" alt="Chureito Pagoda and Mount Fuji" loading="lazy" decoding="async">
           </div>
@@ -142,7 +152,7 @@
           </div>
         </a>
 
-        <a class="link-card resource-card" href="./guide.html" data-resource-card data-resource-title="Full Guide long scroll interactive summary" data-resource-keywords="full guide long scroll interactive all in one" data-resource-category="local planning">
+        <a class="link-card resource-card" href="./guide.html" data-resource-card data-resource-title="Full Guide long scroll interactive summary" data-resource-keywords="full guide long scroll interactive all in one" data-resource-category="local planning" data-resource-filter="route">
           <div class="resource-card-media">
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_Night_%28HDR%29.jpg?width=1280" alt="Shibuya at night" loading="lazy" decoding="async">
           </div>
@@ -153,7 +163,7 @@
           </div>
         </a>
 
-        <a class="link-card resource-card" href="https://www.japan.travel/brochures/eng/" target="_blank" rel="noreferrer" data-resource-card data-resource-title="JNTO brochure library download pdf" data-resource-keywords="official brochures pdf downloads regions jnto" data-resource-category="brochures downloads">
+        <a class="link-card resource-card" href="https://www.japan.travel/brochures/eng/" target="_blank" rel="noreferrer" data-resource-card data-resource-title="JNTO brochure library download pdf" data-resource-keywords="official brochures pdf downloads regions jnto" data-resource-category="brochures downloads" data-resource-filter="official printable">
           <div class="resource-card-media">
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kiyomizu-dera_Temple.Kyoto._Japan_%2850361443956%29.jpg?width=1280" alt="Kyoto temple" loading="lazy" decoding="async">
           </div>
@@ -164,7 +174,7 @@
           </div>
         </a>
 
-        <a class="link-card resource-card" href="https://global.kyoto.travel/en/download/" target="_blank" rel="noreferrer" data-resource-card data-resource-title="Kyoto download materials city map pdf" data-resource-keywords="kyoto download map city guide pdf official" data-resource-category="brochures downloads">
+        <a class="link-card resource-card" href="https://global.kyoto.travel/en/download/" target="_blank" rel="noreferrer" data-resource-card data-resource-title="Kyoto download materials city map pdf" data-resource-keywords="kyoto download map city guide pdf official" data-resource-category="brochures downloads" data-resource-filter="official printable">
           <div class="resource-card-media">
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fushimi_Inari%2C_Kyoto%2C_20240818_1400_4476.jpg?width=1280" alt="Fushimi Inari in Kyoto" loading="lazy" decoding="async">
           </div>
@@ -175,7 +185,7 @@
           </div>
         </a>
 
-        <a class="link-card resource-card" href="https://www.gotokyo.org/book/en/list/" target="_blank" rel="noreferrer" data-resource-card data-resource-title="Tokyo brochures maps district guide download" data-resource-keywords="tokyo brochures maps district pdf gotokyo" data-resource-category="brochures downloads">
+        <a class="link-card resource-card" href="https://www.gotokyo.org/book/en/list/" target="_blank" rel="noreferrer" data-resource-card data-resource-title="Tokyo brochures maps district guide download" data-resource-keywords="tokyo brochures maps district pdf gotokyo" data-resource-category="brochures downloads" data-resource-filter="official printable">
           <div class="resource-card-media">
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_crossing_%2812214%29.jpg?width=1280" alt="Shibuya Crossing in Tokyo" loading="lazy" decoding="async">
           </div>
@@ -186,7 +196,7 @@
           </div>
         </a>
 
-        <a class="link-card resource-card" href="https://www.japan.travel/en/plan/" target="_blank" rel="noreferrer" data-resource-card data-resource-title="Trip planning hub official basics" data-resource-keywords="planning basics official transport travel preparation" data-resource-category="planning">
+        <a class="link-card resource-card" href="https://www.japan.travel/en/plan/" target="_blank" rel="noreferrer" data-resource-card data-resource-title="Trip planning hub official basics" data-resource-keywords="planning basics official transport travel preparation" data-resource-category="planning" data-resource-filter="official route">
           <div class="resource-card-media">
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Fuji_from_Lake_Kawaguchi_s2.jpg?width=1280" alt="Mount Fuji from Lake Kawaguchi" loading="lazy" decoding="async">
           </div>
@@ -197,7 +207,7 @@
           </div>
         </a>
 
-        <a class="link-card resource-card" href="https://smart-ex.jp/en/index.php" target="_blank" rel="noreferrer" data-resource-card data-resource-title="SmartEX rail booking shinkansen odawara" data-resource-keywords="smartex rail booking shinkansen odawara shin-osaka" data-resource-category="rail planning">
+        <a class="link-card resource-card" href="https://smart-ex.jp/en/index.php" target="_blank" rel="noreferrer" data-resource-card data-resource-title="SmartEX rail booking shinkansen odawara" data-resource-keywords="smartex rail booking shinkansen odawara shin-osaka" data-resource-category="rail planning" data-resource-filter="booking official">
           <div class="resource-card-media">
             <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shinkansen_series_N700A_set_G35_at_Odawara_Station_20140720.JPG?width=1280" alt="Shinkansen at Odawara Station" loading="lazy" decoding="async">
           </div>

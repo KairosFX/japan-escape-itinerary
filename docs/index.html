@@ -151,11 +151,11 @@
     <section class="panel section reveal" id="smart-guide">
       <div class="section-header">
         <div class="section-copy">
-          <span class="eyebrow">Smart Guide</span>
-          <h2>Use The Site In The Right Order</h2>
+          <span class="eyebrow">Site Flow</span>
+          <h2>Manual Route Through The Site</h2>
           <div class="section-divider"></div>
         </div>
-        <p>This is the fastest route through the site: set the trip logic, sanity-check the weather, use visual previews for buy-in, then send only the page the group actually needs.</p>
+        <p>This is the manual version of the route. The entry guide bot now handles the dialogue, but this section still shows the clean four-step order underneath.</p>
       </div>
 
       <div class="smart-guide-grid">
@@ -872,70 +872,116 @@
       </div>
     </section>
 
-    <section class="panel section reveal">
+    <section class="panel section reveal" id="official-news">
       <div class="section-header">
         <div class="section-copy">
-          <span class="eyebrow">Quick Access</span>
-          <h2 data-i18n-en="Search And Filter The Guide Fast" data-i18n-ja="ガイドを検索して絞り込む">Search And Filter The Guide Fast</h2>
+          <span class="eyebrow" data-i18n-en="Official News Desk" data-i18n-ja="公式ニュースデスク">Official News Desk</span>
+          <h2 data-i18n-en="Actual National And Local Headlines Worth Checking" data-i18n-ja="実際に確認しておきたい全国・地域ヘッドライン">Actual National And Local Headlines Worth Checking</h2>
           <div class="section-divider"></div>
         </div>
-        <p data-i18n-en="Use keyword search when you already know the question, then narrow the result set by category instead of scanning the whole site." data-i18n-ja="知りたい内容が分かっている時はキーワード検索を使い、カテゴリで絞ってから必要なページだけ開いてください。">Use keyword search when you already know the question, then narrow the result set by category instead of scanning the whole site.</p>
+        <p data-i18n-en="These are the live official reads to check right now: one national layer and the local city sources most relevant to this route." data-i18n-ja="いま確認する価値が高い公式情報を、全国レイヤーとこのルートに近い地域レイヤーに分けて置いています。">These are the live official reads to check right now: one national layer and the local city sources most relevant to this route.</p>
       </div>
 
-      <div class="two-column">
-        <div class="search-panel">
-          <label for="site-search" data-i18n-en="Search the trip guide" data-i18n-ja="旅行ガイドを検索">Search the trip guide</label>
-          <input
-            id="site-search"
-            type="search"
-            name="site-search"
-            autocomplete="off"
-            data-i18n-placeholder-en="Try Fuji, shinkansen, gyoza, onsen, Kyoto, or snapshot"
-            data-i18n-placeholder-ja="富士、新幹線、餃子、温泉、京都、要点で検索"
-            placeholder="Try Fuji, shinkansen, gyoza, onsen, Kyoto, or snapshot">
-          <label for="site-search-category" data-i18n-en="Select category" data-i18n-ja="カテゴリを選ぶ">Select category</label>
-          <select id="site-search-category" name="site-search-category">
-            <option value="all" data-i18n-en="All sections" data-i18n-ja="すべてのセクション">All sections</option>
-            <option value="home" data-i18n-en="Home" data-i18n-ja="ホーム">Home</option>
-            <option value="itinerary" data-i18n-en="Itinerary" data-i18n-ja="旅程">Itinerary</option>
-            <option value="food" data-i18n-en="Food" data-i18n-ja="食事">Food</option>
-            <option value="toolkit" data-i18n-en="Toolkit" data-i18n-ja="準備">Toolkit</option>
-            <option value="culture" data-i18n-en="Culture" data-i18n-ja="文化">Culture</option>
-            <option value="snapshot" data-i18n-en="Snapshot" data-i18n-ja="要点">Snapshot</option>
-            <option value="guide" data-i18n-en="Full guide" data-i18n-ja="完全ガイド">Full guide</option>
-            <option value="brochure" data-i18n-en="Brochures" data-i18n-ja="パンフレット">Brochures</option>
-          </select>
-          <div class="search-tags">
-            <a class="button-pill" href="./itinerary.html#fuji-visibility">Fuji visibility</a>
-            <a class="button-pill" href="./toolkit.html#shinkansen">Shinkansen</a>
-            <a class="button-pill" href="./food.html#osaka-food">Osaka food</a>
-            <a class="button-pill" href="./culture.html#phrases">Useful phrases</a>
-          </div>
-          <div class="search-results" id="site-search-results" aria-live="polite"></div>
-          <div class="term-box" data-term-group>
-            <strong>Tap The Route Terms</strong>
-            <span>Fast definitions for the move-day words that keep coming up.</span>
-            <div class="term-strip">
-              <button class="term-chip is-active" type="button" data-term="visibility-led" aria-pressed="true">visibility-led</button>
-              <button class="term-chip" type="button" data-term="shinkansen" aria-pressed="false">shinkansen</button>
-              <button class="term-chip" type="button" data-term="ic-card" aria-pressed="false">IC card</button>
-              <button class="term-chip" type="button" data-term="ryokan" aria-pressed="false">ryokan</button>
-              <button class="term-chip" type="button" data-term="hachiko-side" aria-pressed="false">Hachiko side</button>
+      <div class="official-layout">
+        <div class="official-feature-stack">
+          <div class="feature-slider article-slider news-desk-slider" data-slider data-slider-interval="6000">
+            <div class="slider-stage">
+              <article class="feature-slide is-active" data-slide>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shinkansen_series_N700A_set_G35_at_Odawara_Station_20140720.JPG?width=1600" alt="Shinkansen at Odawara Station" loading="lazy" decoding="async">
+                <div class="feature-slide-copy">
+                  <span class="badge" data-i18n-en="National / JNTO" data-i18n-ja="全国 / JNTO">National / JNTO</span>
+                  <h3 data-i18n-en="Feb 6, 2026: Certain JR passes are about to get more convenient" data-i18n-ja="2026年2月6日: 一部の JR パスがさらに便利に">Feb 6, 2026: Certain JR passes are about to get more convenient</h3>
+                  <p data-i18n-en="This is the strongest nationwide update for this route because it directly touches rail planning and pass usability." data-i18n-ja="このルートでは鉄道計画に直結するため、全国ニュースの中でも特に見ておく価値があります。">This is the strongest nationwide update for this route because it directly touches rail planning and pass usability.</p>
+                  <div class="article-slide-meta">
+                    <span>JNTO</span>
+                    <span data-i18n-en="Rail update" data-i18n-ja="鉄道更新">Rail update</span>
+                    <span>2026-02-06</span>
+                  </div>
+                  <div class="route-spotlight-actions">
+                    <a class="button-primary" href="https://www.japan.travel/en/ca/news/" target="_blank" rel="noreferrer" data-i18n-en="Open JNTO news" data-i18n-ja="JNTO ニュースを開く">Open JNTO news</a>
+                    <a class="button-secondary" href="./toolkit.html#shinkansen" data-i18n-en="Open rail notes" data-i18n-ja="鉄道メモを開く">Open rail notes</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="feature-slide" data-slide>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tsutenkaku%2C_Osaka.jpg?width=1600" alt="Tsutenkaku in Osaka" loading="lazy" decoding="async">
+                <div class="feature-slide-copy">
+                  <span class="badge" data-i18n-en="Local / Osaka" data-i18n-ja="地域 / 大阪">Local / Osaka</span>
+                  <h3 data-i18n-en="Mar 9, 2026: Osaka official event information has been updated" data-i18n-ja="2026年3月9日: 大阪公式イベント情報が更新">Mar 9, 2026: Osaka official event information has been updated</h3>
+                  <p data-i18n-en="Use Osaka’s official notice layer when the arrival nights need fresh event timing instead of generic city inspiration." data-i18n-ja="到着初日の夜に、一般的な観光紹介ではなく実際のイベント更新を確認したい時に向いています。">Use Osaka’s official notice layer when the arrival nights need fresh event timing instead of generic city inspiration.</p>
+                  <div class="article-slide-meta">
+                    <span>OSAKA-INFO</span>
+                    <span data-i18n-en="Events" data-i18n-ja="イベント">Events</span>
+                    <span>2026-03-09</span>
+                  </div>
+                  <div class="route-spotlight-actions">
+                    <a class="button-primary" href="https://osaka-info.jp/en/important-news/" target="_blank" rel="noreferrer" data-i18n-en="Open Osaka updates" data-i18n-ja="大阪更新を開く">Open Osaka updates</a>
+                    <a class="button-secondary" href="./itinerary.html#osaka-start" data-i18n-en="Open Osaka stop" data-i18n-ja="大阪停止点を開く">Open Osaka stop</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="feature-slide" data-slide>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_crossing_%2812214%29.jpg?width=1600" alt="Shibuya Crossing in Tokyo" loading="lazy" decoding="async">
+                <div class="feature-slide-copy">
+                  <span class="badge" data-i18n-en="Local / Tokyo" data-i18n-ja="地域 / 東京">Local / Tokyo</span>
+                  <h3 data-i18n-en="Mar 10, 2026: TOKYO Anime Tourism 2026 kicks off" data-i18n-ja="2026年3月10日: TOKYO Anime Tourism 2026 開始">Mar 10, 2026: TOKYO Anime Tourism 2026 kicks off</h3>
+                  <p data-i18n-en="This is useful when the Tokyo finish is drifting toward pop culture, district events, or extra-night add-ons." data-i18n-ja="東京の締めがポップカルチャー寄り、イベント寄り、あるいは追加の夜遊び寄りに傾く時に使えます。">This is useful when the Tokyo finish is drifting toward pop culture, district events, or extra-night add-ons.</p>
+                  <div class="article-slide-meta">
+                    <span>GO TOKYO</span>
+                    <span data-i18n-en="City update" data-i18n-ja="都市更新">City update</span>
+                    <span>2026-03-10</span>
+                  </div>
+                  <div class="route-spotlight-actions">
+                    <a class="button-primary" href="https://www.gotokyo.org/en/new-and-now/index.html" target="_blank" rel="noreferrer" data-i18n-en="Open Tokyo updates" data-i18n-ja="東京更新を開く">Open Tokyo updates</a>
+                    <a class="button-secondary" href="./itinerary.html#tokyo-finish" data-i18n-en="Open Tokyo finish" data-i18n-ja="東京フィニッシュを開く">Open Tokyo finish</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="feature-slide" data-slide>
+                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kiyomizu-dera_Temple.Kyoto._Japan_%2850361443956%29.jpg?width=1600" alt="Kyoto temple" loading="lazy" decoding="async">
+                <div class="feature-slide-copy">
+                  <span class="badge" data-i18n-en="Local / Kyoto" data-i18n-ja="地域 / 京都">Local / Kyoto</span>
+                  <h3 data-i18n-en="Mar 2026: Newest Kyoto event information for Mar 16-29" data-i18n-ja="2026年3月: 3月16日から29日の京都イベント最新情報">Mar 2026: Newest Kyoto event information for Mar 16-29</h3>
+                  <p data-i18n-en="This is the best local check when the Kyoto day is close and you want fresh temple-area event timing instead of broad evergreen guides." data-i18n-ja="京都の日が近づき、恒常的な案内ではなく、その時期の現地イベント更新を確認したい時に最適です。">This is the best local check when the Kyoto day is close and you want fresh temple-area event timing instead of broad evergreen guides.</p>
+                  <div class="article-slide-meta">
+                    <span>Kyoto Travel</span>
+                    <span data-i18n-en="City update" data-i18n-ja="都市更新">City update</span>
+                    <span>2026-03</span>
+                  </div>
+                  <div class="route-spotlight-actions">
+                    <a class="button-primary" href="https://kyoto.travel/en/news/index.html" target="_blank" rel="noreferrer" data-i18n-en="Open Kyoto news" data-i18n-ja="京都ニュースを開く">Open Kyoto news</a>
+                    <a class="button-secondary" href="./culture.html#culture-watch" data-i18n-en="Open Kyoto culture lane" data-i18n-ja="京都文化レイヤーを開く">Open Kyoto culture lane</a>
+                  </div>
+                </div>
+              </article>
             </div>
-            <div class="term-panel" data-term-panel aria-live="polite"></div>
+
+            <div class="slider-controls">
+              <button class="slider-arrow" type="button" data-slider-prev aria-label="Previous official news">&lt;</button>
+              <div class="slider-dots" data-slider-dots aria-label="Official news slides"></div>
+              <button class="slider-arrow" type="button" data-slider-next aria-label="Next official news">&gt;</button>
+            </div>
           </div>
         </div>
 
-        <aside class="sticky-glance">
-          <strong>Absolute Essentials</strong>
-          <span>Night pattern, one food to remember, and one weather word at a glance.</span>
-          <ul>
-            <li><strong>Nights 1 to 3 / Osaka:</strong> stay put, eat takoyaki, keyword `easy`.</li>
-            <li><strong>Day trip / Kyoto:</strong> no hotel move, eat matcha sweets, keyword `walking`.</li>
-            <li><strong>Night 4 / Hakone:</strong> eat early, keyword `cooler`.</li>
-            <li><strong>Night 5 / Fuji area:</strong> eat Yoshida udon or a practical lunch, keyword `visibility`.</li>
-            <li><strong>Final base / Tokyo:</strong> eat one strong dinner, keyword `central`.</li>
-          </ul>
+        <aside class="tool-stack">
+          <div class="tool-card">
+            <span class="eyebrow" data-i18n-en="Fast check order" data-i18n-ja="確認の順番">Fast check order</span>
+            <strong data-i18n-en="National first, then the city that matches the next move" data-i18n-ja="全国を見てから、次の移動先の都市を見る">National first, then the city that matches the next move</strong>
+            <p data-i18n-en="Check JNTO for nationwide shifts, then jump to Osaka, Kyoto, or Tokyo local reads only when the next block is getting close." data-i18n-ja="まず JNTO で全国の変化を確認し、その後で次に近い都市だけを読むと無駄が減ります。">Check JNTO for nationwide shifts, then jump to Osaka, Kyoto, or Tokyo local reads only when the next block is getting close.</p>
+          </div>
+          <div class="tool-card">
+            <strong data-i18n-en="News links worth saving" data-i18n-ja="保存しておきたいニュース導線">News links worth saving</strong>
+            <ul class="brochure-list">
+              <li><a href="https://www.japan.travel/en/ca/news/" target="_blank" rel="noreferrer">JNTO News</a></li>
+              <li><a href="https://osaka-info.jp/en/important-news/" target="_blank" rel="noreferrer">OSAKA-INFO notices</a></li>
+              <li><a href="https://www.gotokyo.org/en/new-and-now/index.html" target="_blank" rel="noreferrer">GO TOKYO new and now</a></li>
+              <li><a href="https://kyoto.travel/en/news/index.html" target="_blank" rel="noreferrer">Kyoto Travel news</a></li>
+            </ul>
+          </div>
         </aside>
       </div>
     </section>
