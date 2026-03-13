@@ -1,47 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
-  <title id="title">Linear route reference for Japan trip</title>
-  <desc id="desc">A refined linear route reference showing Osaka, Kyoto, Shin-Osaka, Odawara, Hakone, the Mt. Fuji area, and Tokyo.</desc>
+  <title id="title">Refined route reference for Japan trip</title>
+  <desc id="desc">A stronger route diagram showing Osaka, Kyoto, Shin-Osaka, Odawara, Hakone, a Mt. Fuji area branch, and Tokyo with consistent spacing and clearer direction.</desc>
   <defs>
-    <filter id="panelShadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#6c4c37" flood-opacity="0.08"/>
+    <filter id="panelShadow" x="-12%" y="-12%" width="124%" height="124%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#3c2b23" flood-opacity="0.11"/>
     </filter>
+    <marker id="routeArrow" markerWidth="22" markerHeight="22" refX="16" refY="11" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M2 2L16 11L2 20" fill="none" stroke="#c85a44" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
   </defs>
 
-  <rect width="1200" height="560" rx="36" fill="#f7f0e6"/>
+  <rect width="1200" height="560" rx="36" fill="#f6f3ef"/>
   <g filter="url(#panelShadow)">
-    <rect x="44" y="44" width="1112" height="472" rx="28" fill="#fffdfa" stroke="#eaded0" stroke-width="2"/>
+    <rect x="44" y="44" width="1112" height="472" rx="28" fill="#fffdfa" stroke="#ebdfd3" stroke-width="2"/>
   </g>
 
-  <circle cx="1026" cy="114" r="78" fill="#f6e4dd" opacity="0.7"/>
-  <circle cx="170" cy="438" r="92" fill="#e7efeb" opacity="0.8"/>
+  <circle cx="1062" cy="114" r="40" fill="#f3ddd4" opacity="0.16"/>
+  <circle cx="122" cy="446" r="48" fill="#dfe8e2" opacity="0.14"/>
 
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M198 312H1082" stroke="#d6c7bb" stroke-width="4"/>
-
-    <path d="M272 296L294 312L272 328" stroke="#c55443" stroke-width="6"/>
-    <path d="M446 296L468 312L446 328" stroke="#c55443" stroke-width="6"/>
-    <path d="M656 296L678 312L656 328" stroke="#c55443" stroke-width="6"/>
-    <path d="M848 296L870 312L848 328" stroke="#c55443" stroke-width="6"/>
-    <path d="M1028 296L1050 312L1028 328" stroke="#c55443" stroke-width="6"/>
-
-    <circle cx="318" cy="312" r="5" fill="#fffdfa" stroke="#c55443" stroke-width="3"/>
-    <circle cx="520" cy="312" r="5" fill="#fffdfa" stroke="#c55443" stroke-width="3"/>
-    <circle cx="730" cy="312" r="5" fill="#fffdfa" stroke="#c55443" stroke-width="3"/>
-    <circle cx="916" cy="312" r="5" fill="#fffdfa" stroke="#c55443" stroke-width="3"/>
+  <g font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
+    <text x="108" y="118" fill="#c85a44" font-size="18" font-weight="700" letter-spacing="2.8">TRAVEL DIRECTION</text>
+    <text x="330" y="118" fill="#c85a44" font-size="22" font-weight="700">→</text>
   </g>
 
-  <g fill="#24282b">
-    <text x="178" y="322" text-anchor="end" font-size="48" font-weight="700" font-family="'Avenir Next', Arial, sans-serif">Osaka</text>
-
-    <text x="304" y="250" text-anchor="middle" font-size="36" font-weight="700" font-family="'Avenir Next', Arial, sans-serif">Kyoto</text>
-    <text x="526" y="250" text-anchor="middle" font-size="36" font-weight="700" font-family="'Avenir Next', Arial, sans-serif">Shin-Osaka</text>
-    <text x="758" y="250" text-anchor="middle" font-size="36" font-weight="700" font-family="'Avenir Next', Arial, sans-serif">Odawara</text>
-    <text x="928" y="250" text-anchor="middle" font-size="36" font-weight="700" font-family="'Avenir Next', Arial, sans-serif">Hakone</text>
-    <text x="1098" y="250" text-anchor="middle" font-size="36" font-weight="700" font-family="'Avenir Next', Arial, sans-serif">Tokyo</text>
+  <g fill="none" stroke="#c85a44" stroke-width="8.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M175 306H326" marker-end="url(#routeArrow)"/>
+    <path d="M365 306H516" marker-end="url(#routeArrow)"/>
+    <path d="M555 306H706" marker-end="url(#routeArrow)"/>
+    <path d="M745 306H896" marker-end="url(#routeArrow)"/>
+    <path d="M935 319V376" marker-end="url(#routeArrow)"/>
+    <path d="M954 389H1023" marker-end="url(#routeArrow)"/>
+    <path d="M1062 376V319" marker-end="url(#routeArrow)"/>
   </g>
 
-  <g>
-    <rect x="834" y="352" width="212" height="58" rx="29" fill="#f1e6db" stroke="#e3d3c5" stroke-width="2"/>
-    <text x="940" y="389" text-anchor="middle" fill="#3d4748" font-size="32" font-weight="600" font-family="'Avenir Next', Arial, sans-serif">Mt. Fuji area</text>
+  <g fill="#c85a44" stroke="#fffdfa" stroke-width="4.5">
+    <circle cx="160" cy="306" r="14"/>
+    <circle cx="350" cy="306" r="14"/>
+    <circle cx="540" cy="306" r="14"/>
+    <circle cx="730" cy="306" r="14"/>
+    <circle cx="920" cy="306" r="14"/>
+    <circle cx="920" cy="389" r="14"/>
+    <circle cx="1045" cy="389" r="14"/>
+    <circle cx="1045" cy="306" r="14"/>
+  </g>
+
+  <g fill="#262b2d" text-anchor="middle" font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
+    <text x="160" y="224" font-size="42" font-weight="700">Osaka</text>
+    <text x="350" y="224" font-size="42" font-weight="700">Kyoto</text>
+    <text x="540" y="226" font-size="30" font-weight="600">Shin-Osaka</text>
+    <text x="730" y="226" font-size="30" font-weight="600">Odawara</text>
+    <text x="920" y="226" font-size="30" font-weight="600">Hakone</text>
+    <text x="1045" y="224" font-size="42" font-weight="700">Tokyo</text>
+  </g>
+
+  <g fill="#262b2d" text-anchor="middle" font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
+    <text x="920" y="452" font-size="28" font-weight="700">Mt. Fuji area</text>
+    <text x="920" y="482" font-size="18" font-weight="500" fill="#677173">Lake Kawaguchiko / Oshino Hakkai</text>
   </g>
 </svg>
