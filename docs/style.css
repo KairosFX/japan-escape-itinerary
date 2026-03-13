@@ -305,6 +305,31 @@ h3 {
   margin-top: 0.2rem;
 }
 
+.route-reference {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(181, 65, 49, 0.06), rgba(255, 255, 255, 0.72)),
+    var(--surface);
+}
+
+.route-reference img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: calc(var(--radius-lg) - 4px);
+  border: 1px solid rgba(181, 65, 49, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.route-reference figcaption {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.96rem;
+}
+
 .day-grid,
 .notes-grid {
   display: grid;

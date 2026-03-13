@@ -1,6 +1,7 @@
 const languageButtons = document.querySelectorAll("[data-set-language]");
 const localizedNodes = document.querySelectorAll("[data-language]");
 const ariaLabelNodes = document.querySelectorAll("[data-aria-label-en][data-aria-label-ja]");
+const altTextNodes = document.querySelectorAll("[data-alt-en][data-alt-ja]");
 const pageTitles = {
   en: "Japan Trip | Checklist & Notes",
   ja: "Japan Trip | チェックリストとメモ"
@@ -37,6 +38,13 @@ function setLanguage(language) {
     node.setAttribute(
       "aria-label",
       nextLanguage === "ja" ? node.dataset.ariaLabelJa : node.dataset.ariaLabelEn
+    );
+  });
+
+  altTextNodes.forEach((node) => {
+    node.setAttribute(
+      "alt",
+      nextLanguage === "ja" ? node.dataset.altJa : node.dataset.altEn
     );
   });
 
