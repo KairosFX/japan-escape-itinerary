@@ -1,95 +1,119 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
-  <title id="title">Japan trip route reference</title>
-  <desc id="desc">A minimal two-row route diagram from Osaka to Tokyo via Kyoto, Shin-Osaka, Odawara, Hakone, and the Mount Fuji area.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Japan trip route map</title>
+  <desc id="desc">Map-style route graphic showing Osaka to Kyoto, back to Osaka, then Shin-Osaka, Odawara, Hakone, Mount Fuji area, and Tokyo.</desc>
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="paper" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fffaf5"/>
-      <stop offset="100%" stop-color="#f3e6d8"/>
+      <stop offset="100%" stop-color="#f1e5d8"/>
     </linearGradient>
-    <linearGradient id="line" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="route" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#b54131"/>
       <stop offset="100%" stop-color="#3f5a4b"/>
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#5c3b27" flood-opacity="0.12"/>
     </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#b54131"/>
+    </marker>
   </defs>
 
-  <rect width="1200" height="560" rx="40" fill="url(#bg)"/>
-  <circle cx="1050" cy="90" r="88" fill="#f7e6e0"/>
-  <circle cx="145" cy="470" r="108" fill="#e6efe9"/>
+  <rect width="1200" height="720" rx="40" fill="url(#paper)"/>
+  <circle cx="1025" cy="120" r="86" fill="#f8e7e1"/>
+  <circle cx="190" cy="585" r="96" fill="#e5efe9"/>
 
-  <g transform="translate(82 72)">
-    <text x="0" y="0" fill="#b54131" font-size="18" font-weight="700" font-family="'Avenir Next', Arial, sans-serif" letter-spacing="3">ROUTE REFERENCE</text>
-    <text x="0" y="42" fill="#1f2527" font-size="40" font-weight="700" font-family="'Iowan Old Style', Georgia, serif">Osaka to Tokyo Flow</text>
-    <text x="0" y="76" fill="#5e6768" font-size="20" font-family="'Avenir Next', Arial, sans-serif">A quick visual guide for the itinerary order</text>
-  </g>
-
-  <path d="M150 210 H1010 V350 H190" fill="none" stroke="url(#line)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-
-  <g font-family="'Avenir Next', Arial, sans-serif" text-anchor="middle">
-    <g transform="translate(150 210)">
-      <circle r="22" fill="#b54131"/>
-      <circle r="34" fill="none" stroke="#b54131" stroke-opacity="0.18" stroke-width="10"/>
-      <text y="7" fill="#ffffff" font-size="16" font-weight="700">1</text>
-      <text y="68" fill="#1f2527" font-size="24" font-weight="700">Osaka</text>
-      <text y="96" fill="#5e6768" font-size="16">大阪</text>
-    </g>
-
-    <g transform="translate(420 210)">
-      <circle r="18" fill="#ffffff" stroke="#b54131" stroke-width="5"/>
-      <text y="6" fill="#b54131" font-size="14" font-weight="700">2</text>
-      <text y="68" fill="#1f2527" font-size="24" font-weight="700">Kyoto</text>
-      <text y="96" fill="#5e6768" font-size="16">京都</text>
-    </g>
-
-    <g transform="translate(690 210)">
-      <circle r="18" fill="#ffffff" stroke="#b54131" stroke-width="5"/>
-      <text y="6" fill="#b54131" font-size="14" font-weight="700">3</text>
-      <text y="68" fill="#1f2527" font-size="24" font-weight="700">Osaka</text>
-      <text y="96" fill="#5e6768" font-size="16">大阪</text>
-    </g>
-
-    <g transform="translate(1010 210)">
-      <circle r="18" fill="#ffffff" stroke="#b54131" stroke-width="5"/>
-      <text y="6" fill="#b54131" font-size="14" font-weight="700">4</text>
-      <text y="68" fill="#1f2527" font-size="22" font-weight="700">Shin-Osaka</text>
-      <text y="96" fill="#5e6768" font-size="16">新大阪</text>
-    </g>
-
-    <g transform="translate(930 350)">
-      <circle r="18" fill="#ffffff" stroke="#3f5a4b" stroke-width="5"/>
-      <text y="6" fill="#3f5a4b" font-size="14" font-weight="700">5</text>
-      <text y="68" fill="#1f2527" font-size="22" font-weight="700">Odawara</text>
-      <text y="96" fill="#5e6768" font-size="16">小田原</text>
-    </g>
-
-    <g transform="translate(670 350)">
-      <circle r="18" fill="#ffffff" stroke="#3f5a4b" stroke-width="5"/>
-      <text y="6" fill="#3f5a4b" font-size="14" font-weight="700">6</text>
-      <text y="68" fill="#1f2527" font-size="22" font-weight="700">Hakone</text>
-      <text y="96" fill="#5e6768" font-size="16">箱根</text>
-    </g>
-
-    <g transform="translate(410 350)">
-      <circle r="18" fill="#ffffff" stroke="#3f5a4b" stroke-width="5"/>
-      <text y="6" fill="#3f5a4b" font-size="14" font-weight="700">7</text>
-      <text y="60" fill="#1f2527" font-size="20" font-weight="700">Mt. Fuji area</text>
-      <text y="88" fill="#5e6768" font-size="16">富士山エリア</text>
-    </g>
-
-    <g transform="translate(190 350)">
-      <circle r="22" fill="#3f5a4b"/>
-      <circle r="34" fill="none" stroke="#3f5a4b" stroke-opacity="0.16" stroke-width="10"/>
-      <text y="7" fill="#ffffff" font-size="16" font-weight="700">8</text>
-      <text y="68" fill="#1f2527" font-size="24" font-weight="700">Tokyo</text>
-      <text y="96" fill="#5e6768" font-size="16">東京</text>
-    </g>
+  <g transform="translate(78 74)">
+    <text x="0" y="0" fill="#b54131" font-size="18" font-weight="700" font-family="'Avenir Next', Arial, sans-serif" letter-spacing="3">ROUTE MAP</text>
+    <text x="0" y="40" fill="#1f2527" font-size="38" font-weight="700" font-family="'Iowan Old Style', Georgia, serif">Japan Trip (日本旅行)</text>
+    <text x="0" y="74" fill="#5e6768" font-size="20" font-family="'Avenir Next', Arial, sans-serif">Actual travel path / 実際の移動ルート</text>
   </g>
 
   <g filter="url(#shadow)">
-    <rect x="820" y="408" width="292" height="84" rx="22" fill="#fffdf9" stroke="#ead9ca"/>
-    <text x="850" y="444" fill="#b54131" font-size="18" font-weight="700" font-family="'Avenir Next', Arial, sans-serif">Travel flow</text>
-    <text x="850" y="473" fill="#5e6768" font-size="18" font-family="'Avenir Next', Arial, sans-serif">West to east with one scenic middle section</text>
+    <path
+      d="M150 540C198 500 244 461 324 421C394 387 467 362 556 348C622 338 686 343 752 327C822 310 887 275 951 228C999 192 1039 158 1088 149C1107 145 1126 154 1131 172C1137 194 1126 221 1102 246C1066 283 1021 318 956 354C888 392 805 423 719 450C623 480 526 503 408 524C314 540 240 550 183 551C152 552 128 547 121 534C116 524 124 514 150 540Z"
+      fill="#fffaf4"
+      stroke="#e6d6c8"
+      stroke-width="2"/>
+  </g>
+
+  <path
+    d="M248 466Q282 438 318 420Q293 448 266 478Q283 468 305 457C440 425 608 383 776 290Q796 278 819 269Q852 256 884 247Q950 230 1010 198"
+    fill="none"
+    stroke="url(#route)"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    marker-end="url(#arrow)"/>
+
+  <g stroke="#ffffff" stroke-width="5" font-family="'Avenir Next', Arial, sans-serif" text-anchor="middle">
+    <g transform="translate(248 466)">
+      <circle r="18" fill="#b54131"/>
+      <text y="6" fill="#ffffff" font-size="14" font-weight="700">1</text>
+    </g>
+    <g transform="translate(318 420)">
+      <circle r="16" fill="#b54131"/>
+      <text y="5" fill="#ffffff" font-size="13" font-weight="700">2</text>
+    </g>
+    <g transform="translate(266 478)">
+      <circle r="16" fill="#b54131"/>
+      <text y="5" fill="#ffffff" font-size="13" font-weight="700">3</text>
+    </g>
+    <g transform="translate(305 457)">
+      <circle r="16" fill="#b54131"/>
+      <text y="5" fill="#ffffff" font-size="13" font-weight="700">4</text>
+    </g>
+    <g transform="translate(776 290)">
+      <circle r="16" fill="#3f5a4b"/>
+      <text y="5" fill="#ffffff" font-size="13" font-weight="700">5</text>
+    </g>
+    <g transform="translate(819 269)">
+      <circle r="16" fill="#3f5a4b"/>
+      <text y="5" fill="#ffffff" font-size="13" font-weight="700">6</text>
+    </g>
+    <g transform="translate(884 247)">
+      <circle r="16" fill="#3f5a4b"/>
+      <text y="5" fill="#ffffff" font-size="13" font-weight="700">7</text>
+    </g>
+    <g transform="translate(1010 198)">
+      <circle r="20" fill="#3f5a4b"/>
+      <text y="7" fill="#ffffff" font-size="15" font-weight="700">8</text>
+    </g>
+  </g>
+
+  <g font-family="'Avenir Next', Arial, sans-serif" fill="#1f2527">
+    <path d="M210 458H156" stroke="#ccb6a7" stroke-width="2"/>
+    <text x="88" y="448" font-size="22" font-weight="700">Osaka</text>
+    <text x="88" y="474" font-size="15" fill="#5e6768">大阪 / 1, 3</text>
+
+    <path d="M320 404L320 350H258" stroke="#ccb6a7" stroke-width="2"/>
+    <text x="170" y="340" font-size="22" font-weight="700">Kyoto</text>
+    <text x="170" y="366" font-size="15" fill="#5e6768">京都 / 2</text>
+
+    <path d="M324 457H404" stroke="#ccb6a7" stroke-width="2"/>
+    <text x="430" y="448" font-size="21" font-weight="700">Shin-Osaka</text>
+    <text x="430" y="474" font-size="15" fill="#5e6768">新大阪 / 4</text>
+
+    <path d="M774 274L748 228" stroke="#ccb6a7" stroke-width="2"/>
+    <text x="650" y="212" font-size="21" font-weight="700">Odawara</text>
+    <text x="650" y="238" font-size="15" fill="#5e6768">小田原 / 5</text>
+
+    <path d="M826 256L842 214" stroke="#ccb6a7" stroke-width="2"/>
+    <text x="848" y="200" font-size="21" font-weight="700">Hakone</text>
+    <text x="848" y="226" font-size="15" fill="#5e6768">箱根 / 6</text>
+
+    <path d="M884 231L884 172" stroke="#ccb6a7" stroke-width="2"/>
+    <text x="884" y="156" font-size="20" font-weight="700" text-anchor="middle">Mt. Fuji area</text>
+    <text x="884" y="182" font-size="15" fill="#5e6768" text-anchor="middle">富士山エリア / 7</text>
+
+    <path d="M1022 192L1080 178" stroke="#ccb6a7" stroke-width="2"/>
+    <text x="1090" y="172" font-size="23" font-weight="700">Tokyo</text>
+    <text x="1090" y="198" font-size="15" fill="#5e6768">東京 / 8</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="820" y="520" width="290" height="98" rx="22" fill="#fffdf9" stroke="#ead9ca"/>
+    <text x="850" y="556" fill="#b54131" font-size="17" font-weight="700" font-family="'Avenir Next', Arial, sans-serif">Travel path / 移動順</text>
+    <text x="850" y="584" fill="#5e6768" font-size="17" font-family="'Avenir Next', Arial, sans-serif">Osaka → Kyoto → Osaka → Shin-Osaka</text>
+    <text x="850" y="609" fill="#5e6768" font-size="17" font-family="'Avenir Next', Arial, sans-serif">→ Odawara → Hakone → Mt. Fuji area → Tokyo</text>
   </g>
 </svg>

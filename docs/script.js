@@ -3,8 +3,8 @@ const localizedNodes = document.querySelectorAll("[data-language]");
 const ariaLabelNodes = document.querySelectorAll("[data-aria-label-en][data-aria-label-ja]");
 const altTextNodes = document.querySelectorAll("[data-alt-en][data-alt-ja]");
 const pageTitles = {
-  en: "Japan Trip | Checklist & Notes",
-  ja: "Japan Trip | チェックリストとメモ"
+  en: "Japan Trip (日本旅行) | Checklist & Notes",
+  ja: "Japan Trip (日本旅行) | チェックリストとメモ"
 };
 const storageKey = "japan-trip-language";
 
