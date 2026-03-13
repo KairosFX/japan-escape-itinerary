@@ -8,6 +8,14 @@
     name="description"
     content="Simple bilingual Japan trip website for GitHub Pages with a checklist, notes, and a route map from Osaka to Tokyo.">
   <meta name="theme-color" content="#b54131">
+  <script>
+    try {
+      const hasSeenWelcome = window.localStorage.getItem("japan-trip-welcome-seen") === "1";
+      document.documentElement.classList.add(hasSeenWelcome ? "has-seen-welcome" : "is-welcoming");
+    } catch (error) {
+      document.documentElement.classList.add("is-welcoming");
+    }
+  </script>
   <link rel="stylesheet" href="./style.css">
   <script src="./script.js" defer></script>
 </head>
@@ -16,6 +24,17 @@
     <span data-language="en">Skip to content</span>
     <span data-language="ja" hidden>本文へ移動</span>
   </a>
+
+  <div class="welcome-overlay" aria-hidden="true">
+    <div class="welcome-overlay__glow welcome-overlay__glow--left"></div>
+    <div class="welcome-overlay__glow welcome-overlay__glow--right"></div>
+    <div class="welcome-overlay__content">
+      <p class="welcome-overlay__eyebrow">Japan Trip</p>
+      <h2 class="welcome-overlay__title">Welcome / ようこそ</h2>
+      <p class="welcome-overlay__subtitle">Cities, mountains, lantern light, and a quieter pace.</p>
+      <span class="welcome-overlay__line"></span>
+    </div>
+  </div>
 
   <header class="site-header">
     <div class="header-inner">
@@ -29,7 +48,7 @@
           <span data-language="ja" hidden>旅程</span>
         </h1>
         <p class="hero-copy">
-          <span data-language="en">A simple website for this trip, organized as checklist, notes, and route.</span>
+          <span data-language="en">A simple website for this trip, organized as checklist, notes, and routes.</span>
           <span data-language="ja" hidden>このウェブサイトは、チェックリスト、メモ、ルートの順で見やすく整理しています。</span>
         </p>
       </div>
@@ -49,7 +68,7 @@
             <span data-language="ja" hidden>メモ</span>
           </a>
           <a href="#route">
-            <span data-language="en">Route</span>
+            <span data-language="en">Routes</span>
             <span data-language="ja" hidden>ルート</span>
           </a>
         </nav>
