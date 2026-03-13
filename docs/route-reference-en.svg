@@ -1,12 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
   <title id="title">Refined route reference for Japan trip</title>
-  <desc id="desc">A stronger route diagram showing Osaka, Kyoto, Shin-Osaka, Odawara, Hakone, a Mt. Fuji area branch, and Tokyo with consistent spacing and clearer direction.</desc>
+  <desc id="desc">A stronger route diagram showing the main route from Osaka to Tokyo, with an optional dashed Mt. Fuji area detour from Hakone.</desc>
   <defs>
     <filter id="panelShadow" x="-12%" y="-12%" width="124%" height="124%">
       <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#3c2b23" flood-opacity="0.11"/>
     </filter>
-    <marker id="routeArrow" markerWidth="22" markerHeight="22" refX="16" refY="11" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M2 2L16 11L2 20" fill="none" stroke="#c85a44" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <marker id="routeArrow" markerWidth="19" markerHeight="19" refX="14" refY="9.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M2 2L14 9.5L2 17" fill="none" stroke="#c85a44" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="detourArrow" markerWidth="16" markerHeight="16" refX="12" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M2 2L12 8L2 14" fill="none" stroke="#dc9e8b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     </marker>
   </defs>
 
@@ -15,46 +18,47 @@
     <rect x="44" y="44" width="1112" height="472" rx="28" fill="#fffdfa" stroke="#ebdfd3" stroke-width="2"/>
   </g>
 
-  <circle cx="1062" cy="114" r="40" fill="#f3ddd4" opacity="0.16"/>
-  <circle cx="122" cy="446" r="48" fill="#dfe8e2" opacity="0.14"/>
+  <circle cx="1062" cy="114" r="40" fill="#f3ddd4" opacity="0.05"/>
+  <circle cx="122" cy="446" r="48" fill="#dfe8e2" opacity="0.05"/>
 
   <g font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
     <text x="108" y="118" fill="#c85a44" font-size="18" font-weight="700" letter-spacing="2.8">TRAVEL DIRECTION</text>
     <text x="330" y="118" fill="#c85a44" font-size="22" font-weight="700">→</text>
   </g>
 
-  <g fill="none" stroke="#c85a44" stroke-width="8.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M175 306H326" marker-end="url(#routeArrow)"/>
-    <path d="M365 306H516" marker-end="url(#routeArrow)"/>
-    <path d="M555 306H706" marker-end="url(#routeArrow)"/>
-    <path d="M745 306H896" marker-end="url(#routeArrow)"/>
-    <path d="M935 319V376" marker-end="url(#routeArrow)"/>
-    <path d="M954 389H1023" marker-end="url(#routeArrow)"/>
-    <path d="M1062 376V319" marker-end="url(#routeArrow)"/>
+  <g fill="none" stroke="#c85a44" stroke-width="8.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M175 320H326" marker-end="url(#routeArrow)"/>
+    <path d="M365 320H516" marker-end="url(#routeArrow)"/>
+    <path d="M555 320H706" marker-end="url(#routeArrow)"/>
+    <path d="M745 320H896" marker-end="url(#routeArrow)"/>
+    <path d="M935 320H1022" marker-end="url(#routeArrow)"/>
+  </g>
+
+  <g fill="none" stroke="#dc9e8b" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="10 12">
+    <path d="M920 334V386" marker-end="url(#detourArrow)"/>
   </g>
 
   <g fill="#c85a44" stroke="#fffdfa" stroke-width="4.5">
-    <circle cx="160" cy="306" r="14"/>
-    <circle cx="350" cy="306" r="14"/>
-    <circle cx="540" cy="306" r="14"/>
-    <circle cx="730" cy="306" r="14"/>
-    <circle cx="920" cy="306" r="14"/>
-    <circle cx="920" cy="389" r="14"/>
-    <circle cx="1045" cy="389" r="14"/>
-    <circle cx="1045" cy="306" r="14"/>
+    <circle cx="160" cy="320" r="14"/>
+    <circle cx="350" cy="320" r="14"/>
+    <circle cx="540" cy="320" r="14"/>
+    <circle cx="730" cy="320" r="14"/>
+    <circle cx="920" cy="320" r="14"/>
+    <circle cx="920" cy="398" r="12" fill="#dc9e8b"/>
+    <circle cx="1036" cy="320" r="14"/>
   </g>
 
   <g fill="#262b2d" text-anchor="middle" font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
-    <text x="160" y="224" font-size="42" font-weight="700">Osaka</text>
-    <text x="350" y="224" font-size="42" font-weight="700">Kyoto</text>
-    <text x="540" y="226" font-size="30" font-weight="600">Shin-Osaka</text>
-    <text x="730" y="226" font-size="30" font-weight="600">Odawara</text>
-    <text x="920" y="226" font-size="30" font-weight="600">Hakone</text>
-    <text x="1045" y="224" font-size="42" font-weight="700">Tokyo</text>
+    <text x="160" y="208" font-size="42" font-weight="700">Osaka</text>
+    <text x="350" y="208" font-size="42" font-weight="700">Kyoto</text>
+    <text x="540" y="210" font-size="27" font-weight="500" fill="#474f52">Shin-Osaka</text>
+    <text x="730" y="210" font-size="30" font-weight="580">Odawara</text>
+    <text x="920" y="210" font-size="30" font-weight="580">Hakone</text>
+    <text x="1036" y="208" font-size="42" font-weight="700">Tokyo</text>
   </g>
 
   <g fill="#262b2d" text-anchor="middle" font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
-    <text x="920" y="452" font-size="28" font-weight="700">Mt. Fuji area</text>
-    <text x="920" y="482" font-size="18" font-weight="500" fill="#677173">Lake Kawaguchiko / Oshino Hakkai</text>
+    <text x="920" y="454" font-size="28" font-weight="700">Mt. Fuji area</text>
+    <text x="920" y="484" font-size="18" font-weight="500" fill="#677173">Optional detour: Lake Kawaguchiko / Oshino Hakkai</text>
   </g>
 </svg>
