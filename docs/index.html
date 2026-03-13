@@ -3,1191 +3,617 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Japan Escape | Main Guide Hub</title>
+  <title>Japan Trip | Checklist &amp; Notes</title>
   <meta
     name="description"
-    content="Main hub for the Japan Escape trip guide with a built-in recommendation engine, interactive city image previews, and separate itinerary, food, toolkit, culture, snapshot, and full guide pages.">
-  <meta name="theme-color" content="#9c3d33">
-  <link rel="preconnect" href="https://commons.wikimedia.org" crossorigin>
-  <link rel="preconnect" href="https://upload.wikimedia.org" crossorigin>
-  <link
-    rel="icon"
-    type="image/svg+xml"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23fff7ec'/%3E%3Ccircle cx='45' cy='18' r='9' fill='%239c3d33'/%3E%3Cpath d='M11 43c7-12 15-19 21-19s13 7 21 19H11z' fill='%231e5d69'/%3E%3Cpath d='M19 46h26v4H19zm4-9h4v13h-4zm14 0h4v13h-4zm-18-5h26v3H19zm-3-5h32v3H16z' fill='%239c3d33'/%3E%3C/svg%3E">
-  <script src="./assets/theme-init.js"></script>
-  <link rel="stylesheet" href="./assets/site.css">
+    content="Clean bilingual Japan trip checklist and notes covering Osaka, Kyoto, Hakone, the Mt. Fuji area, and Tokyo.">
+  <meta name="theme-color" content="#b54131">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./script.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to content</a>
-  <div class="scroll-progress" aria-hidden="true"></div>
+  <a class="skip-link" href="#main-content">
+    <span data-language="en">Skip to content</span>
+    <span data-language="ja" hidden>本文へ移動</span>
+  </a>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark">JE</div>
-      <div class="brand-copy">
-        <strong>Japan Escape</strong>
-        <span>Main trip hub</span>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-block">
+        <p class="eyebrow">
+          <span data-language="en">Japan Trip</span>
+          <span data-language="ja" hidden>Japan Trip</span>
+        </p>
+        <h1>
+          <span data-language="en">Checklist &amp; Notes</span>
+          <span data-language="ja" hidden>チェックリストとメモ</span>
+        </h1>
+        <p class="hero-copy">
+          <span data-language="en">Checklist first, notes second, route summary last, matching the original document structure.</span>
+          <span data-language="ja" hidden>元のドキュメントと同じく、チェックリスト、メモ、ルートの順で整理した1ページです。</span>
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <nav
+          class="section-nav"
+          aria-label="Page sections"
+          data-aria-label-en="Page sections"
+          data-aria-label-ja="ページ内セクション">
+          <a href="#checklist">
+            <span data-language="en">Checklist</span>
+            <span data-language="ja" hidden>チェックリスト</span>
+          </a>
+          <a href="#notes">
+            <span data-language="en">Notes</span>
+            <span data-language="ja" hidden>メモ</span>
+          </a>
+          <a href="#route">
+            <span data-language="en">Route</span>
+            <span data-language="ja" hidden>ルート</span>
+          </a>
+        </nav>
+
+        <div
+          class="language-switcher"
+          role="group"
+          aria-label="Language switcher"
+          data-aria-label-en="Language switcher"
+          data-aria-label-ja="言語切り替え">
+          <button class="language-button is-active" type="button" data-set-language="en" aria-pressed="true">English</button>
+          <button class="language-button" type="button" data-set-language="ja" aria-pressed="false">日本語</button>
+        </div>
       </div>
     </div>
-    <nav class="nav-links">
-      <a class="current" aria-current="page" href="./index.html">Home</a>
-      <a href="./itinerary.html">Itinerary</a>
-      <a href="./food.html">Food</a>
-      <a href="./toolkit.html">Toolkit</a>
-      <a href="./culture.html">Culture</a>
-      <a href="./quick_snapshot.html">Snapshot</a>
-      <a href="./guide.html">Full Guide</a>
-    </nav>
   </header>
 
   <main class="page-shell" id="main-content">
-    <section class="panel hero hero-home reveal">
-      <div class="hero-copy">
-        <span class="eyebrow">Main Page</span>
-        <h1>Japan Escape Guide Hub</h1>
-        <p class="hero-lead">
-          Use the site to pick a trip style fast: rank the route, check the weather logic, and preview the cities before sharing anything out.
-        </p>
-        <div class="hero-status-strip">
-          <a class="status-pill" href="./itinerary.html#day-flow">
-            <strong>7 Days</strong>
-            <span>Focused route instead of city overload.</span>
-          </a>
-          <a class="status-pill" href="./itinerary.html#fuji-visibility">
-            <strong>1 Flex Rule</strong>
-            <span>Fuji stays visibility-led, not strict-order-led.</span>
-          </a>
-          <a class="status-pill" href="./itinerary.html#day-flow">
-            <strong>5 Anchor Stops</strong>
-            <span>Osaka, Kyoto, Hakone, Fuji, Tokyo.</span>
-          </a>
-        </div>
-        <div class="quick-callout">
-          <strong>Start Here</strong>
-          <span>Build the profile, then use the preview cards before sending pages out.</span>
-        </div>
-        <div class="hero-actions">
-          <a class="button-primary" href="#trip-profile">Build My Plan</a>
-          <a class="button-secondary" href="./itinerary.html">Open Itinerary</a>
-          <a class="button-secondary" href="./guide.html">Open Full Guide</a>
-        </div>
-        <div class="glance-strip">
-          <a class="glance-card" href="#visual-previews">
-            <strong>Trip Vibe</strong>
-            <span>Food-forward nights, one culture day, then a scenic hinge before Tokyo.</span>
-          </a>
-          <a class="glance-card" href="#trip-weather">
-            <strong>Planning Rule</strong>
-            <span>Start easy in Osaka and let Fuji move around the weather.</span>
-          </a>
-        </div>
-      </div>
-      <div class="hero-side">
-        <div class="hero-canvas">
-          <div class="hero-canvas-copy">
-            <span class="kicker">Live Trip Shape</span>
-            <strong>Neon arrival, temple contrast, scenic hinge, Shibuya finish.</strong>
-            <span>The board below mirrors the core logic: food pull, scenery pull, transfer ease, and weather pressure.</span>
-          </div>
-          <div class="route-ribbon" aria-label="Trip route overview">
-            <div class="route-stop is-strong">
-              <span>Osaka</span>
-              <small>Nights 1-3</small>
-            </div>
-            <div class="route-stop">
-              <span>Kyoto</span>
-              <small>Day trip</small>
-            </div>
-            <div class="route-stop">
-              <span>Hakone</span>
-              <small>Reset night</small>
-            </div>
-            <div class="route-stop is-photo">
-              <span>Fuji</span>
-              <small>Visibility-led</small>
-            </div>
-            <div class="route-stop">
-              <span>Tokyo</span>
-              <small>Finale</small>
-            </div>
-          </div>
-          <div class="hero-metric-stack">
-            <div class="hero-metric">
-              <span>Weather-sensitive block</span>
-              <strong>Fuji day</strong>
-              <div class="mini-bar"><span style="width: 72%"></span></div>
-            </div>
-            <div class="hero-metric">
-              <span>Food pressure</span>
-              <strong>Osaka + Tokyo</strong>
-              <div class="mini-bar"><span style="width: 84%"></span></div>
-            </div>
-            <div class="hero-metric">
-              <span>Reset potential</span>
-              <strong>Hakone overnight</strong>
-              <div class="mini-bar"><span style="width: 63%"></span></div>
-            </div>
-          </div>
-        </div>
-        <div class="glance-card atmospheric-card">
-          <strong>Before You Share The Plan</strong>
-          <span>Use the preview cards for quick visual buy-in, then send the page that matches the strongest recommendation instead of dumping the whole guide into the group chat.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel section reveal section-nav-panel">
-      <nav class="page-section-nav" data-section-nav aria-label="Homepage sections">
-        <a class="section-pill" href="#smart-guide">Guide path</a>
-        <a class="section-pill" href="#route-atlas">Highlights</a>
-        <a class="section-pill" href="#live-map">Live map</a>
-        <a class="section-pill" href="#trip-profile">Trip profile</a>
-        <a class="section-pill" href="#trip-weather">Live weather</a>
-        <a class="section-pill" href="#japan-explorer">Explorer</a>
-        <a class="section-pill" href="#official-watch">Articles</a>
-        <a class="section-pill" href="#visual-previews">Previews</a>
-      </nav>
-    </section>
-
-    <section class="panel section reveal" id="smart-guide">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow">Site Flow</span>
-          <h2>Manual Route Through The Site</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p>This is the manual version of the route. The entry guide bot now handles the dialogue, but this section still shows the clean four-step order underneath.</p>
-      </div>
-
-      <div class="smart-guide-grid">
-        <a class="smart-step-card" href="#trip-profile">
-          <span class="smart-step-count">Step 01</span>
-          <strong>Build the plan shape first</strong>
-          <span>Use the recommendation engine to decide whether food, scenery, nightlife, or transfer ease should drive the trip.</span>
-        </a>
-        <a class="smart-step-card" href="#trip-weather">
-          <span class="smart-step-count">Step 02</span>
-          <strong>Check the live weather logic</strong>
-          <span>Confirm if Fuji should stay flexible, whether Hakone needs extra layers, and which stop is easiest to commit to today.</span>
-        </a>
-        <a class="smart-step-card" href="#visual-previews">
-          <span class="smart-step-count">Step 03</span>
-          <strong>Use image previews for quick buy-in</strong>
-          <span>Open the city previews before sending links into the group chat so everyone sees the mood instead of only reading logistics.</span>
-        </a>
-        <a class="smart-step-card" href="./quick_snapshot.html">
-          <span class="smart-step-count">Step 04</span>
-          <strong>Send the right level of detail</strong>
-          <span>Use Snapshot for essentials, the split pages for focused answers, and Full Guide only when people want the deeper all-in-one version.</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel section reveal" id="route-atlas">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow">Visual Highlights</span>
-          <h2>See The Whole Trip In A Cleaner Image-Led Sequence</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p>The old route board is gone here. This section now works as a fast visual read: rotating highlights, seasonal timing cues, and clear jump points into the right page before you start scrolling deeper.</p>
-      </div>
-
-      <div class="highlight-layout">
-        <div class="feature-slider highlight-slider" data-slider data-slider-interval="5200">
-          <div class="slider-stage">
-            <article class="feature-slide is-active" data-slide>
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/D%C5%8Dtonbori_at_night%2C_Osaka_%2819551420339%29.jpg?width=1600" alt="Dotonbori canal at night in Osaka" loading="lazy" decoding="async">
-              <div class="feature-slide-copy">
-                <span class="badge">Arrival mood</span>
-                <h3>Osaka keeps the first nights bright and forgiving</h3>
-                <p>Use Osaka for quick wins: street food, strong visuals, and enough late options that the trip feels open instead of immediately over-scheduled.</p>
-                <div class="route-spotlight-actions">
-                  <button class="button-primary image-preview-trigger" type="button" data-preview-gallery="osaka">Preview Osaka</button>
-                  <a class="button-secondary" href="./itinerary.html#osaka-start">Open itinerary</a>
-                </div>
-              </div>
-            </article>
-
-            <article class="feature-slide" data-slide>
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kiyomizu-dera_Temple.Kyoto._Japan_%2850361443956%29.jpg?width=1600" alt="Kiyomizu-dera temple in Kyoto" loading="lazy" decoding="async">
-              <div class="feature-slide-copy">
-                <span class="badge">Culture contrast</span>
-                <h3>Kyoto works best as one focused day, not a scattered chase</h3>
-                <p>Keep Kyoto selective. One district with clean walking rhythm lands better than trying to consume the whole city in a single pass.</p>
-                <div class="route-spotlight-actions">
-                  <button class="button-primary image-preview-trigger" type="button" data-preview-gallery="kyoto">Preview Kyoto</button>
-                  <a class="button-secondary" href="./culture.html#temples">Open culture notes</a>
-                </div>
-              </div>
-            </article>
-
-            <article class="feature-slide" data-slide>
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chureito_Pagoda.jpg?width=1600" alt="Chureito Pagoda with Mount Fuji" loading="lazy" decoding="async">
-              <div class="feature-slide-copy">
-                <span class="badge">Seasonal watch</span>
-                <h3>Fuji is still the weather-led centerpiece of the route</h3>
-                <p>Visibility matters more than strict order. Check the live weather read, chase the clearest window, and let the mountain decide the strongest moment.</p>
-                <div class="route-spotlight-actions">
-                  <a class="button-primary" href="#trip-weather">Open weather read</a>
-                  <a class="button-secondary" href="./itinerary.html#fuji-visibility">Open Fuji plan</a>
-                </div>
-              </div>
-            </article>
-
-            <article class="feature-slide" data-slide>
-              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Fushimi_Inari%2C_Kyoto%2C_20240818_1400_4476.jpg?width=1600" alt="Torii gates in Kyoto" loading="lazy" decoding="async">
-              <div class="feature-slide-copy">
-                <span class="badge">Season timing</span>
-                <h3>Use the official blossom forecast as your seasonal planning anchor</h3>
-                <p>When dates are still flexible, start with bloom timing, then fit the route around the strongest regional window instead of guessing too early.</p>
-                <div class="route-spotlight-actions">
-                  <a class="button-primary" href="https://www.japan.travel/en/see-and-do/cherry-blossom-forecast/" target="_blank" rel="noreferrer">Open blossom forecast</a>
-                  <a class="button-secondary" href="./japan_trip_brochure.html">Open brochure pack</a>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <div class="slider-controls">
-            <button class="slider-arrow" type="button" data-slider-prev aria-label="Previous highlight">&lt;</button>
-            <div class="slider-dots" data-slider-dots aria-label="Highlight slides"></div>
-            <button class="slider-arrow" type="button" data-slider-next aria-label="Next highlight">&gt;</button>
-          </div>
+    <section class="hero-panel card" aria-labelledby="overview-title">
+      <div class="hero-panel__body">
+        <div class="hero-panel__copy">
+          <p class="section-tag">
+            <span data-language="en">Overview</span>
+            <span data-language="ja" hidden>概要</span>
+          </p>
+          <h2 id="overview-title">
+            <span data-language="en">A simple trip note, cleaned up for the web</span>
+            <span data-language="ja" hidden>旅行メモを見やすく整えたWeb版</span>
+          </h2>
+          <p class="section-intro">
+            <span data-language="en">The content below follows the screenshots closely and keeps the original purpose: a compact travel checklist with supporting notes.</span>
+            <span data-language="ja" hidden>下の内容は添付画像の構成に沿っており、目的もそのままに、コンパクトな旅行チェックリストと補足メモとしてまとめています。</span>
+          </p>
         </div>
 
-        <aside class="highlight-stack">
-          <article class="highlight-card seasonal-highlight-card">
-            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cherry_blossoms_and_a_train_in_Arashiyama%2C_Kyoto%2C_Japan.jpg?width=1280" alt="Cherry blossoms in Kyoto" loading="lazy" decoding="async">
-            <div class="highlight-card-copy">
-              <span class="badge">Seasonal timing</span>
-              <strong>Cherry blossom timing belongs in the planning layer, not as an afterthought</strong>
-              <span>Use the official forecast before locking the final route order if the trip is meant to land during sakura season.</span>
-            </div>
+        <div class="overview-grid" aria-label="Trip overview">
+          <article class="overview-card">
+            <p class="overview-label">
+              <span data-language="en">Core plan</span>
+              <span data-language="ja" hidden>基本日程</span>
+            </p>
+            <strong>
+              <span data-language="en">7-day itinerary</span>
+              <span data-language="ja" hidden>7日間の旅程</span>
+            </strong>
           </article>
 
-          <div class="highlight-mini-grid">
-            <a class="highlight-mini-card" href="./food.html#osaka-food">
-              <strong>Food-first start</strong>
-              <span>Osaka works because the first nights are visual, easy, and low pressure.</span>
-            </a>
-            <a class="highlight-mini-card" href="./toolkit.html#weather-packing">
-              <strong>Weather-led toolkit</strong>
-              <span>Fuji and Hakone still benefit from same-day checks and cleaner packing choices.</span>
-            </a>
-            <a class="highlight-mini-card" href="./quick_snapshot.html">
-              <strong>Fast mobile backup</strong>
-              <span>Open the snapshot when signal, energy, or patience gets thin.</span>
-            </a>
-            <a class="highlight-mini-card" href="./guide.html">
-              <strong>Deeper visual guide</strong>
-              <span>Use the full guide if the group needs the richer all-in-one version.</span>
-            </a>
-          </div>
-        </aside>
+          <article class="overview-card">
+            <p class="overview-label">
+              <span data-language="en">Optional</span>
+              <span data-language="ja" hidden>追加日程</span>
+            </p>
+            <strong>
+              <span data-language="en">2 extra Tokyo days</span>
+              <span data-language="ja" hidden>東京の追加2日</span>
+            </strong>
+          </article>
+
+          <article class="overview-card">
+            <p class="overview-label">
+              <span data-language="en">Main flow</span>
+              <span data-language="ja" hidden>主な流れ</span>
+            </p>
+            <strong>
+              <span data-language="en">Osaka to Tokyo</span>
+              <span data-language="ja" hidden>大阪から東京へ</span>
+            </strong>
+          </article>
+        </div>
       </div>
     </section>
 
-    <section class="panel section reveal" id="live-map">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow">Live Navigation Map</span>
-          <h2>Use A Real Map With GPS, Route Pins, And Google Maps Handoff</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p>This map layer is utility-first: live location, route and category filters, distance awareness, and one-click handoff to Google Maps for actual navigation. The site keeps the original design language instead of copying someone else’s product UI.</p>
+    <section class="content-section" id="checklist" aria-labelledby="checklist-title">
+      <div class="section-heading">
+        <p class="section-tag">
+          <span data-language="en">Checklist</span>
+          <span data-language="ja" hidden>チェックリスト</span>
+        </p>
+        <h2 id="checklist-title">
+          <span data-language="en">7-Day Itinerary</span>
+          <span data-language="ja" hidden>7日間の旅程</span>
+        </h2>
+        <p class="section-intro">
+          <span data-language="en">The daily checklist from the first screenshot, kept in the same order.</span>
+          <span data-language="ja" hidden>1枚目の画像にある日別チェックリストを、そのままの順序で整理しています。</span>
+        </p>
       </div>
 
-      <div class="map-app-layout" data-live-map>
-        <div class="map-app-stage">
-          <div class="map-toolbar">
-            <div class="explorer-filter-strip" aria-label="Map pin filters">
-              <button class="filter-chip is-active" type="button" data-map-filter="all" aria-pressed="true">All pins</button>
-              <button class="filter-chip" type="button" data-map-filter="route" aria-pressed="false">Route</button>
-              <button class="filter-chip" type="button" data-map-filter="food" aria-pressed="false">Food</button>
-              <button class="filter-chip" type="button" data-map-filter="view" aria-pressed="false">Views</button>
-              <button class="filter-chip" type="button" data-map-filter="transit" aria-pressed="false">Transit</button>
-            </div>
-            <div class="map-toolbar-actions">
-              <button class="button-pill" type="button" data-map-locate>Use my location</button>
-              <button class="button-pill" type="button" data-map-reset>Reset map</button>
-            </div>
+      <div class="day-grid">
+        <article class="day-card card">
+          <div class="day-card__header">
+            <p class="day-label">
+              <span data-language="en">Day 1</span>
+              <span data-language="ja" hidden>1日目</span>
+            </p>
+            <p class="day-region">
+              <span data-language="en">Osaka</span>
+              <span data-language="ja" hidden>大阪</span>
+            </p>
           </div>
-
-          <div class="map-canvas-shell">
-            <div class="map-loading-card" data-map-loading>
-              <strong>Loading interactive map...</strong>
-              <span>The map initializes only when this section comes into view so the page stays fast.</span>
-            </div>
-            <div class="map-canvas" id="live-route-map" role="application" aria-label="Interactive Japan route map"></div>
-          </div>
-        </div>
-
-        <aside class="map-info-panel">
-          <span class="eyebrow">GPS + route context</span>
-          <h3 data-map-title>Osaka is the current anchor</h3>
-          <p data-map-description>The live map starts on the core route. Click any marker or use the filters to switch between route anchors, food spots, scenic viewpoints, and major transit handoffs.</p>
-
-          <div class="map-stat-grid">
-            <div class="map-stat">
-              <span>GPS status</span>
-              <strong data-map-gps-status>Location not shared yet</strong>
-            </div>
-            <div class="map-stat">
-              <span>Nearest saved stop</span>
-              <strong data-map-nearest>Osaka</strong>
-            </div>
-            <div class="map-stat">
-              <span>Weather tie-in</span>
-              <strong data-map-weather>Live route weather loads below.</strong>
-            </div>
-          </div>
-
-          <div class="destination-meta" data-map-tags>
-            <span class="destination-pill">route</span>
-            <span class="destination-pill">food</span>
-            <span class="destination-pill">easy</span>
-          </div>
-
-          <div class="destination-facts" data-map-facts>
-            <div class="route-fact">
-              <strong>Best use</strong>
-              <span>Use Osaka to convert travel fatigue into food and momentum before the more precise middle of the route starts.</span>
-            </div>
-            <div class="route-fact">
-              <strong>Google Maps handoff</strong>
-              <span>Once a stop is selected, use the directions button for real-world routing instead of trying to rebuild turn-by-turn logic inside the site.</span>
-            </div>
-          </div>
-
-          <div class="route-spotlight-actions">
-            <a class="button-primary" data-map-primary href="./itinerary.html#osaka-start">Open local guide</a>
-            <a class="button-secondary" data-map-directions href="https://www.google.com/maps/search/?api=1&query=34.6937,135.5023" target="_blank" rel="noreferrer">Open in Google Maps</a>
-          </div>
-
-          <div class="map-nearby-panel">
-            <strong>Closest saved points</strong>
-            <div class="map-nearby-list" data-map-nearby>
-              <div class="map-nearby-item">
-                <strong>Osaka</strong>
-                <span>Route start, food, and low-friction first-night energy.</span>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="panel section reveal" id="trip-profile">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow">Recommendation Engine</span>
-          <h2>Rank The Trip Around Your Actual Priorities</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p>The engine scores route stops and guide pages against food weight, scenery weight, nightlife, pace, budget, weather, group shape, and opt-in extras like onsen, culture depth, shopping, and easier transfers.</p>
-      </div>
-
-      <div class="engine-layout">
-        <form class="engine-form" id="recommendation-form">
-          <div class="engine-grid">
-            <label class="control-card control-range" for="food-priority">
-              <span class="control-label">Food Priority</span>
-              <span class="control-copy">How much the plan should be driven by what you want to eat first.</span>
-              <input id="food-priority" name="food-priority" type="range" min="1" max="5" value="5" data-range-output="food-priority-output">
-              <div class="range-meta">
-                <span>Light</span>
-                <output id="food-priority-output" for="food-priority">5</output>
-                <span>Food-led</span>
-              </div>
-            </label>
-
-            <label class="control-card control-range" for="scenery-priority">
-              <span class="control-label">Scenery + Photo Priority</span>
-              <span class="control-copy">How strongly the scenic middle and photo windows should influence the trip.</span>
-              <input id="scenery-priority" name="scenery-priority" type="range" min="1" max="5" value="4" data-range-output="scenery-priority-output">
-              <div class="range-meta">
-                <span>Secondary</span>
-                <output id="scenery-priority-output" for="scenery-priority">4</output>
-                <span>Main driver</span>
-              </div>
-            </label>
-
-            <label class="control-card control-range" for="night-priority">
-              <span class="control-label">Night Energy</span>
-              <span class="control-copy">How much Osaka and Tokyo should lean toward lights, late dinners, and stronger city energy.</span>
-              <input id="night-priority" name="night-priority" type="range" min="1" max="5" value="4" data-range-output="night-priority-output">
-              <div class="range-meta">
-                <span>Low-key</span>
-                <output id="night-priority-output" for="night-priority">4</output>
-                <span>Late city</span>
-              </div>
-            </label>
-
-            <label class="control-card control-range" for="relaxed-priority">
-              <span class="control-label">Breathing Room</span>
-              <span class="control-copy">How much you want slack, slow transitions, and a softer pace built into the route.</span>
-              <input id="relaxed-priority" name="relaxed-priority" type="range" min="1" max="5" value="3" data-range-output="relaxed-priority-output">
-              <div class="range-meta">
-                <span>Tight</span>
-                <output id="relaxed-priority-output" for="relaxed-priority">3</output>
-                <span>Loose</span>
-              </div>
-            </label>
-
-            <label class="control-card" for="weather-mode">
-              <span class="control-label">Weather Outlook</span>
-              <span class="control-copy">Use the most realistic forecast so the engine knows how hard to lean on Fuji.</span>
-              <select id="weather-mode" name="weather-mode">
-                <option value="mixed" selected>Mixed / uncertain</option>
-                <option value="clear">Mostly clear</option>
-                <option value="cloudy">Cloudy / risky</option>
-              </select>
-            </label>
-
-            <label class="control-card" for="budget-mode">
-              <span class="control-label">Budget Shape</span>
-              <span class="control-copy">This affects how strongly the engine favors easy value wins versus flexible comfort choices.</span>
-              <select id="budget-mode" name="budget-mode">
-                <option value="balanced" selected>Balanced</option>
-                <option value="value">Value-conscious</option>
-                <option value="comfort">Comfort-led</option>
-              </select>
-            </label>
-
-            <label class="control-card" for="party-mode">
-              <span class="control-label">Travel Party</span>
-              <span class="control-copy">Solo, couples, and small groups do not move through stations and meal decisions the same way.</span>
-              <select id="party-mode" name="party-mode">
-                <option value="couple" selected>Couple / pair</option>
-                <option value="solo">Solo</option>
-                <option value="group">Small group</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="toggle-strip" aria-label="Extra priorities">
-            <label class="toggle-chip" for="pref-onsen">
-              <input id="pref-onsen" name="pref-onsen" type="checkbox" checked>
-              <span>Need an onsen or ryokan window</span>
-            </label>
-            <label class="toggle-chip" for="pref-shopping">
-              <input id="pref-shopping" name="pref-shopping" type="checkbox" checked>
-              <span>Want a stronger shopping finish</span>
-            </label>
-            <label class="toggle-chip" for="pref-easy">
-              <input id="pref-easy" name="pref-easy" type="checkbox" checked>
-              <span>Keep transfers simple</span>
-            </label>
-            <label class="toggle-chip" for="pref-culture">
-              <input id="pref-culture" name="pref-culture" type="checkbox">
-              <span>Lean harder into culture depth</span>
-            </label>
-          </div>
-
-          <div class="engine-actions">
-            <button class="button-primary" id="reset-recommendations" type="button">Reset Profile</button>
-            <a class="button-secondary" href="./quick_snapshot.html">Open Snapshot Backup</a>
-          </div>
-        </form>
-
-        <aside class="engine-results">
-          <div class="engine-summary-card">
-            <span class="eyebrow">Profile Result</span>
-            <h3 id="recommendation-mode">Food-first soft landing</h3>
-            <p id="recommendation-description">A balanced route that starts easy in Osaka, keeps the Fuji block flexible, and lets food and night energy carry the city side of the trip.</p>
-            <div class="engine-stat-grid">
-              <div class="engine-stat">
-                <span>Lead With</span>
-                <strong id="recommendation-lead">Osaka arrival lane</strong>
-              </div>
-              <div class="engine-stat">
-                <span>Weather Watch</span>
-                <strong id="recommendation-weather">Keep Fuji flexible</strong>
-              </div>
-              <div class="engine-stat">
-                <span>Share First</span>
-                <strong id="recommendation-share">Main page + itinerary</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="signal-board">
-            <div class="signal-board-copy">
-              <strong>Route Signal Board</strong>
-              <span>These weights move as the engine re-ranks the plan.</span>
-            </div>
-            <div class="signal-stack">
-              <div class="signal-row" data-city-row="osaka">
-                <div class="signal-label">
-                  <strong>Osaka</strong>
-                  <span>Arrival + food</span>
-                </div>
-                <div class="signal-bar"><span data-city-fill="osaka"></span></div>
-                <strong class="signal-score" data-city-score="osaka">0</strong>
-              </div>
-              <div class="signal-row" data-city-row="kyoto">
-                <div class="signal-label">
-                  <strong>Kyoto</strong>
-                  <span>Culture contrast</span>
-                </div>
-                <div class="signal-bar"><span data-city-fill="kyoto"></span></div>
-                <strong class="signal-score" data-city-score="kyoto">0</strong>
-              </div>
-              <div class="signal-row" data-city-row="hakone">
-                <div class="signal-label">
-                  <strong>Hakone</strong>
-                  <span>Reset + onsen</span>
-                </div>
-                <div class="signal-bar"><span data-city-fill="hakone"></span></div>
-                <strong class="signal-score" data-city-score="hakone">0</strong>
-              </div>
-              <div class="signal-row" data-city-row="fuji">
-                <div class="signal-label">
-                  <strong>Fuji</strong>
-                  <span>Scenery risk</span>
-                </div>
-                <div class="signal-bar"><span data-city-fill="fuji"></span></div>
-                <strong class="signal-score" data-city-score="fuji">0</strong>
-              </div>
-              <div class="signal-row" data-city-row="tokyo">
-                <div class="signal-label">
-                  <strong>Tokyo</strong>
-                  <span>Shopping + finish</span>
-                </div>
-                <div class="signal-bar"><span data-city-fill="tokyo"></span></div>
-                <strong class="signal-score" data-city-score="tokyo">0</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="recommendation-list" id="recommendation-list" aria-live="polite"></div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="panel section reveal" id="trip-weather">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow">Live Route Weather</span>
-          <h2>Read The Conditions Before You Lock The Order</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p>The weather layer pulls live forecast data for the five route anchors, then turns it into practical trip advice instead of a wall of numbers. Fuji gets its own clarity and fog-risk read.</p>
-      </div>
-
-      <div class="weather-layout">
-        <div class="weather-main">
-          <div class="weather-callout">
-            <div>
-              <strong>What This Is Doing</strong>
-              <span>Current temperature, quick condition, packing cue, and a same-day timing tip for each stop. Refresh it before a move day or before committing to Fuji.</span>
-            </div>
-            <button class="button-pill" type="button" data-refresh-weather>Refresh live read</button>
-          </div>
-
-          <div class="weather-grid" data-weather-grid>
-            <article class="weather-card">
-              <span class="weather-stop-label">Osaka</span>
-              <strong>Loading live read...</strong>
-              <span>Checking current route conditions.</span>
-            </article>
-            <article class="weather-card">
-              <span class="weather-stop-label">Kyoto</span>
-              <strong>Loading live read...</strong>
-              <span>Checking current route conditions.</span>
-            </article>
-            <article class="weather-card">
-              <span class="weather-stop-label">Hakone</span>
-              <strong>Loading live read...</strong>
-              <span>Checking current route conditions.</span>
-            </article>
-            <article class="weather-card">
-              <span class="weather-stop-label">Mt. Fuji Area</span>
-              <strong>Loading live read...</strong>
-              <span>Checking current route conditions.</span>
-            </article>
-            <article class="weather-card">
-              <span class="weather-stop-label">Tokyo</span>
-              <strong>Loading live read...</strong>
-              <span>Checking current route conditions.</span>
-            </article>
-          </div>
-        </div>
-
-        <aside class="weather-focus-panel" data-fuji-forecast>
-          <span class="eyebrow">Fuji visibility index</span>
-          <h3>Waiting on forecast data</h3>
-          <p>The Fuji recommendation will update once the live weather forecast loads. The index rewards clearer visibility, lower cloud cover, and lower rain pressure.</p>
-          <div class="fuji-forecast-list">
-            <div class="fuji-day-card">
-              <strong>Best day to aim for</strong>
-              <span>Checking the next few days now.</span>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="panel section reveal" id="japan-explorer">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow">Japan Explorer</span>
-          <h2>Search Major Destinations And Read The Fit Fast</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p>This is the broader discovery layer: major Japan stops, region filters, and one detail panel that spells out what each place is strongest at without making you open ten tabs.</p>
-      </div>
-
-      <div class="explorer-toolbar">
-        <label class="search-panel explorer-search-panel" for="destination-search">
-          <span>Search major destinations</span>
-          <input id="destination-search" type="search" autocomplete="off" placeholder="Try Osaka, Nikko, Okinawa, Kanazawa, or night views">
-        </label>
-        <div class="explorer-filter-strip" aria-label="Destination region filters">
-          <button class="filter-chip is-active" type="button" data-region-filter="all" aria-pressed="true">All</button>
-          <button class="filter-chip" type="button" data-region-filter="kansai" aria-pressed="false">Kansai</button>
-          <button class="filter-chip" type="button" data-region-filter="kanto" aria-pressed="false">Kanto</button>
-          <button class="filter-chip" type="button" data-region-filter="chubu" aria-pressed="false">Chubu</button>
-          <button class="filter-chip" type="button" data-region-filter="west" aria-pressed="false">West Japan</button>
-          <button class="filter-chip" type="button" data-region-filter="north-south" aria-pressed="false">North + South</button>
-        </div>
-      </div>
-
-      <div class="explorer-layout" data-destination-explorer>
-        <div class="destination-grid" id="destination-grid" aria-live="polite"></div>
-
-        <aside class="destination-detail" id="destination-detail">
-          <div class="destination-detail-media">
-            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/D%C5%8Dtonbori_at_night%2C_Osaka_%2819551420339%29.jpg?width=1280" alt="Dotonbori at night in Osaka">
-          </div>
-          <div class="destination-detail-copy">
-            <span class="eyebrow">Featured destination</span>
-            <h3>Osaka</h3>
-            <p>Start with Osaka if you want food, easy arrivals, nightlife, and a forgiving first-night base.</p>
-            <div class="destination-meta">
-              <span class="destination-pill">Kansai</span>
-              <span class="destination-pill">Food</span>
-              <span class="destination-pill">Night</span>
-            </div>
-            <div class="destination-facts">
-              <div class="route-fact">
-                <strong>Best time</strong>
-                <span>After dark when the signage and streets are doing most of the emotional work.</span>
-              </div>
-              <div class="route-fact">
-                <strong>Good for</strong>
-                <span>Loose arrivals, casual eating, and turning a tired group into a functioning group.</span>
-              </div>
-            </div>
-            <div class="destination-category-grid">
-              <div class="destination-category">
-                <strong>Hotels</strong>
-                <span>Namba, Umeda, or Shin-Osaka depending on whether food, shopping, or transit matters most.</span>
-              </div>
-              <div class="destination-category">
-                <strong>Shopping</strong>
-                <span>Shinsaibashi, Umeda, and station-linked malls keep it easy in bad weather too.</span>
-              </div>
-              <div class="destination-category">
-                <strong>Entertainment</strong>
-                <span>Dotonbori, neon walks, retro Shinsekai, and late low-pressure wandering.</span>
-              </div>
-              <div class="destination-category">
-                <strong>Restaurants</strong>
-                <span>Takoyaki, kushikatsu, okonomiyaki, ramen, and strong casual late-night fallback.</span>
-              </div>
-            </div>
-            <div class="route-spotlight-actions">
-              <a class="button-primary" href="./itinerary.html#osaka-start">Open local guide</a>
-              <a class="button-secondary" href="./food.html#osaka-food">Open food notes</a>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="panel section reveal" id="official-watch">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow" data-i18n-en="Official Watch" data-i18n-ja="公式ウォッチ">Official Watch</span>
-          <h2 data-i18n-en="National And Local Japan Updates, Brochures, And Planning" data-i18n-ja="全国・地域アップデート、パンフレット、計画リンク">National And Local Japan Updates, Brochures, And Planning</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p data-i18n-en="Use this layer when you want official national or city-level reads without opening heavy widgets or digging through unrelated search results." data-i18n-ja="重い埋め込みを使わずに、全国または都市単位の公式情報を確認したい時の入口です。">Use this layer when you want official national or city-level reads without opening heavy widgets or digging through unrelated search results.</p>
-      </div>
-
-      <div class="official-layout">
-        <div class="official-feature-stack">
-          <div class="feature-slider article-slider" data-slider data-slider-interval="5600">
-            <div class="slider-stage">
-              <article class="feature-slide is-active" data-slide>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Cherry_blossoms_and_a_train_in_Arashiyama%2C_Kyoto%2C_Japan.jpg?width=1600" alt="Cherry blossoms in Kyoto" loading="lazy" decoding="async">
-                <div class="feature-slide-copy">
-                  <span class="badge">Official seasonal watch</span>
-                  <h3>Track bloom timing with the official JNTO sakura forecast</h3>
-                  <p>Use this when the trip dates still have movement and you want one official starting point before the route order gets locked.</p>
-                  <div class="article-slide-meta">
-                    <span>JNTO</span>
-                    <span>Seasonal timing</span>
-                    <span>Forecast</span>
-                  </div>
-                  <div class="route-spotlight-actions">
-                    <a class="button-primary" href="https://www.japan.travel/en/see-and-do/cherry-blossom-forecast/" target="_blank" rel="noreferrer">Open forecast</a>
-                    <a class="button-secondary" href="./toolkit.html#weather-packing">Open site weather notes</a>
-                  </div>
-                </div>
-              </article>
-
-              <article class="feature-slide" data-slide>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Mount_Fuji_from_Lake_Kawaguchi_s2.jpg?width=1600" alt="Mount Fuji from Lake Kawaguchi" loading="lazy" decoding="async">
-                <div class="feature-slide-copy">
-                  <span class="badge">National update feed</span>
-                  <h3>Check JNTO news when you want official nationwide travel updates</h3>
-                  <p>Use this as the national layer for travel changes, destination updates, and broader Japan reads before you start branching outside the core route.</p>
-                  <div class="article-slide-meta">
-                    <span>JNTO</span>
-                    <span>National</span>
-                    <span>Updates</span>
-                  </div>
-                  <div class="route-spotlight-actions">
-                    <a class="button-primary" href="https://www.japan.travel/en/ca/news/" target="_blank" rel="noreferrer">Open JNTO news</a>
-                    <a class="button-secondary" href="#japan-explorer">Stay in the site explorer</a>
-                  </div>
-                </div>
-              </article>
-
-              <article class="feature-slide" data-slide>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_crossing_%2812214%29.jpg?width=1600" alt="Shibuya Crossing in Tokyo" loading="lazy" decoding="async">
-                <div class="feature-slide-copy">
-                  <span class="badge">Local city updates</span>
-                  <h3>Use GO TOKYO for Tokyo-side new and now reads</h3>
-                  <p>Good for local updates, seasonal events, and district-level timing once the final Tokyo stop starts becoming the focus.</p>
-                  <div class="article-slide-meta">
-                    <span>Tokyo</span>
-                    <span>Local</span>
-                    <span>Official</span>
-                  </div>
-                  <div class="route-spotlight-actions">
-                    <a class="button-primary" href="https://www.gotokyo.org/en/new-and-now/index.html" target="_blank" rel="noreferrer">Open Tokyo updates</a>
-                    <a class="button-secondary" href="./itinerary.html#tokyo-finish">Open Tokyo stop</a>
-                  </div>
-                </div>
-              </article>
-
-              <article class="feature-slide" data-slide>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kiyomizu-dera_Temple.Kyoto._Japan_%2850361443956%29.jpg?width=1600" alt="Kyoto temple" loading="lazy" decoding="async">
-                <div class="feature-slide-copy">
-                  <span class="badge">Local city updates</span>
-                  <h3>Kyoto news is the cleanest local read before the culture day</h3>
-                  <p>Use Kyoto’s official tourism news layer for local notices, seasonal changes, and event timing when the day-trip details start tightening up.</p>
-                  <div class="article-slide-meta">
-                    <span>Kyoto</span>
-                    <span>Local</span>
-                    <span>Official</span>
-                  </div>
-                  <div class="route-spotlight-actions">
-                    <a class="button-primary" href="https://kyoto.travel/en/news/index.html" target="_blank" rel="noreferrer">Open Kyoto news</a>
-                    <a class="button-secondary" href="./culture.html#culture-watch">Open culture page</a>
-                  </div>
-                </div>
-              </article>
-            </div>
-
-            <div class="slider-controls">
-              <button class="slider-arrow" type="button" data-slider-prev aria-label="Previous official read">&lt;</button>
-              <div class="slider-dots" data-slider-dots aria-label="Official read slides"></div>
-              <button class="slider-arrow" type="button" data-slider-next aria-label="Next official read">&gt;</button>
-            </div>
-          </div>
-
-          <div class="link-grid official-link-grid">
-            <a class="link-card" href="https://www.japan.travel/en/destinations/kanto/" target="_blank" rel="noreferrer">
-              <strong>Kanto Region Guide</strong>
-              <span>Official region read for Tokyo, Kanagawa, Nikko-side add-ons, and eastern-route planning.</span>
-              <small>JNTO</small>
-            </a>
-            <a class="link-card" href="https://www.japan.travel/en/destinations/kansai/" target="_blank" rel="noreferrer">
-              <strong>Kansai Region Guide</strong>
-              <span>Use this when comparing Osaka, Kyoto, Nara, Kobe, or a stronger west-Japan food and culture swing.</span>
-              <small>JNTO</small>
-            </a>
-            <a class="link-card" href="https://www.japan.travel/en/destinations/kanto/tokyo/" target="_blank" rel="noreferrer">
-              <strong>Tokyo Official Read</strong>
-              <span>Good for neighborhood inspiration, time allocation, and deciding how hard to lean into Tokyo at the end.</span>
-              <small>JNTO</small>
-            </a>
-            <a class="link-card" href="./japan_trip_brochure.html">
-              <strong>Travel Brochures</strong>
-              <span>Open the local brochure pack with printable route summaries, fast links, and share-ready planning pages.</span>
-              <small>Local brochures</small>
-            </a>
-          </div>
-        </div>
-
-        <aside class="tool-stack">
-          <div class="tool-card">
-            <span class="eyebrow">Free Flight Launcher</span>
-            <h3>Open a quick airfare search without embedding a heavy widget</h3>
-            <p>Enter airport codes, pick your Japan arrival airport, and launch a lightweight external search in a new tab.</p>
-            <form class="flight-form" data-flight-form>
-              <label for="flight-from">
-                <span>From airport code</span>
-                <input id="flight-from" name="from" type="text" maxlength="4" placeholder="SEA" value="SEA" autocomplete="off">
+          <ul class="checklist-list">
+            <li>
+              <label class="check-item" for="day1-nightlife">
+                <input id="day1-nightlife" type="checkbox">
+                <span class="check-copy" data-language="en">Osaka nightlife</span>
+                <span class="check-copy" data-language="ja" hidden>大阪の夜散策</span>
               </label>
-              <label for="flight-to">
-                <span>Japan airport</span>
-                <select id="flight-to" name="to">
-                  <option value="KIX">Osaka / KIX</option>
-                  <option value="HND">Tokyo / HND</option>
-                  <option value="NRT">Tokyo / NRT</option>
-                  <option value="ITM">Osaka / ITM</option>
-                  <option value="FUK">Fukuoka / FUK</option>
-                  <option value="CTS">Sapporo / CTS</option>
-                </select>
+            </li>
+            <li>
+              <label class="check-item" for="day1-tsutenkaku">
+                <input id="day1-tsutenkaku" type="checkbox">
+                <span class="check-copy" data-language="en">Tsutenkaku</span>
+                <span class="check-copy" data-language="ja" hidden>通天閣</span>
               </label>
-              <label for="flight-depart">
-                <span>Depart</span>
-                <input id="flight-depart" name="depart" type="date">
+            </li>
+            <li>
+              <label class="check-item" for="day1-shinsekai">
+                <input id="day1-shinsekai" type="checkbox">
+                <span class="check-copy" data-language="en">Shinsekai</span>
+                <span class="check-copy" data-language="ja" hidden>新世界</span>
               </label>
-              <label for="flight-return">
-                <span>Return</span>
-                <input id="flight-return" name="return" type="date">
+            </li>
+          </ul>
+        </article>
+
+        <article class="day-card card">
+          <div class="day-card__header">
+            <p class="day-label">
+              <span data-language="en">Day 2</span>
+              <span data-language="ja" hidden>2日目</span>
+            </p>
+            <p class="day-region">
+              <span data-language="en">Kyoto</span>
+              <span data-language="ja" hidden>京都</span>
+            </p>
+          </div>
+          <ul class="checklist-list">
+            <li>
+              <label class="check-item" for="day2-kyoto">
+                <input id="day2-kyoto" type="checkbox">
+                <span class="check-copy" data-language="en">Kyoto full day</span>
+                <span class="check-copy" data-language="ja" hidden>京都を1日観光</span>
               </label>
-              <button class="button-primary" type="submit">Search flights</button>
-            </form>
-            <div class="note-band">This launches an external search page instead of pulling in an ad-heavy widget. Use airport codes for the cleanest result.</div>
-          </div>
+            </li>
+            <li>
+              <label class="check-item" for="day2-zenji">
+                <input id="day2-zenji" type="checkbox">
+                <!-- Review: "Zenji Temple" was inferred from the screenshot and should be confirmed against the original document. -->
+                <span class="check-copy" data-language="en">Zenji Temple</span>
+                <span class="check-copy" data-language="ja" hidden>Zenji Temple</span>
+              </label>
+            </li>
+          </ul>
+        </article>
 
-          <div class="tool-card">
-            <strong>Planning extras worth opening</strong>
-            <ul class="brochure-list">
-              <li><a href="./japan_trip_brochure.html">Japan Escape brochure pack</a></li>
-              <li><a href="https://www.japan.travel/en/" target="_blank" rel="noreferrer">Japan Travel official home</a></li>
-              <li><a href="https://www.japan.travel/en/destinations/chubu/yamanashi/" target="_blank" rel="noreferrer">Yamanashi and Fuji-side inspiration</a></li>
-              <li><a href="https://www.japan.travel/en/destinations/kanto/kanagawa/" target="_blank" rel="noreferrer">Kanagawa and Hakone-side inspiration</a></li>
-              <li><a href="https://www.japan.travel/en/plan/" target="_blank" rel="noreferrer">Plan your trip overview</a></li>
-            </ul>
+        <article class="day-card card">
+          <div class="day-card__header">
+            <p class="day-label">
+              <span data-language="en">Day 3</span>
+              <span data-language="ja" hidden>3日目</span>
+            </p>
+            <p class="day-region">
+              <span data-language="en">Osaka</span>
+              <span data-language="ja" hidden>大阪</span>
+            </p>
           </div>
-        </aside>
+          <ul class="checklist-list">
+            <li>
+              <label class="check-item" for="day3-kaiyukan">
+                <input id="day3-kaiyukan" type="checkbox">
+                <span class="check-copy" data-language="en">Osaka Aquarium Kaiyukan</span>
+                <span class="check-copy" data-language="ja" hidden>海遊館</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day3-flex">
+                <input id="day3-flex" type="checkbox">
+                <span class="check-copy" data-language="en">Flexible Osaka time</span>
+                <span class="check-copy" data-language="ja" hidden>大阪で自由時間</span>
+              </label>
+            </li>
+          </ul>
+        </article>
+
+        <article class="day-card card">
+          <div class="day-card__header">
+            <p class="day-label">
+              <span data-language="en">Day 4</span>
+              <span data-language="ja" hidden>4日目</span>
+            </p>
+            <p class="day-region">
+              <span data-language="en">Transit + Hakone</span>
+              <span data-language="ja" hidden>移動 + 箱根</span>
+            </p>
+          </div>
+          <ul class="checklist-list">
+            <li>
+              <label class="check-item" for="day4-train">
+                <input id="day4-train" type="checkbox">
+                <span class="check-copy" data-language="en">Bullet train: Shin-Osaka -&gt; Odawara</span>
+                <span class="check-copy" data-language="ja" hidden>新幹線：新大阪 -&gt; 小田原</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day4-hakone">
+                <input id="day4-hakone" type="checkbox">
+                <span class="check-copy" data-language="en">Hakone sightseeing</span>
+                <span class="check-copy" data-language="ja" hidden>箱根観光</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day4-overnight">
+                <input id="day4-overnight" type="checkbox">
+                <span class="check-copy" data-language="en">Hakone overnight</span>
+                <span class="check-copy" data-language="ja" hidden>箱根泊</span>
+              </label>
+            </li>
+          </ul>
+        </article>
+
+        <article class="day-card card">
+          <div class="day-card__header">
+            <p class="day-label">
+              <span data-language="en">Day 5</span>
+              <span data-language="ja" hidden>5日目</span>
+            </p>
+            <p class="day-region">
+              <span data-language="en">Hakone</span>
+              <span data-language="ja" hidden>箱根</span>
+            </p>
+          </div>
+          <ul class="checklist-list">
+            <li>
+              <label class="check-item" for="day5-morning">
+                <input id="day5-morning" type="checkbox">
+                <span class="check-copy" data-language="en">Hakone morning</span>
+                <span class="check-copy" data-language="ja" hidden>箱根の朝</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day5-transfer">
+                <input id="day5-transfer" type="checkbox">
+                <span class="check-copy" data-language="en">Transfer toward Mt. Fuji area</span>
+                <span class="check-copy" data-language="ja" hidden>富士山エリアへ移動</span>
+              </label>
+            </li>
+          </ul>
+        </article>
+
+        <article class="day-card card">
+          <div class="day-card__header">
+            <p class="day-label">
+              <span data-language="en">Day 6</span>
+              <span data-language="ja" hidden>6日目</span>
+            </p>
+            <p class="day-region">
+              <span data-language="en">Mt. Fuji Area</span>
+              <span data-language="ja" hidden>富士山エリア</span>
+            </p>
+          </div>
+          <ul class="checklist-list">
+            <li>
+              <label class="check-item" for="day6-kawaguchiko">
+                <input id="day6-kawaguchiko" type="checkbox">
+                <span class="check-copy" data-language="en">Lake Kawaguchiko</span>
+                <span class="check-copy" data-language="ja" hidden>河口湖</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day6-chureito">
+                <input id="day6-chureito" type="checkbox">
+                <span class="check-copy" data-language="en">Arakurayama Sengen Park / Chureito Pagoda</span>
+                <span class="check-copy" data-language="ja" hidden>新倉山浅間公園 / 忠霊塔</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day6-oshino">
+                <input id="day6-oshino" type="checkbox">
+                <span class="check-copy" data-language="en">Oshino Hakkai</span>
+                <span class="check-copy" data-language="ja" hidden>忍野八海</span>
+              </label>
+            </li>
+          </ul>
+        </article>
+
+        <article class="day-card card">
+          <div class="day-card__header">
+            <p class="day-label">
+              <span data-language="en">Day 7</span>
+              <span data-language="ja" hidden>7日目</span>
+            </p>
+            <p class="day-region">
+              <span data-language="en">Tokyo</span>
+              <span data-language="ja" hidden>東京</span>
+            </p>
+          </div>
+          <ul class="checklist-list">
+            <li>
+              <label class="check-item" for="day7-tokyo">
+                <input id="day7-tokyo" type="checkbox">
+                <span class="check-copy" data-language="en">Travel into Tokyo</span>
+                <span class="check-copy" data-language="ja" hidden>東京へ移動</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day7-crossing">
+                <input id="day7-crossing" type="checkbox">
+                <span class="check-copy" data-language="en">Shibuya Crossing</span>
+                <span class="check-copy" data-language="ja" hidden>渋谷スクランブル交差点</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day7-sightseeing">
+                <input id="day7-sightseeing" type="checkbox">
+                <span class="check-copy" data-language="en">Shibuya Sightseeing</span>
+                <span class="check-copy" data-language="ja" hidden>渋谷観光</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day7-sky">
+                <input id="day7-sky" type="checkbox">
+                <span class="check-copy" data-language="en">Shibuya Sky at night</span>
+                <span class="check-copy" data-language="ja" hidden>夜の渋谷スカイ</span>
+              </label>
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="section-heading section-heading--compact">
+        <p class="section-tag">
+          <span data-language="en">Optional</span>
+          <span data-language="ja" hidden>追加日程</span>
+        </p>
+        <h3>
+          <span data-language="en">If Extra Days Are Added</span>
+          <span data-language="ja" hidden>日数を増やせる場合</span>
+        </h3>
+      </div>
+
+      <div class="day-grid day-grid--optional">
+        <article class="day-card card">
+          <div class="day-card__header">
+            <p class="day-label">
+              <span data-language="en">Day 8</span>
+              <span data-language="ja" hidden>8日目</span>
+            </p>
+            <p class="day-region">
+              <span data-language="en">Tokyo</span>
+              <span data-language="ja" hidden>東京</span>
+            </p>
+          </div>
+          <ul class="checklist-list">
+            <li>
+              <label class="check-item" for="day8-skytree">
+                <input id="day8-skytree" type="checkbox">
+                <span class="check-copy" data-language="en">Tokyo Skytree</span>
+                <span class="check-copy" data-language="ja" hidden>東京スカイツリー</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day8-solamachi">
+                <input id="day8-solamachi" type="checkbox">
+                <span class="check-copy" data-language="en">Tokyo Solamachi</span>
+                <span class="check-copy" data-language="ja" hidden>東京ソラマチ</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day8-akihabara">
+                <input id="day8-akihabara" type="checkbox">
+                <span class="check-copy" data-language="en">Akihabara</span>
+                <span class="check-copy" data-language="ja" hidden>秋葉原</span>
+              </label>
+            </li>
+          </ul>
+        </article>
+
+        <article class="day-card card">
+          <div class="day-card__header">
+            <p class="day-label">
+              <span data-language="en">Day 9</span>
+              <span data-language="ja" hidden>9日目</span>
+            </p>
+            <p class="day-region">
+              <span data-language="en">Tokyo</span>
+              <span data-language="ja" hidden>東京</span>
+            </p>
+          </div>
+          <ul class="checklist-list">
+            <li>
+              <label class="check-item" for="day9-palace">
+                <input id="day9-palace" type="checkbox">
+                <span class="check-copy" data-language="en">Tokyo Imperial Palace</span>
+                <span class="check-copy" data-language="ja" hidden>皇居</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day9-shinjuku">
+                <input id="day9-shinjuku" type="checkbox">
+                <span class="check-copy" data-language="en">Shinjuku</span>
+                <span class="check-copy" data-language="ja" hidden>新宿</span>
+              </label>
+            </li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <section class="panel section reveal" id="official-news">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow" data-i18n-en="Official News Desk" data-i18n-ja="公式ニュースデスク">Official News Desk</span>
-          <h2 data-i18n-en="Actual National And Local Headlines Worth Checking" data-i18n-ja="実際に確認しておきたい全国・地域ヘッドライン">Actual National And Local Headlines Worth Checking</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p data-i18n-en="These are the live official reads to check right now: one national layer and the local city sources most relevant to this route." data-i18n-ja="いま確認する価値が高い公式情報を、全国レイヤーとこのルートに近い地域レイヤーに分けて置いています。">These are the live official reads to check right now: one national layer and the local city sources most relevant to this route.</p>
+    <section class="content-section" id="notes" aria-labelledby="notes-title">
+      <div class="section-heading">
+        <p class="section-tag">
+          <span data-language="en">Notes</span>
+          <span data-language="ja" hidden>メモ</span>
+        </p>
+        <h2 id="notes-title">
+          <span data-language="en">Trip Notes</span>
+          <span data-language="ja" hidden>旅のメモ</span>
+        </h2>
+        <p class="section-intro">
+          <span data-language="en">These notes follow the second screenshot and keep the same stop-by-stop structure.</span>
+          <span data-language="ja" hidden>2枚目の画像にある補足メモを、同じ順番で読みやすく整理しています。</span>
+        </p>
       </div>
 
-      <div class="official-layout">
-        <div class="official-feature-stack">
-          <div class="feature-slider article-slider news-desk-slider" data-slider data-slider-interval="6000">
-            <div class="slider-stage">
-              <article class="feature-slide is-active" data-slide>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shinkansen_series_N700A_set_G35_at_Odawara_Station_20140720.JPG?width=1600" alt="Shinkansen at Odawara Station" loading="lazy" decoding="async">
-                <div class="feature-slide-copy">
-                  <span class="badge" data-i18n-en="National / JNTO" data-i18n-ja="全国 / JNTO">National / JNTO</span>
-                  <h3 data-i18n-en="Feb 6, 2026: Certain JR passes are about to get more convenient" data-i18n-ja="2026年2月6日: 一部の JR パスがさらに便利に">Feb 6, 2026: Certain JR passes are about to get more convenient</h3>
-                  <p data-i18n-en="This is the strongest nationwide update for this route because it directly touches rail planning and pass usability." data-i18n-ja="このルートでは鉄道計画に直結するため、全国ニュースの中でも特に見ておく価値があります。">This is the strongest nationwide update for this route because it directly touches rail planning and pass usability.</p>
-                  <div class="article-slide-meta">
-                    <span>JNTO</span>
-                    <span data-i18n-en="Rail update" data-i18n-ja="鉄道更新">Rail update</span>
-                    <span>2026-02-06</span>
-                  </div>
-                  <div class="route-spotlight-actions">
-                    <a class="button-primary" href="https://www.japan.travel/en/ca/news/" target="_blank" rel="noreferrer" data-i18n-en="Open JNTO news" data-i18n-ja="JNTO ニュースを開く">Open JNTO news</a>
-                    <a class="button-secondary" href="./toolkit.html#shinkansen" data-i18n-en="Open rail notes" data-i18n-ja="鉄道メモを開く">Open rail notes</a>
-                  </div>
-                </div>
-              </article>
-
-              <article class="feature-slide" data-slide>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tsutenkaku%2C_Osaka.jpg?width=1600" alt="Tsutenkaku in Osaka" loading="lazy" decoding="async">
-                <div class="feature-slide-copy">
-                  <span class="badge" data-i18n-en="Local / Osaka" data-i18n-ja="地域 / 大阪">Local / Osaka</span>
-                  <h3 data-i18n-en="Mar 9, 2026: Osaka official event information has been updated" data-i18n-ja="2026年3月9日: 大阪公式イベント情報が更新">Mar 9, 2026: Osaka official event information has been updated</h3>
-                  <p data-i18n-en="Use Osaka’s official notice layer when the arrival nights need fresh event timing instead of generic city inspiration." data-i18n-ja="到着初日の夜に、一般的な観光紹介ではなく実際のイベント更新を確認したい時に向いています。">Use Osaka’s official notice layer when the arrival nights need fresh event timing instead of generic city inspiration.</p>
-                  <div class="article-slide-meta">
-                    <span>OSAKA-INFO</span>
-                    <span data-i18n-en="Events" data-i18n-ja="イベント">Events</span>
-                    <span>2026-03-09</span>
-                  </div>
-                  <div class="route-spotlight-actions">
-                    <a class="button-primary" href="https://osaka-info.jp/en/important-news/" target="_blank" rel="noreferrer" data-i18n-en="Open Osaka updates" data-i18n-ja="大阪更新を開く">Open Osaka updates</a>
-                    <a class="button-secondary" href="./itinerary.html#osaka-start" data-i18n-en="Open Osaka stop" data-i18n-ja="大阪停止点を開く">Open Osaka stop</a>
-                  </div>
-                </div>
-              </article>
-
-              <article class="feature-slide" data-slide>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_crossing_%2812214%29.jpg?width=1600" alt="Shibuya Crossing in Tokyo" loading="lazy" decoding="async">
-                <div class="feature-slide-copy">
-                  <span class="badge" data-i18n-en="Local / Tokyo" data-i18n-ja="地域 / 東京">Local / Tokyo</span>
-                  <h3 data-i18n-en="Mar 10, 2026: TOKYO Anime Tourism 2026 kicks off" data-i18n-ja="2026年3月10日: TOKYO Anime Tourism 2026 開始">Mar 10, 2026: TOKYO Anime Tourism 2026 kicks off</h3>
-                  <p data-i18n-en="This is useful when the Tokyo finish is drifting toward pop culture, district events, or extra-night add-ons." data-i18n-ja="東京の締めがポップカルチャー寄り、イベント寄り、あるいは追加の夜遊び寄りに傾く時に使えます。">This is useful when the Tokyo finish is drifting toward pop culture, district events, or extra-night add-ons.</p>
-                  <div class="article-slide-meta">
-                    <span>GO TOKYO</span>
-                    <span data-i18n-en="City update" data-i18n-ja="都市更新">City update</span>
-                    <span>2026-03-10</span>
-                  </div>
-                  <div class="route-spotlight-actions">
-                    <a class="button-primary" href="https://www.gotokyo.org/en/new-and-now/index.html" target="_blank" rel="noreferrer" data-i18n-en="Open Tokyo updates" data-i18n-ja="東京更新を開く">Open Tokyo updates</a>
-                    <a class="button-secondary" href="./itinerary.html#tokyo-finish" data-i18n-en="Open Tokyo finish" data-i18n-ja="東京フィニッシュを開く">Open Tokyo finish</a>
-                  </div>
-                </div>
-              </article>
-
-              <article class="feature-slide" data-slide>
-                <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kiyomizu-dera_Temple.Kyoto._Japan_%2850361443956%29.jpg?width=1600" alt="Kyoto temple" loading="lazy" decoding="async">
-                <div class="feature-slide-copy">
-                  <span class="badge" data-i18n-en="Local / Kyoto" data-i18n-ja="地域 / 京都">Local / Kyoto</span>
-                  <h3 data-i18n-en="Mar 2026: Newest Kyoto event information for Mar 16-29" data-i18n-ja="2026年3月: 3月16日から29日の京都イベント最新情報">Mar 2026: Newest Kyoto event information for Mar 16-29</h3>
-                  <p data-i18n-en="This is the best local check when the Kyoto day is close and you want fresh temple-area event timing instead of broad evergreen guides." data-i18n-ja="京都の日が近づき、恒常的な案内ではなく、その時期の現地イベント更新を確認したい時に最適です。">This is the best local check when the Kyoto day is close and you want fresh temple-area event timing instead of broad evergreen guides.</p>
-                  <div class="article-slide-meta">
-                    <span>Kyoto Travel</span>
-                    <span data-i18n-en="City update" data-i18n-ja="都市更新">City update</span>
-                    <span>2026-03</span>
-                  </div>
-                  <div class="route-spotlight-actions">
-                    <a class="button-primary" href="https://kyoto.travel/en/news/index.html" target="_blank" rel="noreferrer" data-i18n-en="Open Kyoto news" data-i18n-ja="京都ニュースを開く">Open Kyoto news</a>
-                    <a class="button-secondary" href="./culture.html#culture-watch" data-i18n-en="Open Kyoto culture lane" data-i18n-ja="京都文化レイヤーを開く">Open Kyoto culture lane</a>
-                  </div>
-                </div>
-              </article>
-            </div>
-
-            <div class="slider-controls">
-              <button class="slider-arrow" type="button" data-slider-prev aria-label="Previous official news">&lt;</button>
-              <div class="slider-dots" data-slider-dots aria-label="Official news slides"></div>
-              <button class="slider-arrow" type="button" data-slider-next aria-label="Next official news">&gt;</button>
-            </div>
-          </div>
-        </div>
-
-        <aside class="tool-stack">
-          <div class="tool-card">
-            <span class="eyebrow" data-i18n-en="Fast check order" data-i18n-ja="確認の順番">Fast check order</span>
-            <strong data-i18n-en="National first, then the city that matches the next move" data-i18n-ja="全国を見てから、次の移動先の都市を見る">National first, then the city that matches the next move</strong>
-            <p data-i18n-en="Check JNTO for nationwide shifts, then jump to Osaka, Kyoto, or Tokyo local reads only when the next block is getting close." data-i18n-ja="まず JNTO で全国の変化を確認し、その後で次に近い都市だけを読むと無駄が減ります。">Check JNTO for nationwide shifts, then jump to Osaka, Kyoto, or Tokyo local reads only when the next block is getting close.</p>
-          </div>
-          <div class="tool-card">
-            <strong data-i18n-en="News links worth saving" data-i18n-ja="保存しておきたいニュース導線">News links worth saving</strong>
-            <ul class="brochure-list">
-              <li><a href="https://www.japan.travel/en/ca/news/" target="_blank" rel="noreferrer">JNTO News</a></li>
-              <li><a href="https://osaka-info.jp/en/important-news/" target="_blank" rel="noreferrer">OSAKA-INFO notices</a></li>
-              <li><a href="https://www.gotokyo.org/en/new-and-now/index.html" target="_blank" rel="noreferrer">GO TOKYO new and now</a></li>
-              <li><a href="https://kyoto.travel/en/news/index.html" target="_blank" rel="noreferrer">Kyoto Travel news</a></li>
-            </ul>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="panel section reveal" id="visual-previews">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow">Preview Deck</span>
-          <h2>Open Image Previews Before You Commit</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p>Each card opens a multi-image preview and a direct jump to the matching guide section.</p>
-      </div>
-
-      <div class="city-grid preview-grid">
-        <article class="image-story-card" data-preview-city="osaka">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tsutenkaku%2C_Osaka.jpg?width=960" alt="Tsutenkaku in Osaka" loading="lazy" decoding="async" fetchpriority="low">
-          <div class="story-gradient"></div>
-          <div class="image-card-copy">
-            <div class="story-topline">
-              <span class="badge">3-photo preview</span>
-              <span class="badge badge-soft">Arrival mood</span>
-            </div>
-            <strong>Osaka</strong>
-            <span>Low-pressure arrival, neon streets, and the easiest first-night food energy.</span>
-          </div>
-          <div class="image-card-actions">
-            <button class="button-pill image-preview-trigger" type="button" data-preview-gallery="osaka">Preview Images</button>
-            <a class="button-pill button-pill-light" href="./itinerary.html#osaka-start">Open stop</a>
-          </div>
+      <div class="notes-grid">
+        <article class="note-card card">
+          <h3>
+            <span data-language="en">Osaka</span>
+            <span data-language="ja" hidden>大阪</span>
+          </h3>
+          <p>
+            <span data-language="en">Starting base of the trip. Focus on city atmosphere, food, and nightlife rather than packing in too many stops. Main highlights are Tsutenkaku, Shinsekai, and Osaka Aquarium Kaiyukan.</span>
+            <span data-language="ja" hidden>旅の出発拠点です。予定を詰め込みすぎず、街の雰囲気、食、夜の空気を楽しむのが中心です。主な見どころは通天閣、新世界、海遊館です。</span>
+          </p>
         </article>
 
-        <article class="image-story-card" data-preview-city="kyoto">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kiyomizu-dera_Temple.Kyoto._Japan_%2850361443956%29.jpg?width=960" alt="Kiyomizu-dera in Kyoto" loading="lazy" decoding="async" fetchpriority="low">
-          <div class="story-gradient"></div>
-          <div class="image-card-copy">
-            <div class="story-topline">
-              <span class="badge">2-photo preview</span>
-              <span class="badge badge-soft">Culture contrast</span>
-            </div>
-            <strong>Kyoto</strong>
-            <span>Temple rhythm, slower detail, and a clear cultural contrast to Osaka.</span>
-          </div>
-          <div class="image-card-actions">
-            <button class="button-pill image-preview-trigger" type="button" data-preview-gallery="kyoto">Preview Images</button>
-            <a class="button-pill button-pill-light" href="./itinerary.html#kyoto-day">Open stop</a>
-          </div>
+        <article class="note-card card">
+          <h3>
+            <span data-language="en">Kyoto</span>
+            <span data-language="ja" hidden>京都</span>
+          </h3>
+          <p>
+            <span data-language="en">Best as a full-day trip from Osaka. Kyoto is the cultural and historic part of the trip, offering a very different feel from Osaka, with highlights such as Zenji Temple.</span>
+            <span data-language="ja" hidden>大阪からの日帰りで組むのが最適です。京都は旅の中で文化と歴史を感じるパートで、大阪とはかなり違う雰囲気を楽しめます。見どころには Zenji Temple などがあります。</span>
+          </p>
         </article>
 
-        <article class="image-story-card" data-preview-city="hakone">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Lake_torii_%40_Hakone_Shrine_%2813776519615%29.jpg?width=960" alt="Lake torii in Hakone" loading="lazy" decoding="async" fetchpriority="low">
-          <div class="story-gradient"></div>
-          <div class="image-card-copy">
-            <div class="story-topline">
-              <span class="badge">3-photo preview</span>
-              <span class="badge badge-soft">Reset night</span>
-            </div>
-            <strong>Hakone</strong>
-            <span>Lake air, ryokan energy, and the reset that breaks up the move east.</span>
-          </div>
-          <div class="image-card-actions">
-            <button class="button-pill image-preview-trigger" type="button" data-preview-gallery="hakone">Preview Images</button>
-            <a class="button-pill button-pill-light" href="./itinerary.html#hakone-move">Open stop</a>
-          </div>
+        <article class="note-card card">
+          <h3>
+            <span data-language="en">Hakone</span>
+            <span data-language="ja" hidden>箱根</span>
+          </h3>
+          <p>
+            <span data-language="en">First major stop when heading east. Travel from Shin-Osaka to Odawara by bullet train, then continue into Hakone for sightseeing and an overnight stay.</span>
+            <span data-language="ja" hidden>東へ向かう最初の大きな移動ポイントです。新大阪から小田原まで新幹線で移動し、その後は箱根へ入って観光し、そのまま宿泊します。</span>
+          </p>
         </article>
 
-        <article class="image-story-card" data-preview-city="fuji">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Chureito_Pagoda.jpg?width=960" alt="Chureito Pagoda and Mount Fuji" loading="lazy" decoding="async" fetchpriority="low">
-          <div class="story-gradient"></div>
-          <div class="image-card-copy">
-            <div class="story-topline">
-              <span class="badge">3-photo preview</span>
-              <span class="badge badge-soft">Weather-led</span>
-            </div>
-            <strong>Mt. Fuji Area</strong>
-            <span>Highest photo payoff and the one stop where the plan must stay flexible.</span>
-          </div>
-          <div class="image-card-actions">
-            <button class="button-pill image-preview-trigger" type="button" data-preview-gallery="fuji">Preview Images</button>
-            <a class="button-pill button-pill-light" href="./itinerary.html#fuji-visibility">Open stop</a>
-          </div>
+        <article class="note-card card">
+          <h3>
+            <span data-language="en">Mt. Fuji Area</span>
+            <span data-language="ja" hidden>富士山エリア</span>
+          </h3>
+          <p>
+            <span data-language="en">The scenic section of the trip. Main spots are Lake Kawaguchiko, Arakurayama Sengen Park / Chureito Pagoda, and Oshino Hakkai. Keep this part flexible because weather and transit can affect the day.</span>
+            <span data-language="ja" hidden>旅の中でも景色を楽しむパートです。主なスポットは河口湖、新倉山浅間公園 / 忠霊塔、忍野八海です。天気や移動状況で動きやすさが変わるので、この区間は柔軟に考えるのがおすすめです。</span>
+          </p>
         </article>
 
-        <article class="image-story-card" data-preview-city="tokyo">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_crossing_%2812214%29.jpg?width=960" alt="Shibuya Crossing in Tokyo" loading="lazy" decoding="async" fetchpriority="low">
-          <div class="story-gradient"></div>
-          <div class="image-card-copy">
-            <div class="story-topline">
-              <span class="badge">3-photo preview</span>
-              <span class="badge badge-soft">Finale energy</span>
-            </div>
-            <strong>Tokyo</strong>
-            <span>Shopping pressure, skyline close, and a clean strong ending.</span>
-          </div>
-          <div class="image-card-actions">
-            <button class="button-pill image-preview-trigger" type="button" data-preview-gallery="tokyo">Preview Images</button>
-            <a class="button-pill button-pill-light" href="./itinerary.html#tokyo-finish">Open stop</a>
-          </div>
+        <article class="note-card card">
+          <h3>
+            <span data-language="en">Tokyo</span>
+            <span data-language="ja" hidden>東京</span>
+          </h3>
+          <p>
+            <span data-language="en">Final city stop. Keep it simple and focus on Shibuya Crossing, Shibuya sightseeing, and Shibuya Sky at night.</span>
+            <span data-language="ja" hidden>最後の都市です。シンプルにまとめて、渋谷スクランブル交差点、渋谷観光、夜の渋谷スカイを中心にする流れです。</span>
+          </p>
+        </article>
+
+        <article class="note-card card">
+          <h3>
+            <span data-language="en">Extra Tokyo Days</span>
+            <span data-language="ja" hidden>東京の追加日程</span>
+          </h3>
+          <p>
+            <span data-language="en">If more time is available, add Akihabara, Shinjuku, Tokyo Skytree, Tokyo Solamachi, and the Tokyo Imperial Palace.</span>
+            <span data-language="ja" hidden>時間に余裕があれば、秋葉原、新宿、東京スカイツリー、東京ソラマチ、皇居を追加する想定です。</span>
+          </p>
+        </article>
+
+        <article class="note-card card">
+          <h3>
+            <span data-language="en">Future Trip</span>
+            <span data-language="ja" hidden>次回の旅</span>
+          </h3>
+          <p>
+            <span data-language="en">Okinawa stays separate for another trip.</span>
+            <span data-language="ja" hidden>沖縄は別の旅行として分けて考える前提です。</span>
+          </p>
         </article>
       </div>
     </section>
 
-    <section class="panel section reveal">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow">Pages</span>
-          <h2>Open The Right Page For The Moment</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p>The split pages still keep fast-scrolling mobile use cleaner. Use the engine to decide where to start, then open the layer that matches the moment.</p>
+    <section class="content-section" id="route" aria-labelledby="route-title">
+      <div class="section-heading">
+        <p class="section-tag">
+          <span data-language="en">Route</span>
+          <span data-language="ja" hidden>ルート</span>
+        </p>
+        <h2 id="route-title">
+          <span data-language="en">Travel Flow</span>
+          <span data-language="ja" hidden>移動ルート</span>
+        </h2>
+        <p class="section-intro">
+          <span data-language="en">The route line shown at the bottom of the second screenshot.</span>
+          <span data-language="ja" hidden>2枚目の画像の下部にある移動ルートをそのまま並べています。</span>
+        </p>
       </div>
 
-      <div class="card-grid">
-        <a class="page-card" href="./itinerary.html">
-          <strong>Itinerary</strong>
-          <span>Where you stay, daily flow, key transfers, and the Fuji visibility logic in one route-first page.</span>
-          <small>Route planner</small>
-        </a>
-        <a class="page-card" href="./food.html">
-          <strong>Food Guide</strong>
-          <span>City food picks, must-try dishes, late-night backup, rough cash feel, and where to eat.</span>
-          <small>Food first</small>
-        </a>
-        <a class="page-card" href="./toolkit.html">
-          <strong>Toolkit</strong>
-          <span>All-year weather facts, layers, packing, tickets, luggage, and move-day survival notes.</span>
-          <small>Practical layer</small>
-        </a>
-        <a class="page-card" href="./culture.html">
-          <strong>Culture Notes</strong>
-          <span>Etiquette, onsen basics, train behavior, phrases, and city photo prompts.</span>
-          <small>Travel smoother</small>
-        </a>
-        <a class="page-card" href="./quick_snapshot.html">
-          <strong>Quick Snapshot</strong>
-          <span>The fastest mobile and print-ready version if someone only wants the essentials.</span>
-          <small>Portable view</small>
-        </a>
-        <a class="page-card" href="./guide.html">
-          <strong>Full Interactive Guide</strong>
-          <span>The richer all-in-one experience with the larger interactive cards and image stories.</span>
-          <small>Deep version</small>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel section reveal">
-      <div class="section-header">
-        <div class="section-copy">
-          <span class="eyebrow">Share Ready</span>
-          <h2>What To Send The Group</h2>
-          <div class="section-divider"></div>
-        </div>
-        <p>If people are busy or indecisive, use the homepage and engine first, then send only the pages that support the highest-ranked plan.</p>
-      </div>
-
-      <div class="metric-grid">
-        <div class="metric-card">
-          <strong>For Everyone</strong>
-          <span>Send this main page first. It now explains the route, the tool, and the preview deck in one place.</span>
-        </div>
-        <div class="metric-card">
-          <strong>For Group Debate</strong>
-          <span>Use the recommendation engine live, then send the top page instead of arguing abstractly about cities.</span>
-        </div>
-        <div class="metric-card">
-          <strong>For Move Days</strong>
-          <span>Send the itinerary page and snapshot page together.</span>
-        </div>
-        <div class="metric-card">
-          <strong>For Weak Signal</strong>
-          <span>Use the snapshot page, screenshot the transfer notes, and open the city preview modal before heading out.</span>
-        </div>
+      <div class="route-card card">
+        <ol class="route-flow">
+          <li>
+            <span data-language="en">Osaka</span>
+            <span data-language="ja" hidden>大阪</span>
+          </li>
+          <li>
+            <span data-language="en">Kyoto</span>
+            <span data-language="ja" hidden>京都</span>
+          </li>
+          <li>
+            <span data-language="en">Osaka</span>
+            <span data-language="ja" hidden>大阪</span>
+          </li>
+          <li>
+            <span data-language="en">Shin-Osaka</span>
+            <span data-language="ja" hidden>新大阪</span>
+          </li>
+          <li>
+            <span data-language="en">Odawara</span>
+            <span data-language="ja" hidden>小田原</span>
+          </li>
+          <li>
+            <span data-language="en">Hakone</span>
+            <span data-language="ja" hidden>箱根</span>
+          </li>
+          <li>
+            <span data-language="en">Mt. Fuji area</span>
+            <span data-language="ja" hidden>富士山エリア</span>
+          </li>
+          <li>
+            <span data-language="en">Tokyo</span>
+            <span data-language="ja" hidden>東京</span>
+          </li>
+        </ol>
       </div>
     </section>
-
-    <div class="footer-note">
-      The upgraded homepage keeps the shared static setup, but now adds a profile-driven recommendation engine, richer cards, and multi-image preview modals without turning the site into a heavy app.
-    </div>
   </main>
 
-  <div class="preview-modal" id="preview-modal" hidden>
-    <div class="preview-backdrop" data-close-preview></div>
-    <div class="preview-panel" role="dialog" aria-modal="true" aria-labelledby="preview-title">
-      <div class="preview-media">
-        <div class="preview-stage">
-          <img id="preview-image" alt="">
-        </div>
-        <div class="preview-thumbs" id="preview-thumbs"></div>
-      </div>
-      <div class="preview-copy">
-        <button class="preview-close" type="button" data-close-preview aria-label="Close preview">x</button>
-        <span class="eyebrow" id="preview-eyebrow">City Preview</span>
-        <h3 id="preview-title"></h3>
-        <p id="preview-description"></p>
-        <div class="preview-meta" id="preview-meta"></div>
-        <div class="preview-facts" id="preview-facts"></div>
-        <div class="preview-actions">
-          <a class="button-secondary" id="preview-link" href="./guide.html">Open related guide section</a>
-        </div>
-        <div class="preview-credit" id="preview-credit"></div>
-      </div>
-    </div>
-  </div>
-
-  <script src="./assets/site.js" defer></script>
+  <footer class="site-footer">
+    <p>
+      <span data-language="en">Built as a lightweight one-page site for GitHub Pages using the attached trip screenshots as the source reference.</span>
+      <span data-language="ja" hidden>添付された旅行メモ画像を元に、GitHub Pages でそのまま使える軽量な1ページサイトとして整理しました。</span>
+    </p>
+  </footer>
 </body>
 </html>
