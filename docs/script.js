@@ -8,8 +8,12 @@ const contentPanels = document.querySelectorAll("[data-panel]");
 const siteHeader = document.querySelector(".site-header");
 const welcomeOverlay = document.querySelector(".welcome-overlay");
 const checklistPanel = document.querySelector('[data-panel="checklist"]');
+const routeMedia = document.querySelector(".route-reference__media");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
+const checklistInputs = Array.from(document.querySelectorAll('.day-card input[type="checkbox"]'));
 const progressItems = Array.from(document.querySelectorAll("[data-progress-item]"));
+const dayCardMap = new Map(dayCards.map((card) => [card.dataset.day, card]));
+const progressItemMap = new Map(progressItems.map((item) => [item.dataset.progressItem, item]));
 const root = document.documentElement;
 const pageTitles = {
   en: "Japan Trip | Travel Guide",
@@ -17,11 +21,35 @@ const pageTitles = {
 };
 const storageKey = "japan-trip-language";
 const welcomeStorageKey = "japan-trip-welcome-seen";
+const checklistStorageKey = "japan-trip-checklist-state";
 let reservedHeaderHeight = 0;
 let headerLockUntil = 0;
 let lastScrollY = window.scrollY;
 let scrollTicking = false;
 let revealObserver = null;
+let completedDays = new Set();
+
+function readStoredChecklistState() {
+  try {
+    return JSON.parse(window.localStorage.getItem(checklistStorageKey) || "{}");
+  } catch (error) {
+    return {};
+  }
+}
+
+function storeChecklistState() {
+  try {
+    const nextState = {};
+    checklistInputs.forEach((input) => {
+      if (input.checked) {
+        nextState[input.id] = true;
+      }
+    });
+    window.localStorage.setItem(checklistStorageKey, JSON.stringify(nextState));
+  } catch (error) {
+    // Ignore storage failures and keep the checklist usable.
+  }
+}
 
 function readStoredLanguage() {
   try {
@@ -84,6 +112,152 @@ function preserveScrollPosition(callback) {
     window.scrollTo(scrollX, scrollY);
     window.requestAnimationFrame(() => {
       window.scrollTo(scrollX, scrollY);
+    });
+  });
+}
+
+function getDayInputs(dayCard) {
+  return Array.from(dayCard.querySelectorAll('input[type="checkbox"]'));
+}
+
+function isDayComplete(dayCard) {
+  const inputs = getDayInputs(dayCard);
+  return inputs.length > 0 && inputs.every((input) => input.checked);
+}
+
+function areOptionalDaysUnlocked() {
+  const daySevenCard = dayCardMap.get("7");
+  return Boolean(daySevenCard && isDayComplete(daySevenCard));
+}
+
+function restoreChecklistState() {
+  const storedState = readStoredChecklistState();
+  checklistInputs.forEach((input) => {
+    input.checked = Boolean(storedState[input.id]);
+  });
+}
+
+function getScrollBehavior() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+}
+
+function animateCompletion(target) {
+  if (!target) {
+    return;
+  }
+
+  target.classList.remove("is-celebrating", "is-unlocking");
+  void target.getBoundingClientRect();
+  target.classList.add("is-celebrating");
+  window.setTimeout(() => {
+    target.classList.remove("is-celebrating");
+  }, 920);
+}
+
+function animateUnlock(target) {
+  if (!target) {
+    return;
+  }
+
+  target.classList.remove("is-unlocking");
+  void target.getBoundingClientRect();
+  target.classList.add("is-unlocking");
+  window.setTimeout(() => {
+    target.classList.remove("is-unlocking");
+  }, 1200);
+}
+
+function refreshChecklistProgressState() {
+  const optionalUnlocked = areOptionalDaysUnlocked();
+  const nextCompletedDays = new Set();
+
+  dayCards.forEach((card) => {
+    const isComplete = isDayComplete(card);
+    card.classList.toggle("is-complete", isComplete);
+    if (isComplete) {
+      nextCompletedDays.add(card.dataset.day);
+    }
+  });
+
+  progressItems.forEach((item) => {
+    const day = Number(item.dataset.progressItem);
+    const isLocked = day > 7 && !optionalUnlocked;
+    const isComplete = nextCompletedDays.has(String(day));
+
+    item.classList.toggle("is-locked", isLocked);
+    item.classList.toggle("is-unlocked", day > 7 && optionalUnlocked);
+    item.classList.toggle("is-complete", !isLocked && isComplete);
+    item.setAttribute("aria-disabled", String(isLocked));
+  });
+
+  completedDays = nextCompletedDays;
+}
+
+function celebrateCompletedDay(day) {
+  animateCompletion(dayCardMap.get(String(day)));
+  animateCompletion(progressItemMap.get(String(day)));
+
+  if (Number(day) === 7) {
+    animateUnlock(progressItemMap.get("8"));
+    animateUnlock(progressItemMap.get("9"));
+  }
+}
+
+function scrollToChecklistDay(day) {
+  const targetCard = dayCardMap.get(String(day));
+  if (!targetCard) {
+    return;
+  }
+
+  lockHeaderState(420);
+  setActivePanel("checklist");
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      const targetTop =
+        targetCard.getBoundingClientRect().top + window.scrollY - reservedHeaderHeight - 24;
+
+      window.scrollTo({
+        top: Math.max(targetTop, 0),
+        behavior: getScrollBehavior()
+      });
+
+      targetCard.classList.remove("is-route-target");
+      void targetCard.getBoundingClientRect();
+      targetCard.classList.add("is-route-target");
+      window.setTimeout(() => {
+        targetCard.classList.remove("is-route-target");
+      }, 1400);
+
+      setActiveProgressItem(day);
+    });
+  });
+}
+
+function bindRouteInteractions() {
+  if (!routeMedia?.contentDocument?.documentElement) {
+    return;
+  }
+
+  const routeRoot = routeMedia.contentDocument.documentElement;
+  if (routeRoot.dataset.interactionsBound === "1") {
+    return;
+  }
+
+  routeRoot.dataset.interactionsBound = "1";
+
+  routeMedia.contentDocument.querySelectorAll("[data-scroll-day]").forEach((stop) => {
+    const activateStop = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      scrollToChecklistDay(stop.dataset.scrollDay);
+    };
+
+    stop.addEventListener("click", activateStop);
+    stop.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        activateStop(event);
+      }
     });
   });
 }
@@ -167,8 +341,12 @@ function setActiveProgressItem(day) {
     return;
   }
 
+  const maxVisibleDay = areOptionalDaysUnlocked() ? 9 : 7;
+  const nextDay = Math.min(Number(day) || 1, maxVisibleDay);
+
   progressItems.forEach((item) => {
-    const isActive = item.dataset.progressItem === String(day);
+    const isActive =
+      item.dataset.progressItem === String(nextDay) && !item.classList.contains("is-locked");
     item.classList.toggle("is-active", isActive);
     if (isActive) {
       item.setAttribute("aria-current", "step");
@@ -184,7 +362,9 @@ function syncProgressTimeline() {
   }
 
   const headerOffset = reservedHeaderHeight + 28;
-  const visibleCards = dayCards
+  const maxVisibleDay = areOptionalDaysUnlocked() ? 9 : 7;
+  const eligibleCards = dayCards.filter((card) => Number(card.dataset.day) <= maxVisibleDay);
+  const visibleCards = eligibleCards
     .map((card) => ({ card, rect: card.getBoundingClientRect() }))
     .filter(({ rect }) => rect.bottom > headerOffset + 24 && rect.top < window.innerHeight * 0.78);
 
@@ -192,7 +372,7 @@ function syncProgressTimeline() {
     visibleCards.sort(
       (left, right) =>
         Math.abs(left.rect.top - headerOffset) - Math.abs(right.rect.top - headerOffset)
-    )[0]?.card || dayCards[0];
+    )[0]?.card || eligibleCards[0];
 
   setActiveProgressItem(currentCard.dataset.day);
 }
@@ -265,12 +445,35 @@ languageButtons.forEach((button) => {
 });
 
 setLanguage(readStoredLanguage());
+restoreChecklistState();
+refreshChecklistProgressState();
 
 registerRevealBlocks();
 setActivePanel("checklist");
 setActiveProgressItem(1);
 syncParallax();
 syncProgressTimeline();
+
+checklistInputs.forEach((input) => {
+  input.addEventListener("change", () => {
+    const dayCard = input.closest(".day-card[data-day]");
+    const day = dayCard?.dataset.day;
+    const wasComplete = day ? completedDays.has(day) : false;
+
+    storeChecklistState();
+    refreshChecklistProgressState();
+    syncProgressTimeline();
+
+    if (
+      day &&
+      !wasComplete &&
+      completedDays.has(day) &&
+      (Number(day) <= 7 || areOptionalDaysUnlocked())
+    ) {
+      celebrateCompletedDay(day);
+    }
+  });
+});
 
 sectionTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
@@ -286,6 +489,13 @@ if (root.classList.contains("is-welcoming")) {
   window.setTimeout(finishWelcome, prefersReducedMotion ? 60 : 2400);
 } else if (welcomeOverlay) {
   welcomeOverlay.setAttribute("hidden", "");
+}
+
+if (routeMedia) {
+  routeMedia.addEventListener("load", bindRouteInteractions);
+  window.requestAnimationFrame(() => {
+    bindRouteInteractions();
+  });
 }
 
 function syncHeaderState() {

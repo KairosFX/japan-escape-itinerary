@@ -160,8 +160,8 @@
             <span data-language="ja" hidden>7日間</span>
           </strong>
           <p>
-            <span data-language="en">Compact city-to-scenic route</span>
-            <span data-language="ja" hidden>都市から景色へ流れる短期ルート</span>
+            <span data-language="en">Compact city-to-scenic route (possibly 9 days)</span>
+            <span data-language="ja" hidden>都市から景色へ流れる短期ルート（場合によっては9日間）</span>
           </p>
         </article>
 
@@ -207,8 +207,8 @@
             <span data-language="ja" hidden>7日間の進み方</span>
           </h2>
           <p class="section-intro">
-            <span data-language="en">Scroll through the checklist and the current day highlights here.</span>
-            <span data-language="ja" hidden>チェックリストを見進めると、現在の旅程がここで分かるようにしています。</span>
+            <span data-language="en">Complete each day to advance the trip. Days 8 and 9 unlock after Day 7.</span>
+            <span data-language="ja" hidden>各日を完了すると進み方が更新されます。8日目と9日目は7日目を終えると解放されます。</span>
           </p>
         </div>
 
@@ -281,6 +281,40 @@
             <strong class="progress-item__place">
               <span data-language="en">Tokyo</span>
               <span data-language="ja" hidden>東京</span>
+            </strong>
+          </li>
+          <li class="progress-item is-locked" data-progress-item="8" data-progress-optional="true" aria-disabled="true">
+            <span class="progress-item__status" aria-hidden="true">🔒</span>
+            <span class="progress-item__step">
+              <span data-language="en">Day 8</span>
+              <span data-language="ja" hidden>8日目</span>
+            </span>
+            <strong class="progress-item__place">
+              <span class="progress-item__place-default">
+                <span data-language="en">Tokyo Extras</span>
+                <span data-language="ja" hidden>東京追加日程</span>
+              </span>
+              <span class="progress-item__place-locked">
+                <span data-language="en">Locked</span>
+                <span data-language="ja" hidden>未解放</span>
+              </span>
+            </strong>
+          </li>
+          <li class="progress-item is-locked" data-progress-item="9" data-progress-optional="true" aria-disabled="true">
+            <span class="progress-item__status" aria-hidden="true">🔒</span>
+            <span class="progress-item__step">
+              <span data-language="en">Day 9</span>
+              <span data-language="ja" hidden>9日目</span>
+            </span>
+            <strong class="progress-item__place">
+              <span class="progress-item__place-default">
+                <span data-language="en">Tokyo Finish</span>
+                <span data-language="ja" hidden>東京仕上げ</span>
+              </span>
+              <span class="progress-item__place-locked">
+                <span data-language="en">Locked</span>
+                <span data-language="ja" hidden>未解放</span>
+              </span>
             </strong>
           </li>
         </ol>
@@ -563,7 +597,7 @@
       </div>
 
       <div class="day-grid day-grid--optional">
-        <article class="day-card card">
+        <article class="day-card card" data-day="8">
           <div class="day-card__header">
             <p class="day-label">
               <span data-language="en">Day 8</span>
@@ -599,7 +633,7 @@
           </ul>
         </article>
 
-        <article class="day-card card">
+        <article class="day-card card" data-day="9">
           <div class="day-card__header">
             <p class="day-label">
               <span data-language="en">Day 9</span>
