@@ -6,12 +6,15 @@ const sourceNodes = document.querySelectorAll("[data-src-en][data-src-ja]");
 const sectionLinks = document.querySelectorAll(".section-nav a");
 const siteHeader = document.querySelector(".site-header");
 const welcomeOverlay = document.querySelector(".welcome-overlay");
+const root = document.documentElement;
 const pageTitles = {
   en: "Japan Trip | Itinerary",
   ja: "日本旅行 | 旅程"
 };
 const storageKey = "japan-trip-language";
 const welcomeStorageKey = "japan-trip-welcome-seen";
+let reservedHeaderHeight = 0;
+let headerLockUntil = 0;
 
 function readStoredLanguage() {
   try {
@@ -38,18 +41,38 @@ function storeWelcomeSeen() {
 }
 
 function finishWelcome() {
-  document.documentElement.classList.remove("is-welcoming");
-  document.documentElement.classList.add("has-seen-welcome");
+  root.classList.remove("is-welcoming");
+  root.classList.add("has-seen-welcome");
   if (welcomeOverlay) {
     welcomeOverlay.setAttribute("hidden", "");
   }
   storeWelcomeSeen();
 }
 
+function syncReservedHeaderHeight(forceReset = false) {
+  if (!siteHeader) {
+    return;
+  }
+
+  const currentHeight = Math.ceil(siteHeader.getBoundingClientRect().height);
+  if (forceReset) {
+    reservedHeaderHeight = currentHeight;
+  } else {
+    reservedHeaderHeight = Math.max(reservedHeaderHeight, currentHeight);
+  }
+
+  root.style.setProperty("--header-reserved-height", `${reservedHeaderHeight}px`);
+}
+
+function lockHeaderState(duration = 420) {
+  headerLockUntil = window.performance.now() + duration;
+  lastScrollY = window.scrollY;
+}
+
 function setLanguage(language) {
   const nextLanguage = language === "ja" ? "ja" : "en";
 
-  document.documentElement.lang = nextLanguage;
+  root.lang = nextLanguage;
   document.title = pageTitles[nextLanguage];
 
   localizedNodes.forEach((node) => {
@@ -72,8 +95,23 @@ function setLanguage(language) {
 
   sourceNodes.forEach((node) => {
     const nextSource = nextLanguage === "ja" ? node.dataset.srcJa : node.dataset.srcEn;
-    if (node.getAttribute("src") !== nextSource) {
-      node.setAttribute("src", nextSource);
+    const sourceAttribute = node.tagName === "OBJECT" ? "data" : "src";
+    if (node.getAttribute(sourceAttribute) !== nextSource) {
+      node.setAttribute(sourceAttribute, nextSource);
+    }
+  });
+
+  window.requestAnimationFrame(() => {
+    if (window.scrollY <= 36) {
+      syncReservedHeaderHeight(true);
+      return;
+    }
+
+    const wasCondensed = siteHeader?.classList.contains("is-condensed");
+    siteHeader?.classList.remove("is-condensed");
+    syncReservedHeaderHeight(true);
+    if (wasCondensed) {
+      siteHeader?.classList.add("is-condensed");
     }
   });
 
@@ -86,9 +124,14 @@ function setLanguage(language) {
   storeLanguage(nextLanguage);
 }
 
+function handleLanguageButtonClick(button) {
+  lockHeaderState(280);
+  setLanguage(button.dataset.setLanguage);
+}
+
 languageButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    setLanguage(button.dataset.setLanguage);
+    handleLanguageButtonClick(button);
   });
 });
 
@@ -97,6 +140,8 @@ setLanguage(readStoredLanguage());
 sectionLinks.forEach((link) => {
   link.addEventListener("click", () => {
     siteHeader?.classList.remove("is-condensed");
+    syncReservedHeaderHeight(true);
+    lockHeaderState(520);
   });
 });
 
@@ -117,6 +162,12 @@ function syncHeaderState() {
   }
 
   const currentScrollY = window.scrollY;
+  if (window.performance.now() < headerLockUntil) {
+    lastScrollY = currentScrollY;
+    scrollTicking = false;
+    return;
+  }
+
   const delta = currentScrollY - lastScrollY;
 
   if (currentScrollY <= 36 || delta < -8) {
@@ -141,3 +192,31 @@ window.addEventListener(
   },
   { passive: true }
 );
+
+if (siteHeader) {
+  syncReservedHeaderHeight(true);
+
+  if ("ResizeObserver" in window) {
+    const headerObserver = new window.ResizeObserver(() => {
+      if (siteHeader.classList.contains("is-condensed")) {
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        syncReservedHeaderHeight(true);
+      });
+    });
+
+    headerObserver.observe(siteHeader);
+  }
+
+  window.addEventListener("resize", () => {
+    const wasCondensed = siteHeader.classList.contains("is-condensed");
+    siteHeader.classList.remove("is-condensed");
+    syncReservedHeaderHeight(true);
+    if (wasCondensed && window.scrollY > 150) {
+      siteHeader.classList.add("is-condensed");
+    }
+    lockHeaderState(220);
+  });
+}

@@ -5,6 +5,75 @@
     <filter id="panelShadow" x="-12%" y="-12%" width="124%" height="124%">
       <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#3c2b23" flood-opacity="0.11"/>
     </filter>
+    <style>
+      .route-hit-area {
+        fill: transparent;
+        cursor: pointer;
+        pointer-events: all;
+      }
+
+      .route-direction,
+      .route-icons,
+      .route-main,
+      .route-branch,
+      .route-branch-label {
+        pointer-events: none;
+      }
+
+      .route-branch-line,
+      .route-node--hakone,
+      .route-node--fuji,
+      .route-label--hakone,
+      .route-label--fuji,
+      .route-note--fuji,
+      .route-icon--hakone,
+      .route-icon--fuji {
+        transition:
+          stroke 180ms ease,
+          fill 180ms ease,
+          opacity 180ms ease,
+          transform 180ms ease;
+        transform-origin: center;
+      }
+
+      .route-hit-area--hakone:hover ~ .route-branch .route-branch-line,
+      .route-hit-area--fuji:hover ~ .route-branch .route-branch-line {
+        stroke: #b54131;
+        opacity: 1;
+      }
+
+      .route-hit-area--hakone:hover ~ .route-main .route-node--hakone,
+      .route-hit-area--fuji:hover ~ .route-main .route-node--hakone,
+      .route-hit-area--hakone:hover ~ .route-branch .route-node--fuji,
+      .route-hit-area--fuji:hover ~ .route-branch .route-node--fuji {
+        fill: #b54131;
+      }
+
+      .route-hit-area--hakone:hover ~ .route-main .route-label--hakone,
+      .route-hit-area--fuji:hover ~ .route-main .route-label--hakone,
+      .route-hit-area--hakone:hover ~ .route-branch-label .route-label--fuji,
+      .route-hit-area--fuji:hover ~ .route-branch-label .route-label--fuji {
+        fill: #b54131;
+      }
+
+      .route-hit-area--hakone:hover ~ .route-branch-label .route-note--fuji,
+      .route-hit-area--fuji:hover ~ .route-branch-label .route-note--fuji {
+        fill: #8f2e22;
+      }
+
+      .route-hit-area--hakone:hover ~ .route-icons .route-icon--hakone,
+      .route-hit-area--fuji:hover ~ .route-icons .route-icon--hakone,
+      .route-hit-area--hakone:hover ~ .route-icons .route-icon--fuji,
+      .route-hit-area--fuji:hover ~ .route-icons .route-icon--fuji {
+        stroke: #b54131;
+        opacity: 1;
+      }
+
+      .route-hit-area--hakone:hover ~ .route-branch-label .route-label--fuji,
+      .route-hit-area--fuji:hover ~ .route-branch-label .route-label--fuji {
+        transform: translateY(-1px);
+      }
+    </style>
     <marker id="routeArrow" markerWidth="13.5" markerHeight="13.5" refX="10.5" refY="6.75" orient="auto" markerUnits="userSpaceOnUse">
       <path d="M2 2L10.5 6.75L2 11.5" fill="none" stroke="#c85a44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </marker>
@@ -21,67 +90,81 @@
   <circle cx="1062" cy="112" r="40" fill="#f3ddd4" opacity="0.03"/>
   <circle cx="124" cy="444" r="48" fill="#dfe8e2" opacity="0.03"/>
 
-  <g font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
+  <g class="route-direction" font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
     <text x="108" y="118" fill="#c85a44" font-size="18" font-weight="700" letter-spacing="2.8">TRAVEL DIRECTION</text>
     <text x="330" y="118" fill="#c85a44" font-size="22" font-weight="700">→</text>
     <text x="160" y="164" fill="#c85a44" font-size="16" font-weight="700" letter-spacing="2">START</text>
     <text x="1084" y="164" text-anchor="middle" fill="#c85a44" font-size="16" font-weight="700" letter-spacing="2">END</text>
   </g>
 
-  <g fill="none" stroke="#b86552" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.86">
-    <path d="M352 166H408"/>
-    <path d="M360 166L380 152L400 166"/>
-    <path d="M366 166V176"/>
-    <path d="M394 166V176"/>
-    <path d="M366 176H394"/>
+  <rect class="route-hit-area route-hit-area--hakone" x="748" y="160" width="148" height="284" rx="30"/>
+  <rect class="route-hit-area route-hit-area--fuji" x="846" y="404" width="196" height="122" rx="26"/>
 
-    <rect x="584" y="154" width="32" height="16" rx="4"/>
-    <path d="M592 162H608"/>
-    <path d="M590 170H610"/>
-    <path d="M590 170L586 176"/>
-    <path d="M610 170L614 176"/>
+  <g class="route-icons" fill="none" stroke="#b86552" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.86">
+    <g class="route-icon--kyoto">
+      <path d="M352 166H408"/>
+      <path d="M360 166L380 152L400 166"/>
+      <path d="M366 166V176"/>
+      <path d="M394 166V176"/>
+      <path d="M366 176H394"/>
+    </g>
 
-    <path d="M804 176V156"/>
-    <path d="M836 176V156"/>
-    <path d="M798 156H842"/>
-    <path d="M802 148H838"/>
-    <path d="M810 168H830"/>
+    <g class="route-icon--odawara">
+      <rect x="584" y="154" width="32" height="16" rx="4"/>
+      <path d="M592 162H608"/>
+      <path d="M590 170H610"/>
+      <path d="M590 170L586 176"/>
+      <path d="M610 170L614 176"/>
+    </g>
 
-    <path d="M918 454L934 432L950 454Z"/>
-    <path d="M930 432L946 454"/>
+    <g class="route-icon--hakone">
+      <path d="M804 176V156"/>
+      <path d="M836 176V156"/>
+      <path d="M798 156H842"/>
+      <path d="M802 148H838"/>
+      <path d="M810 168H830"/>
+    </g>
+
+    <g class="route-icon--fuji">
+      <path d="M918 454L934 432L950 454Z"/>
+      <path d="M930 432L946 454"/>
+    </g>
   </g>
 
-  <g fill="none" stroke="#c85a44" stroke-width="8.4" stroke-linecap="round" stroke-linejoin="round">
+  <g class="route-main" fill="none" stroke="#c85a44" stroke-width="8.4" stroke-linecap="round" stroke-linejoin="round">
     <path d="M175 322H356" marker-end="url(#routeArrow)"/>
     <path d="M395 322H576" marker-end="url(#routeArrow)"/>
     <path d="M615 322H796" marker-end="url(#routeArrow)"/>
     <path d="M835 322H1060" marker-end="url(#routeArrow)"/>
   </g>
 
-  <g fill="none" stroke="#dc9e8b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 10">
-    <path d="M826 338C828 378 860 410 924 426" marker-end="url(#detourArrow)"/>
-    <path d="M950 426C1022 426 1062 392 1072 344" marker-end="url(#detourArrow)"/>
+  <g class="route-branch" fill="none" stroke="#dc9e8b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 10">
+    <path class="route-branch-line" d="M826 338C828 378 860 410 924 426" marker-end="url(#detourArrow)"/>
+    <path class="route-branch-line" d="M950 426C1022 426 1062 392 1072 344" marker-end="url(#detourArrow)"/>
   </g>
 
-  <g fill="#c85a44" stroke="#fffdfa" stroke-width="4.5">
+  <g class="route-main" fill="#c85a44" stroke="#fffdfa" stroke-width="4.5">
     <circle cx="160" cy="322" r="14"/>
     <circle cx="380" cy="322" r="14"/>
     <circle cx="600" cy="322" r="14"/>
-    <circle cx="820" cy="322" r="14"/>
+    <circle class="route-node--hakone" cx="820" cy="322" r="14"/>
     <circle cx="1084" cy="322" r="14"/>
-    <circle cx="936" cy="428" r="12" fill="#dc9e8b"/>
   </g>
 
-  <g fill="#262b2d" text-anchor="middle" font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
+  <g class="route-branch" fill="#dc9e8b" stroke="#fffdfa" stroke-width="4.5">
+    <circle class="route-node--fuji" cx="936" cy="428" r="12"/>
+  </g>
+
+  <g class="route-main" fill="#262b2d" text-anchor="middle" font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
     <text x="160" y="202" font-size="42" font-weight="700">Osaka</text>
     <text x="380" y="202" font-size="42" font-weight="700">Kyoto</text>
     <text x="600" y="204" font-size="26" font-weight="500">Odawara</text>
-    <text x="820" y="202" font-size="34" font-weight="650">Hakone</text>
+    <text class="route-label--hakone" x="820" y="202" font-size="34" font-weight="650">Hakone</text>
     <text x="1084" y="202" font-size="42" font-weight="700">Tokyo</text>
   </g>
 
-  <g fill="#262b2d" text-anchor="middle" font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
-    <text x="936" y="478" font-size="28" font-weight="700">Mt. Fuji area</text>
-    <text x="936" y="508" font-size="18" font-weight="500" fill="#677173">Optional stop</text>
+  <g class="route-branch-label" fill="#262b2d" text-anchor="middle" font-family="'Avenir Next', 'Hiragino Sans', sans-serif">
+    <text class="route-label--fuji" x="936" y="478" font-size="28" font-weight="700">Mt. Fuji area</text>
+    <text class="route-note--fuji" x="936" y="508" font-size="18" font-weight="500" fill="#677173">Optional stop</text>
   </g>
 </svg>

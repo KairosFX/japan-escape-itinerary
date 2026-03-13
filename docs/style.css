@@ -21,6 +21,7 @@
   --font-sans: "Avenir Next", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
   --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Yu Mincho", "Hiragino Mincho ProN", serif;
   --header-ease: 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  --header-reserved-height: 9rem;
 }
 
 * {
@@ -29,13 +30,14 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 8rem;
+  scroll-padding-top: calc(var(--header-reserved-height) + 0.9rem);
 }
 
 body {
   position: relative;
   margin: 0;
   min-height: 100vh;
+  padding-top: var(--header-reserved-height);
   overflow-x: clip;
   color: var(--text);
   font-family: var(--font-sans);
@@ -96,10 +98,10 @@ input:focus-visible {
 }
 
 .skip-link {
-  position: absolute;
+  position: fixed;
   left: 1rem;
   top: 1rem;
-  z-index: 10;
+  z-index: 18;
   padding: 0.7rem 1rem;
   border-radius: 999px;
   background: var(--accent-deep);
@@ -113,10 +115,11 @@ input:focus-visible {
 }
 
 .site-header {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  inset: 0 0 auto 0;
   z-index: 12;
   padding-top: 0.4rem;
+  width: 100%;
   overflow-x: clip;
   backdrop-filter: blur(18px);
   background: linear-gradient(180deg, rgba(249, 245, 240, 0.74), rgba(249, 245, 240, 0.56));
@@ -272,7 +275,7 @@ h3 {
 .page-shell {
   width: min(calc(100% - 2rem), var(--content-width));
   margin: 0 auto;
-  padding: 2.35rem 0 4rem;
+  padding: 1.45rem 0 4rem;
 }
 
 .card {
@@ -360,10 +363,13 @@ h3 {
     0 3px 0 rgba(255, 255, 255, 0.28) inset;
 }
 
-.route-reference img {
+.route-reference img,
+.route-reference object,
+.route-reference__media {
   width: 100%;
   height: auto;
   display: block;
+  aspect-ratio: 1200 / 560;
   border-radius: calc(var(--radius-lg) - 4px);
   border: 1px solid rgba(181, 65, 49, 0.12);
   background: rgba(255, 255, 255, 0.78);
@@ -740,10 +746,6 @@ h3 {
 }
 
 @media (max-width: 720px) {
-  html {
-    scroll-padding-top: 6.2rem;
-  }
-
   .page-shell {
     padding-top: 1.4rem;
   }
@@ -865,7 +867,9 @@ h3 {
     padding: 0.72rem 0.74rem;
   }
 
-  .route-reference img {
+  .route-reference img,
+  .route-reference object,
+  .route-reference__media {
     border-radius: 14px;
   }
 }
