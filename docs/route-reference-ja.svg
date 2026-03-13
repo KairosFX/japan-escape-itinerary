@@ -37,6 +37,7 @@
 
       .node,
       .node-halo,
+      .route-main-animated,
       .tooltip-ui,
       .branch-line,
       .fuji-node,
@@ -53,6 +54,68 @@
 
       .node-halo {
         opacity: 0;
+      }
+
+      .route-main-animated {
+        stroke-dasharray: 860;
+        stroke-dashoffset: 860;
+        animation: routeDraw 1100ms cubic-bezier(0.22, 1, 0.36, 1) 180ms forwards;
+      }
+
+      .branch-line {
+        opacity: 0;
+        animation: routeBranchReveal 420ms cubic-bezier(0.22, 1, 0.36, 1) 860ms forwards;
+      }
+
+      .route-arrow {
+        opacity: 0;
+        animation: routeArrowIn 240ms ease forwards;
+      }
+
+      .route-arrow--1 {
+        animation-delay: 760ms;
+      }
+
+      .route-arrow--2 {
+        animation-delay: 840ms;
+      }
+
+      .route-arrow--3 {
+        animation-delay: 920ms;
+      }
+
+      .route-arrow--4 {
+        animation-delay: 1000ms;
+      }
+
+      .node,
+      .fuji-node {
+        opacity: 0;
+        animation: routeNodeIn 280ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+
+      .node--1 {
+        animation-delay: 860ms;
+      }
+
+      .node--2 {
+        animation-delay: 920ms;
+      }
+
+      .node--3 {
+        animation-delay: 980ms;
+      }
+
+      .node--4 {
+        animation-delay: 1040ms;
+      }
+
+      .node--5 {
+        animation-delay: 1100ms;
+      }
+
+      .node--fuji {
+        animation-delay: 1220ms;
       }
 
       .tooltip-ui {
@@ -105,6 +168,48 @@
       .branch-cluster:active .fuji-label {
         fill: #8e352b;
       }
+
+      @keyframes routeDraw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      @keyframes routeBranchReveal {
+        from {
+          opacity: 0;
+          transform: translateY(-4px);
+        }
+
+        to {
+          opacity: 0.92;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes routeArrowIn {
+        from {
+          opacity: 0;
+          transform: translateX(-8px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes routeNodeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.72);
+        }
+
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
     </style>
   </defs>
 
@@ -136,12 +241,12 @@
 
   <g class="route-static" fill="none" stroke-linecap="round" stroke-linejoin="round">
     <path d="M176 320H1020" stroke="#b79d90" stroke-width="16" opacity="0.14"/>
-    <path d="M176 320H1020" stroke="url(#trackTint)" stroke-width="8"/>
-    <path d="M176 320H1020" stroke="#eb9a84" stroke-width="2.4" opacity="0.42"/>
-    <path d="M277 311L287 320L277 329" stroke="#8e352b" stroke-width="3.8"/>
-    <path d="M481 311L491 320L481 329" stroke="#8e352b" stroke-width="3.8"/>
-    <path d="M685 311L695 320L685 329" stroke="#8e352b" stroke-width="3.8"/>
-    <path d="M889 311L899 320L889 329" stroke="#8e352b" stroke-width="3.8"/>
+    <path class="route-main-animated" d="M176 320H1020" stroke="url(#trackTint)" stroke-width="8"/>
+    <path class="route-main-animated" d="M176 320H1020" stroke="#eb9a84" stroke-width="2.4" opacity="0.42"/>
+    <path class="route-arrow route-arrow--1" d="M277 311L287 320L277 329" stroke="#8e352b" stroke-width="3.8"/>
+    <path class="route-arrow route-arrow--2" d="M481 311L491 320L481 329" stroke="#8e352b" stroke-width="3.8"/>
+    <path class="route-arrow route-arrow--3" d="M685 311L695 320L685 329" stroke="#8e352b" stroke-width="3.8"/>
+    <path class="route-arrow route-arrow--4" d="M889 311L899 320L889 329" stroke="#8e352b" stroke-width="3.8"/>
   </g>
 
   <g class="interactive" transform="translate(188 320)">
@@ -154,7 +259,7 @@
       </g>
     </g>
     <circle class="node-halo" r="22" fill="#ab4a3b"/>
-    <circle class="node" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
+    <circle class="node node--1" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
   </g>
 
   <g class="interactive" transform="translate(392 320)">
@@ -167,7 +272,7 @@
       </g>
     </g>
     <circle class="node-halo" r="22" fill="#ab4a3b"/>
-    <circle class="node" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
+    <circle class="node node--2" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
   </g>
 
   <g class="interactive" transform="translate(596 320)">
@@ -180,7 +285,7 @@
       </g>
     </g>
     <circle class="node-halo" r="22" fill="#ab4a3b"/>
-    <circle class="node" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
+    <circle class="node node--3" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
   </g>
 
   <g class="branch-cluster">
@@ -196,13 +301,13 @@
         </g>
       </g>
       <circle class="node-halo" r="22" fill="#ab4a3b"/>
-      <circle class="node" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
+      <circle class="node node--4" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
     </g>
 
     <g class="interactive fuji-group" transform="translate(878 398)">
       <circle class="hit-area" r="38"/>
       <circle class="node-halo" r="20" fill="#d0a08f"/>
-      <circle class="fuji-node" r="10.5" fill="#d0a08f" stroke="#fffdfa" stroke-width="4"/>
+      <circle class="fuji-node node--fuji" r="10.5" fill="#d0a08f" stroke="#fffdfa" stroke-width="4"/>
       <g class="fuji-icon" fill="none" stroke="#ad6a58" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 26)">
         <path d="M-15 11L0 -9L15 11"/>
         <path d="M-5 -3L4 -9L12 2"/>
@@ -221,6 +326,6 @@
       </g>
     </g>
     <circle class="node-halo" r="22" fill="#ab4a3b"/>
-    <circle class="node" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
+    <circle class="node node--5" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
   </g>
 </svg>

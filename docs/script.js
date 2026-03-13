@@ -7,10 +7,13 @@ const sectionTabs = document.querySelectorAll("[data-panel-target]");
 const contentPanels = document.querySelectorAll("[data-panel]");
 const siteHeader = document.querySelector(".site-header");
 const welcomeOverlay = document.querySelector(".welcome-overlay");
+const checklistPanel = document.querySelector('[data-panel="checklist"]');
+const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
+const progressItems = Array.from(document.querySelectorAll("[data-progress-item]"));
 const root = document.documentElement;
 const pageTitles = {
-  en: "Japan Trip | Itinerary",
-  ja: "日本旅行 | 旅程"
+  en: "Japan Trip | Travel Guide",
+  ja: "日本旅行 | 旅行ガイド"
 };
 const storageKey = "japan-trip-language";
 const welcomeStorageKey = "japan-trip-welcome-seen";
@@ -18,6 +21,7 @@ let reservedHeaderHeight = 0;
 let headerLockUntil = 0;
 let lastScrollY = window.scrollY;
 let scrollTicking = false;
+let revealObserver = null;
 
 function readStoredLanguage() {
   try {
@@ -150,7 +154,108 @@ function setActivePanel(panelId) {
     tab.setAttribute("aria-selected", String(isActive));
   });
 
+  if (hasMatch) {
+    refreshRevealPanel(panelId);
+    syncProgressTimeline();
+  }
+
   return hasMatch;
+}
+
+function setActiveProgressItem(day) {
+  if (!progressItems.length) {
+    return;
+  }
+
+  progressItems.forEach((item) => {
+    const isActive = item.dataset.progressItem === String(day);
+    item.classList.toggle("is-active", isActive);
+    if (isActive) {
+      item.setAttribute("aria-current", "step");
+    } else {
+      item.removeAttribute("aria-current");
+    }
+  });
+}
+
+function syncProgressTimeline() {
+  if (!checklistPanel || !checklistPanel.classList.contains("is-active") || !dayCards.length) {
+    return;
+  }
+
+  const headerOffset = reservedHeaderHeight + 28;
+  const visibleCards = dayCards
+    .map((card) => ({ card, rect: card.getBoundingClientRect() }))
+    .filter(({ rect }) => rect.bottom > headerOffset + 24 && rect.top < window.innerHeight * 0.78);
+
+  const currentCard =
+    visibleCards.sort(
+      (left, right) =>
+        Math.abs(left.rect.top - headerOffset) - Math.abs(right.rect.top - headerOffset)
+    )[0]?.card || dayCards[0];
+
+  setActiveProgressItem(currentCard.dataset.day);
+}
+
+function syncParallax() {
+  const shift = Math.min(window.scrollY * 0.085, 60);
+  root.style.setProperty("--parallax-shift", `${shift}px`);
+}
+
+function registerRevealBlocks() {
+  const revealBlocks = Array.from(
+    document.querySelectorAll(
+      ".hero-panel, .trip-stats, .progress-card, .section-heading, .day-card, .note-card, .route-reference, .site-footer__lead, .site-footer__links"
+    )
+  );
+
+  revealBlocks.forEach((block, index) => {
+    block.classList.add("reveal-block");
+    block.style.setProperty("--reveal-delay", `${Math.min(index, 6) * 60}ms`);
+  });
+
+  if (!("IntersectionObserver" in window)) {
+    revealBlocks.forEach((block) => block.classList.add("is-visible"));
+    return;
+  }
+
+  revealObserver = new window.IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+        }
+      });
+    },
+    {
+      threshold: 0.16,
+      rootMargin: "0px 0px -10% 0px"
+    }
+  );
+
+  revealBlocks.forEach((block) => revealObserver.observe(block));
+}
+
+function refreshRevealPanel(panelId) {
+  const activePanel = Array.from(contentPanels).find((panel) => panel.dataset.panel === panelId);
+  if (!activePanel) {
+    return;
+  }
+
+  const panelBlocks = activePanel.querySelectorAll(".reveal-block");
+  panelBlocks.forEach((block, index) => {
+    block.classList.remove("is-visible");
+    block.style.setProperty("--reveal-delay", `${Math.min(index, 6) * 70}ms`);
+  });
+
+  window.requestAnimationFrame(() => {
+    panelBlocks.forEach((block) => {
+      block.classList.add("is-visible");
+      if (revealObserver) {
+        revealObserver.observe(block);
+      }
+    });
+  });
 }
 
 languageButtons.forEach((button) => {
@@ -161,7 +266,11 @@ languageButtons.forEach((button) => {
 
 setLanguage(readStoredLanguage());
 
+registerRevealBlocks();
 setActivePanel("checklist");
+setActiveProgressItem(1);
+syncParallax();
+syncProgressTimeline();
 
 sectionTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
@@ -174,7 +283,7 @@ sectionTabs.forEach((tab) => {
 
 if (root.classList.contains("is-welcoming")) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  window.setTimeout(finishWelcome, prefersReducedMotion ? 60 : 2600);
+  window.setTimeout(finishWelcome, prefersReducedMotion ? 60 : 2400);
 } else if (welcomeOverlay) {
   welcomeOverlay.setAttribute("hidden", "");
 }
@@ -188,7 +297,6 @@ function syncHeaderState() {
   const currentScrollY = window.scrollY;
   if (window.performance.now() < headerLockUntil) {
     lastScrollY = currentScrollY;
-    scrollTicking = false;
     return;
   }
 
@@ -201,6 +309,12 @@ function syncHeaderState() {
   }
 
   lastScrollY = currentScrollY;
+}
+
+function runScrollEffects() {
+  syncHeaderState();
+  syncProgressTimeline();
+  syncParallax();
   scrollTicking = false;
 }
 
@@ -212,7 +326,7 @@ window.addEventListener(
     }
 
     scrollTicking = true;
-    window.requestAnimationFrame(syncHeaderState);
+    window.requestAnimationFrame(runScrollEffects);
   },
   { passive: true }
 );
@@ -241,6 +355,8 @@ if (siteHeader) {
     if (wasCondensed && window.scrollY > 150) {
       siteHeader.classList.add("is-condensed");
     }
+    syncProgressTimeline();
+    syncParallax();
     lockHeaderState(220);
   });
 }
