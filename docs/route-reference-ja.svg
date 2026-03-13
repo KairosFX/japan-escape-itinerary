@@ -1,163 +1,211 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
-  <title id="title">洗練した日本旅行ルート参考図</title>
-  <desc id="desc">大阪、京都、小田原、箱根、東京を主な流れとして示し、箱根から直接分かれる富士山エリアへの任意寄り道を東京前に示した参考図。</desc>
+  <title id="title">日本旅行のルート参考図</title>
+  <desc id="desc">大阪、京都、小田原、箱根、東京を主な流れとして示し、箱根から分かれる富士山エリアの寄り道ルートを淡い日本風景の背景に重ねた、洗練された鉄道路線風の参考図です。</desc>
   <defs>
-    <filter id="panelShadow" x="-12%" y="-12%" width="124%" height="124%">
-      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#3c2b23" flood-opacity="0.11"/>
+    <filter id="panelShadow" x="-14%" y="-14%" width="128%" height="128%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#281d18" flood-opacity="0.11"/>
     </filter>
+    <linearGradient id="panelSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fdfbf8"/>
+      <stop offset="54%" stop-color="#f7f3ed"/>
+      <stop offset="100%" stop-color="#f1eae1"/>
+    </linearGradient>
+    <linearGradient id="trackTint" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#c85a44"/>
+      <stop offset="100%" stop-color="#cf6d53"/>
+    </linearGradient>
+    <clipPath id="panelClip">
+      <rect x="86" y="84" width="1028" height="392" rx="26"/>
+    </clipPath>
     <style>
-      .route-hit-area {
-        fill: transparent;
-        cursor: pointer;
-        pointer-events: all;
-      }
-
-      .route-direction,
-      .route-icons,
-      .route-main,
-      .route-branch,
-      .route-branch-label {
+      .route-static {
         pointer-events: none;
       }
 
+      .route-stop,
+      .route-stop * {
+        pointer-events: none;
+      }
+
+      .route-stop .route-hit,
+      .route-detour .route-hit {
+        pointer-events: all;
+        fill: transparent;
+      }
+
+      .route-node,
+      .route-label,
+      .route-icon,
+      .route-start-end,
       .route-branch-line,
-      .route-node--hakone,
-      .route-node--fuji,
-      .route-label--hakone,
-      .route-label--fuji,
-      .route-icon--hakone,
-      .route-icon--fuji {
+      .route-branch-node,
+      .route-branch-label,
+      .route-branch-icon {
         transition:
-          stroke 180ms ease,
           fill 180ms ease,
+          stroke 180ms ease,
           opacity 180ms ease,
           transform 180ms ease;
         transform-origin: center;
       }
 
-      .route-hit-area--hakone:hover ~ .route-branch .route-branch-line,
-      .route-hit-area--fuji:hover ~ .route-branch .route-branch-line {
+      .route-stop:hover .route-node {
+        fill: #b54131;
+        transform: scale(1.08);
+      }
+
+      .route-stop:hover .route-label,
+      .route-stop:hover .route-start-end {
+        fill: #b54131;
+      }
+
+      .route-stop:hover .route-icon {
+        stroke: #b54131;
+        transform: translateY(-2px);
+      }
+
+      .route-detour:hover .route-branch-line {
         stroke: #b54131;
         opacity: 1;
       }
 
-      .route-hit-area--hakone:hover ~ .route-main .route-node--hakone,
-      .route-hit-area--fuji:hover ~ .route-main .route-node--hakone,
-      .route-hit-area--hakone:hover ~ .route-branch .route-node--fuji,
-      .route-hit-area--fuji:hover ~ .route-branch .route-node--fuji {
+      .route-detour:hover .route-stop--hakone .route-node,
+      .route-detour:hover .route-branch-node {
         fill: #b54131;
       }
 
-      .route-hit-area--hakone:hover ~ .route-main .route-label--hakone,
-      .route-hit-area--fuji:hover ~ .route-main .route-label--hakone,
-      .route-hit-area--hakone:hover ~ .route-branch-label .route-label--fuji,
-      .route-hit-area--fuji:hover ~ .route-branch-label .route-label--fuji {
+      .route-detour:hover .route-stop--hakone .route-label,
+      .route-detour:hover .route-branch-label {
         fill: #b54131;
       }
 
-      .route-hit-area--hakone:hover ~ .route-icons .route-icon--hakone,
-      .route-hit-area--fuji:hover ~ .route-icons .route-icon--hakone,
-      .route-hit-area--hakone:hover ~ .route-icons .route-icon--fuji,
-      .route-hit-area--fuji:hover ~ .route-icons .route-icon--fuji {
+      .route-detour:hover .route-stop--hakone .route-icon,
+      .route-detour:hover .route-branch-icon {
         stroke: #b54131;
-        opacity: 1;
       }
 
-      .route-hit-area--hakone:hover ~ .route-branch-label .route-label--fuji,
-      .route-hit-area--fuji:hover ~ .route-branch-label .route-label--fuji {
-        transform: translateY(-1px);
+      .route-detour:hover .route-branch-node,
+      .route-detour:hover .route-branch-label,
+      .route-detour:hover .route-branch-icon {
+        transform: translateY(-2px);
       }
     </style>
-    <marker id="routeArrow" markerWidth="13.5" markerHeight="13.5" refX="10.5" refY="6.75" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M2 2L10.5 6.75L2 11.5" fill="none" stroke="#c85a44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </marker>
-    <marker id="detourArrow" markerWidth="13" markerHeight="13" refX="10" refY="6.5" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M2 2L10 6.5L2 11" fill="none" stroke="#dc9e8b" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
-    </marker>
   </defs>
 
   <rect width="1200" height="560" rx="36" fill="#f6f3ef"/>
   <g filter="url(#panelShadow)">
-    <rect x="44" y="44" width="1112" height="472" rx="28" fill="#fffdfa" stroke="#ebdfd3" stroke-width="2"/>
+    <rect x="44" y="44" width="1112" height="472" rx="30" fill="#fffdfa" stroke="#ebdfd3" stroke-width="2"/>
   </g>
 
-  <circle cx="1062" cy="112" r="40" fill="#f3ddd4" opacity="0.03"/>
-  <circle cx="124" cy="444" r="48" fill="#dfe8e2" opacity="0.03"/>
-
-  <g class="route-direction" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    <text x="108" y="118" fill="#c85a44" font-size="18" font-weight="700" letter-spacing="2.4">移動方向</text>
-    <text x="216" y="118" fill="#c85a44" font-size="22" font-weight="700">→</text>
-    <text x="160" y="164" fill="#c85a44" font-size="16" font-weight="700" letter-spacing="2">出発</text>
-    <text x="1084" y="164" text-anchor="middle" fill="#c85a44" font-size="16" font-weight="700" letter-spacing="2">到着</text>
+  <g clip-path="url(#panelClip)" class="route-static">
+    <rect x="86" y="84" width="1028" height="392" rx="26" fill="url(#panelSky)"/>
+    <circle cx="998" cy="134" r="70" fill="#f1dcd3" opacity="0.25"/>
+    <path d="M86 454C232 416 348 414 500 446C676 482 848 484 1114 430V476H86Z" fill="#e7ece5"/>
+    <path d="M86 438C224 390 350 388 522 420C700 454 876 456 1114 404V476H86Z" fill="#eff3ee"/>
+    <path d="M858 414L930 322L1002 414Z" fill="#dde4de" opacity="0.9"/>
+    <path d="M890 366L930 322L970 366Z" fill="#fbfcfb" opacity="0.96"/>
+    <path d="M760 188C800 174 848 174 888 188" fill="none" stroke="#ebe2d8" stroke-width="11" stroke-linecap="round" opacity="0.52"/>
+    <path d="M706 214C764 196 836 198 904 218" fill="none" stroke="#ece2d8" stroke-width="9" stroke-linecap="round" opacity="0.42"/>
+    <path d="M100 180C128 194 148 214 168 244" fill="none" stroke="#d6b8ae" stroke-width="8" stroke-linecap="round" opacity="0.34"/>
+    <circle cx="114" cy="190" r="11" fill="#f6e0da" opacity="0.72"/>
+    <circle cx="136" cy="206" r="9" fill="#f7e8e2" opacity="0.82"/>
+    <circle cx="156" cy="224" r="10" fill="#f6e0da" opacity="0.7"/>
+    <circle cx="176" cy="244" r="8" fill="#f7e8e2" opacity="0.78"/>
   </g>
 
-  <rect class="route-hit-area route-hit-area--hakone" x="748" y="160" width="148" height="284" rx="30"/>
-  <rect class="route-hit-area route-hit-area--fuji" x="846" y="404" width="196" height="122" rx="26"/>
+  <g class="route-static" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
+    <text x="126" y="126" fill="#c85a44" font-size="18" font-weight="700" letter-spacing="2.4">移動ルート</text>
+    <text x="248" y="126" fill="#c85a44" font-size="20" font-weight="700">→</text>
+  </g>
 
-  <g class="route-icons" fill="none" stroke="#b86552" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.86">
-    <g class="route-icon--kyoto">
-      <path d="M352 166H408"/>
-      <path d="M360 166L380 152L400 166"/>
-      <path d="M366 166V176"/>
-      <path d="M394 166V176"/>
-      <path d="M366 176H394"/>
+  <g class="route-static" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M192 338H1012" stroke="#b79d90" stroke-width="16" opacity="0.16"/>
+    <path d="M192 338H1012" stroke="url(#trackTint)" stroke-width="8.8"/>
+    <path d="M192 338H1012" stroke="#eb9a84" stroke-width="2.6" opacity="0.46"/>
+    <path d="M276 327L288 338L276 349" stroke="#b54131" stroke-width="4.2"/>
+    <path d="M482 327L494 338L482 349" stroke="#b54131" stroke-width="4.2"/>
+    <path d="M688 327L700 338L688 349" stroke="#b54131" stroke-width="4.2"/>
+    <path d="M894 327L906 338L894 349" stroke="#b54131" stroke-width="4.2"/>
+  </g>
+
+  <g class="route-stop route-stop--osaka" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
+    <circle class="route-hit" cx="192" cy="270" r="78"/>
+    <g class="route-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(174 148)">
+      <path d="M0 22H36"/>
+      <path d="M4 22L18 8L32 22"/>
+      <path d="M9 22V12"/>
+      <path d="M27 22V12"/>
+      <path d="M6 12H30"/>
+      <path d="M10 28H26"/>
+    </g>
+    <text class="route-start-end" x="192" y="146" text-anchor="middle" fill="#c85a44" font-size="15" font-weight="700" letter-spacing="1.8">出発</text>
+    <text class="route-label" x="192" y="208" text-anchor="middle" fill="#262b2d" font-size="46" font-weight="700">大阪</text>
+    <circle class="route-node" cx="192" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
+  </g>
+
+  <g class="route-stop route-stop--kyoto" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
+    <circle class="route-hit" cx="398" cy="270" r="78"/>
+    <g class="route-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(380 148)">
+      <path d="M0 20H36"/>
+      <path d="M4 20L18 6L32 20"/>
+      <path d="M8 20V10"/>
+      <path d="M28 20V10"/>
+      <path d="M6 10H30"/>
+      <path d="M10 26H26"/>
+    </g>
+    <text class="route-label" x="398" y="208" text-anchor="middle" fill="#262b2d" font-size="46" font-weight="700">京都</text>
+    <circle class="route-node" cx="398" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
+  </g>
+
+  <g class="route-stop route-stop--odawara" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
+    <circle class="route-hit" cx="604" cy="274" r="70"/>
+    <g class="route-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.78" transform="translate(587 149)">
+      <rect x="0" y="8" width="34" height="16" rx="4"/>
+      <path d="M8 16H26"/>
+      <path d="M6 24H28"/>
+      <path d="M6 24L2 30"/>
+      <path d="M28 24L32 30"/>
+    </g>
+    <text class="route-label" x="604" y="212" text-anchor="middle" fill="#4f565b" font-size="30" font-weight="500">小田原</text>
+    <circle class="route-node" cx="604" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
+  </g>
+
+  <g class="route-detour" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
+    <circle class="route-hit" cx="810" cy="274" r="82"/>
+    <circle class="route-hit" cx="918" cy="434" r="72"/>
+    <path class="route-branch-line" d="M810 352C820 394 854 426 918 432C982 432 1008 398 1012 352" fill="none" stroke="#d79a87" stroke-width="3" stroke-dasharray="6 8" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <g class="route-stop route-stop--hakone">
+      <g class="route-icon route-icon--hakone" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(792 148)">
+        <path d="M0 24L12 10L22 22L32 8L40 24"/>
+        <path d="M9 24L12 18L16 24"/>
+        <path d="M0 28H40"/>
+      </g>
+      <text class="route-label route-label--hakone" x="810" y="208" text-anchor="middle" fill="#262b2d" font-size="38" font-weight="650">箱根</text>
+      <circle class="route-node" cx="810" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
     </g>
 
-    <g class="route-icon--odawara">
-      <rect x="584" y="154" width="32" height="16" rx="4"/>
-      <path d="M592 162H608"/>
-      <path d="M590 170H610"/>
-      <path d="M590 170L586 176"/>
-      <path d="M610 170L614 176"/>
-    </g>
-
-    <g class="route-icon--hakone">
-      <path d="M804 176V156"/>
-      <path d="M836 176V156"/>
-      <path d="M798 156H842"/>
-      <path d="M802 148H838"/>
-      <path d="M810 168H830"/>
-    </g>
-
-    <g class="route-icon--fuji">
-      <path d="M918 454L934 432L950 454Z"/>
-      <path d="M930 432L946 454"/>
+    <g class="route-stop route-stop--fuji">
+      <g class="route-icon route-branch-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(900 438)">
+        <path d="M-14 10L0 -10L14 10"/>
+        <path d="M-4 -4L4 -10L12 2"/>
+      </g>
+      <circle class="route-branch-node" cx="918" cy="432" r="12" fill="#d79a87" stroke="#fffdfa" stroke-width="4"/>
+      <text class="route-label route-branch-label" x="918" y="476" text-anchor="middle" fill="#3a4043" font-size="30" font-weight="700">富士山エリア</text>
     </g>
   </g>
 
-  <g class="route-main" fill="none" stroke="#c85a44" stroke-width="8.4" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M175 322H356" marker-end="url(#routeArrow)"/>
-    <path d="M395 322H576" marker-end="url(#routeArrow)"/>
-    <path d="M615 322H796" marker-end="url(#routeArrow)"/>
-    <path d="M835 322H1060" marker-end="url(#routeArrow)"/>
-  </g>
-
-  <g class="route-branch" fill="none" stroke="#dc9e8b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 10">
-    <path class="route-branch-line" d="M826 338C828 378 860 410 924 426" marker-end="url(#detourArrow)"/>
-    <path class="route-branch-line" d="M950 426C1022 426 1062 392 1072 344" marker-end="url(#detourArrow)"/>
-  </g>
-
-  <g class="route-main" fill="#c85a44" stroke="#fffdfa" stroke-width="4.5">
-    <circle cx="160" cy="322" r="14"/>
-    <circle cx="380" cy="322" r="14"/>
-    <circle cx="600" cy="322" r="14"/>
-    <circle class="route-node--hakone" cx="820" cy="322" r="14"/>
-    <circle cx="1084" cy="322" r="14"/>
-  </g>
-
-  <g class="route-branch" fill="#dc9e8b" stroke="#fffdfa" stroke-width="4.5">
-    <circle class="route-node--fuji" cx="936" cy="428" r="12"/>
-  </g>
-
-  <g class="route-main" fill="#262b2d" text-anchor="middle" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    <text x="160" y="202" font-size="46" font-weight="700">大阪</text>
-    <text x="380" y="202" font-size="46" font-weight="700">京都</text>
-    <text x="600" y="204" font-size="30" font-weight="500">小田原</text>
-    <text class="route-label--hakone" x="820" y="202" font-size="38" font-weight="650">箱根</text>
-    <text x="1084" y="202" font-size="46" font-weight="700">東京</text>
-  </g>
-
-  <g class="route-branch-label" fill="#262b2d" text-anchor="middle" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    <text class="route-label--fuji" x="936" y="478" font-size="30" font-weight="700">富士山エリア</text>
+  <g class="route-stop route-stop--tokyo" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
+    <circle class="route-hit" cx="1012" cy="270" r="78"/>
+    <g class="route-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(994 148)">
+      <path d="M-18 30V14"/>
+      <path d="M-8 30V8"/>
+      <path d="M4 30V18"/>
+      <path d="M16 30V12"/>
+      <path d="M-22 30H20"/>
+    </g>
+    <text class="route-start-end" x="1012" y="146" text-anchor="middle" fill="#c85a44" font-size="15" font-weight="700" letter-spacing="1.8">到着</text>
+    <text class="route-label" x="1012" y="208" text-anchor="middle" fill="#262b2d" font-size="46" font-weight="700">東京</text>
+    <circle class="route-node" cx="1012" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
   </g>
 </svg>
