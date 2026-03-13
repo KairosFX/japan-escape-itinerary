@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
   <title id="title">日本旅行のルート参考図</title>
-  <desc id="desc">大阪、京都、小田原、箱根、東京を主な流れとして示し、箱根から分かれる富士山エリアの寄り道ルートを淡い日本風景の背景に重ねた、洗練された鉄道路線風の参考図です。</desc>
+  <desc id="desc">大阪、京都、小田原、箱根、東京の各停留点をホバーラベル付きで示し、箱根から分かれる富士山の寄り道ルートを、淡い日本風景の背景に重ねたルート図です。</desc>
   <defs>
     <filter id="panelShadow" x="-14%" y="-14%" width="128%" height="128%">
       <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#281d18" flood-opacity="0.11"/>
     </filter>
     <linearGradient id="panelSky" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#fdfbf8"/>
-      <stop offset="54%" stop-color="#f7f3ed"/>
-      <stop offset="100%" stop-color="#f1eae1"/>
+      <stop offset="56%" stop-color="#f8f3ec"/>
+      <stop offset="100%" stop-color="#f1e9df"/>
     </linearGradient>
     <linearGradient id="trackTint" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="#c85a44"/>
@@ -18,76 +18,92 @@
       <rect x="86" y="84" width="1028" height="392" rx="26"/>
     </clipPath>
     <style>
-      .route-static {
+      .scene,
+      .route-static,
+      .tooltip,
+      .fuji-group,
+      .stop-label {
         pointer-events: none;
       }
 
-      .route-stop,
-      .route-stop * {
-        pointer-events: none;
+      .interactive {
+        cursor: pointer;
       }
 
-      .route-stop .route-hit,
-      .route-detour .route-hit {
-        pointer-events: all;
+      .hit-area {
         fill: transparent;
+        pointer-events: all;
       }
 
-      .route-node,
-      .route-label,
-      .route-icon,
-      .route-start-end,
-      .route-branch-line,
-      .route-branch-node,
-      .route-branch-label,
-      .route-branch-icon {
+      .node,
+      .node-halo,
+      .tooltip-ui,
+      .branch-line,
+      .fuji-node,
+      .fuji-icon,
+      .fuji-label {
         transition:
+          opacity 180ms ease,
           fill 180ms ease,
           stroke 180ms ease,
-          opacity 180ms ease,
           transform 180ms ease;
+        transform-box: fill-box;
         transform-origin: center;
       }
 
-      .route-stop:hover .route-node {
+      .node-halo {
+        opacity: 0;
+      }
+
+      .tooltip-ui {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      .interactive:hover .node,
+      .interactive:active .node {
         fill: #b54131;
-        transform: scale(1.08);
+        transform: scale(1.12);
       }
 
-      .route-stop:hover .route-label,
-      .route-stop:hover .route-start-end {
-        fill: #b54131;
+      .interactive:hover .node-halo,
+      .interactive:active .node-halo {
+        opacity: 0.18;
+        transform: scale(1.28);
       }
 
-      .route-stop:hover .route-icon {
-        stroke: #b54131;
-        transform: translateY(-2px);
+      .interactive:hover .tooltip-ui,
+      .interactive:active .tooltip-ui {
+        opacity: 1;
+        transform: translateY(0);
       }
 
-      .route-detour:hover .route-branch-line {
+      .branch-cluster:hover .branch-line,
+      .branch-cluster:active .branch-line {
         stroke: #b54131;
         opacity: 1;
       }
 
-      .route-detour:hover .route-stop--hakone .route-node,
-      .route-detour:hover .route-branch-node {
-        fill: #b54131;
-      }
-
-      .route-detour:hover .route-stop--hakone .route-label,
-      .route-detour:hover .route-branch-label {
-        fill: #b54131;
-      }
-
-      .route-detour:hover .route-stop--hakone .route-icon,
-      .route-detour:hover .route-branch-icon {
+      .branch-cluster:hover .fuji-node,
+      .branch-cluster:hover .fuji-label,
+      .branch-cluster:hover .fuji-icon,
+      .branch-cluster:active .fuji-node,
+      .branch-cluster:active .fuji-label,
+      .branch-cluster:active .fuji-icon {
         stroke: #b54131;
+        fill: #b54131;
       }
 
-      .route-detour:hover .route-branch-node,
-      .route-detour:hover .route-branch-label,
-      .route-detour:hover .route-branch-icon {
+      .branch-cluster:hover .fuji-icon,
+      .branch-cluster:hover .fuji-label,
+      .branch-cluster:active .fuji-icon,
+      .branch-cluster:active .fuji-label {
         transform: translateY(-2px);
+      }
+
+      .branch-cluster:hover .fuji-label,
+      .branch-cluster:active .fuji-label {
+        fill: #b54131;
       }
     </style>
   </defs>
@@ -97,115 +113,114 @@
     <rect x="44" y="44" width="1112" height="472" rx="30" fill="#fffdfa" stroke="#ebdfd3" stroke-width="2"/>
   </g>
 
-  <g clip-path="url(#panelClip)" class="route-static">
+  <g clip-path="url(#panelClip)" class="scene">
     <rect x="86" y="84" width="1028" height="392" rx="26" fill="url(#panelSky)"/>
-    <circle cx="998" cy="134" r="70" fill="#f1dcd3" opacity="0.25"/>
-    <path d="M86 454C232 416 348 414 500 446C676 482 848 484 1114 430V476H86Z" fill="#e7ece5"/>
-    <path d="M86 438C224 390 350 388 522 420C700 454 876 456 1114 404V476H86Z" fill="#eff3ee"/>
-    <path d="M858 414L930 322L1002 414Z" fill="#dde4de" opacity="0.9"/>
-    <path d="M890 366L930 322L970 366Z" fill="#fbfcfb" opacity="0.96"/>
-    <path d="M760 188C800 174 848 174 888 188" fill="none" stroke="#ebe2d8" stroke-width="11" stroke-linecap="round" opacity="0.52"/>
-    <path d="M706 214C764 196 836 198 904 218" fill="none" stroke="#ece2d8" stroke-width="9" stroke-linecap="round" opacity="0.42"/>
-    <path d="M100 180C128 194 148 214 168 244" fill="none" stroke="#d6b8ae" stroke-width="8" stroke-linecap="round" opacity="0.34"/>
-    <circle cx="114" cy="190" r="11" fill="#f6e0da" opacity="0.72"/>
-    <circle cx="136" cy="206" r="9" fill="#f7e8e2" opacity="0.82"/>
-    <circle cx="156" cy="224" r="10" fill="#f6e0da" opacity="0.7"/>
-    <circle cx="176" cy="244" r="8" fill="#f7e8e2" opacity="0.78"/>
+    <circle cx="994" cy="136" r="66" fill="#f1dcd3" opacity="0.22"/>
+    <path d="M86 444C222 404 364 406 506 438C664 474 840 480 1114 430V476H86Z" fill="#ebf0e8"/>
+    <path d="M86 454C224 426 374 428 542 456C724 486 906 488 1114 444V476H86Z" fill="#e2e9e2"/>
+    <path d="M104 184C130 196 148 214 170 246" fill="none" stroke="#d5b7ae" stroke-width="8" stroke-linecap="round" opacity="0.28"/>
+    <circle cx="116" cy="192" r="11" fill="#f6e1db" opacity="0.66"/>
+    <circle cx="138" cy="208" r="9" fill="#f8e9e3" opacity="0.74"/>
+    <circle cx="158" cy="226" r="10" fill="#f6e1db" opacity="0.64"/>
+    <circle cx="178" cy="246" r="8" fill="#f8e9e3" opacity="0.72"/>
+    <path d="M746 186C792 172 844 174 890 188" fill="none" stroke="#ebe1d6" stroke-width="10" stroke-linecap="round" opacity="0.36"/>
+    <path d="M704 214C758 198 824 200 884 216" fill="none" stroke="#ebe1d6" stroke-width="8" stroke-linecap="round" opacity="0.28"/>
   </g>
 
   <g class="route-static" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
     <text x="126" y="126" fill="#c85a44" font-size="18" font-weight="700" letter-spacing="2.4">移動ルート</text>
     <text x="248" y="126" fill="#c85a44" font-size="20" font-weight="700">→</text>
+    <text x="188" y="152" text-anchor="middle" fill="#c85a44" font-size="15" font-weight="700" letter-spacing="1.8">出発</text>
+    <text x="1008" y="152" text-anchor="middle" fill="#c85a44" font-size="15" font-weight="700" letter-spacing="1.8">到着</text>
   </g>
 
   <g class="route-static" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M192 338H1012" stroke="#b79d90" stroke-width="16" opacity="0.16"/>
-    <path d="M192 338H1012" stroke="url(#trackTint)" stroke-width="8.8"/>
-    <path d="M192 338H1012" stroke="#eb9a84" stroke-width="2.6" opacity="0.46"/>
-    <path d="M276 327L288 338L276 349" stroke="#b54131" stroke-width="4.2"/>
-    <path d="M482 327L494 338L482 349" stroke="#b54131" stroke-width="4.2"/>
-    <path d="M688 327L700 338L688 349" stroke="#b54131" stroke-width="4.2"/>
-    <path d="M894 327L906 338L894 349" stroke="#b54131" stroke-width="4.2"/>
+    <path d="M176 320H1020" stroke="#b79d90" stroke-width="16" opacity="0.14"/>
+    <path d="M176 320H1020" stroke="url(#trackTint)" stroke-width="8"/>
+    <path d="M176 320H1020" stroke="#eb9a84" stroke-width="2.4" opacity="0.42"/>
+    <path d="M277 311L287 320L277 329" stroke="#b54131" stroke-width="3.8"/>
+    <path d="M481 311L491 320L481 329" stroke="#b54131" stroke-width="3.8"/>
+    <path d="M685 311L695 320L685 329" stroke="#b54131" stroke-width="3.8"/>
+    <path d="M889 311L899 320L889 329" stroke="#b54131" stroke-width="3.8"/>
   </g>
 
-  <g class="route-stop route-stop--osaka" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    <circle class="route-hit" cx="192" cy="270" r="78"/>
-    <g class="route-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(174 148)">
-      <path d="M0 22H36"/>
-      <path d="M4 22L18 8L32 22"/>
-      <path d="M9 22V12"/>
-      <path d="M27 22V12"/>
-      <path d="M6 12H30"/>
-      <path d="M10 28H26"/>
-    </g>
-    <text class="route-start-end" x="192" y="146" text-anchor="middle" fill="#c85a44" font-size="15" font-weight="700" letter-spacing="1.8">出発</text>
-    <text class="route-label" x="192" y="208" text-anchor="middle" fill="#262b2d" font-size="46" font-weight="700">大阪</text>
-    <circle class="route-node" cx="192" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
-  </g>
-
-  <g class="route-stop route-stop--kyoto" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    <circle class="route-hit" cx="398" cy="270" r="78"/>
-    <g class="route-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(380 148)">
-      <path d="M0 20H36"/>
-      <path d="M4 20L18 6L32 20"/>
-      <path d="M8 20V10"/>
-      <path d="M28 20V10"/>
-      <path d="M6 10H30"/>
-      <path d="M10 26H26"/>
-    </g>
-    <text class="route-label" x="398" y="208" text-anchor="middle" fill="#262b2d" font-size="46" font-weight="700">京都</text>
-    <circle class="route-node" cx="398" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
-  </g>
-
-  <g class="route-stop route-stop--odawara" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    <circle class="route-hit" cx="604" cy="274" r="70"/>
-    <g class="route-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.78" transform="translate(587 149)">
-      <rect x="0" y="8" width="34" height="16" rx="4"/>
-      <path d="M8 16H26"/>
-      <path d="M6 24H28"/>
-      <path d="M6 24L2 30"/>
-      <path d="M28 24L32 30"/>
-    </g>
-    <text class="route-label" x="604" y="212" text-anchor="middle" fill="#4f565b" font-size="30" font-weight="500">小田原</text>
-    <circle class="route-node" cx="604" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
-  </g>
-
-  <g class="route-detour" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    <circle class="route-hit" cx="810" cy="274" r="82"/>
-    <circle class="route-hit" cx="918" cy="434" r="72"/>
-    <path class="route-branch-line" d="M810 352C820 394 854 426 918 432C982 432 1008 398 1012 352" fill="none" stroke="#d79a87" stroke-width="3" stroke-dasharray="6 8" stroke-linecap="round" stroke-linejoin="round"/>
-
-    <g class="route-stop route-stop--hakone">
-      <g class="route-icon route-icon--hakone" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(792 148)">
-        <path d="M0 24L12 10L22 22L32 8L40 24"/>
-        <path d="M9 24L12 18L16 24"/>
-        <path d="M0 28H40"/>
+  <g class="interactive" transform="translate(188 320)">
+    <circle class="hit-area" r="38"/>
+    <g transform="translate(-48 -96)">
+      <g class="tooltip-ui tooltip">
+        <rect x="0" y="0" width="96" height="42" rx="18" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4"/>
+        <path d="M42 42L48 50L54 42Z" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4" stroke-linejoin="round"/>
+        <text x="48" y="26" text-anchor="middle" fill="#2b2f31" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="16" font-weight="600">大阪</text>
       </g>
-      <text class="route-label route-label--hakone" x="810" y="208" text-anchor="middle" fill="#262b2d" font-size="38" font-weight="650">箱根</text>
-      <circle class="route-node" cx="810" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
+    </g>
+    <circle class="node-halo" r="22" fill="#c85a44"/>
+    <circle class="node" r="11.5" fill="#cb5e47" stroke="#fffdfa" stroke-width="4"/>
+  </g>
+
+  <g class="interactive" transform="translate(392 320)">
+    <circle class="hit-area" r="38"/>
+    <g transform="translate(-48 -96)">
+      <g class="tooltip-ui tooltip">
+        <rect x="0" y="0" width="96" height="42" rx="18" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4"/>
+        <path d="M42 42L48 50L54 42Z" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4" stroke-linejoin="round"/>
+        <text x="48" y="26" text-anchor="middle" fill="#2b2f31" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="16" font-weight="600">京都</text>
+      </g>
+    </g>
+    <circle class="node-halo" r="22" fill="#c85a44"/>
+    <circle class="node" r="11.5" fill="#cb5e47" stroke="#fffdfa" stroke-width="4"/>
+  </g>
+
+  <g class="interactive" transform="translate(596 320)">
+    <circle class="hit-area" r="38"/>
+    <g transform="translate(-58 -96)">
+      <g class="tooltip-ui tooltip">
+        <rect x="0" y="0" width="116" height="42" rx="18" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4"/>
+        <path d="M52 42L58 50L64 42Z" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4" stroke-linejoin="round"/>
+        <text x="58" y="26" text-anchor="middle" fill="#2b2f31" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="16" font-weight="600">小田原</text>
+      </g>
+    </g>
+    <circle class="node-halo" r="22" fill="#c85a44"/>
+    <circle class="node" r="11.5" fill="#cb5e47" stroke="#fffdfa" stroke-width="4"/>
+  </g>
+
+  <g class="branch-cluster">
+    <path class="branch-line" d="M800 332C804 364 834 388 878 398" fill="none" stroke="#d59a86" stroke-width="3" stroke-dasharray="6 8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
+
+    <g class="interactive" transform="translate(800 320)">
+      <circle class="hit-area" r="40"/>
+      <g transform="translate(-48 -96)">
+        <g class="tooltip-ui tooltip">
+          <rect x="0" y="0" width="96" height="42" rx="18" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4"/>
+          <path d="M42 42L48 50L54 42Z" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4" stroke-linejoin="round"/>
+          <text x="48" y="26" text-anchor="middle" fill="#2b2f31" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="16" font-weight="600">箱根</text>
+        </g>
+      </g>
+      <circle class="node-halo" r="22" fill="#c85a44"/>
+      <circle class="node" r="11.5" fill="#cb5e47" stroke="#fffdfa" stroke-width="4"/>
     </g>
 
-    <g class="route-stop route-stop--fuji">
-      <g class="route-icon route-branch-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(900 438)">
-        <path d="M-14 10L0 -10L14 10"/>
-        <path d="M-4 -4L4 -10L12 2"/>
+    <g class="interactive fuji-group" transform="translate(878 398)">
+      <circle class="hit-area" r="38"/>
+      <circle class="node-halo" r="20" fill="#d59a86"/>
+      <circle class="fuji-node" r="10.5" fill="#d59a86" stroke="#fffdfa" stroke-width="4"/>
+      <g class="fuji-icon" fill="none" stroke="#be725d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 26)">
+        <path d="M-15 11L0 -9L15 11"/>
+        <path d="M-5 -3L4 -9L12 2"/>
       </g>
-      <circle class="route-branch-node" cx="918" cy="432" r="12" fill="#d79a87" stroke="#fffdfa" stroke-width="4"/>
-      <text class="route-label route-branch-label" x="918" y="476" text-anchor="middle" fill="#3a4043" font-size="30" font-weight="700">富士山エリア</text>
+      <text class="fuji-label" x="0" y="64" text-anchor="middle" fill="#404548" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="24" font-weight="600">富士山</text>
     </g>
   </g>
 
-  <g class="route-stop route-stop--tokyo" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif">
-    <circle class="route-hit" cx="1012" cy="270" r="78"/>
-    <g class="route-icon" fill="none" stroke="#be725d" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" transform="translate(994 148)">
-      <path d="M-18 30V14"/>
-      <path d="M-8 30V8"/>
-      <path d="M4 30V18"/>
-      <path d="M16 30V12"/>
-      <path d="M-22 30H20"/>
+  <g class="interactive" transform="translate(1008 320)">
+    <circle class="hit-area" r="38"/>
+    <g transform="translate(-48 -96)">
+      <g class="tooltip-ui tooltip">
+        <rect x="0" y="0" width="96" height="42" rx="18" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4"/>
+        <path d="M42 42L48 50L54 42Z" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4" stroke-linejoin="round"/>
+        <text x="48" y="26" text-anchor="middle" fill="#2b2f31" font-family="'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="16" font-weight="600">東京</text>
+      </g>
     </g>
-    <text class="route-start-end" x="1012" y="146" text-anchor="middle" fill="#c85a44" font-size="15" font-weight="700" letter-spacing="1.8">到着</text>
-    <text class="route-label" x="1012" y="208" text-anchor="middle" fill="#262b2d" font-size="46" font-weight="700">東京</text>
-    <circle class="route-node" cx="1012" cy="338" r="14" fill="#cb5e47" stroke="#fffdfa" stroke-width="4.4"/>
+    <circle class="node-halo" r="22" fill="#c85a44"/>
+    <circle class="node" r="11.5" fill="#cb5e47" stroke="#fffdfa" stroke-width="4"/>
   </g>
 </svg>
