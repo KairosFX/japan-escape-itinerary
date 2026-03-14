@@ -741,15 +741,15 @@ h3 {
 }
 
 .progress-timeline {
+  --timeline-gutter: 2.5rem;
   --timeline-node-size: 1.42rem;
-  --timeline-node-left: 0.48rem;
   --timeline-node-top: 1.08rem;
-  --timeline-axis-x: calc(var(--timeline-node-left) + (var(--timeline-node-size) / 2));
+  --timeline-axis-x: calc(var(--timeline-gutter) / 2);
   --timeline-node-center: calc(var(--timeline-node-top) + (var(--timeline-node-size) / 2));
   --timeline-spine-fill: 0px;
   list-style: none;
   margin: 0;
-  padding: 0 0 0 0.18rem;
+  padding: 0;
   display: grid;
   gap: 0.82rem;
   position: relative;
@@ -787,7 +787,7 @@ h3 {
 .progress-item {
   --timeline-progress: 0;
   position: relative;
-  padding: 0.95rem 1rem 0.98rem 2.72rem;
+  padding: 0.95rem 1rem 0.98rem 0;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(31, 37, 39, 0.08);
   background: rgba(255, 255, 255, 0.74);
@@ -848,6 +848,7 @@ h3 {
   grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 0.85rem;
+  margin-left: var(--timeline-gutter);
 }
 
 .progress-item__text {
@@ -1370,6 +1371,14 @@ h3 {
   cursor: pointer;
 }
 
+.route-map__surface.is-interactive {
+  cursor: grab;
+}
+
+.route-map__surface.is-interactive:active {
+  cursor: grabbing;
+}
+
 .route-map__surface::before {
   content: "";
   position: absolute;
@@ -1716,6 +1725,7 @@ html.has-modal-open body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.08rem;
+  align-items: start;
 }
 
 .day-grid--optional {
@@ -1917,8 +1927,14 @@ html.has-modal-open body {
 
 .note-card {
   display: grid;
+  align-content: start;
   gap: 0.8rem;
   border-top: 4px solid var(--accent-soft);
+}
+
+.note-card p {
+  max-width: none;
+  line-height: 1.72;
 }
 
 .note-card h3 {
@@ -2031,7 +2047,7 @@ html.has-modal-open body {
 .journey-close {
   margin-top: 2.8rem;
   margin-bottom: 2.4rem;
-  padding: 1.6rem;
+  padding: 1.45rem;
   overflow: hidden;
 }
 
@@ -2046,59 +2062,23 @@ html.has-modal-open body {
   filter: blur(8px);
 }
 
-.journey-close::after {
-  content: "";
-  position: absolute;
-  inset: auto 1.4rem 0.4rem auto;
-  width: min(18rem, 42vw);
-  height: 7rem;
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 160' fill='none'%3E%3Cpath d='M18 132c46-2 82-18 113-58 16-20 32-44 54-64 22 20 38 44 54 65 30 40 68 56 143 57' stroke='%23b2b8b0' stroke-opacity='.3' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M143 52c13-12 28-24 42-35 15 11 28 23 42 35' stroke='%23fff7f1' stroke-opacity='.58' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
-    center bottom / contain no-repeat;
-  opacity: 0.52;
-  pointer-events: none;
-}
-
 .journey-close__inner {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 0.9rem;
+  gap: 0.72rem;
 }
 
 .journey-close__summary {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: clamp(1.2rem, 1rem + 0.8vw, 1.65rem);
+  font-size: clamp(1.15rem, 0.96rem + 0.74vw, 1.52rem);
   color: var(--text);
-}
-
-.journey-close__route {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.58rem;
-  margin-top: 0.1rem;
-}
-
-.journey-close__stop {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.46rem 0.8rem;
-  border-radius: 999px;
-  border: 1px solid rgba(171, 74, 59, 0.1);
-  background: rgba(255, 252, 248, 0.74);
-  color: var(--text);
-  font-weight: 600;
-}
-
-.journey-close__arrow {
-  color: var(--accent);
-  font-weight: 700;
+  max-width: 44rem;
 }
 
 .journey-close__actions {
-  margin-top: 0.25rem;
+  margin-top: 0.12rem;
 }
 
 .journey-close__button {
@@ -2658,7 +2638,7 @@ html.has-modal-open body {
   }
 
   .progress-item {
-    padding: 0.9rem 0.86rem 0.92rem 2.42rem;
+    padding: 0.9rem 0.86rem 0.92rem 0;
   }
 
   .progress-item__body {
@@ -2734,11 +2714,12 @@ html.has-modal-open body {
   }
 
   .progress-timeline {
+    --timeline-gutter: 2.2rem;
     max-height: none;
   }
 
   .progress-item {
-    padding: 0.88rem 0.8rem 0.9rem 2.15rem;
+    padding: 0.88rem 0.8rem 0.9rem 0;
   }
 
   .progress-item__body {

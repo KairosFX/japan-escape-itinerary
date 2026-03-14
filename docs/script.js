@@ -2176,6 +2176,16 @@ if (routeMapGate) {
   });
 }
 
+if (routeMapSurface) {
+  routeMapSurface.addEventListener("pointerleave", (event) => {
+    if (!routeMapInteractive || event.buttons !== 0) {
+      return;
+    }
+
+    setRouteMapInteractive(false);
+  });
+}
+
 if (jumpCurrentDayButton) {
   jumpCurrentDayButton.addEventListener("click", () => {
     scrollToChecklistDay(getCurrentProgressDay());
@@ -2300,6 +2310,10 @@ function runScrollEffects() {
 window.addEventListener(
   "scroll",
   () => {
+    if (routeMapInteractive) {
+      setRouteMapInteractive(false);
+    }
+
     if (scrollTicking) {
       return;
     }
