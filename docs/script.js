@@ -7,7 +7,7 @@ const sectionTabs = document.querySelectorAll("[data-panel-target]");
 const contentPanels = document.querySelectorAll("[data-panel]");
 const siteHeader = document.querySelector(".site-header");
 const welcomeOverlay = document.querySelector(".welcome-overlay");
-const checklistPanel = document.querySelector('[data-panel="checklist"]');
+const sequenceNotice = document.querySelector("[data-sequence-notice]");
 const routeMedia = document.querySelector(".route-reference__media");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
 const checklistInputs = Array.from(document.querySelectorAll('.day-card input[type="checkbox"]'));
@@ -48,23 +48,59 @@ const routeDayToStopKey = {
   8: "tokyo",
   9: "tokyo"
 };
-const routeDayCelebrationTargets = {
-  1: ["route-stop-osaka"],
-  2: ["route-progress-kyoto", "route-stop-kyoto"],
-  3: ["route-stop-osaka"],
-  4: ["route-progress-odawara", "route-stop-odawara", "route-progress-hakone", "route-stop-hakone"],
-  5: ["route-stop-hakone"],
-  6: ["route-progress-fuji", "route-stop-fuji"],
-  7: ["route-progress-tokyo", "route-stop-tokyo"],
-  8: ["route-stop-tokyo"],
-  9: ["route-stop-tokyo"]
-};
 let reservedHeaderHeight = 0;
 let headerLockUntil = 0;
 let lastScrollY = window.scrollY;
 let scrollTicking = false;
 let revealObserver = null;
 let completedDays = new Set();
+let accessibleDay = 1;
+let sequenceNoticeTimer = 0;
+
+function getOrderedDayNumbers() {
+  return dayCards
+    .map((card) => Number(card.dataset.day))
+    .filter((day) => !Number.isNaN(day))
+    .sort((left, right) => left - right);
+}
+
+function getJourneyState() {
+  const orderedDays = getOrderedDayNumbers();
+  const rawCompleted = new Set();
+
+  dayCards.forEach((card) => {
+    if (isDayComplete(card)) {
+      rawCompleted.add(card.dataset.day);
+    }
+  });
+
+  const sequentialCompleted = new Set();
+  let nextAccessibleDay = orderedDays[0] || 1;
+
+  for (const day of orderedDays) {
+    if (rawCompleted.has(String(day))) {
+      sequentialCompleted.add(String(day));
+      nextAccessibleDay = day + 1;
+      continue;
+    }
+
+    nextAccessibleDay = day;
+    break;
+  }
+
+  const highestDay = orderedDays[orderedDays.length - 1] || 1;
+  if (sequentialCompleted.size === orderedDays.length) {
+    nextAccessibleDay = highestDay;
+  } else {
+    nextAccessibleDay = Math.min(nextAccessibleDay, highestDay);
+  }
+
+  return {
+    rawCompleted,
+    sequentialCompleted,
+    accessibleDay: nextAccessibleDay
+  };
+}
 
 function readStoredChecklistState() {
   try {
@@ -173,8 +209,7 @@ function isDayComplete(dayCard) {
 }
 
 function areOptionalDaysUnlocked() {
-  const daySevenCard = dayCardMap.get("7");
-  return Boolean(daySevenCard && isDayComplete(daySevenCard));
+  return accessibleDay >= 8;
 }
 
 function restoreChecklistState() {
@@ -214,34 +249,34 @@ function animateUnlock(target) {
   }, 1200);
 }
 
-function animateRouteTargets(targetIds) {
-  const routeDoc = routeMedia?.contentDocument;
-  if (!routeDoc || !Array.isArray(targetIds)) {
+function showSequenceNotice(requiredDay) {
+  if (!sequenceNotice) {
     return;
   }
 
-  targetIds.forEach((targetId) => {
-    const target = routeDoc.getElementById(targetId);
-    if (!target) {
-      return;
-    }
+  sequenceNotice.textContent =
+    root.lang === "ja"
+      ? `${requiredDay}日目を完了すると次へ進めます。`
+      : `Complete Day ${requiredDay} first to continue.`;
 
-    target.classList.remove("is-celebrating");
-    void target.getBoundingClientRect();
-    target.classList.add("is-celebrating");
+  sequenceNotice.hidden = false;
+  sequenceNotice.classList.remove("is-visible");
+  void sequenceNotice.getBoundingClientRect();
+  sequenceNotice.classList.add("is-visible");
 
+  window.clearTimeout(sequenceNoticeTimer);
+  sequenceNoticeTimer = window.setTimeout(() => {
+    sequenceNotice.classList.remove("is-visible");
     window.setTimeout(() => {
-      target.classList.remove("is-celebrating");
-    }, 940);
-  });
+      if (!sequenceNotice.classList.contains("is-visible")) {
+        sequenceNotice.hidden = true;
+      }
+    }, 220);
+  }, 2400);
 }
 
 function getCurrentProgressDay() {
-  const maxVisibleDay = areOptionalDaysUnlocked() ? 9 : 7;
-  const eligibleCards = dayCards.filter((card) => Number(card.dataset.day) <= maxVisibleDay);
-  const firstIncompleteCard = eligibleCards.find((card) => !isDayComplete(card));
-
-  return firstIncompleteCard?.dataset.day || String(maxVisibleDay);
+  return String(accessibleDay);
 }
 
 function updateRouteProgress() {
@@ -250,7 +285,6 @@ function updateRouteProgress() {
     return;
   }
 
-  const optionalUnlocked = areOptionalDaysUnlocked();
   const currentStopKey = routeDayToStopKey[getCurrentProgressDay()];
 
   Object.entries(routeStopProgressConfig).forEach(([stopKey, config]) => {
@@ -259,9 +293,7 @@ function updateRouteProgress() {
       return;
     }
 
-    const relevantDays = config.days.filter(
-      (day) => Number(day) <= 7 || optionalUnlocked
-    );
+    const relevantDays = config.days;
     const completedCount = relevantDays.filter((day) => completedDays.has(day)).length;
     const ratio = relevantDays.length ? completedCount / relevantDays.length : 0;
     const progressRing = stop.querySelector(".node-progress");
@@ -294,44 +326,48 @@ function updateRouteProgress() {
 }
 
 function refreshChecklistProgressState() {
-  const optionalUnlocked = areOptionalDaysUnlocked();
-  const nextCompletedDays = new Set();
+  const { rawCompleted, sequentialCompleted, accessibleDay: nextAccessibleDay } = getJourneyState();
 
   dayCards.forEach((card) => {
     const progressRatio = getDayCompletionRatio(card);
-    const isComplete = isDayComplete(card);
+    const day = Number(card.dataset.day);
+    const isComplete = rawCompleted.has(card.dataset.day);
+    const isLocked = day > nextAccessibleDay;
 
     card.style.setProperty("--day-progress", String(progressRatio));
     card.setAttribute("data-day-progress", String(Math.round(progressRatio * 100)));
     card.classList.toggle("is-complete", isComplete);
-
-    if (isComplete) {
-      nextCompletedDays.add(card.dataset.day);
-    }
+    card.classList.toggle("is-locked-day", isLocked);
+    card.setAttribute("aria-disabled", String(isLocked));
+    getDayInputs(card).forEach((input) => {
+      input.disabled = isLocked;
+    });
   });
 
   progressItems.forEach((item) => {
     const day = Number(item.dataset.progressItem);
-    const isLocked = day > 7 && !optionalUnlocked;
-    const isComplete = nextCompletedDays.has(String(day));
+    const isLocked = day > nextAccessibleDay;
+    const isComplete = sequentialCompleted.has(String(day));
 
     item.classList.toggle("is-locked", isLocked);
-    item.classList.toggle("is-unlocked", day > 7 && optionalUnlocked);
+    item.classList.toggle("is-unlocked", day <= nextAccessibleDay);
     item.classList.toggle("is-complete", !isLocked && isComplete);
     item.setAttribute("aria-disabled", String(isLocked));
   });
 
-  completedDays = nextCompletedDays;
+  completedDays = sequentialCompleted;
+  accessibleDay = nextAccessibleDay;
   updateRouteProgress();
 }
 
 function celebrateCompletedDay(day) {
-  animateCompletion(dayCardMap.get(String(day)));
   animateCompletion(progressItemMap.get(String(day)));
-  animateRouteTargets(routeDayCelebrationTargets[Number(day)]);
 
   if (Number(day) === 7) {
     animateUnlock(progressItemMap.get("8"));
+  }
+
+  if (Number(day) === 8) {
     animateUnlock(progressItemMap.get("9"));
   }
 }
@@ -381,6 +417,13 @@ function bindRouteInteractions() {
     const activateStop = (event) => {
       event.preventDefault();
       event.stopPropagation();
+
+      const targetDay = Number(stop.dataset.scrollDay);
+      if (targetDay > accessibleDay) {
+        showSequenceNotice(accessibleDay);
+        return;
+      }
+
       scrollToChecklistDay(stop.dataset.scrollDay);
     };
 
@@ -574,6 +617,19 @@ setActiveProgressItem(1);
 syncParallax();
 syncProgressTimeline();
 
+dayCards.forEach((card) => {
+  card.addEventListener("click", (event) => {
+    const day = Number(card.dataset.day);
+    if (day <= accessibleDay) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    showSequenceNotice(accessibleDay);
+  });
+});
+
 checklistInputs.forEach((input) => {
   input.addEventListener("change", () => {
     const dayCard = input.closest(".day-card[data-day]");
@@ -587,8 +643,7 @@ checklistInputs.forEach((input) => {
     if (
       day &&
       !wasComplete &&
-      completedDays.has(day) &&
-      (Number(day) <= 7 || areOptionalDaysUnlocked())
+      completedDays.has(day)
     ) {
       celebrateCompletedDay(day);
     }
