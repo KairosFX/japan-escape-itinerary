@@ -1460,6 +1460,12 @@ function scrollProgressTimelineToActive(force = false) {
     return;
   }
 
+  const timelineStyles = window.getComputedStyle(progressTimeline);
+  if (!["auto", "scroll"].includes(timelineStyles.overflowY)) {
+    lastTimelineFocusDay = null;
+    return;
+  }
+
   const activeItem = progressTimeline.querySelector(".progress-item.is-active");
   if (!activeItem) {
     return;
@@ -2111,6 +2117,8 @@ if (optionalSkipButton) {
   optionalSkipButton.addEventListener("click", () => {
     optionalPromptDeferred = true;
     optionalPromptIsCompact = false;
+    setOptionalPromptFeedback(false);
+    setOptionalPromptButtonsDisabled(false);
     syncOptionalDaysUI();
   });
 }
