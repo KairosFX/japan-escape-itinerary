@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="Subtle washi paper texture">
+  <defs>
+    <filter id="paperNoise" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="2" seed="11" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="
+        1 0 0 0 0.84
+        0 1 0 0 0.79
+        0 0 1 0 0.72
+        0 0 0 0.12 0"/>
+    </filter>
+    <linearGradient id="paperBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcf8f2"/>
+      <stop offset="55%" stop-color="#f6efe6"/>
+      <stop offset="100%" stop-color="#f2e9de"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="320" height="320" fill="url(#paperBase)"/>
+  <rect width="320" height="320" filter="url(#paperNoise)" opacity="0.38"/>
+
+  <g opacity="0.14" stroke="#d4c3b4" stroke-linecap="round">
+    <path d="M26 54C44 48 56 58 78 52"/>
+    <path d="M108 102C128 94 142 106 164 98"/>
+    <path d="M208 62C226 54 240 62 258 58"/>
+    <path d="M52 212C74 202 92 214 114 206"/>
+    <path d="M178 228C194 220 208 232 226 224"/>
+    <path d="M240 156C256 148 272 160 290 152"/>
+  </g>
+</svg>
