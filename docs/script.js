@@ -1,8 +1,10 @@
 const languageButtons = document.querySelectorAll("[data-set-language]");
+const themeButtons = document.querySelectorAll("[data-set-theme]");
 const localizedNodes = document.querySelectorAll("[data-language]");
 const ariaLabelNodes = document.querySelectorAll("[data-aria-label-en][data-aria-label-ja]");
 const altTextNodes = document.querySelectorAll("[data-alt-en][data-alt-ja]");
 const sourceNodes = document.querySelectorAll("[data-src-en][data-src-ja]");
+const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const sectionTabs = document.querySelectorAll("[data-panel-target]");
 const contentPanels = document.querySelectorAll("[data-panel]");
 const siteHeader = document.querySelector(".site-header");
@@ -41,6 +43,7 @@ const pageTitles = {
   ja: "日本旅行 | 旅行ガイド"
 };
 const storageKey = "japan-trip-language";
+const themeStorageKey = "japan-trip-theme";
 const welcomeStorageKey = "japan-trip-welcome-seen";
 const checklistStorageKey = "japan-trip-checklist-state";
 const completedHistoryStorageKey = "japan-trip-completed-history";
@@ -136,6 +139,61 @@ let routeMapInitializationPromise = null;
 let routeMapSegments = [];
 let routeMapMarkers = new Map();
 let routeMapStatusMode = null;
+
+function getSystemTheme() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function readStoredThemePreference() {
+  try {
+    const storedTheme = window.localStorage.getItem(themeStorageKey);
+    return storedTheme === "light" || storedTheme === "dark" ? storedTheme : "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function storeThemePreference(theme) {
+  try {
+    window.localStorage.setItem(themeStorageKey, theme);
+  } catch (error) {
+    // Ignore storage failures and keep the page usable.
+  }
+}
+
+function getCurrentTheme() {
+  const explicitTheme = root.dataset.theme;
+  if (explicitTheme === "light" || explicitTheme === "dark") {
+    return explicitTheme;
+  }
+
+  return getSystemTheme();
+}
+
+function updateThemeButtons(theme) {
+  themeButtons.forEach((button) => {
+    const isActive = button.dataset.setTheme === theme;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
+function updateThemeColorMeta(theme) {
+  if (!themeColorMeta) {
+    return;
+  }
+
+  themeColorMeta.content = theme === "dark" ? "#14161a" : "#ab4a3b";
+}
+
+function applyRouteTheme() {
+  const routeDoc = routeMedia?.contentDocument;
+  if (!routeDoc?.documentElement) {
+    return;
+  }
+
+  routeDoc.documentElement.dataset.theme = getCurrentTheme();
+}
 
 function getOrderedDayNumbers() {
   return dayCards
@@ -568,14 +626,16 @@ function getRouteMapMessage(key) {
       close: "Hide map",
       loading: "Loading live map…",
       fallback: "Live routing is unavailable right now. Showing a simplified path.",
-      error: "Map could not load right now."
+      error: "Map could not load right now.",
+      reset: "Reset route view"
     },
     ja: {
       open: "地図を見る",
       close: "地図を閉じる",
       loading: "ライブ地図を読み込み中…",
       fallback: "ライブの経路を取得できないため、簡易ルートを表示しています。",
-      error: "現在は地図を読み込めません。"
+      error: "現在は地図を読み込めません。",
+      reset: "ルート全体に戻る"
     }
   };
 
@@ -590,6 +650,17 @@ function updateRouteMapToggleLabel() {
   const isExpanded = routeMapToggle.getAttribute("aria-expanded") === "true";
   const nextLabel = isExpanded ? getRouteMapMessage("close") : getRouteMapMessage("open");
   routeMapToggle.textContent = nextLabel;
+}
+
+function updateRouteMapControlLabels() {
+  const resetButton = document.querySelector(".route-map__reset-button");
+  if (!resetButton) {
+    return;
+  }
+
+  const label = getRouteMapMessage("reset");
+  resetButton.setAttribute("aria-label", label);
+  resetButton.title = label;
 }
 
 function renderRouteMapStatus() {
@@ -694,7 +765,42 @@ function ensureRouteMapAssets() {
   return routeMapLibraryPromise;
 }
 
+function getRouteMapPalette() {
+  const isDark = getCurrentTheme() === "dark";
+  if (isDark) {
+    return {
+      background: "#14171b",
+      rasterOpacity: 0.54,
+      rasterSaturation: -0.72,
+      rasterContrast: 0.18,
+      rasterBrightnessMin: 0.18,
+      rasterBrightnessMax: 0.88,
+      complete: "#d7745f",
+      current: "#f0c1b4",
+      warning: "#d09d59",
+      available: "#a77466",
+      locked: "#524844"
+    };
+  }
+
+  return {
+    background: "#f2ece5",
+    rasterOpacity: 0.82,
+    rasterSaturation: -0.28,
+    rasterContrast: 0.08,
+    rasterBrightnessMin: 0.48,
+    rasterBrightnessMax: 1.08,
+    complete: "#b55446",
+    current: "#de8c78",
+    warning: "#bf9151",
+    available: "#b89082",
+    locked: "#91857f"
+  };
+}
+
 function buildRouteMapStyle() {
+  const palette = getRouteMapPalette();
+
   return {
     version: 8,
     sources: {
@@ -711,7 +817,7 @@ function buildRouteMapStyle() {
         id: "route-map-background",
         type: "background",
         paint: {
-          "background-color": "#14171b"
+          "background-color": palette.background
         }
       },
       {
@@ -719,15 +825,42 @@ function buildRouteMapStyle() {
         type: "raster",
         source: "osmRaster",
         paint: {
-          "raster-opacity": 0.54,
-          "raster-saturation": -0.72,
-          "raster-contrast": 0.18,
-          "raster-brightness-min": 0.18,
-          "raster-brightness-max": 0.88
+          "raster-opacity": palette.rasterOpacity,
+          "raster-saturation": palette.rasterSaturation,
+          "raster-contrast": palette.rasterContrast,
+          "raster-brightness-min": palette.rasterBrightnessMin,
+          "raster-brightness-max": palette.rasterBrightnessMax
         }
       }
     ]
   };
+}
+
+class RouteMapResetControl {
+  onAdd(map) {
+    this.map = map;
+    this.container = document.createElement("div");
+    this.container.className = "maplibregl-ctrl maplibregl-ctrl-group route-map__reset-control";
+
+    this.button = document.createElement("button");
+    this.button.type = "button";
+    this.button.className = "route-map__reset-button";
+    this.button.textContent = "↺";
+    this.button.setAttribute("aria-label", getRouteMapMessage("reset"));
+    this.button.title = getRouteMapMessage("reset");
+    this.button.addEventListener("click", () => {
+      fitRouteMapBounds(true);
+    });
+
+    this.container.append(this.button);
+    return this.container;
+  }
+
+  onRemove() {
+    this.button?.remove();
+    this.container?.remove();
+    this.map = null;
+  }
 }
 
 function buildFallbackGeometry(fromCoordinates, toCoordinates) {
@@ -825,6 +958,8 @@ function addRouteMapLayers() {
     return;
   }
 
+  const palette = getRouteMapPalette();
+
   routeMapInstance.addSource("route-map-segments", {
     type: "geojson",
     data: buildRouteMapFeatureCollection()
@@ -834,14 +969,14 @@ function addRouteMapLayers() {
     "match",
     ["get", "state"],
     "complete",
-    "#d7745f",
+    palette.complete,
     "current",
-    "#f0c1b4",
+    palette.current,
     "warning",
-    "#d09d59",
+    palette.warning,
     "available",
-    "#a77466",
-    "#524844"
+    palette.available,
+    palette.locked
   ];
   const segmentOpacityExpression = [
     "match",
@@ -1065,7 +1200,7 @@ function createRouteMapMarkers(maplibregl) {
   });
 }
 
-function fitRouteMapBounds() {
+function fitRouteMapBounds(animate = false) {
   if (!routeMapInstance || !window.maplibregl) {
     return;
   }
@@ -1075,7 +1210,7 @@ function fitRouteMapBounds() {
 
   routeMapInstance.fitBounds(bounds, {
     padding: { top: 36, right: 34, bottom: 40, left: 34 },
-    duration: 0,
+    duration: animate ? 780 : 0,
     maxZoom: 6.25
   });
 }
@@ -1110,7 +1245,33 @@ function syncRouteMapState() {
   });
 
   updateRouteMapToggleLabel();
+  updateRouteMapControlLabels();
   renderRouteMapStatus();
+}
+
+function refreshRouteMapTheme() {
+  if (!routeMapInstance || !window.maplibregl) {
+    return;
+  }
+
+  const currentCenter = routeMapInstance.getCenter();
+  const currentZoom = routeMapInstance.getZoom();
+  const currentBearing = routeMapInstance.getBearing();
+  const currentPitch = routeMapInstance.getPitch();
+
+  routeMapInstance.once("style.load", () => {
+    addRouteMapLayers();
+    createRouteMapMarkers(window.maplibregl);
+    routeMapInstance.jumpTo({
+      center: currentCenter,
+      zoom: currentZoom,
+      bearing: currentBearing,
+      pitch: currentPitch
+    });
+    syncRouteMapState();
+  });
+
+  routeMapInstance.setStyle(buildRouteMapStyle());
 }
 
 async function initializeRouteMap() {
@@ -1140,8 +1301,6 @@ async function initializeRouteMap() {
         maxZoom: 9,
         attributionControl: false,
         dragRotate: false,
-        touchZoomRotate: false,
-        scrollZoom: false,
         preserveDrawingBuffer: false
       });
 
@@ -1149,6 +1308,14 @@ async function initializeRouteMap() {
         new maplibregl.AttributionControl({ compact: true }),
         "bottom-right"
       );
+      routeMapInstance.addControl(
+        new maplibregl.NavigationControl({
+          showCompass: false,
+          visualizePitch: false
+        }),
+        "top-right"
+      );
+      routeMapInstance.addControl(new RouteMapResetControl(), "top-right");
       routeMapInstance.dragRotate.disable();
       routeMapInstance.touchZoomRotate.disableRotation();
 
@@ -1570,7 +1737,9 @@ function bindRouteInteractions() {
   }
 
   const routeRoot = routeMedia.contentDocument.documentElement;
+  applyRouteTheme();
   if (routeRoot.dataset.interactionsBound === "1") {
+    updateRouteProgress();
     return;
   }
 
@@ -1647,10 +1816,36 @@ function setLanguage(language) {
   setOptionalPromptFeedback(false);
 }
 
+function applyTheme(theme, options = {}) {
+  const nextTheme = theme === "dark" ? "dark" : "light";
+  const { persist = true } = options;
+
+  root.dataset.theme = nextTheme;
+  root.style.colorScheme = nextTheme;
+  updateThemeButtons(nextTheme);
+  updateThemeColorMeta(nextTheme);
+  applyRouteTheme();
+
+  if (persist) {
+    storeThemePreference(nextTheme);
+  }
+
+  if (routeMapInstance) {
+    refreshRouteMapTheme();
+  }
+}
+
 function handleLanguageButtonClick(button) {
   lockHeaderState(280);
   preserveScrollPosition(() => {
     setLanguage(button.dataset.setLanguage);
+  });
+}
+
+function handleThemeButtonClick(button) {
+  lockHeaderState(280);
+  preserveScrollPosition(() => {
+    applyTheme(button.dataset.setTheme);
   });
 }
 
@@ -1805,10 +2000,17 @@ languageButtons.forEach((button) => {
   });
 });
 
+themeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    handleThemeButtonClick(button);
+  });
+});
+
 decorateProgressTimeline();
 completedHistoryDays = readStoredDaySet(completedHistoryStorageKey);
 optionalDaysUnlocked = readStoredBoolean(optionalDaysUnlockedStorageKey);
 syncOptionalDaysUI();
+applyTheme(readStoredThemePreference() || getCurrentTheme(), { persist: false });
 setLanguage(readStoredLanguage());
 restoreChecklistState();
 refreshChecklistProgressState();

@@ -7,16 +7,25 @@
   <meta
     name="description"
     content="Simple bilingual Japan trip website for GitHub Pages with a checklist, notes, and a route map from Osaka to Tokyo.">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ab4a3b">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#14161a">
+  <meta name="theme-color" content="#ab4a3b">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
   <script>
     try {
+      const storedTheme = window.localStorage.getItem("japan-trip-theme");
+      const initialTheme =
+        storedTheme === "light" || storedTheme === "dark"
+          ? storedTheme
+          : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = initialTheme;
+      document.documentElement.style.colorScheme = initialTheme;
+
       const hasSeenWelcome = window.localStorage.getItem("japan-trip-welcome-seen") === "1";
       document.documentElement.classList.add(hasSeenWelcome ? "has-seen-welcome" : "is-welcoming");
     } catch (error) {
+      document.documentElement.dataset.theme = "light";
+      document.documentElement.style.colorScheme = "light";
       document.documentElement.classList.add("is-welcoming");
     }
   </script>
@@ -130,6 +139,22 @@
           data-aria-label-ja="言語切り替え">
           <button class="language-button is-active" type="button" data-set-language="en" aria-pressed="true">English</button>
           <button class="language-button" type="button" data-set-language="ja" aria-pressed="false">日本語</button>
+        </div>
+
+        <div
+          class="theme-switcher"
+          role="group"
+          aria-label="Theme mode"
+          data-aria-label-en="Theme mode"
+          data-aria-label-ja="テーマ切り替え">
+          <button class="theme-button" type="button" data-set-theme="light" aria-pressed="false">
+            <span data-language="en">Light</span>
+            <span data-language="ja" hidden>ライト</span>
+          </button>
+          <button class="theme-button" type="button" data-set-theme="dark" aria-pressed="false">
+            <span data-language="en">Dark</span>
+            <span data-language="ja" hidden>ダーク</span>
+          </button>
         </div>
       </div>
     </div>
