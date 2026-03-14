@@ -24,6 +24,10 @@ const progressTotalDaysNode = document.querySelector("[data-progress-total-days]
 const progressOverviewFill = document.querySelector("[data-progress-overview-fill]");
 const progressOverviewCaptions = document.querySelectorAll(".progress-overview__caption [data-language]");
 const jumpCurrentDayButton = document.querySelector("[data-jump-current-day]");
+const resetProgressOpenButton = document.querySelector("[data-reset-progress-open]");
+const resetProgressModal = document.querySelector("[data-reset-progress-modal]");
+const resetProgressCancelButton = document.querySelector("[data-reset-progress-cancel]");
+const resetProgressConfirmButton = document.querySelector("[data-reset-progress-confirm]");
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
 const optionalPrompt = document.querySelector("[data-optional-prompt]");
 const optionalPromptExpanded = document.querySelector("[data-optional-prompt-expanded]");
@@ -659,8 +663,12 @@ function updateRouteMapControlLabels() {
   }
 
   const label = getRouteMapMessage("reset");
+  const resetButtonLabel = resetButton.querySelector(".route-map__reset-button-label");
   resetButton.setAttribute("aria-label", label);
   resetButton.title = label;
+  if (resetButtonLabel) {
+    resetButtonLabel.textContent = label;
+  }
 }
 
 function renderRouteMapStatus() {
@@ -845,7 +853,7 @@ class RouteMapResetControl {
     this.button = document.createElement("button");
     this.button.type = "button";
     this.button.className = "route-map__reset-button";
-    this.button.textContent = "↺";
+    this.button.innerHTML = `<span class="route-map__reset-button-icon" aria-hidden="true">↺</span><span class="route-map__reset-button-label">${getRouteMapMessage("reset")}</span>`;
     this.button.setAttribute("aria-label", getRouteMapMessage("reset"));
     this.button.title = getRouteMapMessage("reset");
     this.button.addEventListener("click", () => {
@@ -1406,7 +1414,63 @@ function confirmOptionalDaysUnlock() {
 
   window.setTimeout(() => {
     unlockOptionalDays();
-  }, 880);
+  }, 640);
+}
+
+function setResetModalOpen(isOpen) {
+  if (!resetProgressModal) {
+    return;
+  }
+
+  resetProgressModal.hidden = !isOpen;
+  root.classList.toggle("has-modal-open", isOpen);
+
+  if (isOpen) {
+    window.requestAnimationFrame(() => {
+      resetProgressCancelButton?.focus();
+    });
+  } else {
+    resetProgressOpenButton?.focus();
+  }
+}
+
+function resetTripProgress() {
+  checklistInputs.forEach((input) => {
+    input.checked = false;
+  });
+
+  completedDays = new Set();
+  completedHistoryDays = new Set();
+  unlockedDays = new Set();
+  warningDays = new Set();
+  optionalDaysUnlocked = false;
+  optionalPromptDeferred = false;
+  optionalPromptIsCompact = false;
+  accessibleDay = 1;
+  currentProgressDay = 1;
+  lastTimelineFocusDay = null;
+
+  storeChecklistState();
+  storeDaySet(completedHistoryStorageKey, completedHistoryDays);
+  storeBoolean(optionalDaysUnlockedStorageKey, false);
+
+  window.clearTimeout(sequenceNoticeTimer);
+  if (sequenceNotice) {
+    sequenceNotice.hidden = true;
+    sequenceNotice.classList.remove("is-visible");
+  }
+
+  setOptionalPromptFeedback(false);
+  setOptionalPromptButtonsDisabled(false);
+  refreshChecklistProgressState();
+  syncProgressTimeline();
+  syncRouteMapState();
+  setActivePanel("checklist");
+  setResetModalOpen(false);
+
+  window.requestAnimationFrame(() => {
+    scrollToChecklistDay(1);
+  });
 }
 
 function resolveLengthValue(value, rootFontSize) {
@@ -1947,7 +2011,7 @@ function syncParallax() {
 function registerRevealBlocks() {
   const revealBlocks = Array.from(
     document.querySelectorAll(
-      ".hero-panel, .trip-stats, .progress-card, .section-heading, .day-card, .note-card, .route-reference, .route-map, .journey-close, .site-footer__lead, .site-footer__links, .site-footer__credit"
+      ".hero-panel, .trip-stats, .progress-card, .section-heading, .day-card, .note-card, .route-map, .journey-close, .site-footer__lead, .site-footer__links, .site-footer__credit"
     )
   );
 
@@ -2098,6 +2162,24 @@ if (jumpCurrentDayButton) {
   });
 }
 
+if (resetProgressOpenButton) {
+  resetProgressOpenButton.addEventListener("click", () => {
+    setResetModalOpen(true);
+  });
+}
+
+if (resetProgressCancelButton) {
+  resetProgressCancelButton.addEventListener("click", () => {
+    setResetModalOpen(false);
+  });
+}
+
+if (resetProgressConfirmButton) {
+  resetProgressConfirmButton.addEventListener("click", () => {
+    resetTripProgress();
+  });
+}
+
 backToTopButtons.forEach((button) => {
   button.addEventListener("click", () => {
     window.scrollTo({
@@ -2122,6 +2204,20 @@ if (optionalSkipButton) {
     syncOptionalDaysUI();
   });
 }
+
+if (resetProgressModal) {
+  resetProgressModal.addEventListener("click", (event) => {
+    if (event.target === resetProgressModal) {
+      setResetModalOpen(false);
+    }
+  });
+}
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && resetProgressModal && !resetProgressModal.hidden) {
+    setResetModalOpen(false);
+  }
+});
 
 if (root.classList.contains("is-welcoming")) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
