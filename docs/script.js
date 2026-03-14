@@ -630,16 +630,14 @@ function getRouteMapMessage(key) {
       close: "Hide map",
       loading: "Loading live map…",
       fallback: "Live routing is unavailable right now. Showing a simplified path.",
-      error: "Map could not load right now.",
-      reset: "Reset route view"
+      error: "Map could not load right now."
     },
     ja: {
       open: "地図を見る",
       close: "地図を閉じる",
       loading: "ライブ地図を読み込み中…",
       fallback: "ライブの経路を取得できないため、簡易ルートを表示しています。",
-      error: "現在は地図を読み込めません。",
-      reset: "ルート全体に戻る"
+      error: "現在は地図を読み込めません。"
     }
   };
 
@@ -654,21 +652,6 @@ function updateRouteMapToggleLabel() {
   const isExpanded = routeMapToggle.getAttribute("aria-expanded") === "true";
   const nextLabel = isExpanded ? getRouteMapMessage("close") : getRouteMapMessage("open");
   routeMapToggle.textContent = nextLabel;
-}
-
-function updateRouteMapControlLabels() {
-  const resetButton = document.querySelector(".route-map__reset-button");
-  if (!resetButton) {
-    return;
-  }
-
-  const label = getRouteMapMessage("reset");
-  const resetButtonLabel = resetButton.querySelector(".route-map__reset-button-label");
-  resetButton.setAttribute("aria-label", label);
-  resetButton.title = label;
-  if (resetButtonLabel) {
-    resetButtonLabel.textContent = label;
-  }
 }
 
 function renderRouteMapStatus() {
@@ -842,33 +825,6 @@ function buildRouteMapStyle() {
       }
     ]
   };
-}
-
-class RouteMapResetControl {
-  onAdd(map) {
-    this.map = map;
-    this.container = document.createElement("div");
-    this.container.className = "maplibregl-ctrl maplibregl-ctrl-group route-map__reset-control";
-
-    this.button = document.createElement("button");
-    this.button.type = "button";
-    this.button.className = "route-map__reset-button";
-    this.button.innerHTML = `<span class="route-map__reset-button-icon" aria-hidden="true">↺</span><span class="route-map__reset-button-label">${getRouteMapMessage("reset")}</span>`;
-    this.button.setAttribute("aria-label", getRouteMapMessage("reset"));
-    this.button.title = getRouteMapMessage("reset");
-    this.button.addEventListener("click", () => {
-      fitRouteMapBounds(true);
-    });
-
-    this.container.append(this.button);
-    return this.container;
-  }
-
-  onRemove() {
-    this.button?.remove();
-    this.container?.remove();
-    this.map = null;
-  }
 }
 
 function buildFallbackGeometry(fromCoordinates, toCoordinates) {
@@ -1253,7 +1209,6 @@ function syncRouteMapState() {
   });
 
   updateRouteMapToggleLabel();
-  updateRouteMapControlLabels();
   renderRouteMapStatus();
 }
 
@@ -1323,7 +1278,6 @@ async function initializeRouteMap() {
         }),
         "top-right"
       );
-      routeMapInstance.addControl(new RouteMapResetControl(), "top-right");
       routeMapInstance.dragRotate.disable();
       routeMapInstance.touchZoomRotate.disableRotation();
 
