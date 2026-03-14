@@ -8,6 +8,9 @@
     name="description"
     content="Simple bilingual Japan trip website for GitHub Pages with a checklist, notes, and a route map from Osaka to Tokyo.">
   <meta name="theme-color" content="#ab4a3b">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
   <script>
     try {
       const hasSeenWelcome = window.localStorage.getItem("japan-trip-welcome-seen") === "1";
@@ -863,9 +866,9 @@
           height="560"
           type="image/svg+xml"
           role="img"
-          data-aria-label-en="Refined route reference showing Osaka, Kyoto, Odawara, Hakone, Mt. Fuji area, and Tokyo, with progress-linked stops and route segments."
-          data-aria-label-ja="大阪、京都、小田原、箱根、富士山エリア、東京を示し、進行状況と連動する停留点とルート区間を添えた参考図。"
-          aria-label="Refined route reference showing Osaka, Kyoto, Odawara, Hakone, Mt. Fuji area, and Tokyo, with progress-linked stops and route segments.">
+          data-aria-label-en="Refined route reference showing Osaka, Kyoto, Odawara, Hakone, Mt. Fuji, and Tokyo, with progress-linked stops and route segments."
+          data-aria-label-ja="大阪、京都、小田原、箱根、富士山、東京を示し、進行状況と連動する停留点とルート区間を添えた参考図。"
+          aria-label="Refined route reference showing Osaka, Kyoto, Odawara, Hakone, Mt. Fuji, and Tokyo, with progress-linked stops and route segments.">
           Route diagram
         </object>
       </figure>
@@ -954,6 +957,10 @@
           <span data-language="en">Japan rail info</span>
           <span data-language="ja" hidden>鉄道情報</span>
         </a>
+        <button class="footer-link footer-link--button footer-link--backtop" type="button" data-back-to-top>
+          <span data-language="en">Back to top</span>
+          <span data-language="ja" hidden>ページ上部へ戻る</span>
+        </button>
       </nav>
     </div>
   </footer>

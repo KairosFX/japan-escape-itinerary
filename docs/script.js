@@ -22,6 +22,7 @@ const progressTotalDaysNode = document.querySelector("[data-progress-total-days]
 const progressOverviewFill = document.querySelector("[data-progress-overview-fill]");
 const progressOverviewCaptions = document.querySelectorAll(".progress-overview__caption [data-language]");
 const jumpCurrentDayButton = document.querySelector("[data-jump-current-day]");
+const backToTopButton = document.querySelector("[data-back-to-top]");
 const optionalPrompt = document.querySelector("[data-optional-prompt]");
 const optionalPromptExpanded = document.querySelector("[data-optional-prompt-expanded]");
 const optionalPromptCompact = document.querySelector("[data-optional-prompt-compact]");
@@ -71,7 +72,7 @@ const routeMapStops = {
   },
   fuji: {
     coordinates: [138.7598, 35.4894],
-    title: { en: "Mt. Fuji area", ja: "富士山エリア" },
+    title: { en: "Mt. Fuji", ja: "富士山" },
     subtitle: { en: "Day 6 · Scenic side trip", ja: "6日目 · 景色を楽しむ寄り道" }
   },
   tokyo: {
@@ -1883,6 +1884,15 @@ if (jumpCurrentDayButton) {
   });
 }
 
+if (backToTopButton) {
+  backToTopButton.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: getScrollBehavior()
+    });
+  });
+}
+
 optionalUnlockButtons.forEach((button) => {
   button.addEventListener("click", () => {
     confirmOptionalDaysUnlock();
@@ -1899,7 +1909,7 @@ if (optionalSkipButton) {
 
 if (root.classList.contains("is-welcoming")) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  window.setTimeout(finishWelcome, prefersReducedMotion ? 60 : 2400);
+  window.setTimeout(finishWelcome, prefersReducedMotion ? 60 : 1900);
 } else if (welcomeOverlay) {
   welcomeOverlay.setAttribute("hidden", "");
 }

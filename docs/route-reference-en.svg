@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
   <title id="title">Route reference for the Japan trip</title>
-  <desc id="desc">A refined rail-style route map with hover labels for Osaka, Kyoto, Odawara, Hakone, Mt. Fuji area, and Tokyo, plus a cleaner Mt. Fuji branch from Hakone on a subtle Japanese scenery background.</desc>
+  <desc id="desc">A refined rail-style route map with hover labels for Osaka, Kyoto, Odawara, Hakone, Mt. Fuji, and Tokyo, plus a cleaner Mt. Fuji branch from Hakone on a subtle Japanese scenery background.</desc>
   <defs>
     <filter id="panelShadow" x="-14%" y="-14%" width="128%" height="128%">
       <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#281d18" flood-opacity="0.11"/>
@@ -133,12 +133,12 @@
       .route-main-animated {
         stroke-dasharray: 860;
         stroke-dashoffset: 860;
-        animation: routeDraw 1100ms cubic-bezier(0.22, 1, 0.36, 1) 180ms forwards;
+        animation: routeDraw 1280ms cubic-bezier(0.22, 1, 0.36, 1) 180ms forwards;
       }
 
       .branch-line {
         opacity: 0;
-        animation: routeBranchReveal 420ms cubic-bezier(0.22, 1, 0.36, 1) 860ms forwards;
+        animation: routeBranchReveal 460ms cubic-bezier(0.22, 1, 0.36, 1) 1120ms forwards;
       }
 
       .route-arrow {
@@ -147,19 +147,19 @@
       }
 
       .route-arrow--1 {
-        animation-delay: 760ms;
+        animation-delay: 880ms;
       }
 
       .route-arrow--2 {
-        animation-delay: 840ms;
+        animation-delay: 980ms;
       }
 
       .route-arrow--3 {
-        animation-delay: 920ms;
+        animation-delay: 1080ms;
       }
 
       .route-arrow--4 {
-        animation-delay: 1000ms;
+        animation-delay: 1180ms;
       }
 
       .node,
@@ -169,27 +169,27 @@
       }
 
       .node--1 {
-        animation-delay: 860ms;
-      }
-
-      .node--2 {
-        animation-delay: 920ms;
-      }
-
-      .node--3 {
         animation-delay: 980ms;
       }
 
+      .node--2 {
+        animation-delay: 1060ms;
+      }
+
+      .node--3 {
+        animation-delay: 1140ms;
+      }
+
       .node--4 {
-        animation-delay: 1040ms;
+        animation-delay: 1220ms;
       }
 
       .node--5 {
-        animation-delay: 1100ms;
+        animation-delay: 1300ms;
       }
 
       .node--fuji {
-        animation-delay: 1220ms;
+        animation-delay: 1420ms;
       }
 
       .tooltip-ui {
@@ -429,8 +429,8 @@
   </g>
 
   <g class="branch-cluster">
-    <path class="branch-line" d="M800 332C804 364 834 388 878 398" fill="none" stroke="#d0a08f" stroke-width="2.8" stroke-dasharray="6 8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
-    <path id="route-progress-fuji" class="progress-segment progress-segment--branch" d="M800 332C804 364 834 388 878 398"/>
+    <path class="branch-line" d="M800 332C806 376 838 402 878 410" fill="none" stroke="#d0a08f" stroke-width="3.1" stroke-dasharray="6 8" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
+    <path id="route-progress-fuji" class="progress-segment progress-segment--branch" d="M800 332C806 376 838 402 878 410"/>
 
     <g class="interactive route-stop" id="route-stop-hakone" data-scroll-day="4" tabindex="0" role="link" aria-label="Open Day 4 checklist" transform="translate(800 320)">
       <circle class="hit-area" r="40"/>
@@ -448,21 +448,21 @@
       <circle class="node node--4" r="11.5" fill="#b25041" stroke="#fffdfa" stroke-width="4"/>
     </g>
 
-    <g class="interactive route-stop fuji-group" id="route-stop-fuji" data-scroll-day="6" tabindex="0" role="link" aria-label="Open Day 6 checklist" transform="translate(878 398)">
+    <g class="interactive route-stop fuji-group" id="route-stop-fuji" data-scroll-day="6" tabindex="0" role="link" aria-label="Open Day 6 checklist" transform="translate(878 410)">
       <circle class="hit-area" r="38"/>
-      <g transform="translate(-92 -104)">
+      <g transform="translate(-88 -110)">
         <g class="tooltip-ui tooltip">
-          <rect x="0" y="0" width="184" height="58" rx="18" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4"/>
-          <path d="M86 58L92 66L98 58Z" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4" stroke-linejoin="round"/>
-          <text x="92" y="24" text-anchor="middle" fill="#2b2f31" font-family="'Avenir Next', 'Hiragino Sans', sans-serif" font-size="18" font-weight="600">Mt. Fuji area</text>
-          <text x="92" y="42" text-anchor="middle" fill="#6b7374" font-family="'Avenir Next', 'Hiragino Sans', sans-serif" font-size="12.5" font-weight="600">Day 6 · lakeside branch</text>
+          <rect x="0" y="0" width="176" height="58" rx="18" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4"/>
+          <path d="M82 58L88 66L94 58Z" fill="#fff8f3" stroke="#e2c6b8" stroke-width="1.4" stroke-linejoin="round"/>
+          <text x="88" y="24" text-anchor="middle" fill="#2b2f31" font-family="'Avenir Next', 'Hiragino Sans', sans-serif" font-size="18" font-weight="600">Mt. Fuji</text>
+          <text x="88" y="42" text-anchor="middle" fill="#6b7374" font-family="'Avenir Next', 'Hiragino Sans', sans-serif" font-size="12.5" font-weight="600">Day 6 · scenic branch</text>
         </g>
       </g>
-      <circle class="node-progress-track" r="16"/>
-      <circle class="node-progress" r="16" data-circumference="100.531" stroke-dasharray="100.531" stroke-dashoffset="100.531" transform="rotate(-90)"/>
-      <circle class="node-halo" r="20" fill="#d0a08f"/>
-      <circle class="fuji-node node--fuji" r="10.5" fill="#d0a08f" stroke="#fffdfa" stroke-width="4"/>
-      <text class="fuji-label" x="0" y="58" text-anchor="middle" fill="#404548" font-family="'Avenir Next', 'Hiragino Sans', sans-serif" font-size="20" font-weight="600">Mt. Fuji area</text>
+      <circle class="node-progress-track" r="17"/>
+      <circle class="node-progress" r="17" data-circumference="106.814" stroke-dasharray="106.814" stroke-dashoffset="106.814" transform="rotate(-90)"/>
+      <circle class="node-halo" r="21" fill="#d0a08f"/>
+      <circle class="fuji-node node--fuji" r="11.5" fill="#d0a08f" stroke="#fffdfa" stroke-width="4"/>
+      <text class="fuji-label" x="0" y="62" text-anchor="middle" fill="#404548" font-family="'Avenir Next', 'Hiragino Sans', sans-serif" font-size="21" font-weight="600">Mt. Fuji</text>
     </g>
   </g>
 
