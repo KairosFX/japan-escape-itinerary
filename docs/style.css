@@ -803,7 +803,7 @@ h3 {
 .progress-item::before {
   content: "";
   position: absolute;
-  left: calc(var(--timeline-axis-x) - (var(--timeline-node-size) / 2));
+  left: var(--timeline-axis-x);
   top: var(--timeline-node-top);
   width: var(--timeline-node-size);
   height: var(--timeline-node-size);
@@ -814,6 +814,7 @@ h3 {
   box-shadow:
     0 0 0 1px rgba(171, 74, 59, 0.1),
     0 0 0 0.42rem rgba(255, 253, 250, 0.94);
+  transform: translateX(-50%) scale(1);
   transition:
     background 220ms ease,
     box-shadow 220ms ease,
@@ -823,7 +824,7 @@ h3 {
 .progress-item::after {
   content: "";
   position: absolute;
-  left: calc(var(--timeline-axis-x) - (var(--timeline-node-size) / 2));
+  left: var(--timeline-axis-x);
   top: var(--timeline-node-top);
   width: var(--timeline-node-size);
   height: var(--timeline-node-size);
@@ -834,7 +835,7 @@ h3 {
   font-size: 0.76rem;
   font-weight: 700;
   opacity: 0;
-  transform: scale(0.72);
+  transform: translateX(-50%) scale(0.72);
   transition:
     opacity 220ms ease,
     transform 220ms ease,
@@ -942,7 +943,7 @@ h3 {
     0 0 0 1px rgba(171, 74, 59, 0.16),
     0 0 0 0.46rem rgba(255, 248, 243, 0.96),
     0 0 0 0.68rem rgba(171, 74, 59, 0.12);
-  transform: scale(1.04);
+  transform: translateX(-50%) scale(1.04);
 }
 
 .progress-item.is-active .progress-item__place {
@@ -952,7 +953,7 @@ h3 {
 .progress-item.is-active::after {
   content: "▶";
   opacity: 1;
-  transform: scale(1);
+  transform: translateX(-50%) scale(1);
   color: var(--accent-deep);
   background: rgba(255, 248, 243, 0.96);
 }
@@ -977,7 +978,7 @@ h3 {
 .progress-item.is-complete::after {
   content: "✓";
   opacity: 1;
-  transform: scale(1);
+  transform: translateX(-50%) scale(1);
 }
 
 .progress-item.is-complete .progress-item__ratio {
@@ -1011,7 +1012,7 @@ h3 {
 .progress-item.is-warning::after {
   content: "!";
   opacity: 1;
-  transform: scale(1);
+  transform: translateX(-50%) scale(1);
   color: #c28a43;
   background: rgba(255, 253, 249, 0.94);
 }
@@ -1046,7 +1047,7 @@ h3 {
 .progress-item.is-locked::after {
   content: "🔒";
   opacity: 1;
-  transform: scale(1);
+  transform: translateX(-50%) scale(1);
   background: transparent;
   font-size: 0.66rem;
 }
@@ -1391,6 +1392,8 @@ h3 {
   padding: 1rem;
   background:
     linear-gradient(180deg, rgba(12, 14, 18, 0.04), rgba(12, 14, 18, 0.2) 52%, rgba(12, 14, 18, 0.58) 100%);
+  cursor: pointer;
+  touch-action: pan-y;
 }
 
 .route-map__interaction-title,
@@ -1409,39 +1412,6 @@ h3 {
   font-size: 0.88rem;
   line-height: 1.5;
   color: rgba(247, 238, 228, 0.76);
-}
-
-.route-map__interaction-button,
-.route-map__interaction-exit {
-  padding: 0.58rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 248, 241, 0.14);
-  background: rgba(14, 16, 18, 0.84);
-  color: #fff8f1;
-  box-shadow: 0 12px 24px rgba(5, 6, 7, 0.24);
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    background-color 180ms ease,
-    border-color 180ms ease;
-}
-
-.route-map__interaction-button:hover,
-.route-map__interaction-button:focus-visible,
-.route-map__interaction-exit:hover,
-.route-map__interaction-exit:focus-visible {
-  transform: translateY(-1px);
-  background: rgba(171, 74, 59, 0.18);
-  border-color: rgba(214, 120, 99, 0.28);
-  box-shadow: 0 16px 26px rgba(5, 6, 7, 0.28);
-}
-
-.route-map__interaction-exit {
-  position: absolute;
-  z-index: 5;
-  top: 0.72rem;
-  left: 0.72rem;
-  font-size: 0.82rem;
 }
 
 .route-map__canvas {
@@ -3023,10 +2993,9 @@ html[data-theme="dark"] .route-map__status {
   color: #efe6da;
 }
 
-html[data-theme="dark"] .route-map__interaction-button,
-html[data-theme="dark"] .route-map__interaction-exit {
-  background: rgba(13, 15, 18, 0.88);
-  border-color: rgba(248, 239, 228, 0.1);
+html[data-theme="dark"] .route-map__interaction-gate {
+  background:
+    linear-gradient(180deg, rgba(7, 9, 12, 0.08), rgba(7, 9, 12, 0.24) 52%, rgba(7, 9, 12, 0.62) 100%);
 }
 
 html[data-theme="dark"] .route-map .maplibregl-ctrl-group {

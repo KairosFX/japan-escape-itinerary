@@ -17,8 +17,6 @@ const routeMapSurface = document.querySelector(".route-map__surface");
 const routeMapCanvas = document.getElementById("route-map-canvas");
 const routeMapStatus = document.querySelector("[data-route-map-status]");
 const routeMapGate = document.querySelector("[data-route-map-gate]");
-const routeMapActivateButton = document.querySelector("[data-route-map-activate]");
-const routeMapDeactivateButton = document.querySelector("[data-route-map-deactivate]");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
 const checklistInputs = Array.from(document.querySelectorAll('.day-card input[type="checkbox"]'));
 const progressItems = Array.from(document.querySelectorAll("[data-progress-item]"));
@@ -1196,10 +1194,6 @@ function setRouteMapInteractive(isInteractive) {
     routeMapGate.hidden = routeMapInteractive;
   }
 
-  if (routeMapDeactivateButton) {
-    routeMapDeactivateButton.hidden = !routeMapInteractive;
-  }
-
   if (!routeMapInstance) {
     return;
   }
@@ -2152,15 +2146,17 @@ if (routeMapToggle) {
   });
 }
 
-if (routeMapActivateButton) {
-  routeMapActivateButton.addEventListener("click", () => {
+if (routeMapGate) {
+  const activateMapInteraction = () => {
     setRouteMapInteractive(true);
-  });
-}
+  };
 
-if (routeMapDeactivateButton) {
-  routeMapDeactivateButton.addEventListener("click", () => {
-    setRouteMapInteractive(false);
+  routeMapGate.addEventListener("click", activateMapInteraction);
+  routeMapGate.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      activateMapInteraction();
+    }
   });
 }
 
