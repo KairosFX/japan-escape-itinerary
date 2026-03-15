@@ -23,6 +23,7 @@
   --section-gap: 2.4rem;
   --section-content-gap: 1.32rem;
   --content-box-min: 240px;
+  --content-grid-columns: repeat(4, minmax(0, 1fr));
   --content-box-gap: 1.08rem;
   --content-box-padding-block: 1.42rem;
   --content-box-padding-inline: 1.42rem;
@@ -1710,13 +1711,16 @@ html.has-modal-open body {
 .notes-grid {
   --card-header-min-block: 4.4rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--content-box-min)), 1fr));
+  grid-template-columns: var(--content-grid-columns);
   gap: var(--content-box-gap);
-  align-items: start;
+  align-items: stretch;
 }
 
 .day-grid--optional {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--content-box-min)), 1fr));
+  display: grid;
+  grid-template-columns: var(--content-grid-columns);
+  gap: var(--content-box-gap);
+  align-items: stretch;
 }
 
 .day-card,
@@ -1724,6 +1728,8 @@ html.has-modal-open body {
   display: grid;
   align-content: start;
   gap: 0;
+  min-width: 0;
+  height: 100%;
   padding: var(--content-box-padding-block) var(--content-box-padding-inline);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
@@ -1851,12 +1857,14 @@ html.has-modal-open body {
 }
 
 .check-copy {
+  min-width: 0;
   font-size: var(--content-body-size);
   color: var(--text);
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
   line-height: 1.58;
+  overflow-wrap: anywhere;
 }
 
 .check-item input:checked ~ .check-copy {
@@ -1927,9 +1935,11 @@ html.has-modal-open body {
 }
 
 .note-card p {
+  min-width: 0;
   max-width: none;
   font-size: var(--content-body-size);
   line-height: 1.68;
+  overflow-wrap: anywhere;
 }
 
 .note-card h3 {
@@ -2451,6 +2461,7 @@ html.has-modal-open body {
   :root {
     --section-gap: 2rem;
     --section-content-gap: 1.16rem;
+    --content-grid-columns: repeat(2, minmax(0, 1fr));
   }
 
   .header-inner {
@@ -2508,6 +2519,7 @@ html.has-modal-open body {
   :root {
     --section-gap: 1.72rem;
     --section-content-gap: 1rem;
+    --content-grid-columns: 1fr;
     --content-box-gap: 0.92rem;
     --content-box-padding-block: 1rem;
     --content-box-padding-inline: 1rem;
@@ -2615,12 +2627,6 @@ html.has-modal-open body {
   .day-grid,
   .notes-grid {
     --card-header-min-block: 4rem;
-  }
-
-  .day-grid,
-  .day-grid--optional,
-  .notes-grid {
-    grid-template-columns: 1fr;
   }
 
   .welcome-overlay {
