@@ -1206,10 +1206,6 @@ function setRouteMapInteractive(isInteractive) {
   routeMapSurface?.classList.toggle("is-interactive", routeMapInteractive);
   routeMapPanel?.parentElement?.classList.toggle("is-map-interactive", routeMapInteractive);
 
-  if (routeMapGate) {
-    routeMapGate.hidden = routeMapInteractive;
-  }
-
   if (!routeMapInstance) {
     return;
   }
@@ -2162,21 +2158,17 @@ if (routeMapToggle) {
   });
 }
 
-if (routeMapGate) {
-  const activateMapInteraction = () => {
-    setRouteMapInteractive(true);
-  };
-
-  routeMapGate.addEventListener("click", activateMapInteraction);
-  routeMapGate.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      activateMapInteraction();
-    }
-  });
-}
-
 if (routeMapSurface) {
+  routeMapSurface.addEventListener(
+    "pointerdown",
+    () => {
+      if (!routeMapInteractive) {
+        setRouteMapInteractive(true);
+      }
+    },
+    { capture: true }
+  );
+
   routeMapSurface.addEventListener("pointerleave", (event) => {
     if (!routeMapInteractive || event.buttons !== 0) {
       return;

@@ -767,6 +767,7 @@ h3 {
   transform: translateX(-50%);
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(171, 74, 59, 0.22), rgba(171, 74, 59, 0.08));
+  z-index: 0;
 }
 
 .progress-timeline::after {
@@ -782,6 +783,7 @@ h3 {
   background: linear-gradient(180deg, rgba(171, 74, 59, 0.84), rgba(171, 74, 59, 0.28));
   box-shadow: 0 0 0 1px rgba(255, 250, 245, 0.22);
   transition: height 340ms cubic-bezier(0.22, 1, 0.36, 1), background-color 220ms ease;
+  z-index: 0;
 }
 
 .progress-item {
@@ -798,6 +800,7 @@ h3 {
     background-color 220ms ease,
     box-shadow 220ms ease,
     opacity 220ms ease;
+  z-index: 1;
 }
 
 .progress-item::before {
@@ -1369,10 +1372,12 @@ h3 {
 
 .route-map__surface:not(.is-interactive) {
   cursor: pointer;
+  touch-action: pan-y;
 }
 
 .route-map__surface.is-interactive {
   cursor: grab;
+  touch-action: none;
 }
 
 .route-map__surface.is-interactive:active {
@@ -1743,6 +1748,10 @@ html.has-modal-open body {
   overflow: hidden;
   padding-left: 1.68rem;
   --day-progress: 0;
+}
+
+.note-card {
+  padding-left: 1.68rem;
 }
 
 .day-card::before,
