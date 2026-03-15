@@ -2116,7 +2116,7 @@ function syncParallax() {
 function registerRevealBlocks() {
   const revealBlocks = Array.from(
     document.querySelectorAll(
-      ".hero-panel, .trip-stats, .progress-card, .content-section .section-heading, .day-grid, .notes-grid, [data-optional-section], .route-map, .journey-close, .site-footer__lead, .site-footer__links, .site-footer__credit"
+      ".hero-panel, .trip-stats, .progress-card, .content-section .section-heading, .essentials-grid, .day-grid, .notes-grid, [data-optional-section], .route-map, .journey-close, .site-footer__lead, .site-footer__links, .site-footer__credit"
     )
   );
 

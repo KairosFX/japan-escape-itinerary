@@ -1717,20 +1717,27 @@ html.has-modal-open body {
   overflow-wrap: anywhere;
 }
 
+.essentials-grid,
 .day-grid,
 .notes-grid {
   --card-header-min-block: 4.4rem;
   display: grid;
-  grid-template-columns: var(--content-grid-columns);
   gap: var(--content-box-gap);
 }
 
+.essentials-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+}
+
 .day-grid {
+  grid-template-columns: var(--content-grid-columns);
   grid-auto-rows: 1fr;
   align-items: stretch;
 }
 
 .notes-grid {
+  grid-template-columns: var(--content-grid-columns);
   align-items: start;
 }
 
@@ -1742,15 +1749,22 @@ html.has-modal-open body {
   align-items: stretch;
 }
 
+.essentials-card,
 .day-card,
 .note-card {
   display: grid;
   align-content: start;
   gap: 0;
   min-width: 0;
-  height: 100%;
   padding: var(--content-box-padding-block) var(--content-box-padding-inline);
   transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.essentials-card,
+.note-card {
+  position: relative;
+  padding-left: var(--content-box-gutter);
+  border-top: 4px solid var(--accent-soft);
 }
 
 .day-card {
@@ -1758,12 +1772,7 @@ html.has-modal-open body {
   overflow: hidden;
   padding-left: var(--content-box-gutter);
   --day-progress: 0;
-}
-
-.note-card {
-  position: relative;
-  padding-left: var(--content-box-gutter);
-  border-top: 4px solid var(--accent-soft);
+  height: 100%;
 }
 
 .day-card::before,
@@ -1790,6 +1799,7 @@ html.has-modal-open body {
   transition: height 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.essentials-card:hover,
 .day-card:hover,
 .note-card:hover {
   transform: translateY(-3px);
@@ -1984,6 +1994,92 @@ html.has-modal-open body {
   height: 0.55rem;
   border-radius: 50%;
   background: var(--accent);
+}
+
+.essentials-card h4 {
+  position: relative;
+  margin: 0;
+  padding-bottom: var(--content-box-title-gap);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-serif);
+  font-size: var(--content-card-title-size);
+  line-height: 1.18;
+  color: var(--text);
+}
+
+.essentials-card h4::before {
+  content: "";
+  position: absolute;
+  left: -0.86rem;
+  top: 0.42rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.essentials-list,
+.essentials-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--content-box-item-gap);
+}
+
+.essentials-list li,
+.essentials-checklist li {
+  position: relative;
+  min-width: 0;
+  font-size: var(--content-body-size);
+  line-height: 1.68;
+  overflow-wrap: anywhere;
+}
+
+.essentials-list li {
+  padding-left: 1rem;
+  color: var(--muted);
+}
+
+.essentials-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68rem;
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: rgba(171, 74, 59, 0.72);
+}
+
+.essentials-checklist li {
+  padding-left: 1.58rem;
+  color: var(--text);
+}
+
+.essentials-checklist li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.32rem;
+  width: 0.94rem;
+  height: 0.94rem;
+  border-radius: 0.28rem;
+  border: 1px solid rgba(171, 74, 59, 0.18);
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.essentials-checklist li::after {
+  content: "";
+  position: absolute;
+  left: 0.28rem;
+  top: 0.58rem;
+  width: 0.32rem;
+  height: 0.18rem;
+  border-left: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(-45deg);
 }
 
 .site-footer {
@@ -2504,6 +2600,10 @@ html.has-modal-open body {
     --content-grid-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .essentials-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .header-inner {
     flex-direction: column;
   }
@@ -2626,6 +2726,10 @@ html.has-modal-open body {
     grid-template-columns: 1fr;
   }
 
+  .essentials-grid {
+    grid-template-columns: 1fr;
+  }
+
   .route-reference {
     padding: 0.8rem;
   }
@@ -2665,7 +2769,8 @@ html.has-modal-open body {
   }
 
   .day-grid,
-  .notes-grid {
+  .notes-grid,
+  .essentials-grid {
     --card-header-min-block: 4rem;
   }
 
@@ -2982,6 +3087,16 @@ html[data-theme="dark"] .progress-item {
   border-color: rgba(248, 239, 228, 0.08);
   background: rgba(28, 31, 37, 0.88);
   box-shadow: 0 12px 26px rgba(3, 4, 6, 0.2);
+}
+
+html[data-theme="dark"] .essentials-list li::before {
+  background: rgba(210, 107, 90, 0.78);
+}
+
+html[data-theme="dark"] .essentials-checklist li::before {
+  border-color: rgba(181, 84, 70, 0.24);
+  background: rgba(28, 31, 37, 0.92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 html[data-theme="dark"] .progress-item.is-active {
