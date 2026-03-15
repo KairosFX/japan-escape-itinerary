@@ -57,6 +57,7 @@ const routeMapAssetUrls = {
   css: "https://unpkg.com/maplibre-gl@5.18.0/dist/maplibre-gl.css",
   js: "https://unpkg.com/maplibre-gl@5.18.0/dist/maplibre-gl.js"
 };
+const routeMapLoadTimeoutMs = 10000;
 const routeMapStops = {
   osakaStart: {
     coordinates: [135.5023, 34.6937],
@@ -803,7 +804,7 @@ function getRouteMapPalette() {
     rasterSaturation: -0.28,
     rasterContrast: 0.08,
     rasterBrightnessMin: 0.48,
-    rasterBrightnessMax: 1.08,
+    rasterBrightnessMax: 1,
     complete: "#b55446",
     current: "#de8c78",
     warning: "#bf9151",
@@ -1342,6 +1343,34 @@ async function initializeRouteMap() {
 
   routeMapInitializationPromise = ensureRouteMapAssets()
     .then((maplibregl) => new Promise((resolve, reject) => {
+      let didSettle = false;
+
+      const settleSuccess = () => {
+        if (didSettle) {
+          return false;
+        }
+
+        didSettle = true;
+        window.clearTimeout(loadTimeoutId);
+        return true;
+      };
+
+      const settleError = (error) => {
+        if (didSettle) {
+          return;
+        }
+
+        didSettle = true;
+        window.clearTimeout(loadTimeoutId);
+        routeMapStatusMode = "error";
+        renderRouteMapStatus();
+        reject(error);
+      };
+
+      const loadTimeoutId = window.setTimeout(() => {
+        settleError(new Error("Map load timed out."));
+      }, routeMapLoadTimeoutMs);
+
       routeMapInstance = new maplibregl.Map({
         container: routeMapCanvas,
         style: buildRouteMapStyle(),
@@ -1374,22 +1403,27 @@ async function initializeRouteMap() {
         }
       });
 
-      routeMapInstance.on("load", async () => {
+      routeMapInstance.once("load", async () => {
         try {
           routeMapSegments = await loadRouteMapSegments();
           addRouteMapLayers();
           createRouteMapMarkers(maplibregl);
           fitRouteMapBounds();
           syncRouteMapState();
+          if (!settleSuccess()) {
+            return;
+          }
           resolve(routeMapInstance);
         } catch (error) {
-          routeMapStatusMode = "error";
-          renderRouteMapStatus();
-          reject(error);
+          settleError(error);
         }
       });
     }))
     .catch((error) => {
+      if (routeMapInstance) {
+        routeMapInstance.remove();
+      }
+
       routeMapInitializationPromise = null;
       routeMapInstance = null;
       routeMapStatusMode = "error";

@@ -1722,9 +1722,16 @@ html.has-modal-open body {
   --card-header-min-block: 4.4rem;
   display: grid;
   grid-template-columns: var(--content-grid-columns);
-  grid-auto-rows: 1fr;
   gap: var(--content-box-gap);
+}
+
+.day-grid {
+  grid-auto-rows: 1fr;
   align-items: stretch;
+}
+
+.notes-grid {
+  align-items: start;
 }
 
 .day-grid--optional {
