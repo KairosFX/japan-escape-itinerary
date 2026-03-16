@@ -67,7 +67,7 @@ const routeMapStops = {
   kyoto: {
     coordinates: [135.7681, 35.0116],
     title: { en: "Kyoto", ja: "京都" },
-    subtitle: { en: "Day 2 · Arashiyama and Nanzen-ji", ja: "2日目 · 嵐山と南禅寺" }
+    subtitle: { en: "Day 2 · Arashiyama, Nanzen-ji, and Ninenzaka", ja: "2日目 · 嵐山、南禅寺、二年坂" }
   },
   osakaReturn: {
     coordinates: [135.4945, 34.6992],
