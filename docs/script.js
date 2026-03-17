@@ -67,12 +67,12 @@ const routeMapStops = {
   kyoto: {
     coordinates: [135.7681, 35.0116],
     title: { en: "Kyoto", ja: "京都" },
-    subtitle: { en: "Day 2 · Arashiyama, Nanzen-ji, and Ninenzaka", ja: "2日目 · 嵐山、南禅寺、二年坂" }
+    subtitle: { en: "Day 2 · Arashiyama, Nanzen-ji, Kiyomizu-dera", ja: "2日目 · 嵐山、南禅寺、清水寺" }
   },
   osakaReturn: {
     coordinates: [135.4945, 34.6992],
     title: { en: "Osaka", ja: "大阪" },
-    subtitle: { en: "Day 3 · Kaiyukan and flexible time", ja: "3日目 · 海遊館と自由時間" }
+    subtitle: { en: "Day 3 · Kaiyukan, Osaka Castle, and flex time", ja: "3日目 · 海遊館、大阪城、自由時間" }
   },
   shinOsaka: {
     coordinates: [135.5013, 34.7335],
@@ -82,22 +82,22 @@ const routeMapStops = {
   odawara: {
     coordinates: [139.1544, 35.2556],
     title: { en: "Odawara", ja: "小田原" },
-    subtitle: { en: "Day 4 · Arrival transfer", ja: "4日目 · 到着後の乗り換え" }
+    subtitle: { en: "Day 4 · Hakone transfer handoff", ja: "4日目 · 箱根への乗り換え" }
   },
   hakone: {
     coordinates: [139.1039, 35.2323],
     title: { en: "Hakone", ja: "箱根" },
-    subtitle: { en: "Days 4 & 5 · Scenic stay", ja: "4日目・5日目 · 景色を楽しむ滞在" }
+    subtitle: { en: "Day 4 · Ropeway, ryokan, and scenic stay", ja: "4日目 · ロープウェイと旅館の滞在" }
   },
   fuji: {
     coordinates: [138.7598, 35.4894],
     title: { en: "Mt. Fuji area", ja: "富士山エリア" },
-    subtitle: { en: "Day 6 · Kawaguchiko and classic views", ja: "6日目 · 河口湖と富士山の景色" }
+    subtitle: { en: "Days 5 & 6 · Kawaguchiko, Oshino Hakkai, optional Chureito", ja: "5日目・6日目 · 河口湖、忍野八海、忠霊塔は任意" }
   },
   tokyo: {
     coordinates: [139.6917, 35.6895],
     title: { en: "Tokyo", ja: "東京" },
-    subtitle: { en: "Day 7 onward · Final stop", ja: "7日目以降 · 最後の都市" }
+    subtitle: { en: "Day 7 onward · Shibuya finish", ja: "7日目以降 · 渋谷で締め" }
   }
 };
 const routeMapSegmentDefinitions = [
@@ -106,7 +106,7 @@ const routeMapSegmentDefinitions = [
   { id: "segment-osaka-return-shin-osaka", from: "osakaReturn", to: "shinOsaka", day: "4", kind: "main" },
   { id: "segment-shin-osaka-odawara", from: "shinOsaka", to: "odawara", day: "4", kind: "main" },
   { id: "segment-odawara-hakone", from: "odawara", to: "hakone", day: "4", kind: "main" },
-  { id: "segment-hakone-fuji", from: "hakone", to: "fuji", day: "6", kind: "main" },
+  { id: "segment-hakone-fuji", from: "hakone", to: "fuji", day: "5", kind: "main" },
   { id: "segment-fuji-tokyo", from: "fuji", to: "tokyo", day: "7", kind: "main" }
 ];
 const routeStopProgressConfig = {
@@ -115,8 +115,8 @@ const routeStopProgressConfig = {
   osakaReturn: { stopId: "route-stop-osaka-return", days: ["3"] },
   shinOsaka: { stopId: "route-stop-shin-osaka", days: ["4"] },
   odawara: { stopId: "route-stop-odawara", days: ["4"] },
-  hakone: { stopId: "route-stop-hakone", days: ["4", "5"] },
-  fuji: { stopId: "route-stop-fuji", days: ["6"] },
+  hakone: { stopId: "route-stop-hakone", days: ["4"] },
+  fuji: { stopId: "route-stop-fuji", days: ["5", "6"] },
   tokyo: { stopId: "route-stop-tokyo", days: ["7", "8", "9"] }
 };
 const routeSegmentConfig = {
@@ -124,8 +124,8 @@ const routeSegmentConfig = {
   "route-progress-osaka-return": ["3"],
   "route-progress-shin-osaka": ["4"],
   "route-progress-odawara": ["4"],
-  "route-progress-hakone": ["4", "5"],
-  "route-progress-fuji": ["6"],
+  "route-progress-hakone": ["4"],
+  "route-progress-fuji": ["5"],
   "route-progress-tokyo": ["7"]
 };
 const routeDayToStopKey = {
@@ -133,7 +133,7 @@ const routeDayToStopKey = {
   2: "kyoto",
   3: "osakaReturn",
   4: "hakone",
-  5: "hakone",
+  5: "fuji",
   6: "fuji",
   7: "tokyo",
   8: "tokyo",

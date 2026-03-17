@@ -260,7 +260,7 @@ const PREVIEW_GALLERIES = {
     eyebrow: "Preview Deck / Osaka",
     title: "Osaka: bright, forgiving, and easy to start with",
     description:
-      "Osaka is the best landing city in the route because it turns arrival energy into food, light, and low-pressure wandering instead of hard logistics. If the group is tired, Osaka still works.",
+      "Osaka is the best landing city in the route because it turns arrival energy into food, light, and low-pressure wandering instead of hard logistics. It also gives you room for Dotonbori first, then Kaiyukan and Osaka Castle before the trip shifts east.",
     href: "./itinerary.html#osaka-start",
     tags: ["Arrival-ready", "Night food", "Late backup"],
     facts: [
@@ -274,7 +274,7 @@ const PREVIEW_GALLERIES = {
       },
       {
         label: "How to use it",
-        text: "Use Osaka for atmosphere and recovery. It should feel loose, not like the trip is already racing."
+        text: "Use Osaka for atmosphere and recovery on Day 1, then let Day 3 carry Kaiyukan, Osaka Castle, and any extra food or shopping time."
       }
     ],
     images: [
@@ -308,7 +308,7 @@ const PREVIEW_GALLERIES = {
     eyebrow: "Preview Deck / Kyoto",
     title: "Kyoto: one concentrated cultural contrast instead of a rushed sweep",
     description:
-      "Kyoto changes the texture of the trip. The point is not to consume the whole city in one day; it is to get a strong historic contrast to Osaka with a cleaner, more deliberate rhythm.",
+      "Kyoto changes the texture of the trip. The point is not to consume the whole city in one day; it is to combine Arashiyama with a focused Higashiyama stretch and get a strong historic contrast to Osaka.",
     href: "./itinerary.html#kyoto-day",
     tags: ["Culture weight", "Temple rhythm", "Walk-heavy"],
     facts: [
@@ -318,11 +318,11 @@ const PREVIEW_GALLERIES = {
       },
       {
         label: "Where the payoff is",
-        text: "The value comes from street atmosphere, temple setting, and pace shift rather than trying to count landmarks."
+        text: "The value comes from combining Arashiyama, Nanzen-ji, Kiyomizu-dera, Ninenzaka, and Yasaka Pagoda into one deliberate contrast day."
       },
       {
         label: "How to keep it smooth",
-        text: "Pick a cluster and stay there. The day works better when transit is minimized."
+        text: "Split the day into one western lane and one Higashiyama lane. The day works better when transit is minimized."
       }
     ],
     images: [
@@ -348,7 +348,7 @@ const PREVIEW_GALLERIES = {
     eyebrow: "Preview Deck / Hakone",
     title: "Hakone: a scenic overnight that makes the eastbound move feel earned",
     description:
-      "Hakone is structural, not decorative. It breaks the long run east, introduces onsen and lake atmosphere, and keeps the trip from feeling like a nonstop city transfer machine.",
+      "Hakone is structural, not decorative. It breaks the long run east, introduces ropeway, onsen, and lake atmosphere, and keeps the trip from feeling like a nonstop city transfer machine.",
     href: "./itinerary.html#hakone-move",
     tags: ["Onsen window", "Scenic pivot", "Reset night"],
     facts: [
@@ -358,11 +358,11 @@ const PREVIEW_GALLERIES = {
       },
       {
         label: "What the preview shows",
-        text: "The lakeside torii and softer terrain are the visual signal that the trip has shifted out of pure city mode."
+        text: "The lakeside torii, ropeway access, and softer terrain are the signal that the trip has shifted out of pure city mode."
       },
       {
         label: "How to use the stop",
-        text: "Keep expectations light on arrival. If the move day runs long, the overnight still succeeds."
+        text: "Use Day 4 for the Ropeway or Owakudani plus ryokan time, then let Day 5 cover Lake Ashi and Hakone Shrine before the Fuji transfer."
       }
     ],
     images: [
@@ -396,7 +396,7 @@ const PREVIEW_GALLERIES = {
     eyebrow: "Preview Deck / Mt. Fuji Area",
     title: "Mt. Fuji Area: the scenic section that should stay weather-led",
     description:
-      "This is the biggest visual payoff in the route, but it also carries the most weather risk. The right move is to protect flexibility and cash in on the clearest view first.",
+      "This is the biggest visual payoff in the route, but it also carries the most weather risk. The right move is to protect flexibility, start with Kawaguchiko if the mountain is visible, and then layer Oshino Hakkai or optional Chureito around that.",
     href: "./itinerary.html#fuji-visibility",
     tags: ["Photo priority", "Weather risk", "Flexible order"],
     facts: [
@@ -406,11 +406,11 @@ const PREVIEW_GALLERIES = {
       },
       {
         label: "What the preview shows",
-        text: "The area is not one single viewpoint. The best version mixes lake, pagoda, and village-water atmosphere if the forecast allows it."
+        text: "The area is not one single viewpoint. The best version mixes lake, village-water atmosphere, and an optional pagoda view if the forecast allows it."
       },
       {
         label: "How to plan it",
-        text: "Check visibility the same morning, then let the strongest Fuji-facing stop go first."
+        text: "Check visibility the same morning, then let Kawaguchiko, Oshino Hakkai, or Chureito go first based on the cleanest view."
       }
     ],
     images: [
@@ -444,7 +444,7 @@ const PREVIEW_GALLERIES = {
     eyebrow: "Preview Deck / Tokyo",
     title: "Tokyo: finish in one strong district instead of overloading the end",
     description:
-      "The final stop should feel decisive. Shibuya gives you the crossing, shopping pressure, dinner options, and skyline close without fragmenting the last day across the whole city.",
+      "The final stop should feel decisive. Shibuya gives you the crossing, shopping pressure, dinner options, and a Shibuya Sky finish without fragmenting the last day across the whole city.",
     href: "./itinerary.html#tokyo-finish",
     tags: ["Shibuya-first", "Night skyline", "Clean finale"],
     facts: [
@@ -458,7 +458,7 @@ const PREVIEW_GALLERIES = {
       },
       {
         label: "How to close the trip",
-        text: "Book the skyline or final dinner anchor first, then let the rest of the district flex around it."
+        text: "Book Shibuya Sky or the final dinner anchor first, then let the rest of the district flex around it."
       }
     ],
     images: [
@@ -3555,7 +3555,7 @@ const MAP_POINTS = [
     title: "Osaka Base",
     category: "route",
     tags: ["route", "food", "easy"],
-    description: "Primary arrival base with the easiest first-night energy in the route.",
+    description: "Primary arrival base with the easiest first-night energy in the route and room for Kaiyukan plus Osaka Castle before leaving.",
     lat: 34.6937,
     lon: 135.5023,
     weatherKey: "osaka",
@@ -3589,7 +3589,7 @@ const MAP_POINTS = [
     title: "Kyoto Contrast",
     category: "route",
     tags: ["route", "culture", "walk"],
-    description: "The cultural contrast day. Better as one focused lane than a citywide checklist.",
+    description: "The cultural contrast day, built around Arashiyama and the Higashiyama side instead of a citywide checklist.",
     lat: 35.0116,
     lon: 135.7681,
     weatherKey: "kyoto",
@@ -3597,7 +3597,7 @@ const MAP_POINTS = [
     guideLabel: "Open Kyoto stop",
     googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=35.0116,135.7681",
     facts: [
-      { label: "Best use", text: "Pick one district cluster and keep transit low." },
+      { label: "Best use", text: "Use Arashiyama first, then move to Nanzen-ji, Kiyomizu-dera, Ninenzaka, and Yasaka Pagoda if energy holds." },
       { label: "Timing", text: "Earlier is better because crowd pressure builds fast." }
     ]
   },
@@ -3623,7 +3623,7 @@ const MAP_POINTS = [
     title: "Hakone Reset",
     category: "route",
     tags: ["route", "onsen", "reset"],
-    description: "The scenic overnight that makes the eastbound move feel human.",
+    description: "The scenic overnight that covers the ropeway or Owakudani first, then gives Day 5 room for the lake-and-shrine side.",
     lat: 35.2323,
     lon: 139.1069,
     weatherKey: "hakone",
@@ -3631,7 +3631,7 @@ const MAP_POINTS = [
     guideLabel: "Open Hakone stop",
     googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=35.2323,139.1069",
     facts: [
-      { label: "Best use", text: "Let the transfer finish cleanly before adding sightseeing pressure." },
+      { label: "Best use", text: "Let the transfer finish cleanly, then split the stop between Day 4 ropeway time and Day 5 Lake Ashi plus Hakone Shrine." },
       { label: "Timing", text: "Late afternoon is often the right shift into ryokan mode." }
     ]
   },
@@ -3674,7 +3674,7 @@ const MAP_POINTS = [
     title: "Fuji Scenic Block",
     category: "route",
     tags: ["route", "scenic", "weather"],
-    description: "The scenic centerpiece of the trip and the one section that needs real weather flexibility.",
+    description: "The scenic centerpiece of the trip, built around Kawaguchiko, Oshino Hakkai, and optional Chureito when the weather works.",
     lat: 35.4974,
     lon: 138.7559,
     weatherKey: "fuji",
@@ -3682,7 +3682,7 @@ const MAP_POINTS = [
     guideLabel: "Open Fuji stop",
     googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=35.4974,138.7559",
     facts: [
-      { label: "Best use", text: "Let the cleanest view decide the order instead of defending a rigid plan." },
+      { label: "Best use", text: "Let the cleanest view decide whether Kawaguchiko, Oshino Hakkai, or optional Chureito goes first." },
       { label: "Timing", text: "Morning often gives the clearest mountain windows." }
     ]
   },
@@ -3691,7 +3691,7 @@ const MAP_POINTS = [
     title: "Chureito Viewpoint",
     category: "view",
     tags: ["view", "fuji", "photo"],
-    description: "The most iconic Fuji framing on the route when visibility actually cooperates.",
+    description: "The optional classic Fuji framing on the route when visibility and stair energy both cooperate.",
     lat: 35.5013,
     lon: 138.7995,
     weatherKey: "fuji",
@@ -3725,7 +3725,7 @@ const MAP_POINTS = [
     title: "Tokyo Finale",
     category: "route",
     tags: ["route", "night", "shopping"],
-    description: "The clean district-first finish. Keep the last day concentrated and it will feel bigger.",
+    description: "The clean Shibuya-first finish with the Crossing, shopping, and Shibuya Sky at night.",
     lat: 35.6762,
     lon: 139.6503,
     weatherKey: "tokyo",
@@ -3733,7 +3733,7 @@ const MAP_POINTS = [
     guideLabel: "Open Tokyo stop",
     googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=35.6762,139.6503",
     facts: [
-      { label: "Best use", text: "Anchor the final day around one skyline slot or one dinner and flex around that." },
+      { label: "Best use", text: "Anchor the final day around Shibuya Sky or one dinner slot and flex the rest around that." },
       { label: "Map logic", text: "Tokyo works best here when it stays district-first instead of sprawling." }
     ]
   },
@@ -3791,7 +3791,7 @@ const ROUTE_ATLAS_ITEMS = {
     facts: [
       {
         label: "Route role",
-        text: "Osaka stabilizes the beginning of the trip so the later scenic sections feel earned instead of rushed."
+        text: "Osaka introduces the food and nightlife side of the trip before Kyoto, Hakone, and Fuji change the pace."
       },
       {
         label: "Vibe signal",
@@ -3799,7 +3799,7 @@ const ROUTE_ATLAS_ITEMS = {
       },
       {
         label: "Best move",
-        text: "Keep the first night compact and save the real pace for the next morning."
+        text: "Keep Day 1 centered on Dotonbori, then let Day 3 handle Kaiyukan, Osaka Castle, and any extra Osaka time."
       }
     ]
   },
@@ -3807,7 +3807,7 @@ const ROUTE_ATLAS_ITEMS = {
     kicker: "Contrast day",
     title: "Kyoto changes the texture without changing hotels",
     description:
-      "Kyoto is the deliberate contrast stop. The point is one concentrated cultural day that resets the mood without adding another hotel move.",
+      "Kyoto is the deliberate contrast stop. The point is one concentrated cultural day built around Arashiyama and the Higashiyama side without adding another hotel move.",
     href: "./itinerary.html#kyoto-day",
     image: PREVIEW_GALLERIES.kyoto.images[0].src,
     alt: PREVIEW_GALLERIES.kyoto.images[0].alt,
@@ -3824,11 +3824,11 @@ const ROUTE_ATLAS_ITEMS = {
       },
       {
         label: "Best lane",
-        text: "One focused district cluster works better than a citywide chase."
+        text: "Use Arashiyama first, then finish with Nanzen-ji, Kiyomizu-dera, Ninenzaka, and Yasaka Pagoda."
       },
       {
         label: "Payoff",
-        text: "Temple atmosphere and slower streets create the sharpest contrast in the trip."
+        text: "Temple atmosphere, preserved streets, and Higashiyama landmarks create the sharpest contrast in the trip."
       }
     ]
   },
@@ -3836,7 +3836,7 @@ const ROUTE_ATLAS_ITEMS = {
     kicker: "Scenic pivot",
     title: "Hakone breaks the eastbound move and makes it feel human",
     description:
-      "Hakone turns the route's biggest transfer wall into an atmospheric overnight. That one decision keeps the trip from feeling like pure transit math.",
+      "Hakone turns the route's biggest transfer wall into an atmospheric overnight with ropeway, onsen, and lake-side time. That one decision keeps the trip from feeling like pure transit math.",
     href: "./itinerary.html#hakone-move",
     image: PREVIEW_GALLERIES.hakone.images[0].src,
     alt: PREVIEW_GALLERIES.hakone.images[0].alt,
@@ -3853,7 +3853,7 @@ const ROUTE_ATLAS_ITEMS = {
       },
       {
         label: "Best use",
-        text: "Protect the transfer first and let any extra sightseeing feel like bonus value."
+        text: "Protect the transfer first, use Day 4 for the Ropeway or Owakudani, then let Day 5 carry Lake Ashi and Hakone Shrine."
       },
       {
         label: "Why it works",
@@ -3865,7 +3865,7 @@ const ROUTE_ATLAS_ITEMS = {
     kicker: "Weather play",
     title: "Fuji is the place where flexibility becomes the strategy",
     description:
-      "This is the highest photo payoff in the route, but only if you let weather win. Good visibility should overrule any rigid sequence you wrote down earlier.",
+      "This is the highest photo payoff in the route, but only if you let weather win. Good visibility should overrule any rigid sequence you wrote down earlier, whether that means Kawaguchiko, Oshino Hakkai, or optional Chureito first.",
     href: "./itinerary.html#fuji-visibility",
     image: PREVIEW_GALLERIES.fuji.images[0].src,
     alt: PREVIEW_GALLERIES.fuji.images[0].alt,
@@ -3882,7 +3882,7 @@ const ROUTE_ATLAS_ITEMS = {
       },
       {
         label: "Best move",
-        text: "Check the sky early and hit the clearest viewpoint first."
+        text: "Check the sky early and hit Kawaguchiko, Oshino Hakkai, or Chureito in the order the mountain allows."
       },
       {
         label: "Risk control",
@@ -3894,7 +3894,7 @@ const ROUTE_ATLAS_ITEMS = {
     kicker: "Finale district",
     title: "Tokyo closes the trip cleanly when you keep it district-first",
     description:
-      "The trip ends best in one strong Tokyo district. Shibuya gives shopping, dinner, and skyline closure without fragmenting the last day across the whole city.",
+      "The trip ends best in one strong Tokyo district. Shibuya gives the Crossing, shopping, dinner, and Shibuya Sky closure without fragmenting the last day across the whole city.",
     href: "./itinerary.html#tokyo-finish",
     image: PREVIEW_GALLERIES.tokyo.images[2].src,
     alt: PREVIEW_GALLERIES.tokyo.images[2].alt,
@@ -3911,7 +3911,7 @@ const ROUTE_ATLAS_ITEMS = {
       },
       {
         label: "Best move",
-        text: "Anchor the day around one skyline slot or one dinner and let the rest flex."
+        text: "Anchor the day around Shibuya Sky or one dinner slot and let the rest flex."
       },
       {
         label: "Payoff",

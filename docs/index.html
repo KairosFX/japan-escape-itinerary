@@ -196,8 +196,8 @@
             <span data-language="ja" hidden>移動中でもすぐ確認しやすい旅行ガイドです。</span>
           </h2>
           <p class="section-intro">
-            <span data-language="en">Each section is separated, and the itinerary follows the natural flow of the trip.</span>
-            <span data-language="ja" hidden>各セクションを分けて整理し、旅程は実際の流れに沿って確認しやすくしています。</span>
+            <span data-language="en">Each section is separated, and the itinerary follows the natural flow from Osaka to Tokyo with optional extra Tokyo days at the end.</span>
+            <span data-language="ja" hidden>各セクションを分けて整理し、大阪から東京までの流れと、必要なら最後の東京追加日程まで追いやすくしています。</span>
           </p>
         </div>
 
@@ -216,8 +216,8 @@
             <span data-language="ja" hidden>7日間</span>
           </strong>
           <p>
-            <span data-language="en">Compact city-to-scenic route (possibly 9 days)</span>
-            <span data-language="ja" hidden>都市から景色へ流れる短期ルート（場合によっては9日間）</span>
+            <span data-language="en">Compact city-to-scenic route with optional Tokyo extension days</span>
+            <span data-language="ja" hidden>都市から景色へ流れる短期ルートで、必要なら東京の日程を追加できます</span>
           </p>
         </article>
 
@@ -227,12 +227,12 @@
             <span data-language="ja" hidden>主な立ち寄り先</span>
           </p>
           <strong>
-            <span data-language="en">4 Cities</span>
-            <span data-language="ja" hidden>4都市</span>
+            <span data-language="en">5 Core Stops</span>
+            <span data-language="ja" hidden>主要5か所</span>
           </strong>
           <p>
-            <span data-language="en">Osaka, Kyoto, Hakone, Tokyo</span>
-            <span data-language="ja" hidden>大阪、京都、箱根、東京</span>
+            <span data-language="en">Osaka, Kyoto, Hakone, Mt. Fuji area, Tokyo</span>
+            <span data-language="ja" hidden>大阪、京都、箱根、富士山エリア、東京</span>
           </p>
         </article>
 
@@ -246,8 +246,8 @@
             <span data-language="ja" hidden>新幹線1回</span>
           </strong>
           <p>
-            <span data-language="en">Fast eastbound transfer planning</span>
-            <span data-language="ja" hidden>東へ進む移動をすっきり整理</span>
+            <span data-language="en">Shin-Osaka to Odawara shinkansen plus local Hakone and Fuji-side transfers</span>
+            <span data-language="ja" hidden>新大阪から小田原までの新幹線と、箱根・富士側のローカル移動</span>
           </p>
         </article>
       </div>
@@ -499,10 +499,24 @@
               </label>
             </li>
             <li>
+              <label class="check-item" for="day2-kiyomizu">
+                <input id="day2-kiyomizu" type="checkbox">
+                <span class="check-copy" data-language="en">Kiyomizu-dera</span>
+                <span class="check-copy" data-language="ja" hidden>清水寺</span>
+              </label>
+            </li>
+            <li>
               <label class="check-item" for="day2-ninenzaka">
                 <input id="day2-ninenzaka" type="checkbox">
                 <span class="check-copy" data-language="en">Ninenzaka</span>
                 <span class="check-copy" data-language="ja" hidden>二年坂</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day2-yasaka">
+                <input id="day2-yasaka" type="checkbox">
+                <span class="check-copy" data-language="en">Yasaka Pagoda</span>
+                <span class="check-copy" data-language="ja" hidden>八坂の塔</span>
               </label>
             </li>
           </ul>
@@ -528,6 +542,13 @@
               </label>
             </li>
             <li>
+              <label class="check-item" for="day3-castle">
+                <input id="day3-castle" type="checkbox">
+                <span class="check-copy" data-language="en">Osaka Castle</span>
+                <span class="check-copy" data-language="ja" hidden>大阪城</span>
+              </label>
+            </li>
+            <li>
               <label class="check-item" for="day3-flex">
                 <input id="day3-flex" type="checkbox">
                 <span class="check-copy" data-language="en">Flexible Osaka time</span>
@@ -544,8 +565,8 @@
               <span data-language="ja" hidden>4日目</span>
             </p>
             <p class="day-region">
-              <span data-language="en">Transit + Hakone</span>
-              <span data-language="ja" hidden>移動 + 箱根</span>
+              <span data-language="en">Shin-Osaka -&gt; Hakone</span>
+              <span data-language="ja" hidden>新大阪 -&gt; 箱根</span>
             </p>
           </div>
           <ul class="checklist-list">
@@ -559,8 +580,22 @@
             <li>
               <label class="check-item" for="day4-hakone">
                 <input id="day4-hakone" type="checkbox">
-                <span class="check-copy" data-language="en">Hakone sightseeing</span>
-                <span class="check-copy" data-language="ja" hidden>箱根観光</span>
+                <span class="check-copy" data-language="en">Transfer into Hakone</span>
+                <span class="check-copy" data-language="ja" hidden>箱根へ移動</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day4-ropeway">
+                <input id="day4-ropeway" type="checkbox">
+                <span class="check-copy" data-language="en">Hakone Ropeway (Owakudani)</span>
+                <span class="check-copy" data-language="ja" hidden>箱根ロープウェイ（大涌谷）</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day4-onsen">
+                <input id="day4-onsen" type="checkbox">
+                <span class="check-copy" data-language="en">Onsen / ryokan area (hot spring)</span>
+                <span class="check-copy" data-language="ja" hidden>温泉・旅館エリア</span>
               </label>
             </li>
             <li>
@@ -580,8 +615,8 @@
               <span data-language="ja" hidden>5日目</span>
             </p>
             <p class="day-region">
-              <span data-language="en">Hakone</span>
-              <span data-language="ja" hidden>箱根</span>
+              <span data-language="en">Hakone -&gt; Mt. Fuji Area</span>
+              <span data-language="ja" hidden>箱根 -&gt; 富士山エリア</span>
             </p>
           </div>
           <ul class="checklist-list">
@@ -590,6 +625,20 @@
                 <input id="day5-morning" type="checkbox">
                 <span class="check-copy" data-language="en">Hakone morning</span>
                 <span class="check-copy" data-language="ja" hidden>箱根の朝</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day5-ashi">
+                <input id="day5-ashi" type="checkbox">
+                <span class="check-copy" data-language="en">Lake Ashi</span>
+                <span class="check-copy" data-language="ja" hidden>芦ノ湖</span>
+              </label>
+            </li>
+            <li>
+              <label class="check-item" for="day5-shrine">
+                <input id="day5-shrine" type="checkbox">
+                <span class="check-copy" data-language="en">Hakone Shrine</span>
+                <span class="check-copy" data-language="ja" hidden>箱根神社</span>
               </label>
             </li>
             <li>
@@ -824,8 +873,8 @@
             <span data-language="ja" hidden>大阪</span>
           </h3>
           <p>
-            <span data-language="en">Starting base of the trip and the introduction to Japan’s food and nightlife culture. The focus here is on atmosphere, street food, and exploring the city rather than packing in too many attractions. Dotonbori is the main highlight and can be enjoyed both during the day and at night. During the day it is good for exploring street food stalls, walking along the canal, and visiting nearby Shinsaibashi shopping street, while nighttime is when the area becomes especially lively with neon lights, crowds, and nightlife. Osaka Aquarium Kaiyukan, scheduled for Day 3, is one of the largest aquariums in the world and offers a slower sightseeing experience before leaving Osaka. The remaining time in the city can be kept flexible for additional food exploration, shopping, or revisiting Dotonbori.</span>
-            <span data-language="ja" hidden>旅の出発地点で、日本の食文化とナイトライフに触れる最初の街です。ここでは観光地を詰め込みすぎず、街の雰囲気、食べ歩き、街歩きを楽しむことを重視します。主な見どころは道頓堀で、昼も夜も楽しめます。昼は食べ歩きや川沿いの散策、近くの心斎橋商店街を回るのに向いており、夜になるとネオンや人の賑わいで特に活気が増します。3日目に予定している海遊館は世界最大級の水族館の一つで、大阪を離れる前にゆったり観光できるスポットです。残りの時間は、さらに食べ歩きをしたり、買い物をしたり、もう一度道頓堀を訪れたりと柔軟に使えます。</span>
+            <span data-language="en">Starting base of the trip and the introduction to Japan’s food and nightlife culture. The focus here is on atmosphere, street food, and exploring the city rather than packing in too many attractions. Dotonbori is the main highlight and can be enjoyed both during the day and at night. During the day it is good for exploring street food stalls, walking along the canal, and visiting nearby Shinsaibashi shopping street, while nighttime is when the area becomes especially lively with neon lights, crowds, and nightlife. Osaka Aquarium Kaiyukan, scheduled for Day 3, is one of the largest aquariums in the world and offers a slower sightseeing experience before leaving Osaka. Osaka Castle also adds a historic landmark to the Osaka portion of the trip and provides a contrast to the city’s more modern streets and entertainment areas. The remaining time in the city can be kept flexible for additional food exploration, shopping, or revisiting Dotonbori.</span>
+            <span data-language="ja" hidden>旅の出発地点で、日本の食文化とナイトライフに触れる最初の街です。ここでは観光地を詰め込みすぎず、街の雰囲気、食べ歩き、街歩きを楽しむことを重視します。主な見どころは道頓堀で、昼も夜も楽しめます。昼は食べ歩きや川沿いの散策、近くの心斎橋商店街を回るのに向いており、夜になるとネオンや人の賑わいで特に活気が増します。3日目に予定している海遊館は世界最大級の水族館の一つで、大阪を離れる前にゆったり観光できるスポットです。大阪城は大阪パートに歴史的なランドマークを加え、現代的な街並みや娯楽エリアとの対比も作ってくれます。残りの時間は、さらに食べ歩きをしたり、買い物をしたり、もう一度道頓堀を訪れたりと柔軟に使えます。</span>
           </p>
         </article>
 
@@ -835,8 +884,8 @@
             <span data-language="ja" hidden>京都</span>
           </h3>
           <p>
-            <span data-language="en">Planned as a full-day trip from Osaka, Kyoto represents the cultural and historic portion of the trip and provides a strong contrast to Osaka’s modern nightlife atmosphere. The main areas planned are Arashiyama, known for its bamboo grove, scenic river, and mountain views, and Nanzen-ji Temple, a large Zen temple complex with quiet gardens and historic architecture. Ninenzaka adds a classic Kyoto atmosphere, with preserved stone lanes, traditional buildings, and a more historic streetscape that fits well with the temple and old-town experience. Kyoto is dense with temples and shrines, so the focus here is on a few major areas rather than trying to see everything in one day. The evening can be spent in the Higashiyama or Gion area, where the lantern-lit streets, shops, and traditional architecture make for a strong finish before returning to Osaka.</span>
-            <span data-language="ja" hidden>大阪からの日帰りの終日観光として計画しており、京都は旅の中で文化と歴史を感じるパートとして、大阪の現代的なナイトライフの雰囲気と強い対比を作ります。主な予定地は、竹林、川沿いの景色、山の眺めで知られる嵐山と、静かな庭園や歴史ある建築を持つ大きな禅寺の南禅寺です。二年坂は、保存された石畳の小道、伝統的な建物、そして寺社や旧市街の体験によく合う、より歴史を感じる街並みで、京都らしい空気を加えてくれます。京都は寺社が非常に多いため、1日で全てを見ようとせず、主要なエリアをいくつかに絞って回る想定です。夕方以降は東山や祇園で過ごすこともでき、提灯に照らされた通り、店並み、伝統的な建築が、大阪へ戻る前の締めとしてよく合います。</span>
+            <span data-language="en">Planned as a full-day trip from Osaka, Kyoto represents the cultural and historic portion of the trip and provides a strong contrast to Osaka’s modern nightlife atmosphere. The main areas planned are Arashiyama, known for its bamboo grove, scenic river, and mountain views, and Nanzen-ji Temple, a large Zen temple complex with quiet gardens and historic architecture. Ninenzaka adds a classic Kyoto atmosphere, with preserved stone lanes, traditional buildings, and a more historic streetscape that fits well with the temple and old-town experience, while Kiyomizu-dera and Yasaka Pagoda strengthen the Higashiyama portion of the day with two of Kyoto’s most recognizable historic landmarks. Kyoto is dense with temples and shrines, so the focus here is on a few major areas rather than trying to see everything in one day. The evening can be spent in the Higashiyama or Gion area, where the lantern-lit streets, shops, and traditional architecture make for a strong finish before returning to Osaka.</span>
+            <span data-language="ja" hidden>大阪からの日帰りの終日観光として計画しており、京都は旅の中で文化と歴史を感じるパートとして、大阪の現代的なナイトライフの雰囲気と強い対比を作ります。主な予定地は、竹林、川沿いの景色、山の眺めで知られる嵐山と、静かな庭園や歴史ある建築を持つ大きな禅寺の南禅寺です。二年坂は、保存された石畳の小道、伝統的な建物、そして寺社や旧市街の体験によく合う、より歴史を感じる街並みで、京都らしい空気を加えてくれます。さらに清水寺と八坂の塔が東山エリアを強め、京都を代表する歴史的ランドマークをしっかり入れられます。京都は寺社が非常に多いため、1日で全てを見ようとせず、主要なエリアをいくつかに絞って回る想定です。夕方以降は東山や祇園で過ごすこともでき、提灯に照らされた通り、店並み、伝統的な建築が、大阪へ戻る前の締めとしてよく合います。</span>
           </p>
         </article>
 
@@ -846,8 +895,8 @@
             <span data-language="ja" hidden>箱根</span>
           </h3>
           <p>
-            <span data-language="en">First major stop when heading east. Travel from Shin-Osaka to Odawara by bullet train, then continue into Hakone for sightseeing and an overnight stay. Hakone is known for its mountain scenery, hot springs, and potential views of Mt. Fuji on clear days, making it a good transition from the city portion of the trip into a slower, more scenic part of the itinerary. This stop is best approached at a relaxed pace, with time for sightseeing in the afternoon, an overnight stay, and a quieter morning before continuing on. The area is spread out, so travel between sights can take time, but that is part of the experience. A stay here is less about fitting in many attractions and more about enjoying the landscape, the atmosphere, and the chance to unwind before transferring toward the Mt. Fuji area on Day 5.</span>
-            <span data-language="ja" hidden>東へ向かう最初の大きな立ち寄り先です。新大阪から小田原まで新幹線で移動し、その後は箱根へ入って観光し、一泊します。箱根は山の景色、温泉、晴れた日の富士山の眺めで知られており、都市中心の旅程から、よりゆったりした景色重視の流れへ移るのにちょうどよい場所です。この滞在は、午後の観光と一泊、そして翌朝の静かな時間を含めて、落ち着いたペースで楽しむのが向いています。エリアは広く、各スポット間の移動に時間がかかることもありますが、それも体験の一部です。ここでの滞在は、多くの観光地を詰め込むよりも、風景や空気感を味わい、5日目に富士山エリアへ向かう前にひと息つくことに意味があります。</span>
+            <span data-language="en">First major stop when heading east. Travel from Shin-Osaka to Odawara by bullet train, then continue into Hakone for sightseeing and an overnight stay. Hakone is known for its mountain scenery, hot springs, and potential views of Mt. Fuji on clear days, making it a good transition from the city portion of the trip into a slower, more scenic part of the itinerary. Since the area is spread out, it makes more sense to divide the sightseeing across the arrival day and the following morning rather than trying to fit everything in at once. The Hakone Ropeway works well on Day 4, as it adds one of the area’s most scenic experiences and includes views of Owakudani, Hakone’s well-known volcanic valley. Day 5 can then focus on the Lake Ashi side, including Hakone Shrine, which gives the stop a more relaxed and balanced pace before continuing toward the Mt. Fuji area. The overall experience is less about rushing through attractions and more about enjoying the landscape, atmosphere, and slower rhythm of Hakone.</span>
+            <span data-language="ja" hidden>東へ向かう最初の大きな立ち寄り先です。新大阪から小田原まで新幹線で移動し、その後は箱根へ入って観光し、一泊します。箱根は山の景色、温泉、晴れた日の富士山の眺めで知られており、都市中心の旅程から、よりゆったりした景色重視の流れへ移るのにちょうどよい場所です。エリアが広いため、全部を一度に詰め込むより、到着日と翌朝に分けて見るほうが自然です。4日目は箱根ロープウェイに乗って大涌谷まで行く流れが合いやすく、箱根らしい景色を入れやすくなります。5日目は芦ノ湖側と箱根神社を中心にしてから富士山エリアへ向かうと、全体のペースがより落ち着いてバランスよくまとまります。ここで大事なのは観光地を急いで消化することではなく、箱根の景色、空気感、そしてゆっくりしたリズムを楽しむことです。</span>
           </p>
         </article>
 
@@ -908,8 +957,8 @@
           <span data-language="ja" hidden>ルート</span>
         </h2>
         <p class="section-intro">
-          <span data-language="en">Open the map for a geographic view of the route.</span>
-          <span data-language="ja" hidden>ルート全体の位置関係を見たいときに地図を開けます。</span>
+          <span data-language="en">Open the map for a geographic view of Osaka -&gt; Kyoto -&gt; Osaka -&gt; Shin-Osaka -&gt; Odawara -&gt; Hakone -&gt; Mt. Fuji area -&gt; Tokyo.</span>
+          <span data-language="ja" hidden>大阪 -&gt; 京都 -&gt; 大阪 -&gt; 新大阪 -&gt; 小田原 -&gt; 箱根 -&gt; 富士山エリア -&gt; 東京の位置関係を見たいときに地図を開けます。</span>
         </p>
       </div>
 
@@ -925,8 +974,8 @@
               <span data-language="ja" hidden>開閉できる旅の地図</span>
             </h3>
             <p>
-              <span data-language="en">A compact route map with progress-linked stops and the full trip path.</span>
-              <span data-language="ja" hidden>進行状況と連動する停留点と旅全体の経路をまとめて見られるコンパクトな地図です。</span>
+              <span data-language="en">A compact route map with progress-linked stops covering the full Osaka to Tokyo trip path.</span>
+              <span data-language="ja" hidden>進行状況と連動しながら、大阪から東京までの経路全体をまとめて見られるコンパクトな地図です。</span>
             </p>
           </div>
 
