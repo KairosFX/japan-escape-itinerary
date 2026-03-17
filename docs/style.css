@@ -1792,7 +1792,8 @@ html.has-modal-open body {
   overflow: hidden;
   padding-left: var(--content-box-gutter);
   --day-progress: 0;
-  height: 100%;
+  align-self: stretch;
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .day-card::before,
@@ -1875,6 +1876,7 @@ html.has-modal-open body {
   margin: 0;
   padding: 0;
   display: grid;
+  align-content: start;
   gap: var(--content-box-item-gap);
 }
 

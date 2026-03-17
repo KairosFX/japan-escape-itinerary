@@ -17,6 +17,7 @@ const routeMapSurface = document.querySelector(".route-map__surface");
 const routeMapCanvas = document.getElementById("route-map-canvas");
 const routeMapStatus = document.querySelector("[data-route-map-status]");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
+const dayGrids = Array.from(document.querySelectorAll(".day-grid"));
 const checklistInputs = Array.from(document.querySelectorAll('.day-card input[type="checkbox"]'));
 const progressItems = Array.from(document.querySelectorAll("[data-progress-item]"));
 const progressTimeline = document.querySelector("[data-progress-timeline]");
@@ -165,6 +166,7 @@ let routeMapInteractive = false;
 let routeMapDragArmed = false;
 let routeMapDragPointerId = null;
 let lastResetTrigger = null;
+let dayCardRowEqualizeFrame = 0;
 
 function getSystemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -1465,6 +1467,54 @@ function syncOptionalDaysUI() {
   if (optionalPromptCompact) {
     optionalPromptCompact.hidden = true;
   }
+
+  scheduleDayCardRowHeights();
+}
+
+function syncDayCardRowHeights() {
+  dayGrids.forEach((grid) => {
+    const visibleCards = Array.from(grid.querySelectorAll(".day-card")).filter(
+      (card) => !card.hidden && card.getClientRects().length
+    );
+
+    visibleCards.forEach((card) => {
+      card.style.minHeight = "";
+    });
+
+    const rows = [];
+
+    visibleCards.forEach((card) => {
+      const top = Math.round(card.getBoundingClientRect().top);
+      const matchingRow = rows.find((row) => Math.abs(row.top - top) <= 4);
+
+      if (matchingRow) {
+        matchingRow.cards.push(card);
+        return;
+      }
+
+      rows.push({ top, cards: [card] });
+    });
+
+    rows.forEach((row) => {
+      const tallestCard = Math.max(...row.cards.map((card) => card.getBoundingClientRect().height));
+      row.cards.forEach((card) => {
+        card.style.minHeight = `${Math.ceil(tallestCard)}px`;
+      });
+    });
+  });
+}
+
+function scheduleDayCardRowHeights() {
+  if (dayCardRowEqualizeFrame) {
+    window.cancelAnimationFrame(dayCardRowEqualizeFrame);
+  }
+
+  dayCardRowEqualizeFrame = window.requestAnimationFrame(() => {
+    dayCardRowEqualizeFrame = window.requestAnimationFrame(() => {
+      dayCardRowEqualizeFrame = 0;
+      syncDayCardRowHeights();
+    });
+  });
 }
 
 function unlockOptionalDays() {
@@ -1989,6 +2039,7 @@ function setLanguage(language) {
   syncProgressTimeline();
   syncRouteMapState();
   setOptionalPromptFeedback(false);
+  scheduleDayCardRowHeights();
 }
 
 function applyTheme(theme, options = {}) {
@@ -2054,6 +2105,7 @@ function setActivePanel(panelId) {
 
     refreshRevealPanel(panelId);
     syncProgressTimeline();
+    scheduleDayCardRowHeights();
     if (
       panelId === "route" &&
       routeMapInstance &&
@@ -2197,6 +2249,13 @@ syncParallax();
 syncProgressTimeline();
 updateRouteMapToggleLabel();
 renderRouteMapStatus();
+scheduleDayCardRowHeights();
+
+if (document.fonts?.ready) {
+  document.fonts.ready.then(() => {
+    scheduleDayCardRowHeights();
+  });
+}
 
 dayCards.forEach((card) => {
   card.addEventListener("click", (event) => {
@@ -2489,6 +2548,7 @@ if (siteHeader) {
     }
     syncParallax();
     syncProgressTimeline();
+    scheduleDayCardRowHeights();
     if (routeMapInstance && routeMapToggle?.getAttribute("aria-expanded") === "true") {
       routeMapInstance.resize();
       fitRouteMapBounds();
