@@ -1259,6 +1259,40 @@ h3 {
   transform: translateY(0);
 }
 
+.scroll-swipe-target {
+  will-change: translate;
+}
+
+.scroll-swipe-target.is-swipe-up {
+  animation: sectionSwipeUp 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-swipe-target.is-swipe-down {
+  animation: sectionSwipeDown 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes sectionSwipeUp {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  45% {
+    translate: 0 -10px;
+  }
+}
+
+@keyframes sectionSwipeDown {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  45% {
+    translate: 0 10px;
+  }
+}
+
 .content-panels {
   display: block;
   margin-top: 0;
@@ -3639,6 +3673,7 @@ html[data-theme="light"] .route-reference__media {
   .site-header,
   .page-shell,
   .site-footer,
+  .scroll-swipe-target,
   .reveal-block,
   .day-card,
   .progress-item {

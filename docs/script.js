@@ -31,6 +31,11 @@ const resetProgressModal = document.querySelector("[data-reset-progress-modal]")
 const resetProgressCancelButton = document.querySelector("[data-reset-progress-cancel]");
 const resetProgressConfirmButton = document.querySelector("[data-reset-progress-confirm]");
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
+const scrollSwipeTargets = Array.from(
+  document.querySelectorAll(
+    ".card, .progress-overview, .section-heading, .route-map__status, .site-footer__lead, .site-footer__aside, .site-footer__credit"
+  )
+);
 const optionalPrompt = document.querySelector("[data-optional-prompt]");
 const optionalPromptExpanded = document.querySelector("[data-optional-prompt-expanded]");
 const optionalPromptCompact = document.querySelector("[data-optional-prompt-compact]");
@@ -167,13 +172,26 @@ let routeMapDragPointerId = null;
 let lastResetTrigger = null;
 let dayCardRowEqualizeFrame = 0;
 let backToTopMotionResetTimer = 0;
+let boxSwipeMotionResetTimer = 0;
+let activePanelId = Array.from(sectionTabs).find((tab) => tab.classList.contains("is-active"))?.dataset.panelTarget ?? null;
 
-function syncBackToTopMotion(delta) {
-  if (!backToTopButtons.length) {
+scrollSwipeTargets.forEach((target) => {
+  target.classList.add("scroll-swipe-target");
+});
+
+function getVisibleScrollSwipeTargets() {
+  return scrollSwipeTargets.filter((target) => {
+    const panel = target.closest("[data-panel]");
+    return !panel || panel.classList.contains("is-active");
+  });
+}
+
+function syncBackToTopMotion(delta, { force = false } = {}) {
+  if (!backToTopButtons.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return;
   }
 
-  if (Math.abs(delta) < 6) {
+  if ((!force && Math.abs(delta) < 6) || delta === 0) {
     return;
   }
 
@@ -190,6 +208,52 @@ function syncBackToTopMotion(delta) {
       button.classList.remove("is-swipe-down", "is-swipe-up");
     });
   }, 240);
+}
+
+function syncBoxSwipeMotion(delta, { force = false } = {}) {
+  const visibleTargets = getVisibleScrollSwipeTargets();
+  if (!visibleTargets.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  if ((!force && Math.abs(delta) < 6) || delta === 0) {
+    return;
+  }
+
+  const swipeDirection = delta > 0 ? "is-swipe-down" : "is-swipe-up";
+
+  visibleTargets.forEach((target) => {
+    target.classList.remove("is-swipe-up", "is-swipe-down");
+    target.classList.add(swipeDirection);
+  });
+
+  window.clearTimeout(boxSwipeMotionResetTimer);
+  boxSwipeMotionResetTimer = window.setTimeout(() => {
+    visibleTargets.forEach((target) => {
+      target.classList.remove("is-swipe-up", "is-swipe-down");
+    });
+  }, 280);
+}
+
+function syncDirectionalMotion(delta, options) {
+  syncBackToTopMotion(delta, options);
+  syncBoxSwipeMotion(delta, options);
+}
+
+function getPanelTransitionDelta(nextPanelId) {
+  if (!activePanelId || activePanelId === nextPanelId) {
+    return 0;
+  }
+
+  const panelOrder = Array.from(sectionTabs).map((tab) => tab.dataset.panelTarget);
+  const currentIndex = panelOrder.indexOf(activePanelId);
+  const nextIndex = panelOrder.indexOf(nextPanelId);
+
+  if (currentIndex === -1 || nextIndex === -1) {
+    return 0;
+  }
+
+  return nextIndex - currentIndex;
 }
 
 function getSystemTheme() {
@@ -2092,6 +2156,7 @@ function handleThemeButtonClick(button) {
 
 function setActivePanel(panelId) {
   let hasMatch = false;
+  const panelTransitionDelta = getPanelTransitionDelta(panelId);
 
   contentPanels.forEach((panel) => {
     const isActive = panel.dataset.panel === panelId;
@@ -2119,6 +2184,7 @@ function setActivePanel(panelId) {
     }
 
     refreshRevealPanel(panelId);
+    syncDirectionalMotion(panelTransitionDelta, { force: true });
     syncProgressTimeline();
     scheduleDayCardRowHeights();
     if (
@@ -2131,6 +2197,8 @@ function setActivePanel(panelId) {
         fitRouteMapBounds();
       });
     }
+
+    activePanelId = panelId;
   }
 
   return hasMatch;
@@ -2262,7 +2330,7 @@ setActivePanel("overview");
 setActiveProgressItem(getCurrentProgressDay());
 syncParallax();
 syncProgressTimeline();
-syncBackToTopMotion(0);
+syncDirectionalMotion(0);
 updateRouteMapToggleLabel();
 renderRouteMapStatus();
 scheduleDayCardRowHeights();
@@ -2495,7 +2563,7 @@ if (routeMedia) {
 function syncHeaderState() {
   const currentScrollY = window.scrollY;
   const delta = currentScrollY - lastScrollY;
-  syncBackToTopMotion(delta);
+  syncDirectionalMotion(delta);
 
   if (!siteHeader) {
     lastScrollY = currentScrollY;
