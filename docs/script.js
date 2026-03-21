@@ -166,6 +166,31 @@ let routeMapDragArmed = false;
 let routeMapDragPointerId = null;
 let lastResetTrigger = null;
 let dayCardRowEqualizeFrame = 0;
+let backToTopMotionResetTimer = 0;
+
+function syncBackToTopMotion(delta) {
+  if (!backToTopButtons.length) {
+    return;
+  }
+
+  if (Math.abs(delta) < 6) {
+    return;
+  }
+
+  const swipeDirection = delta > 0 ? "is-swipe-down" : "is-swipe-up";
+
+  backToTopButtons.forEach((button) => {
+    button.classList.toggle("is-swipe-down", swipeDirection === "is-swipe-down");
+    button.classList.toggle("is-swipe-up", swipeDirection === "is-swipe-up");
+  });
+
+  window.clearTimeout(backToTopMotionResetTimer);
+  backToTopMotionResetTimer = window.setTimeout(() => {
+    backToTopButtons.forEach((button) => {
+      button.classList.remove("is-swipe-down", "is-swipe-up");
+    });
+  }, 240);
+}
 
 function getSystemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -2158,7 +2183,7 @@ function syncParallax() {
 function registerRevealBlocks() {
   const revealBlocks = Array.from(
     document.querySelectorAll(
-      ".hero-panel, .trip-stats, .progress-card, .content-section .section-heading, .essentials-grid, .day-grid, .notes-grid, [data-optional-section], .route-map, .journey-close, .site-footer__lead, .site-footer__links, .site-footer__credit"
+      ".hero-panel, .trip-stats, .progress-card, .content-section .section-heading, .essentials-grid, .day-grid, .notes-grid, [data-optional-section], .route-map, .journey-close, .site-footer__lead, .site-footer__aside, .site-footer__credit"
     )
   );
 
@@ -2237,6 +2262,7 @@ setActivePanel("overview");
 setActiveProgressItem(getCurrentProgressDay());
 syncParallax();
 syncProgressTimeline();
+syncBackToTopMotion(0);
 updateRouteMapToggleLabel();
 renderRouteMapStatus();
 scheduleDayCardRowHeights();
@@ -2467,18 +2493,20 @@ if (routeMedia) {
 }
 
 function syncHeaderState() {
+  const currentScrollY = window.scrollY;
+  const delta = currentScrollY - lastScrollY;
+  syncBackToTopMotion(delta);
+
   if (!siteHeader) {
+    lastScrollY = currentScrollY;
     scrollTicking = false;
     return;
   }
 
-  const currentScrollY = window.scrollY;
   if (window.performance.now() < headerLockUntil) {
     lastScrollY = currentScrollY;
     return;
   }
-
-  const delta = currentScrollY - lastScrollY;
 
   if (currentScrollY <= 36 || delta < -8) {
     siteHeader.classList.remove("is-condensed");
