@@ -8,7 +8,6 @@ const welcomeOverlay = document.querySelector(".welcome-overlay");
 const sequenceNotice = document.querySelector("[data-sequence-notice]");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
 const dayGrids = Array.from(document.querySelectorAll(".day-grid"));
-const checklistInputs = Array.from(document.querySelectorAll('.day-card input[type="checkbox"]'));
 const progressItems = Array.from(document.querySelectorAll("[data-progress-item]"));
 const progressTimeline = document.querySelector("[data-progress-timeline]");
 const progressCurrentDayNode = document.querySelector("[data-progress-current-day]");
@@ -21,11 +20,6 @@ const resetProgressModal = document.querySelector("[data-reset-progress-modal]")
 const resetProgressCancelButton = document.querySelector("[data-reset-progress-cancel]");
 const resetProgressConfirmButton = document.querySelector("[data-reset-progress-confirm]");
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
-const bookingTransitRoot = document.querySelector("[data-booking-transit]");
-const bookingTransitGroupsRoot = document.querySelector("[data-booking-transit-groups]");
-const bookingTransitLoadingState = document.querySelector("[data-booking-loading]");
-const bookingTransitErrorState = document.querySelector("[data-booking-error]");
-const bookingTransitEmptyState = document.querySelector("[data-booking-empty]");
 const optionalPrompt = document.querySelector("[data-optional-prompt]");
 const optionalPromptExpanded = document.querySelector("[data-optional-prompt-expanded]");
 const optionalPromptCompact = document.querySelector("[data-optional-prompt-compact]");
@@ -59,7 +53,7 @@ const fujiForecastSessionKey = "japan-trip-fuji-forecast";
 const queuedStorageWrites = new Map();
 const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
 const fujiForecastCacheMaxAgeMs = 45 * 60 * 1000;
-const fujiForecastSourceUrl = "https://open-meteo.com/";
+const fujiForecastSourceUrl = "https://open-meteo.com/en/docs";
 const fujiForecastApiUrl = "https://api.open-meteo.com/v1/forecast";
 const fujiForecastTimezone = "Asia/Tokyo";
 const fujiForecastSpotConfigs = [
@@ -206,6 +200,9 @@ function queueStorageRemoval(key) {
 }
 
 function setBookingTransitStatus(status) {
+  const bookingTransitLoadingState = getBookingTransitLoadingState();
+  const bookingTransitErrorState = getBookingTransitErrorState();
+
   if (bookingTransitLoadingState) {
     bookingTransitLoadingState.hidden = status !== "loading";
   }
@@ -271,6 +268,30 @@ function syncLocalizedNodes(scope = document) {
   scope.querySelectorAll("[data-language]").forEach((node) => {
     node.hidden = node.dataset.language !== activeLanguage;
   });
+}
+
+function getChecklistInputs() {
+  return Array.from(document.querySelectorAll('.day-card input[type="checkbox"]'));
+}
+
+function getBookingTransitRoot() {
+  return document.querySelector("[data-booking-transit]");
+}
+
+function getBookingTransitGroupsRoot() {
+  return document.querySelector("[data-booking-transit-groups]");
+}
+
+function getBookingTransitLoadingState() {
+  return document.querySelector("[data-booking-loading]");
+}
+
+function getBookingTransitErrorState() {
+  return document.querySelector("[data-booking-error]");
+}
+
+function getBookingTransitEmptyState() {
+  return document.querySelector("[data-booking-empty]");
 }
 
 function getFujiForecastSummaryNode() {
@@ -447,7 +468,9 @@ function scoreFujiSpotWindow(spotForecast, windowHours) {
       (entry) => getFujiWeatherCodeScore(entry.weatherCode) * 0.72 + entry.sunshineRatio * 0.28
     )
   );
-  const dawnBonus = windowHours[0].hour === 5 ? 1 : 0.3;
+  const dawnBonus = average(
+    windowHours.map((entry) => (entry.hour >= 5 && entry.hour <= 8 ? 1 : 0.3))
+  );
   const score =
     visibilityScore * 0.35 +
     cloudScore * 0.3 +
@@ -595,37 +618,37 @@ function buildFujiForecastResult(bestWindow, fetchedAt) {
   const kawaguchikoScore = bestWindow.spots.kawaguchiko.score;
   const lakeAdvantage = kawaguchikoScore - chureitoScore;
   let state = "mixed";
-  let badge = { en: "Flexible", ja: "柔軟対応" };
+  let badge = { en: "Mixed", ja: "様子見" };
   let recommendation = {
-    en: "Fuji may appear in short windows. Check early, then decide between Chureito and the lake.",
-    ja: "富士山は短い時間だけ見える可能性があります。朝に確認してから、忠霊塔か湖畔かを決めましょう。"
+    en: "Fuji may appear in short windows. Check early, then decide.",
+    ja: "富士山は短い時間だけ見える可能性があります。朝に確認してから決めましょう。"
   };
   let summaryRecommendation = {
-    en: "Fuji looks mixed. Check early before locking the morning route.",
-    ja: "富士山は判断が分かれそうです。朝の確認後に動きを決めるのが安全です。"
+    en: "Check early, then decide between Chureito and the lake.",
+    ja: "朝に確認してから、忠霊塔か湖畔かを決めましょう。"
   };
 
   if (bestWindow.score >= 0.74 && chureitoScore >= 0.68) {
     state = "good";
-    badge = { en: "Best window", ja: "狙い目" };
+    badge = { en: "Excellent", ja: "好条件" };
     recommendation = {
-      en: "Do Chureito first at dawn.",
-      ja: "夜明けに忠霊塔を最優先にしましょう。"
+      en: "Do Chureito first.",
+      ja: "忠霊塔を先に回りましょう。"
     };
     summaryRecommendation = {
-      en: "Tomorrow looks strongest for an early Chureito run.",
-      ja: "明日は朝の忠霊塔を優先しやすい見込みです。"
+      en: "Start with Chureito if you can move in that window.",
+      ja: "その時間に動けるなら、忠霊塔から始めましょう。"
     };
   } else if (bestWindow.score < 0.55 || chureitoScore < 0.48 || lakeAdvantage >= 0.16) {
     state = "poor";
-    badge = { en: "Lake first", ja: "湖畔優先" };
+    badge = { en: "Poor", ja: "視界弱め" };
     recommendation = {
-      en: "Skip Chureito first and prioritize the lake or flexible sightseeing.",
-      ja: "忠霊塔を先頭固定にせず、湖畔や柔軟な観光を優先しましょう。"
+      en: "Low Fuji visibility likely. Keep Chureito optional and prioritize flexible sightseeing.",
+      ja: "富士山の見え方は弱めの可能性があります。忠霊塔は任意にして、柔軟な観光を優先しましょう。"
     };
     summaryRecommendation = {
-      en: "Visibility leans weak. Keep Chureito optional and stay flexible.",
-      ja: "見え方は弱め寄りです。忠霊塔は任意にして柔軟に動きましょう。"
+      en: "Keep Chureito optional and prioritize the lake or flexible sightseeing.",
+      ja: "忠霊塔は任意にして、湖畔や柔軟な観光を優先しましょう。"
     };
   }
 
@@ -698,6 +721,10 @@ function renderFujiForecastLoading() {
         en: "Fuji weather watch",
         ja: "富士山の見え方チェック"
       })}</p>
+      <p class="fuji-forecast__summary-window">${renderLocalizedContent({
+        en: "Checking the next 2 mornings...",
+        ja: "これから2日分の朝を確認しています..."
+      })}</p>
       <p class="fuji-forecast__summary-text">${renderLocalizedContent({
         en: "Checking the next morning Fuji window...",
         ja: "次の朝の富士山の見え方を確認しています..."
@@ -723,6 +750,10 @@ function renderFujiForecastLoading() {
         en: "Weather-aware Fuji suggestion",
         ja: "天気に合わせた富士山プラン"
       })}</h3>
+      <p class="fuji-forecast__label">${renderLocalizedContent({
+        en: "Best Fuji view window",
+        ja: "富士山が見えやすい時間"
+      })}</p>
       <p class="fuji-forecast__body">${renderLocalizedContent({
         en: "Checking Kawaguchiko and Chureito morning conditions for the next two days.",
         ja: "河口湖と忠霊塔の朝の条件を、これから2日分確認しています。"
@@ -745,9 +776,13 @@ function renderFujiForecastError() {
         en: "Fuji weather watch",
         ja: "富士山の見え方チェック"
       })}</p>
+      <p class="fuji-forecast__summary-window">${renderLocalizedContent({
+        en: "Forecast unavailable",
+        ja: "予報を取得できません"
+      })}</p>
       <p class="fuji-forecast__summary-text">${renderLocalizedContent({
-        en: "Forecast unavailable. Keep Day 6 flexible and decide after an early Fuji check.",
-        ja: "予報を取得できません。6日目は柔軟にして、朝の富士山確認後に判断しましょう。"
+        en: "Forecast unavailable. Use the flexible Day 6 plan after an early Fuji check.",
+        ja: "予報を取得できません。朝の富士山確認後に柔軟な6日目プランで動きましょう。"
       })}</p>
     `;
     syncLocalizedNodes(summaryNode);
@@ -770,9 +805,13 @@ function renderFujiForecastError() {
         en: "Use the flexible Fuji plan",
         ja: "柔軟な富士山プランを使う"
       })}</h3>
-      <p class="fuji-forecast__body">${renderLocalizedContent({
-        en: "Forecast unavailable. Use the existing Day 6 plan: check Fuji at dawn, then decide between Chureito, the lake, and flexible sightseeing.",
-        ja: "予報を取得できません。既存の6日目プランどおり、朝に富士山を確認してから忠霊塔、湖畔、柔軟な観光を判断しましょう。"
+      <p class="fuji-forecast__recommendation">${renderLocalizedContent({
+        en: "Forecast unavailable. Use the existing Day 6 plan and decide after an early Fuji check.",
+        ja: "予報を取得できません。既存の6日目プランで、朝の富士山確認後に判断しましょう。"
+      })}</p>
+      <p class="fuji-forecast__reason">${renderLocalizedContent({
+        en: "Fallback: keep Chureito optional and prioritize the lake or flexible sightseeing.",
+        ja: "代替案: 忠霊塔は任意にして、湖畔や柔軟な観光を優先しましょう。"
       })}</p>
       <div class="fuji-forecast__meta">
         <span>${renderLocalizedContent({
@@ -1236,6 +1275,7 @@ function renderBookingTransitItem(item) {
 }
 
 function renderBookingTransitBoard() {
+  const bookingTransitGroupsRoot = getBookingTransitGroupsRoot();
   if (!bookingTransitGroupsRoot) {
     return;
   }
@@ -1307,6 +1347,9 @@ function itemMatchesBookingTransitFilter(itemConfig, state) {
 }
 
 function updateBookingTransitUI() {
+  const bookingTransitRoot = getBookingTransitRoot();
+  const bookingTransitEmptyState = getBookingTransitEmptyState();
+
   if (!bookingTransitRoot) {
     return;
   }
@@ -1363,6 +1406,7 @@ function setBookingTransitFilter(nextFilter) {
 }
 
 function bindBookingTransitUI() {
+  const bookingTransitRoot = getBookingTransitRoot();
   if (!bookingTransitRoot) {
     return;
   }
@@ -1403,6 +1447,7 @@ function bindBookingTransitUI() {
 }
 
 function initializeBookingTransit() {
+  const bookingTransitRoot = getBookingTransitRoot();
   if (!bookingTransitRoot || bookingTransitInitialized) {
     return Promise.resolve();
   }
@@ -1424,6 +1469,7 @@ function initializeBookingTransit() {
 }
 
 function resetBookingTransitState() {
+  const bookingTransitRoot = getBookingTransitRoot();
   bookingTransitState = { filter: "all", items: {} };
   storeBookingTransitState();
   if (bookingTransitRoot && bookingTransitInitialized) {
@@ -2063,7 +2109,7 @@ function resetTripProgress() {
   checklistState = {};
 
   if (initializedSections.has("checklist")) {
-    checklistInputs.forEach((input) => {
+    getChecklistInputs().forEach((input) => {
       input.checked = false;
     });
   }

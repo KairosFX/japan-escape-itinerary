@@ -1306,9 +1306,8 @@ html.has-modal-open body {
 }
 
 .essentials-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: auto;
-  align-items: start;
+  grid-template-columns: var(--content-grid-columns);
+  align-items: stretch;
 }
 
 .day-grid {
@@ -1344,9 +1343,9 @@ html.has-modal-open body {
 
 .essentials-card {
   gap: 0.92rem;
-  height: auto;
-  align-self: start;
-  grid-template-rows: auto auto auto;
+  height: 100%;
+  align-self: stretch;
+  grid-template-rows: auto auto minmax(0, 1fr);
 }
 
 .essentials-card,
@@ -1433,6 +1432,30 @@ html.has-modal-open body {
   border-bottom: 1px solid var(--line);
 }
 
+.day-card__body {
+  display: grid;
+  gap: 0.82rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+.day-card__body--with-aside {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 18rem);
+  gap: 1rem;
+  align-items: start;
+}
+
+.day-card__main,
+.day-card__side {
+  min-width: 0;
+}
+
+.day-card__side {
+  display: grid;
+  align-content: start;
+}
+
 .day-label {
   font-size: 0.94rem;
   font-weight: 700;
@@ -1505,7 +1528,7 @@ html.has-modal-open body {
 .fuji-forecast {
   display: grid;
   gap: 0.62rem;
-  margin-top: 0.82rem;
+  margin-top: 0;
   padding: 0.86rem 0.92rem;
   border: 1px solid rgba(171, 74, 59, 0.14);
   border-radius: calc(var(--radius-lg) - 0.12rem);
@@ -1522,6 +1545,10 @@ html.has-modal-open body {
   padding: 0.74rem 0.82rem;
   border-style: dashed;
   box-shadow: none;
+}
+
+.day-card__side .fuji-forecast {
+  margin-top: 0;
 }
 
 .fuji-forecast__header,
@@ -1619,6 +1646,15 @@ html.has-modal-open body {
 .fuji-forecast[data-state="good"] .fuji-forecast__badge {
   background: rgba(96, 136, 108, 0.14);
   color: rgba(44, 92, 56, 0.94);
+}
+
+.fuji-forecast[data-state="mixed"] {
+  border-color: rgba(171, 74, 59, 0.16);
+}
+
+.fuji-forecast[data-state="mixed"] .fuji-forecast__badge {
+  background: rgba(171, 74, 59, 0.1);
+  color: var(--accent-deep);
 }
 
 .fuji-forecast[data-state="poor"],
@@ -1737,7 +1773,9 @@ html.has-modal-open body {
 .essentials-card h4 {
   position: relative;
   margin: 0;
-  min-block-size: 3.5rem;
+  display: grid;
+  align-content: start;
+  min-block-size: calc(2 * 1.18em + var(--content-box-title-gap));
   padding-bottom: var(--content-box-title-gap);
   border-bottom: 1px solid var(--line);
   font-family: var(--font-serif);
@@ -1780,7 +1818,7 @@ html.has-modal-open body {
 
 .essentials-card p {
   min-width: 0;
-  min-block-size: 3.35rem;
+  min-block-size: 0;
   font-size: var(--content-body-size);
   line-height: 1.68;
   color: var(--muted);
@@ -1790,7 +1828,7 @@ html.has-modal-open body {
 .essentials-card > .essentials-list,
 .essentials-card > .essentials-checklist,
 .essentials-card > .booking-transit {
-  align-self: start;
+  align-self: stretch;
 }
 
 .essentials-list,
@@ -2772,16 +2810,12 @@ html.intro-done .welcome-overlay {
     padding: 0.86rem 0.92rem 0.9rem;
   }
 
-  .essentials-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .essentials-card--bookings {
     grid-column: 1 / -1;
   }
 
-  .essentials-card p {
-    min-block-size: 0;
+  .day-card__body--with-aside {
+    grid-template-columns: 1fr;
   }
 
   .optional-unlock__compact {
@@ -2904,15 +2938,6 @@ html.intro-done .welcome-overlay {
   .notes-grid,
   .essentials-grid {
     --card-header-min-block: 3.5rem;
-  }
-
-  .essentials-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: auto;
-  }
-
-  .essentials-card--bookings {
-    grid-column: auto;
   }
 
   .booking-group {
