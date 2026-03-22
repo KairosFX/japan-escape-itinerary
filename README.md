@@ -158,6 +158,20 @@ It is designed less like a full travel blog and more like a **clean personal tri
 
 This project is presented as a lightweight brochure-style website focused on clarity, structure, and quick access to useful information.
 
+## Build
+
+Install dependencies once:
+
+```bash
+npm install
+```
+
+Generate the minified deploy assets used by `docs/index.html`:
+
+```bash
+npm run build
+```
+
 ---
 
 ## Future Expansion

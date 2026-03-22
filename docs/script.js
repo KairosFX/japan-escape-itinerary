@@ -275,63 +275,16 @@ const bookingTransitItems = [
   }
 ];
 const bookingTransitItemMap = new Map(bookingTransitItems.map((item) => [item.id, item]));
-const routeMapAssetUrls = {
+const routeExperienceAssetUrls = {
+  css: "./route-section.min.css",
+  script: "./route-map.min.js"
+};
+const routeMapControllerAssetUrls = {
   css: "./assets/vendor/maplibre-gl/maplibre-gl.css",
-  js: "./assets/vendor/maplibre-gl/maplibre-gl.js"
+  js: "./assets/vendor/maplibre-gl/maplibre-gl.js",
+  segmentsUrl: "./assets/data/route-map-segments.json",
+  loadTimeoutMs: 10000
 };
-const routeMapSegmentsUrl = "./assets/data/route-map-segments.json";
-const routeMapLoadTimeoutMs = 10000;
-const routeMapStops = {
-  osakaStart: {
-    coordinates: [135.5023, 34.6937],
-    title: { en: "Osaka", ja: "大阪" },
-    subtitle: { en: "Day 1 · Nightlife and Dotonbori", ja: "1日目 · 夜の街と道頓堀" }
-  },
-  kyoto: {
-    coordinates: [135.7681, 35.0116],
-    title: { en: "Kyoto", ja: "京都" },
-    subtitle: { en: "Day 2 · Arashiyama, Nanzen-ji, Kiyomizu-dera", ja: "2日目 · 嵐山、南禅寺、清水寺" }
-  },
-  osakaReturn: {
-    coordinates: [135.4945, 34.6992],
-    title: { en: "Osaka", ja: "大阪" },
-    subtitle: { en: "Day 3 · Kaiyukan, Osaka Castle, and flex time", ja: "3日目 · 海遊館、大阪城、自由時間" }
-  },
-  shinOsaka: {
-    coordinates: [135.5013, 34.7335],
-    title: { en: "Shin-Osaka", ja: "新大阪" },
-    subtitle: { en: "Day 4 · Bullet train departure", ja: "4日目 · 新幹線の出発駅" }
-  },
-  odawara: {
-    coordinates: [139.1544, 35.2556],
-    title: { en: "Odawara", ja: "小田原" },
-    subtitle: { en: "Day 4 · Hakone transfer handoff", ja: "4日目 · 箱根への乗り換え" }
-  },
-  hakone: {
-    coordinates: [139.1039, 35.2323],
-    title: { en: "Hakone", ja: "箱根" },
-    subtitle: { en: "Day 4 · Ropeway, ryokan, and scenic stay", ja: "4日目 · ロープウェイと旅館の滞在" }
-  },
-  fuji: {
-    coordinates: [138.7598, 35.4894],
-    title: { en: "Mt. Fuji area", ja: "富士山エリア" },
-    subtitle: { en: "Days 5 & 6 · Kawaguchiko, Oshino Hakkai, optional Chureito", ja: "5日目・6日目 · 河口湖、忍野八海、忠霊塔は任意" }
-  },
-  tokyo: {
-    coordinates: [139.6917, 35.6895],
-    title: { en: "Tokyo", ja: "東京" },
-    subtitle: { en: "Day 7 onward · Shibuya finish", ja: "7日目以降 · 渋谷で締め" }
-  }
-};
-const routeMapSegmentDefinitions = [
-  { id: "segment-osaka-start-kyoto", from: "osakaStart", to: "kyoto", day: "2", kind: "main" },
-  { id: "segment-kyoto-osaka-return", from: "kyoto", to: "osakaReturn", day: "3", kind: "main" },
-  { id: "segment-osaka-return-shin-osaka", from: "osakaReturn", to: "shinOsaka", day: "4", kind: "main" },
-  { id: "segment-shin-osaka-odawara", from: "shinOsaka", to: "odawara", day: "4", kind: "main" },
-  { id: "segment-odawara-hakone", from: "odawara", to: "hakone", day: "4", kind: "main" },
-  { id: "segment-hakone-fuji", from: "hakone", to: "fuji", day: "5", kind: "main" },
-  { id: "segment-fuji-tokyo", from: "fuji", to: "tokyo", day: "7", kind: "main" }
-];
 const routeStopProgressConfig = {
   osakaStart: { stopId: "route-stop-osaka-start", days: ["1"] },
   kyoto: { stopId: "route-stop-kyoto", days: ["2"] },
@@ -378,19 +331,12 @@ let lastTimelineFocusDay = null;
 let optionalDaysUnlocked = false;
 let optionalPromptIsCompact = false;
 let optionalPromptDeferred = false;
-let routeMapInstance = null;
-let routeMapLibraryPromise = null;
-let routeMapInitializationPromise = null;
-let routeMapSegmentsPromise = null;
-let routeMapSegments = [];
-let routeMapMarkers = new Map();
 let routeMapStatusMode = null;
-let routeMapInteractive = false;
-let routeMapDragArmed = false;
-let routeMapDragPointerId = null;
 let routeMapLiveReady = false;
-let routeMapViewportSize = { width: 0, height: 0 };
-let routeMapHasFittedBounds = false;
+let routeExperienceStylesPromise = null;
+let routeMapControllerScriptPromise = null;
+let routeMapControllerPromise = null;
+let routeMapController = null;
 let lastResetTrigger = null;
 let dayCardRowEqualizeFrame = 0;
 let backToTopMotionResetTimer = 0;
@@ -557,8 +503,24 @@ function applyRouteTheme() {
   routeDoc.documentElement.dataset.theme = getCurrentTheme();
 }
 
+function isLikelyLowerPowerDevice() {
+  const deviceMemory = Number(navigator.deviceMemory || 0);
+  const hardwareConcurrency = Number(navigator.hardwareConcurrency || 0);
+
+  return (
+    (deviceMemory > 0 && deviceMemory <= 4) ||
+    (hardwareConcurrency > 0 && hardwareConcurrency <= 4)
+  );
+}
+
 function shouldReduceEffects() {
-  return aggressivePerformanceMode || reducedMotionQuery.matches;
+  return (
+    aggressivePerformanceMode ||
+    reducedMotionQuery.matches ||
+    coarsePointerQuery.matches ||
+    compactViewportQuery.matches ||
+    isLikelyLowerPowerDevice()
+  );
 }
 
 function syncReducedEffectsMode({ force = false } = {}) {
@@ -1388,49 +1350,175 @@ function setRouteMapLiveReady(isReady) {
   routeMapLiveReady = Boolean(isReady);
   routeMapPreview?.toggleAttribute("hidden", routeMapLiveReady);
   routeMapSurface?.classList.toggle("is-map-ready", routeMapLiveReady);
-
-  if (!routeMapLiveReady) {
-    routeMapViewportSize = { width: 0, height: 0 };
-    routeMapHasFittedBounds = false;
-  }
 }
 
-function getRouteMapViewportSize() {
-  if (!routeMapCanvas) {
-    return { width: 0, height: 0 };
-  }
+function buildRouteMapStateSnapshot() {
+  const dayProgress = {};
+  dayCards.forEach((card) => {
+    dayProgress[card.dataset.day] = getDayCompletionRatio(card);
+  });
 
   return {
-    width: Math.round(routeMapCanvas.clientWidth),
-    height: Math.round(routeMapCanvas.clientHeight)
+    language: root.lang === "ja" ? "ja" : "en",
+    theme: getCurrentTheme(),
+    accessibleDay,
+    currentProgressDay,
+    optionalDaysUnlocked,
+    completedDays: Array.from(completedDays),
+    unlockedDays: Array.from(unlockedDays),
+    warningDays: Array.from(warningDays),
+    dayProgress
   };
 }
 
-function syncRouteMapViewport({ force = false, fit = false } = {}) {
-  if (!routeMapInstance || !routeMapLiveReady) {
-    return;
+function ensureRouteExperienceStyles() {
+  if (!routeMapPanel) {
+    return Promise.resolve(null);
   }
 
-  const nextSize = getRouteMapViewportSize();
-  if (!nextSize.width || !nextSize.height) {
-    return;
+  const existingLink = document.querySelector("link[data-route-experience='css']");
+  if (existingLink) {
+    return Promise.resolve(existingLink);
   }
 
-  const sizeChanged =
-    force ||
-    nextSize.width !== routeMapViewportSize.width ||
-    nextSize.height !== routeMapViewportSize.height;
-
-  if (!sizeChanged && !(fit && !routeMapHasFittedBounds)) {
-    return;
+  if (routeExperienceStylesPromise) {
+    return routeExperienceStylesPromise;
   }
 
-  routeMapViewportSize = nextSize;
-  routeMapInstance.resize();
+  routeExperienceStylesPromise = new Promise((resolve, reject) => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = routeExperienceAssetUrls.css;
+    link.dataset.routeExperience = "css";
+    link.addEventListener(
+      "load",
+      () => {
+        scheduleDayCardRowHeights();
+        resolve(link);
+      },
+      { once: true }
+    );
+    link.addEventListener(
+      "error",
+      () => {
+        routeExperienceStylesPromise = null;
+        reject(new Error("Route experience styles failed to load."));
+      },
+      { once: true }
+    );
+    document.head.append(link);
+  });
 
-  if (fit || !routeMapHasFittedBounds) {
-    fitRouteMapBounds();
+  return routeExperienceStylesPromise;
+}
+
+function loadRouteMapControllerScript() {
+  if (typeof window.createJapanTripRouteMapController === "function") {
+    return Promise.resolve(window.createJapanTripRouteMapController);
   }
+
+  if (routeMapControllerScriptPromise) {
+    return routeMapControllerScriptPromise;
+  }
+
+  routeMapControllerScriptPromise = new Promise((resolve, reject) => {
+    let script = document.querySelector("script[data-route-map-controller='script']");
+
+    if (!script) {
+      script = document.createElement("script");
+      script.src = routeExperienceAssetUrls.script;
+      script.async = true;
+      script.dataset.routeMapController = "script";
+      document.head.append(script);
+    }
+
+    const resolveController = () => {
+      if (typeof window.createJapanTripRouteMapController === "function") {
+        resolve(window.createJapanTripRouteMapController);
+      } else {
+        routeMapControllerScriptPromise = null;
+        reject(new Error("Route map controller did not initialize."));
+      }
+    };
+
+    script.addEventListener("load", resolveController, { once: true });
+    script.addEventListener(
+      "error",
+      () => {
+        routeMapControllerScriptPromise = null;
+        reject(new Error("Route map controller failed to load."));
+      },
+      { once: true }
+    );
+
+    if (typeof window.createJapanTripRouteMapController === "function") {
+      resolveController();
+    }
+  });
+
+  return routeMapControllerScriptPromise;
+}
+
+function ensureRouteMapController() {
+  if (!routeMapCanvas || !routeMapSurface) {
+    return Promise.resolve(null);
+  }
+
+  if (routeMapController) {
+    return Promise.resolve(routeMapController);
+  }
+
+  if (routeMapControllerPromise) {
+    return routeMapControllerPromise;
+  }
+
+  routeMapControllerPromise = Promise.all([
+    ensureRouteExperienceStyles(),
+    loadRouteMapControllerScript()
+  ])
+    .then(() => {
+      if (typeof window.createJapanTripRouteMapController !== "function") {
+        throw new Error("Route map controller is unavailable.");
+      }
+
+      routeMapController = window.createJapanTripRouteMapController({
+        panel: routeMapPanel,
+        surface: routeMapSurface,
+        canvas: routeMapCanvas,
+        assetUrls: routeMapControllerAssetUrls,
+        getState: buildRouteMapStateSnapshot,
+        onStatusChange: (nextStatusMode) => {
+          routeMapStatusMode = nextStatusMode;
+          renderRouteMapStatus();
+        },
+        onLiveReadyChange: (isReady) => {
+          setRouteMapLiveReady(isReady);
+        },
+        onShowSequenceNotice: (requiredDay) => {
+          showSequenceNotice(requiredDay);
+        },
+        onScrollToDay: (day) => {
+          scrollToChecklistDay(day);
+        }
+      });
+
+      syncRouteMapState();
+      return routeMapController;
+    })
+    .catch((error) => {
+      routeMapControllerPromise = null;
+      throw error;
+    });
+
+  return routeMapControllerPromise;
+}
+
+function primeRouteExperience() {
+  return ensureRouteMapController().catch(() => null);
+}
+
+function syncRouteMapViewport(options = {}) {
+  routeMapController?.resize(options);
 }
 
 function setRouteMapOpen(nextOpen) {
@@ -1444,14 +1532,16 @@ function setRouteMapOpen(nextOpen) {
   updateRouteMapToggleLabel();
 
   if (!isOpen) {
-    setRouteMapInteractive(false);
+    routeMapController?.setInteractive(false);
     return;
   }
 
-  if (routeMapInstance && routeMapLiveReady) {
+  primeRouteExperience();
+
+  if (routeMapController?.isLiveReady()) {
     window.requestAnimationFrame(() => {
       syncRouteMapViewport();
-      setRouteMapInteractive(false);
+      routeMapController?.setInteractive(false);
       syncRouteMapState();
     });
   }
@@ -1465,755 +1555,44 @@ function loadInteractiveRouteMap() {
   if (routeMapLiveReady) {
     window.requestAnimationFrame(() => {
       syncRouteMapViewport({ force: true });
-      setRouteMapInteractive(false);
+      routeMapController?.setInteractive(false);
       syncRouteMapState();
     });
-    return Promise.resolve(routeMapInstance);
+    return Promise.resolve(routeMapController);
   }
 
   setRouteMapLoadPending(true);
-
-  return initializeRouteMap()
-    .then((map) => {
-      setRouteMapLiveReady(true);
-      setRouteMapLoadPending(false);
-      syncRouteMapViewport({ force: true, fit: true });
-      setRouteMapInteractive(false);
-      syncRouteMapState();
-      return map;
-    })
-    .catch((error) => {
-      routeMapStatusMode = "error";
-      renderRouteMapStatus();
-      setRouteMapLoadPending(false);
-      throw error;
-    });
-}
-
-function ensureRouteMapAssets() {
-  if (window.maplibregl) {
-    return Promise.resolve(window.maplibregl);
-  }
-
-  if (routeMapLibraryPromise) {
-    return routeMapLibraryPromise;
-  }
-
-  routeMapLibraryPromise = new Promise((resolve, reject) => {
-    let script = document.querySelector("script[data-route-maplibre='script']");
-    const existingLink = document.querySelector("link[data-route-maplibre='css']");
-
-    if (!existingLink) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = routeMapAssetUrls.css;
-      link.dataset.routeMaplibre = "css";
-      document.head.append(link);
-    }
-
-    if (!script) {
-      script = document.createElement("script");
-      script.src = routeMapAssetUrls.js;
-      script.async = true;
-      script.dataset.routeMaplibre = "script";
-      document.head.append(script);
-    }
-
-    const resolveLibrary = () => {
-      if (window.maplibregl) {
-        resolve(window.maplibregl);
-      } else {
-        reject(new Error("MapLibre library failed to initialize."));
-      }
-    };
-
-    script.addEventListener("load", resolveLibrary, { once: true });
-    script.addEventListener(
-      "error",
-      () => {
-        routeMapLibraryPromise = null;
-        reject(new Error("MapLibre library failed to load."));
-      },
-      { once: true }
-    );
-
-    if (window.maplibregl) {
-      resolve(window.maplibregl);
-    }
-  });
-
-  return routeMapLibraryPromise;
-}
-
-function getRouteMapPalette() {
-  const isDark = getCurrentTheme() === "dark";
-  if (isDark) {
-    return {
-      background: "#14171b",
-      rasterOpacity: 0.54,
-      rasterSaturation: -0.72,
-      rasterContrast: 0.18,
-      rasterBrightnessMin: 0.18,
-      rasterBrightnessMax: 0.88,
-      complete: "#d7745f",
-      current: "#f0c1b4",
-      warning: "#d09d59",
-      available: "#a77466",
-      locked: "#524844"
-    };
-  }
-
-  return {
-    background: "#f2ece5",
-    rasterOpacity: 0.82,
-    rasterSaturation: -0.28,
-    rasterContrast: 0.08,
-    rasterBrightnessMin: 0.48,
-    rasterBrightnessMax: 1,
-    complete: "#b55446",
-    current: "#de8c78",
-    warning: "#bf9151",
-    available: "#b89082",
-    locked: "#91857f"
-  };
-}
-
-function buildRouteMapStyle() {
-  const palette = getRouteMapPalette();
-
-  return {
-    version: 8,
-    sources: {
-      osmRaster: {
-        type: "raster",
-        tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-        tileSize: 256,
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>'
-      }
-    },
-    layers: [
-      {
-        id: "route-map-background",
-        type: "background",
-        paint: {
-          "background-color": palette.background
-        }
-      },
-      {
-        id: "route-map-raster",
-        type: "raster",
-        source: "osmRaster",
-        paint: {
-          "raster-opacity": palette.rasterOpacity,
-          "raster-saturation": palette.rasterSaturation,
-          "raster-contrast": palette.rasterContrast,
-          "raster-brightness-min": palette.rasterBrightnessMin,
-          "raster-brightness-max": palette.rasterBrightnessMax
-        }
-      }
-    ]
-  };
-}
-
-function buildFallbackGeometry(fromCoordinates, toCoordinates) {
-  return {
-    type: "LineString",
-    coordinates: [fromCoordinates, toCoordinates]
-  };
-}
-
-function getFallbackRouteMapSegments() {
-  return routeMapSegmentDefinitions.map((segment) => ({
-    ...segment,
-    geometry: buildFallbackGeometry(
-      routeMapStops[segment.from].coordinates,
-      routeMapStops[segment.to].coordinates
-    ),
-    usesFallback: true
-  }));
-}
-
-async function loadRouteMapSegments() {
-  if (routeMapSegments.length) {
-    return routeMapSegments;
-  }
-
-  if (!routeMapSegmentsPromise) {
-    routeMapSegmentsPromise = window.fetch(routeMapSegmentsUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Route map data request failed with status ${response.status}.`);
-        }
-
-        return response.json();
-      })
-      .then((data) => {
-        if (!Array.isArray(data)) {
-          throw new Error("Route map data is not an array.");
-        }
-
-        const storedSegments = new Map(data.map((segment) => [segment.id, segment]));
-        const segments = routeMapSegmentDefinitions.map((segment) => {
-          const storedSegment = storedSegments.get(segment.id);
-          const fallbackGeometry = buildFallbackGeometry(
-            routeMapStops[segment.from].coordinates,
-            routeMapStops[segment.to].coordinates
-          );
-          const hasValidGeometry =
-            storedSegment?.geometry?.type === "LineString" &&
-            Array.isArray(storedSegment.geometry.coordinates) &&
-            storedSegment.geometry.coordinates.length > 1;
-
-          return {
-            ...segment,
-            geometry: hasValidGeometry ? storedSegment.geometry : fallbackGeometry,
-            usesFallback: Boolean(storedSegment?.usesFallback) || !hasValidGeometry
-          };
-        });
-
-        routeMapStatusMode = segments.some((segment) => segment.usesFallback) ? "fallback" : null;
-        routeMapSegments = segments;
-        return segments;
-      })
-      .catch(() => {
-        const fallbackSegments = getFallbackRouteMapSegments();
-        routeMapStatusMode = "fallback";
-        routeMapSegments = fallbackSegments;
-        return fallbackSegments;
-      });
-  }
-
-  return routeMapSegmentsPromise;
-}
-
-function getRouteMapSegmentState(dayKey) {
-  if (warningDays.has(dayKey)) {
-    return "warning";
-  }
-
-  if (completedDays.has(dayKey)) {
-    return "complete";
-  }
-
-  if (String(currentProgressDay) === dayKey && unlockedDays.has(dayKey)) {
-    return "current";
-  }
-
-  if (unlockedDays.has(dayKey)) {
-    return "available";
-  }
-
-  return "locked";
-}
-
-function buildRouteMapFeatureCollection() {
-  return {
-    type: "FeatureCollection",
-    features: routeMapSegments.map((segment) => ({
-      type: "Feature",
-      properties: {
-        id: segment.id,
-        kind: segment.kind,
-        state: getRouteMapSegmentState(segment.day)
-      },
-      geometry: segment.geometry
-    }))
-  };
-}
-
-function addRouteMapLayers() {
-  if (!routeMapInstance || routeMapInstance.getSource("route-map-segments")) {
-    return;
-  }
-
-  const palette = getRouteMapPalette();
-
-  routeMapInstance.addSource("route-map-segments", {
-    type: "geojson",
-    data: buildRouteMapFeatureCollection()
-  });
-
-  const segmentColorExpression = [
-    "match",
-    ["get", "state"],
-    "complete",
-    palette.complete,
-    "current",
-    palette.current,
-    "warning",
-    palette.warning,
-    "available",
-    palette.available,
-    palette.locked
-  ];
-  const segmentOpacityExpression = [
-    "match",
-    ["get", "state"],
-    "complete",
-    0.98,
-    "current",
-    0.94,
-    "warning",
-    0.9,
-    "available",
-    0.58,
-    0
-  ];
-
-  routeMapInstance.addLayer({
-    id: "route-map-main-base",
-    type: "line",
-    source: "route-map-segments",
-    filter: ["==", ["get", "kind"], "main"],
-    layout: {
-      "line-cap": "round",
-      "line-join": "round"
-    },
-    paint: {
-      "line-color": "rgba(255, 243, 235, 0.24)",
-      "line-width": ["interpolate", ["linear"], ["zoom"], 4, 3.4, 7, 5.4],
-      "line-opacity": 0.5
-    }
-  });
-
-  routeMapInstance.addLayer({
-    id: "route-map-main-glow",
-    type: "line",
-    source: "route-map-segments",
-    filter: ["==", ["get", "kind"], "main"],
-    layout: {
-      "line-cap": "round",
-      "line-join": "round"
-    },
-    paint: {
-      "line-color": segmentColorExpression,
-      "line-width": ["interpolate", ["linear"], ["zoom"], 4, 7.6, 7, 11.4],
-      "line-opacity": ["*", segmentOpacityExpression, 0.28],
-      "line-blur": 8
-    }
-  });
-
-  routeMapInstance.addLayer({
-    id: "route-map-main-active",
-    type: "line",
-    source: "route-map-segments",
-    filter: ["==", ["get", "kind"], "main"],
-    layout: {
-      "line-cap": "round",
-      "line-join": "round"
-    },
-    paint: {
-      "line-color": segmentColorExpression,
-      "line-width": ["interpolate", ["linear"], ["zoom"], 4, 3.8, 7, 5.8],
-      "line-opacity": segmentOpacityExpression
-    }
-  });
-
-  routeMapInstance.addLayer({
-    id: "route-map-branch-base",
-    type: "line",
-    source: "route-map-segments",
-    filter: ["==", ["get", "kind"], "branch"],
-    layout: {
-      "line-cap": "round",
-      "line-join": "round"
-    },
-    paint: {
-      "line-color": "rgba(255, 243, 235, 0.18)",
-      "line-width": ["interpolate", ["linear"], ["zoom"], 4, 2.2, 7, 3.4],
-      "line-opacity": 0.52,
-      "line-dasharray": [0.4, 1.7]
-    }
-  });
-
-  routeMapInstance.addLayer({
-    id: "route-map-branch-active",
-    type: "line",
-    source: "route-map-segments",
-    filter: ["==", ["get", "kind"], "branch"],
-    layout: {
-      "line-cap": "round",
-      "line-join": "round"
-    },
-    paint: {
-      "line-color": segmentColorExpression,
-      "line-width": ["interpolate", ["linear"], ["zoom"], 4, 2.7, 7, 3.9],
-      "line-opacity": ["*", segmentOpacityExpression, 0.94],
-      "line-dasharray": [0.35, 1.75]
-    }
-  });
-}
-
-function buildRouteMapPopupContent(stopKey) {
-  const language = root.lang === "ja" ? "ja" : "en";
-  const stop = routeMapStops[stopKey];
-
-  return `
-    <p class="route-map__popup-title">${stop.title[language]}</p>
-    <p class="route-map__popup-meta">${stop.subtitle[language]}</p>
-  `;
-}
-
-function getPreferredDayForStop(stopKey) {
-  const config = routeStopProgressConfig[stopKey];
-  if (!config) {
-    return 1;
-  }
-
-  const relevantDays = config.days.filter((day) => optionalDaysUnlocked || Number(day) <= 7);
-  const incompleteUnlockedDay = relevantDays.find(
-    (day) => unlockedDays.has(day) && !completedDays.has(day)
-  );
-  if (incompleteUnlockedDay) {
-    return Number(incompleteUnlockedDay);
-  }
-
-  const currentDay = relevantDays.find((day) => day === String(currentProgressDay));
-  if (currentDay) {
-    return Number(currentDay);
-  }
-
-  const latestUnlockedDay = [...relevantDays].reverse().find((day) => unlockedDays.has(day));
-  return Number(latestUnlockedDay || relevantDays[0] || 1);
-}
-
-function getRouteMapStopState(stopKey) {
-  const config = routeStopProgressConfig[stopKey];
-  const relevantDays = config.days.filter((day) => optionalDaysUnlocked || Number(day) <= 7);
-  const isComplete = relevantDays.length > 0 && relevantDays.every((day) => completedDays.has(day));
-  const isCurrent = stopKey === routeDayToStopKey[getCurrentProgressDay()];
-  const isWarning = relevantDays.some((day) => warningDays.has(day));
-  const isUnlocked = relevantDays.some((day) => unlockedDays.has(day));
-  const hasProgress = relevantDays.some((day) => {
-    const dayCard = dayCardMap.get(day);
-    return dayCard ? getDayCompletionRatio(dayCard) > 0 : false;
-  });
-
-  return {
-    isComplete,
-    isCurrent,
-    isWarning,
-    isUnlocked,
-    hasProgress
-  };
-}
-
-function createRouteMapMarkers(maplibregl) {
-  if (!routeMapInstance) {
-    return;
-  }
-
-  routeMapMarkers.forEach(({ marker }) => marker.remove());
-  routeMapMarkers = new Map();
-
-  Object.entries(routeMapStops).forEach(([stopKey, stop]) => {
-    const markerElement = document.createElement("button");
-    markerElement.type = "button";
-    markerElement.className = "route-map__marker";
-    markerElement.setAttribute("aria-label", stop.title[root.lang === "ja" ? "ja" : "en"]);
-
-    const popup = new maplibregl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      offset: 18,
-      className: "route-map__popup"
-    });
-
-    const marker = new maplibregl.Marker({
-      element: markerElement,
-      anchor: "center"
-    })
-      .setLngLat(stop.coordinates)
-      .addTo(routeMapInstance);
-
-    const showPopup = () => {
-      markerElement.classList.add("is-hovered");
-      popup
-        .setLngLat(stop.coordinates)
-        .setHTML(buildRouteMapPopupContent(stopKey))
-        .addTo(routeMapInstance);
-    };
-
-    const hidePopup = () => {
-      markerElement.classList.remove("is-hovered");
-      popup.remove();
-    };
-
-    markerElement.addEventListener("mouseenter", showPopup);
-    markerElement.addEventListener("mouseleave", hidePopup);
-    markerElement.addEventListener("focus", showPopup);
-    markerElement.addEventListener("blur", hidePopup);
-    markerElement.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const targetDay = getPreferredDayForStop(stopKey);
-      if (targetDay > accessibleDay || !unlockedDays.has(String(targetDay))) {
-        showSequenceNotice(accessibleDay);
-        return;
-      }
-
-      hidePopup();
-      scrollToChecklistDay(targetDay);
-    });
-
-    markerElement.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        markerElement.click();
-      }
-    });
-
-    routeMapMarkers.set(stopKey, { marker, markerElement, popup });
-  });
-}
-
-function fitRouteMapBounds(animate = false) {
-  if (!routeMapInstance || !window.maplibregl) {
-    return;
-  }
-
-  const bounds = new window.maplibregl.LngLatBounds();
-  Object.values(routeMapStops).forEach((stop) => bounds.extend(stop.coordinates));
-
-  routeMapInstance.fitBounds(bounds, {
-    padding: { top: 36, right: 34, bottom: 40, left: 34 },
-    duration: animate ? 780 : 0,
-    maxZoom: 6.25
-  });
-  routeMapHasFittedBounds = true;
-}
-
-function setRouteMapInteractive(isInteractive) {
-  routeMapInteractive = Boolean(isInteractive);
-  routeMapDragArmed = false;
-  routeMapDragPointerId = null;
-
-  routeMapSurface?.classList.toggle("is-interactive", routeMapInteractive);
-  routeMapPanel?.parentElement?.classList.toggle("is-map-interactive", routeMapInteractive);
-
-  if (!routeMapInstance) {
-    return;
-  }
-
-  if (routeMapInteractive) {
-    routeMapInstance.scrollZoom.enable();
-    routeMapInstance.dragPan.enable();
-    routeMapInstance.boxZoom.enable();
-    routeMapInstance.doubleClickZoom.enable();
-    routeMapInstance.keyboard.enable();
-    routeMapInstance.touchZoomRotate.enable();
-    routeMapInstance.touchZoomRotate.disableRotation();
-    return;
-  }
-
-  routeMapInstance.scrollZoom.disable();
-  routeMapInstance.dragPan.disable();
-  routeMapInstance.boxZoom.disable();
-  routeMapInstance.doubleClickZoom.disable();
-  routeMapInstance.keyboard.disable();
-  routeMapInstance.touchZoomRotate.disable();
-}
-
-function armRouteMapDrag(pointerId = null) {
-  routeMapDragArmed = true;
-  routeMapDragPointerId = pointerId;
-
-  if (!routeMapInstance || routeMapInteractive) {
-    return;
-  }
-
-  routeMapInstance.dragPan.enable();
-  routeMapInstance.touchZoomRotate.enable();
-  routeMapInstance.touchZoomRotate.disableRotation();
-}
-
-function disarmRouteMapDrag(pointerId = null) {
-  if (!routeMapDragArmed) {
-    return;
-  }
-
-  if (pointerId !== null && routeMapDragPointerId !== null && routeMapDragPointerId !== pointerId) {
-    return;
-  }
-
-  routeMapDragArmed = false;
-  routeMapDragPointerId = null;
-
-  if (!routeMapInstance || routeMapInteractive) {
-    return;
-  }
-
-  routeMapInstance.dragPan.disable();
-  routeMapInstance.touchZoomRotate.disable();
-}
-
-function syncRouteMapState() {
-  if (!routeMapInstance) {
-    updateRouteMapToggleLabel();
-    renderRouteMapStatus();
-    return;
-  }
-
-  const source = routeMapInstance.getSource("route-map-segments");
-  if (source) {
-    source.setData(buildRouteMapFeatureCollection());
-  }
-
-  routeMapMarkers.forEach(({ markerElement, popup }, stopKey) => {
-    const { isComplete, isCurrent, isWarning, isUnlocked, hasProgress } = getRouteMapStopState(stopKey);
-    const language = root.lang === "ja" ? "ja" : "en";
-    const stop = routeMapStops[stopKey];
-
-    markerElement.classList.toggle("is-complete", isComplete);
-    markerElement.classList.toggle("is-current", isCurrent);
-    markerElement.classList.toggle("is-warning", isWarning);
-    markerElement.classList.toggle("is-locked", !isUnlocked);
-    markerElement.classList.toggle("is-progress", hasProgress && !isComplete && !isWarning);
-    markerElement.setAttribute("aria-label", stop.title[language]);
-
-    if (popup.isOpen()) {
-      popup.setHTML(buildRouteMapPopupContent(stopKey));
-    }
-  });
-
-  updateRouteMapToggleLabel();
-  renderRouteMapStatus();
-}
-
-function refreshRouteMapTheme() {
-  if (!routeMapInstance || !window.maplibregl) {
-    return;
-  }
-
-  const currentCenter = routeMapInstance.getCenter();
-  const currentZoom = routeMapInstance.getZoom();
-  const currentBearing = routeMapInstance.getBearing();
-  const currentPitch = routeMapInstance.getPitch();
-
-  routeMapInstance.once("style.load", () => {
-    addRouteMapLayers();
-    createRouteMapMarkers(window.maplibregl);
-    routeMapInstance.jumpTo({
-      center: currentCenter,
-      zoom: currentZoom,
-      bearing: currentBearing,
-      pitch: currentPitch
-    });
-    syncRouteMapState();
-  });
-
-  routeMapInstance.setStyle(buildRouteMapStyle());
-}
-
-async function initializeRouteMap() {
-  if (!routeMapCanvas) {
-    return null;
-  }
-
-  if (routeMapInstance) {
-    return routeMapInstance;
-  }
-
-  if (routeMapInitializationPromise) {
-    return routeMapInitializationPromise;
-  }
-
   routeMapStatusMode = "loading";
   renderRouteMapStatus();
 
-  routeMapInitializationPromise = ensureRouteMapAssets()
-    .then((maplibregl) => new Promise((resolve, reject) => {
-      let didSettle = false;
-
-      const settleSuccess = () => {
-        if (didSettle) {
-          return false;
-        }
-
-        didSettle = true;
-        window.clearTimeout(loadTimeoutId);
-        return true;
-      };
-
-      const settleError = (error) => {
-        if (didSettle) {
-          return;
-        }
-
-        didSettle = true;
-        window.clearTimeout(loadTimeoutId);
-        routeMapStatusMode = "error";
-        renderRouteMapStatus();
-        reject(error);
-      };
-
-      const loadTimeoutId = window.setTimeout(() => {
-        settleError(new Error("Map load timed out."));
-      }, routeMapLoadTimeoutMs);
-
-      routeMapInstance = new maplibregl.Map({
-        container: routeMapCanvas,
-        style: buildRouteMapStyle(),
-        center: [137.52, 35.21],
-        zoom: 5.25,
-        minZoom: 4.65,
-        maxZoom: 9,
-        attributionControl: false,
-        dragRotate: false,
-        preserveDrawingBuffer: false
-      });
-
-      routeMapInstance.addControl(
-        new maplibregl.AttributionControl({ compact: true }),
-        "bottom-right"
-      );
-      routeMapInstance.addControl(
-        new maplibregl.NavigationControl({
-          showCompass: false,
-          visualizePitch: false
-        }),
-        "top-right"
-      );
-      routeMapInstance.dragRotate.disable();
-      routeMapInstance.touchZoomRotate.disableRotation();
-      setRouteMapInteractive(false);
-      routeMapInstance.on("dragstart", () => {
-        if (!routeMapInteractive) {
-          setRouteMapInteractive(true);
-        }
-      });
-
-      routeMapInstance.once("load", async () => {
-        try {
-          routeMapSegments = await loadRouteMapSegments();
-          addRouteMapLayers();
-          createRouteMapMarkers(maplibregl);
-          syncRouteMapState();
-          if (!settleSuccess()) {
-            return;
-          }
-          resolve(routeMapInstance);
-        } catch (error) {
-          settleError(error);
-        }
-      });
-    }))
-    .catch((error) => {
-      if (routeMapInstance) {
-        routeMapInstance.remove();
+  return ensureRouteMapController()
+    .then((controller) => {
+      if (!controller) {
+        throw new Error("Route map controller is unavailable.");
       }
 
-      routeMapInitializationPromise = null;
-      routeMapInstance = null;
-      setRouteMapLiveReady(false);
+      return controller.loadInteractive(buildRouteMapStateSnapshot());
+    })
+    .then((controller) => {
+      setRouteMapLoadPending(false);
+      syncRouteMapState();
+      return controller;
+    })
+    .catch((error) => {
       routeMapStatusMode = "error";
       renderRouteMapStatus();
+      setRouteMapLoadPending(false);
       throw error;
     });
+}
+function syncRouteMapState() {
+  updateRouteMapToggleLabel();
+  renderRouteMapStatus();
+  routeMapController?.sync(buildRouteMapStateSnapshot());
+}
 
-  return routeMapInitializationPromise;
+function refreshRouteMapTheme() {
+  routeMapController?.refreshTheme(buildRouteMapStateSnapshot());
 }
 
 function syncOptionalDaysUI() {
@@ -2864,7 +2243,7 @@ function applyTheme(theme, options = {}) {
     storeThemePreference(nextTheme);
   }
 
-  if (routeMapInstance) {
+  if (routeMapController) {
     refreshRouteMapTheme();
   }
 }
@@ -2906,6 +2285,10 @@ function setActivePanel(panelId) {
       initializeBookingTransit();
     }
 
+    if (panelId === "route") {
+      primeRouteExperience();
+    }
+
     if (
       panelId === "checklist" &&
       optionalPromptDeferred &&
@@ -2922,7 +2305,7 @@ function setActivePanel(panelId) {
     scheduleDayCardRowHeights();
     if (
       panelId === "route" &&
-      routeMapInstance &&
+      routeMapController?.isLiveReady() &&
       routeMapToggle?.getAttribute("aria-expanded") === "true"
     ) {
       window.requestAnimationFrame(() => {
@@ -3088,7 +2471,11 @@ restoreChecklistState();
 refreshChecklistProgressState();
 
 registerRevealBlocks();
-setActivePanel(readStoredActivePanel() || "overview");
+const initialPanelId = readStoredActivePanel() || "overview";
+if (initialPanelId === "route") {
+  primeRouteExperience();
+}
+setActivePanel(initialPanelId);
 setActiveProgressItem(getCurrentProgressDay());
 syncParallax();
 syncProgressTimeline();
@@ -3174,47 +2561,6 @@ if (routeMapLoadButton) {
   });
 }
 
-if (routeMapSurface) {
-  routeMapSurface.addEventListener(
-    "pointerdown",
-    (event) => {
-      if (event.button !== 0 || !event.isPrimary || routeMapInteractive || !routeMapLiveReady) {
-        return;
-      }
-
-      armRouteMapDrag(event.pointerId);
-    },
-    { capture: true }
-  );
-
-  routeMapSurface.addEventListener("pointerup", (event) => {
-    if (!routeMapInteractive) {
-      disarmRouteMapDrag(event.pointerId);
-    }
-  });
-
-  routeMapSurface.addEventListener("pointercancel", (event) => {
-    if (!routeMapInteractive) {
-      disarmRouteMapDrag(event.pointerId);
-    }
-  });
-
-  routeMapSurface.addEventListener("pointerleave", (event) => {
-    if (routeMapInteractive) {
-      if (event.buttons !== 0) {
-        return;
-      }
-
-      setRouteMapInteractive(false);
-      return;
-    }
-
-    if (event.buttons === 0) {
-      disarmRouteMapDrag();
-    }
-  });
-}
-
 if (jumpCurrentDayButton) {
   jumpCurrentDayButton.addEventListener("click", () => {
     scrollToChecklistDay(getCurrentProgressDay());
@@ -3280,45 +2626,8 @@ if (resetProgressModal) {
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && routeMapInteractive) {
-    setRouteMapInteractive(false);
-    return;
-  }
-
   if (event.key === "Escape" && resetProgressModal && !resetProgressModal.hidden) {
     setResetModalOpen(false);
-  }
-});
-
-document.addEventListener("pointerdown", (event) => {
-  if (!routeMapInteractive || !routeMapSurface) {
-    return;
-  }
-
-  if (!routeMapSurface.contains(event.target)) {
-    setRouteMapInteractive(false);
-  }
-});
-
-document.addEventListener("pointerup", (event) => {
-  if (routeMapInteractive && routeMapSurface && !routeMapSurface.contains(event.target)) {
-    setRouteMapInteractive(false);
-    return;
-  }
-
-  if (!routeMapInteractive) {
-    disarmRouteMapDrag(event.pointerId);
-  }
-});
-
-document.addEventListener("pointercancel", (event) => {
-  if (routeMapInteractive) {
-    setRouteMapInteractive(false);
-    return;
-  }
-
-  if (!routeMapInteractive) {
-    disarmRouteMapDrag(event.pointerId);
   }
 });
 
@@ -3369,10 +2678,6 @@ function runScrollEffects() {
 window.addEventListener(
   "scroll",
   () => {
-    if (routeMapInteractive) {
-      setRouteMapInteractive(false);
-    }
-
     if (scrollTicking) {
       return;
     }
@@ -3411,7 +2716,7 @@ if (siteHeader) {
     syncParallax();
     syncProgressTimeline();
     scheduleDayCardRowHeights();
-    if (routeMapInstance && routeMapToggle?.getAttribute("aria-expanded") === "true") {
+    if (routeMapController?.isLiveReady() && routeMapToggle?.getAttribute("aria-expanded") === "true") {
       syncRouteMapViewport();
     }
     lockHeaderState(220);
