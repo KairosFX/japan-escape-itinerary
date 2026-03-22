@@ -1307,8 +1307,8 @@ html.has-modal-open body {
 
 .essentials-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: 1fr;
-  align-items: stretch;
+  grid-auto-rows: auto;
+  align-items: start;
 }
 
 .day-grid {
@@ -1344,9 +1344,9 @@ html.has-modal-open body {
 
 .essentials-card {
   gap: 0.92rem;
-  height: 100%;
-  align-self: stretch;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  height: auto;
+  align-self: start;
+  grid-template-rows: auto auto auto;
 }
 
 .essentials-card,
@@ -1502,6 +1502,144 @@ html.has-modal-open body {
   text-decoration-thickness: 1.5px;
 }
 
+.fuji-forecast {
+  display: grid;
+  gap: 0.62rem;
+  margin-top: 0.82rem;
+  padding: 0.86rem 0.92rem;
+  border: 1px solid rgba(171, 74, 59, 0.14);
+  border-radius: calc(var(--radius-lg) - 0.12rem);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 249, 0.94), rgba(250, 243, 235, 0.88)),
+    rgba(255, 255, 255, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    0 12px 24px rgba(39, 27, 20, 0.05);
+}
+
+.fuji-forecast--summary {
+  gap: 0.42rem;
+  padding: 0.74rem 0.82rem;
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.fuji-forecast__header,
+.fuji-forecast__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+}
+
+.fuji-forecast__eyebrow,
+.fuji-forecast__label,
+.fuji-forecast__title,
+.fuji-forecast__window,
+.fuji-forecast__recommendation,
+.fuji-forecast__reason,
+.fuji-forecast__body,
+.fuji-forecast__summary-window,
+.fuji-forecast__summary-text,
+.fuji-forecast__meta {
+  margin: 0;
+}
+
+.fuji-forecast__eyebrow,
+.fuji-forecast__label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(111, 36, 31, 0.82);
+}
+
+.fuji-forecast__badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  padding: 0.22rem 0.68rem;
+  border-radius: 999px;
+  background: rgba(171, 74, 59, 0.1);
+  color: var(--accent-deep);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.fuji-forecast__title {
+  font-family: var(--font-serif);
+  font-size: 1.08rem;
+  line-height: 1.18;
+  color: var(--text);
+}
+
+.fuji-forecast__window,
+.fuji-forecast__summary-window {
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.42;
+  color: var(--text);
+}
+
+.fuji-forecast__recommendation,
+.fuji-forecast__summary-text,
+.fuji-forecast__body {
+  font-size: 0.9rem;
+  line-height: 1.58;
+  color: var(--text);
+}
+
+.fuji-forecast__reason,
+.fuji-forecast__meta {
+  font-size: 0.82rem;
+  line-height: 1.56;
+  color: var(--muted);
+}
+
+.fuji-forecast__source {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.fuji-forecast__source:hover,
+.fuji-forecast__source:focus-visible {
+  text-decoration: underline;
+}
+
+.fuji-forecast[data-state="good"] {
+  border-color: rgba(96, 136, 108, 0.24);
+  background:
+    linear-gradient(180deg, rgba(249, 253, 249, 0.96), rgba(240, 249, 243, 0.9)),
+    rgba(255, 255, 255, 0.72);
+}
+
+.fuji-forecast[data-state="good"] .fuji-forecast__badge {
+  background: rgba(96, 136, 108, 0.14);
+  color: rgba(44, 92, 56, 0.94);
+}
+
+.fuji-forecast[data-state="poor"],
+.fuji-forecast[data-state="error"] {
+  border-color: rgba(201, 165, 107, 0.28);
+  background:
+    linear-gradient(180deg, rgba(255, 251, 245, 0.96), rgba(252, 245, 234, 0.9)),
+    rgba(255, 255, 255, 0.72);
+}
+
+.fuji-forecast[data-state="poor"] .fuji-forecast__badge,
+.fuji-forecast[data-state="error"] .fuji-forecast__badge {
+  background: rgba(201, 165, 107, 0.16);
+  color: rgba(130, 92, 38, 0.96);
+}
+
+.fuji-forecast[data-state="loading"] .fuji-forecast__badge {
+  background: rgba(111, 124, 137, 0.14);
+  color: rgba(79, 88, 97, 0.94);
+}
+
 .day-card.is-complete {
   border-color: rgba(155, 60, 51, 0.22);
   background:
@@ -1642,7 +1780,7 @@ html.has-modal-open body {
 
 .essentials-card p {
   min-width: 0;
-  min-block-size: 4.45rem;
+  min-block-size: 3.35rem;
   font-size: var(--content-body-size);
   line-height: 1.68;
   color: var(--muted);
@@ -2804,6 +2942,12 @@ html.intro-done .welcome-overlay {
     min-block-size: 0;
   }
 
+  .fuji-forecast__header,
+  .fuji-forecast__meta {
+    display: grid;
+    justify-content: stretch;
+  }
+
   .welcome-overlay {
     padding: 1.4rem;
   }
@@ -3119,6 +3263,56 @@ html[data-theme="dark"] .booking-transit__empty {
   background: rgba(24, 27, 33, 0.82);
   border-color: rgba(192, 95, 80, 0.16);
   color: #e8ddd1;
+}
+
+html[data-theme="dark"] .fuji-forecast {
+  border-color: rgba(248, 239, 228, 0.08);
+  background:
+    linear-gradient(180deg, rgba(27, 30, 35, 0.96), rgba(19, 22, 27, 0.92)),
+    rgba(18, 20, 24, 0.9);
+  box-shadow:
+    0 14px 28px rgba(3, 4, 6, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+html[data-theme="dark"] .fuji-forecast__eyebrow,
+html[data-theme="dark"] .fuji-forecast__label {
+  color: rgba(236, 182, 170, 0.84);
+}
+
+html[data-theme="dark"] .fuji-forecast__badge {
+  background: rgba(192, 95, 80, 0.16);
+  color: #f3d1c6;
+}
+
+html[data-theme="dark"] .fuji-forecast__source {
+  color: #f3d1c6;
+}
+
+html[data-theme="dark"] .fuji-forecast[data-state="good"] {
+  border-color: rgba(96, 136, 108, 0.24);
+  background:
+    linear-gradient(180deg, rgba(24, 34, 29, 0.96), rgba(17, 24, 21, 0.92)),
+    rgba(18, 20, 24, 0.9);
+}
+
+html[data-theme="dark"] .fuji-forecast[data-state="good"] .fuji-forecast__badge {
+  background: rgba(96, 136, 108, 0.2);
+  color: #d4e8d8;
+}
+
+html[data-theme="dark"] .fuji-forecast[data-state="poor"],
+html[data-theme="dark"] .fuji-forecast[data-state="error"] {
+  border-color: rgba(201, 165, 107, 0.24);
+  background:
+    linear-gradient(180deg, rgba(39, 31, 24, 0.96), rgba(28, 22, 17, 0.92)),
+    rgba(18, 20, 24, 0.9);
+}
+
+html[data-theme="dark"] .fuji-forecast[data-state="poor"] .fuji-forecast__badge,
+html[data-theme="dark"] .fuji-forecast[data-state="error"] .fuji-forecast__badge {
+  background: rgba(201, 165, 107, 0.2);
+  color: #f0d39b;
 }
 
 html[data-theme="dark"] .route-map {

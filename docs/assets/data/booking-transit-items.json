@@ -19,8 +19,8 @@
       "ja": "都市部の電車、地下鉄、コンビニ利用のために、チャージ式ICカードかモバイルICを一つ準備しておくと動きやすいです。対応端末ならモバイルICが最も身軽です。"
     },
     "action": {
-      "href": "https://www.google.com/maps/search/?api=1&query=ICOCA%20Suica%20PASMO%20Japan",
-      "label": { "en": "Open Google Maps", "ja": "Googleマップで開く" }
+      "href": "https://www.jreast.co.jp/e/pass/suica.html",
+      "label": { "en": "Open IC card guide", "ja": "ICカード案内を見る" }
     }
   },
   {
@@ -43,8 +43,8 @@
       "ja": "移動日が固まったら予約しておくと安心です。荷物がある場合は指定席にしておくと、大阪から箱根への乗り継ぎがかなり楽になります。"
     },
     "action": {
-      "href": "https://www.rome2rio.com/map/Shin-Osaka-Station/Odawara-Station",
-      "label": { "en": "View route", "ja": "経路を見る" }
+      "href": "https://smart-ex.jp/en/index.php",
+      "label": { "en": "Book on Smart EX", "ja": "Smart EXで予約" }
     }
   },
   {
@@ -67,8 +67,8 @@
       "ja": "4日目の前に、料金と対象区間を確認できるようパスページを保存しておくと便利です。箱根の移動をまとめる時に、エリア全体の基準ページとして使えます。"
     },
     "action": {
-      "href": "https://www.google.com/maps/search/?api=1&query=Odawara%20Station%20Hakone%20Freepass",
-      "label": { "en": "Open Google Maps", "ja": "Googleマップで開く" }
+      "href": "https://www.odakyu.jp/english/passes/hakone/",
+      "label": { "en": "Open official pass", "ja": "公式パスを見る" }
     }
   },
   {
@@ -91,8 +91,8 @@
       "ja": "箱根周遊の変更が必要になった時にすぐ駅や運営地点へ飛べるよう、ロープウェイと鉄道周辺の信頼できる地図検索を保存しておきます。"
     },
     "action": {
-      "href": "https://www.google.com/maps/search/?api=1&query=Hakone%20Ropeway%20Hakone%20Tozan%20Railway",
-      "label": { "en": "Open Google Maps", "ja": "Googleマップで開く" }
+      "href": "https://www.hakonenavi.jp/international/en/status_information",
+      "label": { "en": "Check live status", "ja": "運行状況を見る" }
     }
   },
   {
@@ -115,8 +115,8 @@
       "ja": "箱根から富士側へ抜ける時の基準ルートです。時刻変更に対応できるよう、暗記するより経路情報を保存しておく方が実用的です。"
     },
     "action": {
-      "href": "https://www.rome2rio.com/map/Hakone/Kawaguchiko",
-      "label": { "en": "View route", "ja": "経路を見る" }
+      "href": "https://www.hakonenavi.jp/international/en/transportation",
+      "label": { "en": "Open transfer guide", "ja": "移動ガイドを見る" }
     }
   },
   {
@@ -139,8 +139,8 @@
       "ja": "東京へ入る最後の移動のために保存しておく参照ルートです。鉄道案と代替案を一つずつ持っておくと動きやすいです。"
     },
     "action": {
-      "href": "https://www.rome2rio.com/map/Kawaguchiko/Tokyo",
-      "label": { "en": "View route", "ja": "経路を見る" }
+      "href": "https://www.eki-net.com/en/jreast-train-reservation/Top/Index",
+      "label": { "en": "Book Fuji Excursion", "ja": "富士回遊を予約" }
     }
   },
   {
@@ -163,8 +163,8 @@
       "ja": "大阪ベイエリアの日に迷わないよう、海遊館の信頼できる地図結果をすぐ開ける状態にしておきます。"
     },
     "action": {
-      "href": "https://www.google.com/maps/search/?api=1&query=Kaiyukan%20Osaka%20Aquarium",
-      "label": { "en": "Open Google Maps", "ja": "Googleマップで開く" }
+      "href": "https://www.kaiyukan.com/language/eng/guide/fee/",
+      "label": { "en": "Open official tickets", "ja": "公式チケットを見る" }
     }
   },
   {
@@ -187,8 +187,8 @@
       "ja": "渋谷の屋上スポットへ向かう時に、到着位置や周辺確認を一つで済ませられるよう、信頼できる地図結果をすぐ開ける状態にしておきます。"
     },
     "action": {
-      "href": "https://www.google.com/maps/search/?api=1&query=Shibuya%20Sky%20Tokyo",
-      "label": { "en": "Open Google Maps", "ja": "Googleマップで開く" }
+      "href": "https://www.shibuya-scramble-square.com/sky/ticket/",
+      "label": { "en": "Open official tickets", "ja": "公式チケットを見る" }
     }
   }
 ]

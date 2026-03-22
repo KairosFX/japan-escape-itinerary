@@ -55,8 +55,27 @@ const optionalDaysUnlockedStorageKey = "japan-trip-optional-days-unlocked";
 const activePanelStorageKey = "japan-trip-active-panel";
 const bookingTransitStorageKey = "japan-trip-bookings-transit-state";
 const introSeenSessionKey = "japan-trip-intro-seen";
+const fujiForecastSessionKey = "japan-trip-fuji-forecast";
 const queuedStorageWrites = new Map();
 const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
+const fujiForecastCacheMaxAgeMs = 45 * 60 * 1000;
+const fujiForecastSourceUrl = "https://open-meteo.com/";
+const fujiForecastApiUrl = "https://api.open-meteo.com/v1/forecast";
+const fujiForecastTimezone = "Asia/Tokyo";
+const fujiForecastSpotConfigs = [
+  {
+    id: "kawaguchiko",
+    latitude: 35.5009,
+    longitude: 138.7681,
+    label: { en: "Kawaguchiko area", ja: "河口湖周辺" }
+  },
+  {
+    id: "chureito",
+    latitude: 35.5013,
+    longitude: 138.8073,
+    label: { en: "Arakurayama / Chureito", ja: "新倉山・忠霊塔" }
+  }
+];
 const revealBlockSelector =
   ".hero-panel, .trip-stats, .progress-card, .content-section .section-heading, .essentials-grid, .day-grid, .notes-grid, [data-optional-section], .route-map, .journey-close, .site-footer__lead, .site-footer__aside, .site-footer__credit";
 const initializedSections = new Set();
@@ -111,6 +130,8 @@ let storageWriteIdleHandle = 0;
 let bookingTransitState = { filter: "all", items: {} };
 let bookingTransitInitialized = false;
 let bookingTransitItemsPromise = null;
+let fujiForecastResult = null;
+let fujiForecastPromise = null;
 let reducedEffectsEnabled = false;
 
 function getSystemTheme() {
@@ -222,6 +243,652 @@ function loadBookingTransitItems() {
     });
 
   return bookingTransitItemsPromise;
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function average(values) {
+  if (!values.length) {
+    return 0;
+  }
+
+  return values.reduce((total, value) => total + value, 0) / values.length;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function syncLocalizedNodes(scope = document) {
+  const activeLanguage = root.lang === "ja" ? "ja" : "en";
+  scope.querySelectorAll("[data-language]").forEach((node) => {
+    node.hidden = node.dataset.language !== activeLanguage;
+  });
+}
+
+function getFujiForecastSummaryNode() {
+  return document.querySelector("[data-fuji-forecast-summary]");
+}
+
+function getFujiForecastCardNode() {
+  return document.querySelector("[data-fuji-forecast-card]");
+}
+
+function getFujiForecastSurfaceNodes() {
+  return Array.from(document.querySelectorAll("[data-fuji-forecast-surface]"));
+}
+
+function getTokyoShiftedDate(date = new Date()) {
+  return new Date(date.getTime() + 9 * 60 * 60 * 1000);
+}
+
+function formatTokyoDateKey(date) {
+  return [
+    date.getUTCFullYear(),
+    String(date.getUTCMonth() + 1).padStart(2, "0"),
+    String(date.getUTCDate()).padStart(2, "0")
+  ].join("-");
+}
+
+function getUpcomingFujiDateKeys() {
+  const shiftedNow = getTokyoShiftedDate();
+  shiftedNow.setUTCHours(0, 0, 0, 0);
+
+  return [1, 2].map((daysAhead) => {
+    const nextDate = new Date(shiftedNow);
+    nextDate.setUTCDate(nextDate.getUTCDate() + daysAhead);
+    return formatTokyoDateKey(nextDate);
+  });
+}
+
+function getFujiRelativeDayCopy(dateKey) {
+  const [tomorrowKey, followingKey] = getUpcomingFujiDateKeys();
+
+  if (dateKey === tomorrowKey) {
+    return { en: "Tomorrow", ja: "明日" };
+  }
+
+  if (dateKey === followingKey) {
+    return { en: "Day after tomorrow", ja: "あさって" };
+  }
+
+  return { en: dateKey, ja: dateKey };
+}
+
+function parseTokyoHourDate(timeString) {
+  return new Date(`${timeString}:00+09:00`);
+}
+
+function formatFujiWindowCopy(windowData) {
+  const dayLabel = getFujiRelativeDayCopy(windowData.dateKey);
+  return {
+    en: `${dayLabel.en} ${windowData.startHour}:00-${windowData.endHour}:00`,
+    ja: `${dayLabel.ja} ${windowData.startHour}:00〜${windowData.endHour}:00`
+  };
+}
+
+function formatFujiUpdatedCopy(timestamp) {
+  const formatter = new Intl.DateTimeFormat("en-GB", {
+    timeZone: fujiForecastTimezone,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+  const formattedTime = formatter.format(new Date(timestamp));
+
+  return {
+    en: `Updated ${formattedTime} JST`,
+    ja: `${formattedTime} JST 更新`
+  };
+}
+
+function getFujiWeatherCodeScore(weatherCode) {
+  if (weatherCode === 0) {
+    return 1;
+  }
+
+  if (weatherCode === 1) {
+    return 0.94;
+  }
+
+  if (weatherCode === 2) {
+    return 0.82;
+  }
+
+  if (weatherCode === 3) {
+    return 0.62;
+  }
+
+  if (weatherCode === 45 || weatherCode === 48) {
+    return 0.18;
+  }
+
+  if ([51, 53, 55, 56, 57].includes(weatherCode)) {
+    return 0.5;
+  }
+
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(weatherCode)) {
+    return 0.22;
+  }
+
+  if ([71, 73, 75, 77, 85, 86].includes(weatherCode)) {
+    return 0.12;
+  }
+
+  if (weatherCode >= 95) {
+    return 0.04;
+  }
+
+  return 0.4;
+}
+
+function buildFujiForecastUrl(spotConfig) {
+  const params = new URLSearchParams({
+    latitude: String(spotConfig.latitude),
+    longitude: String(spotConfig.longitude),
+    timezone: fujiForecastTimezone,
+    forecast_days: "3",
+    hourly:
+      "cloud_cover,visibility,weather_code,precipitation_probability,sunshine_duration"
+  });
+
+  return `${fujiForecastApiUrl}?${params.toString()}`;
+}
+
+function normalizeFujiSpotForecast(spotConfig, payload) {
+  const hourly = payload?.hourly;
+  if (!hourly?.time?.length) {
+    throw new Error(`Missing hourly forecast for ${spotConfig.id}`);
+  }
+
+  return {
+    spot: spotConfig,
+    hours: hourly.time.map((time, index) => ({
+      time,
+      dateKey: time.slice(0, 10),
+      hour: Number(time.slice(11, 13)),
+      visibilityKm: Number(hourly.visibility?.[index] ?? 0) / 1000,
+      cloudCover: Number(hourly.cloud_cover?.[index] ?? 100),
+      precipitationProbability: Number(hourly.precipitation_probability?.[index] ?? 100),
+      weatherCode: Number(hourly.weather_code?.[index] ?? 99),
+      sunshineRatio: clamp(Number(hourly.sunshine_duration?.[index] ?? 0) / 3600, 0, 1)
+    }))
+  };
+}
+
+function fetchFujiSpotForecast(spotConfig) {
+  return window
+    .fetch(buildFujiForecastUrl(spotConfig))
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Fuji forecast request failed: ${response.status}`);
+      }
+
+      return response.json();
+    })
+    .then((payload) => normalizeFujiSpotForecast(spotConfig, payload));
+}
+
+function scoreFujiSpotWindow(spotForecast, windowHours) {
+  const visibilityScore = average(windowHours.map((entry) => clamp(entry.visibilityKm / 20, 0, 1)));
+  const cloudScore = average(windowHours.map((entry) => 1 - clamp(entry.cloudCover / 100, 0, 1)));
+  const precipitationScore = average(
+    windowHours.map((entry) => 1 - clamp(entry.precipitationProbability / 100, 0, 1))
+  );
+  const weatherCodeScore = average(
+    windowHours.map(
+      (entry) => getFujiWeatherCodeScore(entry.weatherCode) * 0.72 + entry.sunshineRatio * 0.28
+    )
+  );
+  const dawnBonus = windowHours[0].hour === 5 ? 1 : 0.3;
+  const score =
+    visibilityScore * 0.35 +
+    cloudScore * 0.3 +
+    precipitationScore * 0.2 +
+    weatherCodeScore * 0.1 +
+    dawnBonus * 0.05;
+
+  return {
+    spotId: spotForecast.spot.id,
+    dateKey: windowHours[0].dateKey,
+    startHour: windowHours[0].hour,
+    endHour: windowHours[windowHours.length - 1].hour + 1,
+    score,
+    metrics: {
+      visibilityKm: average(windowHours.map((entry) => entry.visibilityKm)),
+      cloudCover: average(windowHours.map((entry) => entry.cloudCover)),
+      precipitationProbability: average(
+        windowHours.map((entry) => entry.precipitationProbability)
+      ),
+      sunshineRatio: average(windowHours.map((entry) => entry.sunshineRatio)),
+      weatherCodeScore
+    }
+  };
+}
+
+function buildFujiSpotWindowMap(spotForecast) {
+  const allowedDateKeys = new Set(getUpcomingFujiDateKeys());
+  const windowMap = new Map();
+
+  allowedDateKeys.forEach((dateKey) => {
+    const dateEntries = spotForecast.hours.filter(
+      (entry) => entry.dateKey === dateKey && entry.hour >= 4 && entry.hour <= 10
+    );
+    const hourMap = new Map(dateEntries.map((entry) => [entry.hour, entry]));
+
+    [4, 5, 6, 7].forEach((startHour) => {
+      const windowHours = [0, 1, 2]
+        .map((offset) => hourMap.get(startHour + offset))
+        .filter(Boolean);
+      if (windowHours.length !== 3) {
+        return;
+      }
+
+      const key = `${dateKey}|${startHour}`;
+      windowMap.set(key, scoreFujiSpotWindow(spotForecast, windowHours));
+    });
+  });
+
+  return windowMap;
+}
+
+function scoreFujiWindows(spotForecasts) {
+  const spotWindowMaps = new Map(
+    spotForecasts.map((spotForecast) => [spotForecast.spot.id, buildFujiSpotWindowMap(spotForecast)])
+  );
+  const chureitoWindows = spotWindowMaps.get("chureito");
+  const kawaguchikoWindows = spotWindowMaps.get("kawaguchiko");
+
+  if (!chureitoWindows || !kawaguchikoWindows) {
+    return null;
+  }
+
+  return Array.from(chureitoWindows.entries())
+    .map(([key, chureitoWindow]) => {
+      const kawaguchikoWindow = kawaguchikoWindows.get(key);
+      if (!kawaguchikoWindow) {
+        return null;
+      }
+
+      return {
+        ...chureitoWindow,
+        score: chureitoWindow.score * 0.58 + kawaguchikoWindow.score * 0.42,
+        spots: {
+          chureito: chureitoWindow,
+          kawaguchiko: kawaguchikoWindow
+        },
+        metrics: {
+          visibilityKm: average([
+            chureitoWindow.metrics.visibilityKm,
+            kawaguchikoWindow.metrics.visibilityKm
+          ]),
+          cloudCover: average([
+            chureitoWindow.metrics.cloudCover,
+            kawaguchikoWindow.metrics.cloudCover
+          ]),
+          precipitationProbability: average([
+            chureitoWindow.metrics.precipitationProbability,
+            kawaguchikoWindow.metrics.precipitationProbability
+          ]),
+          sunshineRatio: average([
+            chureitoWindow.metrics.sunshineRatio,
+            kawaguchikoWindow.metrics.sunshineRatio
+          ]),
+          weatherCodeScore: average([
+            chureitoWindow.metrics.weatherCodeScore,
+            kawaguchikoWindow.metrics.weatherCodeScore
+          ])
+        }
+      };
+    })
+    .filter(Boolean)
+    .sort((left, right) => right.score - left.score)[0];
+}
+
+function buildFujiReasonCopy(windowData) {
+  const reasonParts = [];
+  const { cloudCover, visibilityKm, precipitationProbability, sunshineRatio } = windowData.metrics;
+
+  if (cloudCover <= 32) {
+    reasonParts.push({ en: "low cloud cover", ja: "雲が少なめ" });
+  } else if (cloudCover >= 68) {
+    reasonParts.push({ en: "thick cloud cover", ja: "雲が厚め" });
+  } else {
+    reasonParts.push({ en: "mixed cloud cover", ja: "雲はやや多め" });
+  }
+
+  if (visibilityKm >= 18) {
+    reasonParts.push({ en: "good visibility", ja: "視程が良い" });
+  } else if (visibilityKm <= 10) {
+    reasonParts.push({ en: "limited visibility", ja: "視程が弱め" });
+  } else {
+    reasonParts.push({ en: "fair visibility", ja: "視程はまずまず" });
+  }
+
+  if (precipitationProbability <= 18) {
+    reasonParts.push({ en: "low rain chance", ja: "雨の可能性が低い" });
+  } else if (precipitationProbability >= 48) {
+    reasonParts.push({ en: "high rain chance", ja: "雨の可能性が高い" });
+  } else {
+    reasonParts.push({ en: "some rain risk", ja: "雨の可能性が少しある" });
+  }
+
+  if (sunshineRatio >= 0.45 && reasonParts.length < 4) {
+    reasonParts.push({ en: "some sunshine", ja: "日差しの期待あり" });
+  }
+
+  return {
+    en: reasonParts.slice(0, 3).map((part) => part.en).join(", "),
+    ja: reasonParts.slice(0, 3).map((part) => part.ja).join("、")
+  };
+}
+
+function buildFujiForecastResult(bestWindow, fetchedAt) {
+  const chureitoScore = bestWindow.spots.chureito.score;
+  const kawaguchikoScore = bestWindow.spots.kawaguchiko.score;
+  const lakeAdvantage = kawaguchikoScore - chureitoScore;
+  let state = "mixed";
+  let badge = { en: "Flexible", ja: "柔軟対応" };
+  let recommendation = {
+    en: "Fuji may appear in short windows. Check early, then decide between Chureito and the lake.",
+    ja: "富士山は短い時間だけ見える可能性があります。朝に確認してから、忠霊塔か湖畔かを決めましょう。"
+  };
+  let summaryRecommendation = {
+    en: "Fuji looks mixed. Check early before locking the morning route.",
+    ja: "富士山は判断が分かれそうです。朝の確認後に動きを決めるのが安全です。"
+  };
+
+  if (bestWindow.score >= 0.74 && chureitoScore >= 0.68) {
+    state = "good";
+    badge = { en: "Best window", ja: "狙い目" };
+    recommendation = {
+      en: "Do Chureito first at dawn.",
+      ja: "夜明けに忠霊塔を最優先にしましょう。"
+    };
+    summaryRecommendation = {
+      en: "Tomorrow looks strongest for an early Chureito run.",
+      ja: "明日は朝の忠霊塔を優先しやすい見込みです。"
+    };
+  } else if (bestWindow.score < 0.55 || chureitoScore < 0.48 || lakeAdvantage >= 0.16) {
+    state = "poor";
+    badge = { en: "Lake first", ja: "湖畔優先" };
+    recommendation = {
+      en: "Skip Chureito first and prioritize the lake or flexible sightseeing.",
+      ja: "忠霊塔を先頭固定にせず、湖畔や柔軟な観光を優先しましょう。"
+    };
+    summaryRecommendation = {
+      en: "Visibility leans weak. Keep Chureito optional and stay flexible.",
+      ja: "見え方は弱め寄りです。忠霊塔は任意にして柔軟に動きましょう。"
+    };
+  }
+
+  return {
+    state,
+    badge,
+    title: {
+      en: "Weather-aware Fuji suggestion",
+      ja: "天気に合わせた富士山プラン"
+    },
+    summaryTitle: {
+      en: "Fuji weather watch",
+      ja: "富士山の見え方チェック"
+    },
+    windowPrefix: {
+      en: "Best Fuji view window",
+      ja: "富士山が見えやすい時間"
+    },
+    window: formatFujiWindowCopy(bestWindow),
+    recommendation,
+    summaryRecommendation,
+    reason: buildFujiReasonCopy(bestWindow),
+    updated: formatFujiUpdatedCopy(fetchedAt),
+    sourceLabel: {
+      en: "Weather source: Open-Meteo",
+      ja: "天気ソース: Open-Meteo"
+    }
+  };
+}
+
+function readCachedFujiForecast() {
+  try {
+    const cached = JSON.parse(window.sessionStorage.getItem(fujiForecastSessionKey) || "null");
+    if (!cached?.timestamp || !cached?.result) {
+      return null;
+    }
+
+    if (Date.now() - Number(cached.timestamp) > fujiForecastCacheMaxAgeMs) {
+      return null;
+    }
+
+    return cached.result;
+  } catch (error) {
+    return null;
+  }
+}
+
+function storeCachedFujiForecast(result) {
+  try {
+    window.sessionStorage.setItem(
+      fujiForecastSessionKey,
+      JSON.stringify({
+        timestamp: Date.now(),
+        result
+      })
+    );
+  } catch (error) {
+    // Ignore cache failures and keep the forecast optional.
+  }
+}
+
+function renderFujiForecastLoading() {
+  const summaryNode = getFujiForecastSummaryNode();
+  const cardNode = getFujiForecastCardNode();
+
+  if (summaryNode) {
+    summaryNode.dataset.state = "loading";
+    summaryNode.innerHTML = `
+      <p class="fuji-forecast__eyebrow">${renderLocalizedContent({
+        en: "Fuji weather watch",
+        ja: "富士山の見え方チェック"
+      })}</p>
+      <p class="fuji-forecast__summary-text">${renderLocalizedContent({
+        en: "Checking the next morning Fuji window...",
+        ja: "次の朝の富士山の見え方を確認しています..."
+      })}</p>
+    `;
+    syncLocalizedNodes(summaryNode);
+  }
+
+  if (cardNode) {
+    cardNode.dataset.state = "loading";
+    cardNode.innerHTML = `
+      <div class="fuji-forecast__header">
+        <p class="fuji-forecast__eyebrow">${renderLocalizedContent({
+          en: "Fuji weather watch",
+          ja: "富士山の見え方チェック"
+        })}</p>
+        <span class="fuji-forecast__badge">${renderLocalizedContent({
+          en: "Checking",
+          ja: "確認中"
+        })}</span>
+      </div>
+      <h3 class="fuji-forecast__title">${renderLocalizedContent({
+        en: "Weather-aware Fuji suggestion",
+        ja: "天気に合わせた富士山プラン"
+      })}</h3>
+      <p class="fuji-forecast__body">${renderLocalizedContent({
+        en: "Checking Kawaguchiko and Chureito morning conditions for the next two days.",
+        ja: "河口湖と忠霊塔の朝の条件を、これから2日分確認しています。"
+      })}</p>
+    `;
+    syncLocalizedNodes(cardNode);
+  }
+
+  scheduleDayCardRowHeights();
+}
+
+function renderFujiForecastError() {
+  const summaryNode = getFujiForecastSummaryNode();
+  const cardNode = getFujiForecastCardNode();
+
+  if (summaryNode) {
+    summaryNode.dataset.state = "error";
+    summaryNode.innerHTML = `
+      <p class="fuji-forecast__eyebrow">${renderLocalizedContent({
+        en: "Fuji weather watch",
+        ja: "富士山の見え方チェック"
+      })}</p>
+      <p class="fuji-forecast__summary-text">${renderLocalizedContent({
+        en: "Forecast unavailable. Keep Day 6 flexible and decide after an early Fuji check.",
+        ja: "予報を取得できません。6日目は柔軟にして、朝の富士山確認後に判断しましょう。"
+      })}</p>
+    `;
+    syncLocalizedNodes(summaryNode);
+  }
+
+  if (cardNode) {
+    cardNode.dataset.state = "error";
+    cardNode.innerHTML = `
+      <div class="fuji-forecast__header">
+        <p class="fuji-forecast__eyebrow">${renderLocalizedContent({
+          en: "Fuji weather watch",
+          ja: "富士山の見え方チェック"
+        })}</p>
+        <span class="fuji-forecast__badge">${renderLocalizedContent({
+          en: "Fallback",
+          ja: "代替案"
+        })}</span>
+      </div>
+      <h3 class="fuji-forecast__title">${renderLocalizedContent({
+        en: "Use the flexible Fuji plan",
+        ja: "柔軟な富士山プランを使う"
+      })}</h3>
+      <p class="fuji-forecast__body">${renderLocalizedContent({
+        en: "Forecast unavailable. Use the existing Day 6 plan: check Fuji at dawn, then decide between Chureito, the lake, and flexible sightseeing.",
+        ja: "予報を取得できません。既存の6日目プランどおり、朝に富士山を確認してから忠霊塔、湖畔、柔軟な観光を判断しましょう。"
+      })}</p>
+      <div class="fuji-forecast__meta">
+        <span>${renderLocalizedContent({
+          en: "Weather source unavailable right now",
+          ja: "現在は天気ソースに接続できません"
+        })}</span>
+      </div>
+    `;
+    syncLocalizedNodes(cardNode);
+  }
+
+  scheduleDayCardRowHeights();
+}
+
+function renderFujiSuggestion(result) {
+  const summaryNode = getFujiForecastSummaryNode();
+  const cardNode = getFujiForecastCardNode();
+  const escapedWindowEn = escapeHtml(result.window.en);
+  const escapedWindowJa = escapeHtml(result.window.ja);
+
+  if (summaryNode) {
+    summaryNode.dataset.state = result.state;
+    summaryNode.innerHTML = `
+      <p class="fuji-forecast__eyebrow">${renderLocalizedContent(result.summaryTitle)}</p>
+      <p class="fuji-forecast__summary-window">
+        <span data-language="en">${escapeHtml(result.windowPrefix.en)}: ${escapedWindowEn}</span>
+        <span data-language="ja" hidden>${escapeHtml(result.windowPrefix.ja)}: ${escapedWindowJa}</span>
+      </p>
+      <p class="fuji-forecast__summary-text">${renderLocalizedContent(result.summaryRecommendation)}</p>
+    `;
+    syncLocalizedNodes(summaryNode);
+  }
+
+  if (cardNode) {
+    cardNode.dataset.state = result.state;
+    cardNode.innerHTML = `
+      <div class="fuji-forecast__header">
+        <p class="fuji-forecast__eyebrow">${renderLocalizedContent(result.summaryTitle)}</p>
+        <span class="fuji-forecast__badge">${renderLocalizedContent(result.badge)}</span>
+      </div>
+      <h3 class="fuji-forecast__title">${renderLocalizedContent(result.title)}</h3>
+      <p class="fuji-forecast__label">${renderLocalizedContent(result.windowPrefix)}</p>
+      <p class="fuji-forecast__window">
+        <span data-language="en">${escapedWindowEn}</span>
+        <span data-language="ja" hidden>${escapedWindowJa}</span>
+      </p>
+      <p class="fuji-forecast__recommendation">${renderLocalizedContent(result.recommendation)}</p>
+      <p class="fuji-forecast__reason">${renderLocalizedContent(result.reason)}</p>
+      <div class="fuji-forecast__meta">
+        <span>${renderLocalizedContent(result.updated)}</span>
+        <a
+          class="fuji-forecast__source"
+          href="${fujiForecastSourceUrl}"
+          target="_blank"
+          rel="noopener noreferrer">
+          ${renderLocalizedContent(result.sourceLabel)}
+        </a>
+      </div>
+    `;
+    syncLocalizedNodes(cardNode);
+  }
+
+  scheduleDayCardRowHeights();
+}
+
+function fetchFujiForecast() {
+  const cached = readCachedFujiForecast();
+  if (cached) {
+    return Promise.resolve(cached);
+  }
+
+  return Promise.all(fujiForecastSpotConfigs.map((spotConfig) => fetchFujiSpotForecast(spotConfig)))
+    .then((spotForecasts) => {
+      const bestWindow = scoreFujiWindows(spotForecasts);
+      if (!bestWindow) {
+        throw new Error("Fuji forecast windows unavailable");
+      }
+
+      const result = buildFujiForecastResult(bestWindow, Date.now());
+      storeCachedFujiForecast(result);
+      return result;
+    });
+}
+
+function initializeFujiForecast() {
+  const surfaces = getFujiForecastSurfaceNodes();
+  if (!surfaces.length) {
+    return Promise.resolve(null);
+  }
+
+  if (fujiForecastResult) {
+    renderFujiSuggestion(fujiForecastResult);
+    return Promise.resolve(fujiForecastResult);
+  }
+
+  if (fujiForecastPromise) {
+    return fujiForecastPromise;
+  }
+
+  renderFujiForecastLoading();
+
+  fujiForecastPromise = fetchFujiForecast()
+    .then((result) => {
+      fujiForecastResult = result;
+      renderFujiSuggestion(result);
+      return result;
+    })
+    .catch((error) => {
+      renderFujiForecastError();
+      return null;
+    })
+    .finally(() => {
+      fujiForecastPromise = null;
+    });
+
+  return fujiForecastPromise;
 }
 
 function readStoredThemePreference() {
@@ -1071,6 +1738,10 @@ function initChecklistSection() {
   refreshChecklistProgressState({ syncDayCards: true });
   syncProgressTimeline();
   scheduleDayCardRowHeights();
+
+  if (getActivePanelId() === "checklist") {
+    void initializeFujiForecast();
+  }
 }
 
 function initNotesSection() {
@@ -1785,6 +2456,10 @@ function setActivePanel(panelId) {
 
     if (initializedSections.has(panelId)) {
       refreshRevealPanel(panelId);
+    }
+
+    if (panelId === "checklist" && initializedSections.has("checklist")) {
+      void initializeFujiForecast();
     }
 
     syncProgressTimeline();
