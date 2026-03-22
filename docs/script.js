@@ -29,8 +29,6 @@ const resetProgressModal = document.querySelector("[data-reset-progress-modal]")
 const resetProgressCancelButton = document.querySelector("[data-reset-progress-cancel]");
 const resetProgressConfirmButton = document.querySelector("[data-reset-progress-confirm]");
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
-const scrollSwipeTargetSelector =
-  ".card, .booking-item, .progress-overview, .progress-item, .section-heading, .route-reference, .route-map__surface, .route-map__status, .site-footer__lead, .site-footer__aside, .site-footer__credit";
 const bookingTransitRoot = document.querySelector("[data-booking-transit]");
 const bookingTransitGroupsRoot = document.querySelector("[data-booking-transit-groups]");
 const bookingTransitEmptyState = document.querySelector("[data-booking-empty]");
@@ -62,6 +60,7 @@ const completedHistoryStorageKey = "japan-trip-completed-history";
 const optionalDaysUnlockedStorageKey = "japan-trip-optional-days-unlocked";
 const activePanelStorageKey = "japan-trip-active-panel";
 const bookingTransitStorageKey = "japan-trip-bookings-transit-state";
+const queuedStorageWrites = new Map();
 const bookingTransitGroupDefinitions = [
   {
     id: "bookings",
@@ -339,117 +338,81 @@ let routeMapControllerPromise = null;
 let routeMapController = null;
 let lastResetTrigger = null;
 let dayCardRowEqualizeFrame = 0;
-let backToTopMotionResetTimer = 0;
-let boxSwipeMotionResetTimer = 0;
-let activePanelId = Array.from(sectionTabs).find((tab) => tab.classList.contains("is-active"))?.dataset.panelTarget ?? null;
+let storageWriteFlushTimer = 0;
+let storageWriteIdleHandle = 0;
 let bookingTransitState = { filter: "all", items: {} };
 let bookingTransitInitialized = false;
 let reducedEffectsEnabled = false;
-let lastParallaxValues = {
-  shift: "",
-  sunShift: "",
-  mistShift: "",
-  fujiShift: ""
-};
-
-function markScrollSwipeTargets() {
-  if (aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  document.querySelectorAll(scrollSwipeTargetSelector).forEach((target) => {
-    target.classList.add("scroll-swipe-target");
-  });
-}
-
-function getVisibleScrollSwipeTargets() {
-  if (reducedEffectsEnabled) {
-    return [];
-  }
-
-  markScrollSwipeTargets();
-  return Array.from(document.querySelectorAll(scrollSwipeTargetSelector)).filter((target) => {
-    const panel = target.closest("[data-panel]");
-    return !panel || panel.classList.contains("is-active");
-  });
-}
-
-function syncBackToTopMotion(delta, { force = false } = {}) {
-  if (!backToTopButtons.length || reducedEffectsEnabled) {
-    return;
-  }
-
-  if ((!force && Math.abs(delta) < 6) || delta === 0) {
-    return;
-  }
-
-  const swipeDirection = delta > 0 ? "is-swipe-down" : "is-swipe-up";
-
-  backToTopButtons.forEach((button) => {
-    button.classList.toggle("is-swipe-down", swipeDirection === "is-swipe-down");
-    button.classList.toggle("is-swipe-up", swipeDirection === "is-swipe-up");
-  });
-
-  window.clearTimeout(backToTopMotionResetTimer);
-  backToTopMotionResetTimer = window.setTimeout(() => {
-    backToTopButtons.forEach((button) => {
-      button.classList.remove("is-swipe-down", "is-swipe-up");
-    });
-  }, 240);
-}
-
-function syncBoxSwipeMotion(delta, { force = false } = {}) {
-  const visibleTargets = getVisibleScrollSwipeTargets();
-  if (!visibleTargets.length) {
-    return;
-  }
-
-  if ((!force && Math.abs(delta) < 6) || delta === 0) {
-    return;
-  }
-
-  const swipeDirection = delta > 0 ? "is-swipe-down" : "is-swipe-up";
-
-  visibleTargets.forEach((target) => {
-    target.classList.remove("is-swipe-up", "is-swipe-down");
-    target.classList.add(swipeDirection);
-  });
-
-  window.clearTimeout(boxSwipeMotionResetTimer);
-  boxSwipeMotionResetTimer = window.setTimeout(() => {
-    visibleTargets.forEach((target) => {
-      target.classList.remove("is-swipe-up", "is-swipe-down");
-    });
-  }, 280);
-}
-
-function syncDirectionalMotion(delta, options) {
-  if (aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  syncBackToTopMotion(delta, options);
-  syncBoxSwipeMotion(delta, options);
-}
-
-function getPanelTransitionDelta(nextPanelId) {
-  if (!activePanelId || activePanelId === nextPanelId) {
-    return 0;
-  }
-
-  const panelOrder = Array.from(sectionTabs).map((tab) => tab.dataset.panelTarget);
-  const currentIndex = panelOrder.indexOf(activePanelId);
-  const nextIndex = panelOrder.indexOf(nextPanelId);
-
-  if (currentIndex === -1 || nextIndex === -1) {
-    return 0;
-  }
-
-  return nextIndex - currentIndex;
-}
 
 function getSystemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function clearScheduledStorageFlush() {
+  if (storageWriteFlushTimer) {
+    window.clearTimeout(storageWriteFlushTimer);
+    storageWriteFlushTimer = 0;
+  }
+
+  if (storageWriteIdleHandle && typeof window.cancelIdleCallback === "function") {
+    window.cancelIdleCallback(storageWriteIdleHandle);
+    storageWriteIdleHandle = 0;
+  }
+}
+
+function flushQueuedStorageWrites() {
+  clearScheduledStorageFlush();
+  if (!queuedStorageWrites.size) {
+    return;
+  }
+
+  const pendingWrites = Array.from(queuedStorageWrites.entries());
+  queuedStorageWrites.clear();
+
+  try {
+    pendingWrites.forEach(([key, entry]) => {
+      if (entry.remove) {
+        window.localStorage.removeItem(key);
+        return;
+      }
+
+      window.localStorage.setItem(key, entry.value);
+    });
+  } catch (error) {
+    // Ignore storage failures and keep the page usable.
+  }
+}
+
+function scheduleStorageFlush() {
+  if (!queuedStorageWrites.size || storageWriteFlushTimer || storageWriteIdleHandle) {
+    return;
+  }
+
+  if (typeof window.requestIdleCallback === "function") {
+    storageWriteIdleHandle = window.requestIdleCallback(
+      () => {
+        storageWriteIdleHandle = 0;
+        flushQueuedStorageWrites();
+      },
+      { timeout: 240 }
+    );
+    return;
+  }
+
+  storageWriteFlushTimer = window.setTimeout(() => {
+    storageWriteFlushTimer = 0;
+    flushQueuedStorageWrites();
+  }, 120);
+}
+
+function queueStorageValue(key, value) {
+  queuedStorageWrites.set(key, { remove: false, value });
+  scheduleStorageFlush();
+}
+
+function queueStorageRemoval(key) {
+  queuedStorageWrites.set(key, { remove: true });
+  scheduleStorageFlush();
 }
 
 function readStoredThemePreference() {
@@ -463,7 +426,7 @@ function readStoredThemePreference() {
 
 function storeThemePreference(theme) {
   try {
-    window.localStorage.setItem(themeStorageKey, theme);
+    queueStorageValue(themeStorageKey, theme);
   } catch (error) {
     // Ignore storage failures and keep the page usable.
   }
@@ -531,7 +494,7 @@ function syncReducedEffectsMode({ force = false } = {}) {
 
   reducedEffectsEnabled = nextReducedEffectsEnabled;
   root.classList.toggle("reduce-effects", reducedEffectsEnabled);
-  syncParallax(true);
+  root.classList.toggle("enhanced-effects", !reducedEffectsEnabled);
 
   if (reducedEffectsEnabled && root.classList.contains("is-welcoming")) {
     finishWelcome();
@@ -586,7 +549,7 @@ function readStoredDaySet(key) {
 function storeDaySet(key, daySet) {
   try {
     const sortedDays = Array.from(daySet).sort((left, right) => Number(left) - Number(right));
-    window.localStorage.setItem(key, JSON.stringify(sortedDays));
+    queueStorageValue(key, JSON.stringify(sortedDays));
   } catch (error) {
     // Ignore storage failures and keep the page usable.
   }
@@ -603,11 +566,11 @@ function readStoredBoolean(key) {
 function storeBoolean(key, value) {
   try {
     if (value) {
-      window.localStorage.setItem(key, "1");
+      queueStorageValue(key, "1");
       return;
     }
 
-    window.localStorage.removeItem(key);
+    queueStorageRemoval(key);
   } catch (error) {
     // Ignore storage failures and keep the page usable.
   }
@@ -710,7 +673,7 @@ function storeChecklistState() {
         nextState[input.id] = true;
       }
     });
-    window.localStorage.setItem(checklistStorageKey, JSON.stringify(nextState));
+    queueStorageValue(checklistStorageKey, JSON.stringify(nextState));
   } catch (error) {
     // Ignore storage failures and keep the checklist usable.
   }
@@ -735,7 +698,7 @@ function readStoredBookingTransitState() {
 
 function storeBookingTransitState() {
   try {
-    window.localStorage.setItem(bookingTransitStorageKey, JSON.stringify(bookingTransitState));
+    queueStorageValue(bookingTransitStorageKey, JSON.stringify(bookingTransitState));
   } catch (error) {
     // Ignore storage failures and keep the booking board usable.
   }
@@ -845,8 +808,6 @@ function renderBookingTransitBoard() {
       `;
     })
     .join("");
-
-  markScrollSwipeTargets();
 }
 
 function syncBookingTransitItemUI(itemElement) {
@@ -1033,7 +994,7 @@ function readStoredActivePanel() {
 
 function storeActivePanel(panelId) {
   try {
-    window.localStorage.setItem(activePanelStorageKey, panelId);
+    queueStorageValue(activePanelStorageKey, panelId);
   } catch (error) {
     // Ignore storage failures and keep the navigation usable.
   }
@@ -1041,7 +1002,7 @@ function storeActivePanel(panelId) {
 
 function storeLanguage(language) {
   try {
-    window.localStorage.setItem(storageKey, language);
+    queueStorageValue(storageKey, language);
   } catch (error) {
     // Ignore storage failures and keep the page usable.
   }
@@ -2264,7 +2225,6 @@ function handleThemeButtonClick(button) {
 
 function setActivePanel(panelId) {
   let hasMatch = false;
-  const panelTransitionDelta = getPanelTransitionDelta(panelId);
 
   contentPanels.forEach((panel) => {
     const isActive = panel.dataset.panel === panelId;
@@ -2300,7 +2260,6 @@ function setActivePanel(panelId) {
     }
 
     refreshRevealPanel(panelId);
-    syncDirectionalMotion(panelTransitionDelta, { force: true });
     syncProgressTimeline();
     scheduleDayCardRowHeights();
     if (
@@ -2313,7 +2272,6 @@ function setActivePanel(panelId) {
       });
     }
 
-    activePanelId = panelId;
     storeActivePanel(panelId);
   }
 
@@ -2351,39 +2309,6 @@ function syncProgressTimeline() {
     updateTimelineSpine();
     scrollProgressTimelineToActive();
   });
-}
-
-function syncParallax(force = false) {
-  const currentScrollY = window.scrollY;
-  const nextParallaxValues = reducedEffectsEnabled
-    ? {
-        shift: "0px",
-        sunShift: "0px",
-        mistShift: "0px",
-        fujiShift: "0px"
-      }
-    : {
-        shift: `${Math.min(Math.round(currentScrollY * 0.085), 60)}px`,
-        sunShift: `${Math.min(Math.round(currentScrollY * 0.032), 28)}px`,
-        mistShift: `${Math.min(Math.round(currentScrollY * 0.022), 20)}px`,
-        fujiShift: `${Math.min(Math.round(currentScrollY * 0.014), 14)}px`
-      };
-
-  if (
-    !force &&
-    lastParallaxValues.shift === nextParallaxValues.shift &&
-    lastParallaxValues.sunShift === nextParallaxValues.sunShift &&
-    lastParallaxValues.mistShift === nextParallaxValues.mistShift &&
-    lastParallaxValues.fujiShift === nextParallaxValues.fujiShift
-  ) {
-    return;
-  }
-
-  root.style.setProperty("--parallax-shift", nextParallaxValues.shift);
-  root.style.setProperty("--sun-shift", nextParallaxValues.sunShift);
-  root.style.setProperty("--mist-shift", nextParallaxValues.mistShift);
-  root.style.setProperty("--fuji-shift", nextParallaxValues.fujiShift);
-  lastParallaxValues = nextParallaxValues;
 }
 
 function registerRevealBlocks() {
@@ -2477,9 +2402,7 @@ if (initialPanelId === "route") {
 }
 setActivePanel(initialPanelId);
 setActiveProgressItem(getCurrentProgressDay());
-syncParallax();
 syncProgressTimeline();
-syncDirectionalMotion(0);
 updateRouteMapToggleLabel();
 renderRouteMapStatus();
 scheduleDayCardRowHeights();
@@ -2647,7 +2570,6 @@ if (routeMedia) {
 function syncHeaderState() {
   const currentScrollY = window.scrollY;
   const delta = currentScrollY - lastScrollY;
-  syncDirectionalMotion(delta);
 
   if (!siteHeader) {
     lastScrollY = currentScrollY;
@@ -2671,7 +2593,6 @@ function syncHeaderState() {
 
 function runScrollEffects() {
   syncHeaderState();
-  syncParallax();
   scrollTicking = false;
 }
 
@@ -2713,7 +2634,6 @@ if (siteHeader) {
     if (wasCondensed && window.scrollY > 150) {
       siteHeader.classList.add("is-condensed");
     }
-    syncParallax();
     syncProgressTimeline();
     scheduleDayCardRowHeights();
     if (routeMapController?.isLiveReady() && routeMapToggle?.getAttribute("aria-expanded") === "true") {
@@ -2722,3 +2642,10 @@ if (siteHeader) {
     lockHeaderState(220);
   });
 }
+
+window.addEventListener("pagehide", flushQueuedStorageWrites);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") {
+    flushQueuedStorageWrites();
+  }
+});

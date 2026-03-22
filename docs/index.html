@@ -18,28 +18,35 @@
         storedTheme === "light" || storedTheme === "dark"
           ? storedTheme
           : "light";
+      const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+      const compactViewportQuery = window.matchMedia("(max-width: 920px)");
+      const deviceMemory = Number(navigator.deviceMemory || 0);
+      const hardwareConcurrency = Number(navigator.hardwareConcurrency || 0);
+      const shouldReduceEffects =
+        reducedMotionQuery.matches ||
+        coarsePointerQuery.matches ||
+        compactViewportQuery.matches ||
+        (deviceMemory > 0 && deviceMemory <= 4) ||
+        (hardwareConcurrency > 0 && hardwareConcurrency <= 4);
+
       document.documentElement.dataset.theme = initialTheme;
       document.documentElement.style.colorScheme = initialTheme;
-      document.documentElement.classList.add("is-welcoming");
+      document.documentElement.classList.toggle("reduce-effects", shouldReduceEffects);
+      document.documentElement.classList.toggle("enhanced-effects", !shouldReduceEffects);
+      if (!shouldReduceEffects) {
+        document.documentElement.classList.add("is-welcoming");
+      }
     } catch (error) {
       document.documentElement.dataset.theme = "light";
       document.documentElement.style.colorScheme = "light";
-      document.documentElement.classList.add("is-welcoming");
+      document.documentElement.classList.add("reduce-effects");
     }
   </script>
   <link rel="stylesheet" href="./style.min.css">
   <script src="./script.min.js" defer></script>
 </head>
 <body>
-  <div class="site-atmosphere" aria-hidden="true">
-    <div class="site-atmosphere__paper"></div>
-    <div class="site-atmosphere__sun"></div>
-    <div class="site-atmosphere__image"></div>
-    <div class="site-atmosphere__mist"></div>
-    <div class="site-atmosphere__fuji"></div>
-    <div class="site-atmosphere__veil"></div>
-  </div>
-
   <a class="skip-link" href="#main-content">
     <span data-language="en">Skip to content</span>
     <span data-language="ja" hidden>本文へ移動</span>
