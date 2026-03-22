@@ -84,6 +84,7 @@ body {
   z-index: -3;
   overflow: hidden;
   pointer-events: none;
+  contain: paint;
 }
 
 .site-atmosphere__image,
@@ -97,18 +98,23 @@ body {
 }
 
 .site-atmosphere__paper {
-  background: url("./washi-texture.svg") center top / 420px 420px repeat;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0)),
+    repeating-linear-gradient(0deg, rgba(188, 166, 149, 0.06) 0 2px, transparent 2px 12px),
+    repeating-linear-gradient(90deg, rgba(188, 166, 149, 0.04) 0 1px, transparent 1px 16px);
   opacity: 0.18;
   mix-blend-mode: multiply;
   z-index: 0;
 }
 
 .site-atmosphere__image {
-  background: url("./scenery-backdrop.svg") center top / cover no-repeat;
+  background:
+    radial-gradient(ellipse at 50% 14%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 36%),
+    linear-gradient(180deg, rgba(182, 192, 184, 0.16), rgba(182, 192, 184, 0.08) 22%, rgba(182, 192, 184, 0) 46%),
+    linear-gradient(180deg, rgba(111, 125, 116, 0) 28%, rgba(111, 125, 116, 0.16) 54%, rgba(111, 125, 116, 0) 76%);
   opacity: 0.1;
   filter: blur(1px) saturate(0.72);
   transform: translate3d(0, calc(var(--parallax-shift) * -0.75), 0) scale(1.04);
-  transition: transform 180ms ease-out;
   z-index: 1;
 }
 
@@ -122,7 +128,6 @@ body {
   opacity: 0.7;
   filter: blur(18px);
   transform: translate3d(0, calc(var(--sun-shift) * -1), 0);
-  transition: transform 220ms ease-out;
   z-index: 2;
 }
 
@@ -135,7 +140,6 @@ body {
   opacity: 0.56;
   filter: blur(16px);
   transform: translate3d(0, calc(var(--mist-shift) * -1), 0);
-  transition: transform 220ms ease-out;
   z-index: 2;
 }
 
@@ -148,7 +152,6 @@ body {
   opacity: 0.12;
   filter: blur(0.15px);
   transform: translate3d(0, calc(var(--fuji-shift) * -1), 0);
-  transition: transform 240ms ease-out;
   z-index: 2;
 }
 
@@ -186,6 +189,47 @@ body::after {
   filter: blur(14px);
   pointer-events: none;
   z-index: -1;
+}
+
+html.reduce-effects .site-atmosphere__paper,
+html.reduce-effects .site-atmosphere__image,
+html.reduce-effects .site-atmosphere__mist {
+  display: none;
+}
+
+html.reduce-effects .site-atmosphere__sun,
+html.reduce-effects .site-atmosphere__fuji {
+  transform: none;
+}
+
+html.reduce-effects .site-atmosphere__sun {
+  opacity: 0.42;
+  filter: blur(10px);
+}
+
+html.reduce-effects .site-atmosphere__fuji {
+  opacity: 0.08;
+}
+
+html.reduce-effects .site-atmosphere__veil {
+  background: linear-gradient(180deg, rgba(252, 248, 243, 0.88), rgba(242, 233, 221, 0.96));
+}
+
+html[data-theme="dark"].reduce-effects .site-atmosphere__veil {
+  background: linear-gradient(180deg, rgba(19, 21, 24, 0.82), rgba(11, 13, 16, 0.94));
+}
+
+html.reduce-effects .site-header,
+html.reduce-effects .card,
+html.reduce-effects .section-tab,
+html.reduce-effects .language-button,
+html.reduce-effects .theme-button,
+html.reduce-effects .confirm-modal__sheet {
+  backdrop-filter: none !important;
+}
+
+html.reduce-effects .welcome-overlay {
+  display: none !important;
 }
 
 a {
@@ -1260,7 +1304,7 @@ h3 {
 }
 
 .scroll-swipe-target {
-  will-change: translate;
+  will-change: auto;
 }
 
 .scroll-swipe-target.is-swipe-up {
@@ -1269,6 +1313,10 @@ h3 {
 
 .scroll-swipe-target.is-swipe-down {
   animation: sectionSwipeDown 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.reduce-effects .scroll-swipe-target {
+  animation: none !important;
 }
 
 @keyframes sectionSwipeUp {
@@ -2804,7 +2852,8 @@ html.has-modal-open body {
   background:
     radial-gradient(circle at 50% 54%, rgba(155, 60, 51, 0.08), rgba(155, 60, 51, 0) 24%),
     linear-gradient(180deg, rgba(252, 248, 242, 0.985), rgba(246, 239, 230, 0.96)),
-    url("./washi-texture.svg") center center / 420px 420px repeat;
+    repeating-linear-gradient(0deg, rgba(188, 166, 149, 0.05) 0 2px, transparent 2px 12px),
+    repeating-linear-gradient(90deg, rgba(188, 166, 149, 0.035) 0 1px, transparent 1px 16px);
   color: #2b2421;
   isolation: isolate;
   pointer-events: none;
@@ -4156,7 +4205,8 @@ html[data-theme="dark"] .welcome-overlay {
   background:
     radial-gradient(circle at 50% 56%, rgba(192, 95, 80, 0.1), rgba(192, 95, 80, 0) 24%),
     linear-gradient(180deg, rgba(17, 19, 23, 0.985), rgba(11, 13, 16, 0.97)),
-    url("./washi-texture.svg") center center / 420px 420px repeat;
+    repeating-linear-gradient(0deg, rgba(118, 107, 98, 0.06) 0 2px, transparent 2px 12px),
+    repeating-linear-gradient(90deg, rgba(118, 107, 98, 0.04) 0 1px, transparent 1px 16px);
   color: #f0e6d9;
 }
 

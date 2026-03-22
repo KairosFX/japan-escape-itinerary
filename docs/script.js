@@ -45,6 +45,9 @@ const optionalProgressItems = Array.from(
 const dayCardMap = new Map(dayCards.map((card) => [card.dataset.day, card]));
 const progressItemMap = new Map(progressItems.map((item) => [item.dataset.progressItem, item]));
 const root = document.documentElement;
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+const compactViewportQuery = window.matchMedia("(max-width: 920px)");
 const pageTitles = {
   en: "Japan Trip | Travel Guide",
   ja: "日本旅行 | 旅行ガイド"
@@ -386,6 +389,13 @@ let backToTopMotionResetTimer = 0;
 let boxSwipeMotionResetTimer = 0;
 let activePanelId = Array.from(sectionTabs).find((tab) => tab.classList.contains("is-active"))?.dataset.panelTarget ?? null;
 let bookingTransitState = { filter: "all", items: {} };
+let reducedEffectsEnabled = false;
+let lastParallaxValues = {
+  shift: "",
+  sunShift: "",
+  mistShift: "",
+  fujiShift: ""
+};
 
 function markScrollSwipeTargets() {
   document.querySelectorAll(scrollSwipeTargetSelector).forEach((target) => {
@@ -394,6 +404,10 @@ function markScrollSwipeTargets() {
 }
 
 function getVisibleScrollSwipeTargets() {
+  if (reducedEffectsEnabled) {
+    return [];
+  }
+
   markScrollSwipeTargets();
   return Array.from(document.querySelectorAll(scrollSwipeTargetSelector)).filter((target) => {
     const panel = target.closest("[data-panel]");
@@ -402,7 +416,7 @@ function getVisibleScrollSwipeTargets() {
 }
 
 function syncBackToTopMotion(delta, { force = false } = {}) {
-  if (!backToTopButtons.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (!backToTopButtons.length || reducedEffectsEnabled) {
     return;
   }
 
@@ -427,7 +441,7 @@ function syncBackToTopMotion(delta, { force = false } = {}) {
 
 function syncBoxSwipeMotion(delta, { force = false } = {}) {
   const visibleTargets = getVisibleScrollSwipeTargets();
-  if (!visibleTargets.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (!visibleTargets.length) {
     return;
   }
 
@@ -524,6 +538,36 @@ function applyRouteTheme() {
   }
 
   routeDoc.documentElement.dataset.theme = getCurrentTheme();
+}
+
+function shouldReduceEffects() {
+  return reducedMotionQuery.matches || coarsePointerQuery.matches || compactViewportQuery.matches;
+}
+
+function syncReducedEffectsMode({ force = false } = {}) {
+  const nextReducedEffectsEnabled = shouldReduceEffects();
+  if (!force && reducedEffectsEnabled === nextReducedEffectsEnabled) {
+    return;
+  }
+
+  reducedEffectsEnabled = nextReducedEffectsEnabled;
+  root.classList.toggle("reduce-effects", reducedEffectsEnabled);
+  syncParallax(true);
+
+  if (reducedEffectsEnabled && root.classList.contains("is-welcoming")) {
+    finishWelcome();
+  }
+}
+
+function bindMediaQueryChange(query, handler) {
+  if (typeof query.addEventListener === "function") {
+    query.addEventListener("change", handler);
+    return;
+  }
+
+  if (typeof query.addListener === "function") {
+    query.addListener(handler);
+  }
 }
 
 function getOrderedDayNumbers() {
@@ -2772,15 +2816,37 @@ function syncProgressTimeline() {
   });
 }
 
-function syncParallax() {
-  const shift = Math.min(window.scrollY * 0.085, 60);
-  const sunShift = Math.min(window.scrollY * 0.032, 28);
-  const mistShift = Math.min(window.scrollY * 0.022, 20);
-  const fujiShift = Math.min(window.scrollY * 0.014, 14);
-  root.style.setProperty("--parallax-shift", `${shift}px`);
-  root.style.setProperty("--sun-shift", `${sunShift}px`);
-  root.style.setProperty("--mist-shift", `${mistShift}px`);
-  root.style.setProperty("--fuji-shift", `${fujiShift}px`);
+function syncParallax(force = false) {
+  const currentScrollY = window.scrollY;
+  const nextParallaxValues = reducedEffectsEnabled
+    ? {
+        shift: "0px",
+        sunShift: "0px",
+        mistShift: "0px",
+        fujiShift: "0px"
+      }
+    : {
+        shift: `${Math.min(Math.round(currentScrollY * 0.085), 60)}px`,
+        sunShift: `${Math.min(Math.round(currentScrollY * 0.032), 28)}px`,
+        mistShift: `${Math.min(Math.round(currentScrollY * 0.022), 20)}px`,
+        fujiShift: `${Math.min(Math.round(currentScrollY * 0.014), 14)}px`
+      };
+
+  if (
+    !force &&
+    lastParallaxValues.shift === nextParallaxValues.shift &&
+    lastParallaxValues.sunShift === nextParallaxValues.sunShift &&
+    lastParallaxValues.mistShift === nextParallaxValues.mistShift &&
+    lastParallaxValues.fujiShift === nextParallaxValues.fujiShift
+  ) {
+    return;
+  }
+
+  root.style.setProperty("--parallax-shift", nextParallaxValues.shift);
+  root.style.setProperty("--sun-shift", nextParallaxValues.sunShift);
+  root.style.setProperty("--mist-shift", nextParallaxValues.mistShift);
+  root.style.setProperty("--fuji-shift", nextParallaxValues.fujiShift);
+  lastParallaxValues = nextParallaxValues;
 }
 
 function registerRevealBlocks() {
@@ -3040,6 +3106,14 @@ if (resetProgressModal) {
   });
 }
 
+[reducedMotionQuery, coarsePointerQuery, compactViewportQuery].forEach((query) => {
+  bindMediaQueryChange(query, () => {
+    syncReducedEffectsMode({ force: true });
+  });
+});
+
+syncReducedEffectsMode({ force: true });
+
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && routeMapInteractive) {
     setRouteMapInteractive(false);
@@ -3084,8 +3158,7 @@ document.addEventListener("pointercancel", (event) => {
 });
 
 if (root.classList.contains("is-welcoming")) {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  window.setTimeout(finishWelcome, prefersReducedMotion ? 60 : 2100);
+  window.setTimeout(finishWelcome, reducedEffectsEnabled ? 60 : 2100);
 } else if (welcomeOverlay) {
   welcomeOverlay.setAttribute("hidden", "");
 }
@@ -3163,6 +3236,7 @@ if (siteHeader) {
   }
 
   window.addEventListener("resize", () => {
+    syncReducedEffectsMode();
     const wasCondensed = siteHeader.classList.contains("is-condensed");
     siteHeader.classList.remove("is-condensed");
     syncReservedHeaderHeight(true);
