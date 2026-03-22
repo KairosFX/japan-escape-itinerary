@@ -1828,9 +1828,9 @@ html.has-modal-open body {
 }
 
 .essentials-card {
-  gap: var(--content-box-item-gap);
+  gap: 0.92rem;
   height: 100%;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto minmax(0, 1fr);
 }
 
 .essentials-card,
@@ -2126,10 +2126,17 @@ html.has-modal-open body {
 
 .essentials-card p {
   min-width: 0;
+  min-block-size: 4.45rem;
   font-size: var(--content-body-size);
   line-height: 1.68;
   color: var(--muted);
   overflow-wrap: anywhere;
+}
+
+.essentials-card > .essentials-list,
+.essentials-card > .essentials-checklist,
+.essentials-card > .booking-transit {
+  align-self: stretch;
 }
 
 .essentials-list,
@@ -2138,7 +2145,7 @@ html.has-modal-open body {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: var(--content-box-item-gap);
+  gap: 0.72rem;
 }
 
 .essentials-list li,
@@ -3273,6 +3280,10 @@ html.has-modal-open body {
 
   .essentials-card--bookings {
     grid-column: 1 / -1;
+  }
+
+  .essentials-card p {
+    min-block-size: 0;
   }
 
   .optional-unlock__compact {

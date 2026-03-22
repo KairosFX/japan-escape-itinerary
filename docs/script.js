@@ -90,8 +90,8 @@ const bookingTransitItems = [
       ja: "都市部の電車、地下鉄、コンビニ利用のために、チャージ式ICカードかモバイルICを一つ準備しておくと動きやすいです。対応端末ならモバイルICが最も身軽です。"
     },
     action: {
-      href: "https://example.com/japan/ic-card-setup",
-      label: { en: "Open setup guide", ja: "設定ガイドを開く" }
+      href: "https://www.google.com/maps/search/?api=1&query=ICOCA%20Suica%20PASMO%20Japan",
+      label: { en: "Open Google Maps", ja: "Googleマップで開く" }
     }
   },
   {
@@ -114,8 +114,8 @@ const bookingTransitItems = [
       ja: "移動日が固まったら予約しておくと安心です。荷物がある場合は指定席にしておくと、大阪から箱根への乗り継ぎがかなり楽になります。"
     },
     action: {
-      href: "https://example.com/japan/shin-osaka-odawara",
-      label: { en: "Book now", ja: "予約する" }
+      href: "https://www.rome2rio.com/map/Shin-Osaka-Station/Odawara-Station",
+      label: { en: "View route", ja: "経路を見る" }
     }
   },
   {
@@ -138,8 +138,8 @@ const bookingTransitItems = [
       ja: "4日目の前に、料金と対象区間を確認できるようパスページを保存しておくと便利です。箱根の移動をまとめる時に、エリア全体の基準ページとして使えます。"
     },
     action: {
-      href: "https://example.com/japan/hakone-freepass",
-      label: { en: "Open pass page", ja: "パスページを開く" }
+      href: "https://www.google.com/maps/search/?api=1&query=Odawara%20Station%20Hakone%20Freepass",
+      label: { en: "Open Google Maps", ja: "Googleマップで開く" }
     }
   },
   {
@@ -158,12 +158,12 @@ const bookingTransitItems = [
       ja: "ロープウェイ、ケーブルカー、湖の移動状況を当日確認するためのページ。"
     },
     details: {
-      en: "This is a reference link, not a reservation. Save it where you can reach it quickly in case weather or maintenance changes the Hakone loop plan.",
-      ja: "予約ではなく、当日確認用の参照ページです。天候や点検で箱根の周遊順が変わる場合にすぐ見られるよう保存しておきます。"
+      en: "Keep a trusted map search ready for the ropeway and rail operators around Hakone so you can jump to stations and operator points quickly if the loop needs to change.",
+      ja: "箱根周遊の変更が必要になった時にすぐ駅や運営地点へ飛べるよう、ロープウェイと鉄道周辺の信頼できる地図検索を保存しておきます。"
     },
     action: {
-      href: "https://example.com/japan/hakone-status",
-      label: { en: "Open status page", ja: "運行ページを開く" }
+      href: "https://www.google.com/maps/search/?api=1&query=Hakone%20Ropeway%20Hakone%20Tozan%20Railway",
+      label: { en: "Open Google Maps", ja: "Googleマップで開く" }
     }
   },
   {
@@ -186,7 +186,7 @@ const bookingTransitItems = [
       ja: "箱根から富士側へ抜ける時の基準ルートです。時刻変更に対応できるよう、暗記するより経路情報を保存しておく方が実用的です。"
     },
     action: {
-      href: "https://example.com/japan/hakone-kawaguchiko",
+      href: "https://www.rome2rio.com/map/Hakone/Kawaguchiko",
       label: { en: "View route", ja: "経路を見る" }
     }
   },
@@ -210,7 +210,7 @@ const bookingTransitItems = [
       ja: "東京へ入る最後の移動のために保存しておく参照ルートです。鉄道案と代替案を一つずつ持っておくと動きやすいです。"
     },
     action: {
-      href: "https://example.com/japan/kawaguchiko-tokyo",
+      href: "https://www.rome2rio.com/map/Kawaguchiko/Tokyo",
       label: { en: "View route", ja: "経路を見る" }
     }
   },
@@ -230,12 +230,12 @@ const bookingTransitItems = [
       ja: "大阪ベイエリアの日に向けた事前予約枠として扱う。"
     },
     details: {
-      en: "Use a placeholder booking link here for now. This should feel like a reserve-ahead item rather than a route reference, so keep the ticket page ready before Day 3.",
-      ja: "今は仮の予約リンクで構いません。これは移動メモではなく事前予約枠として扱い、3日目の前にチケットページをすぐ開けるようにしておきます。"
+      en: "Keep a trusted map result ready for the Osaka Aquarium stop so the waterfront day stays easy to navigate and confirm in one place.",
+      ja: "大阪ベイエリアの日に迷わないよう、海遊館の信頼できる地図結果をすぐ開ける状態にしておきます。"
     },
     action: {
-      href: "https://example.com/japan/kaiyukan",
-      label: { en: "Book now", ja: "予約する" }
+      href: "https://www.google.com/maps/search/?api=1&query=Kaiyukan%20Osaka%20Aquarium",
+      label: { en: "Open Google Maps", ja: "Googleマップで開く" }
     }
   },
   {
@@ -254,12 +254,12 @@ const bookingTransitItems = [
       ja: "夜の時間帯や天候変更の影響があるので、時間指定予約をすぐ開けるようにしておく。"
     },
     details: {
-      en: "This is the highest-priority Tokyo reservation in the guide. Keep the booking page handy and remember that rooftop access and bag rules can change the plan.",
-      ja: "このガイド内では東京で最優先の予約項目です。予約ページをすぐ見られるようにして、屋上開放や荷物ルールの変化も意識しておきます。"
+      en: "Keep a trusted map result ready for the Shibuya rooftop stop so arrival, entry timing, and the surrounding area are easy to check in one place.",
+      ja: "渋谷の屋上スポットへ向かう時に、到着位置や周辺確認を一つで済ませられるよう、信頼できる地図結果をすぐ開ける状態にしておきます。"
     },
     action: {
-      href: "https://example.com/japan/shibuya-sky",
-      label: { en: "Book now", ja: "予約する" }
+      href: "https://www.google.com/maps/search/?api=1&query=Shibuya%20Sky%20Tokyo",
+      label: { en: "Open Google Maps", ja: "Googleマップで開く" }
     }
   }
 ];
