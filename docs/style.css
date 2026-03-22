@@ -1792,8 +1792,8 @@ html.has-modal-open body {
 
 .essentials-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: 1fr;
-  align-items: stretch;
+  grid-auto-rows: auto;
+  align-items: start;
 }
 
 .day-grid {
@@ -1829,7 +1829,8 @@ html.has-modal-open body {
 
 .essentials-card {
   gap: 0.92rem;
-  height: 100%;
+  height: auto;
+  align-self: start;
   grid-template-rows: auto auto minmax(0, 1fr);
 }
 
@@ -2136,7 +2137,7 @@ html.has-modal-open body {
 .essentials-card > .essentials-list,
 .essentials-card > .essentials-checklist,
 .essentials-card > .booking-transit {
-  align-self: stretch;
+  align-self: start;
 }
 
 .essentials-list,
