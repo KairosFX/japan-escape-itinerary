@@ -58,23 +58,27 @@ const activePanelStorageKey = "japan-trip-active-panel";
 const bookingTransitStorageKey = "japan-trip-bookings-transit-state";
 const bookingTransitGroupDefinitions = [
   {
-    id: "tickets",
-    title: { en: "Tickets / passes", ja: "チケット・パス" }
+    id: "bookings",
+    title: { en: "Bookings", ja: "予約" },
+    copy: {
+      en: "Keep the timed or pre-trip reservations together so the critical items are easy to scan first.",
+      ja: "時間指定や出発前に固めたい予約をまとめて、優先度の高い項目を先に見渡せるようにします。"
+    }
   },
   {
     id: "transit",
-    title: { en: "Transport info", ja: "移動情報" }
-  },
-  {
-    id: "attractions",
-    title: { en: "Attraction bookings", ja: "施設予約" }
+    title: { en: "Transit", ja: "移動" },
+    copy: {
+      en: "Keep the saved route references and transport checks together so transfer days stay calmer.",
+      ja: "保存しておきたい経路メモや運行確認をまとめて、移動日を落ち着いて進められるようにします。"
+    }
   }
 ];
 const bookingTransitItems = [
   {
     id: "ic-card",
-    group: "tickets",
-    filters: ["to-book", "transit"],
+    group: "transit",
+    filters: ["transit"],
     kind: "prep",
     tone: { en: "Setup prep", ja: "事前準備" },
     defaultStatus: { en: "Ready", ja: "準備OK" },
@@ -97,8 +101,8 @@ const bookingTransitItems = [
   },
   {
     id: "shin-osaka-odawara",
-    group: "tickets",
-    filters: ["to-book", "transit"],
+    group: "bookings",
+    filters: ["to-book"],
     kind: "booking",
     tone: { en: "Reserve ahead", ja: "事前予約" },
     defaultStatus: { en: "Not booked", ja: "未予約" },
@@ -121,8 +125,8 @@ const bookingTransitItems = [
   },
   {
     id: "hakone-freepass",
-    group: "tickets",
-    filters: ["to-book", "transit"],
+    group: "transit",
+    filters: ["transit"],
     kind: "prep",
     tone: { en: "Pass option", ja: "パス候補" },
     defaultStatus: { en: "Optional", ja: "任意" },
@@ -217,7 +221,7 @@ const bookingTransitItems = [
   },
   {
     id: "kaiyukan",
-    group: "attractions",
+    group: "bookings",
     filters: ["to-book"],
     kind: "booking",
     tone: { en: "Reserve ahead", ja: "事前予約" },
@@ -241,7 +245,7 @@ const bookingTransitItems = [
   },
   {
     id: "shibuya-sky",
-    group: "attractions",
+    group: "bookings",
     filters: ["to-book"],
     kind: "booking",
     tone: { en: "Reserve ahead", ja: "事前予約" },
@@ -797,7 +801,10 @@ function renderBookingTransitBoard() {
 
       return `
         <section class="booking-group" data-booking-group-section="${group.id}">
-          <h5 class="booking-group__title">${renderLocalizedContent(group.title)}</h5>
+          <div class="booking-group__header">
+            <h5 class="booking-group__title">${renderLocalizedContent(group.title)}</h5>
+            <p class="booking-group__copy">${renderLocalizedContent(group.copy)}</p>
+          </div>
           <div class="booking-group__list">
             ${itemsMarkup}
           </div>
