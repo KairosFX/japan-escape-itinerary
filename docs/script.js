@@ -49,6 +49,7 @@ const optionalDaysUnlockedStorageKey = "japan-trip-optional-days-unlocked";
 const activePanelStorageKey = "japan-trip-active-panel";
 const bookingTransitStorageKey = "japan-trip-bookings-transit-state";
 const introSeenSessionKey = "japan-trip-intro-seen";
+const introExitDurationMs = 180;
 const fujiForecastSessionKey = "japan-trip-fuji-forecast";
 const queuedStorageWrites = new Map();
 const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
@@ -125,6 +126,7 @@ let optionalDaysUnlocked = false;
 let optionalPromptIsCompact = false;
 let optionalPromptDeferred = false;
 let lastResetTrigger = null;
+const pendingClassRestarts = new WeakMap();
 let storageWriteFlushTimer = 0;
 let storageWriteIdleHandle = 0;
 let bookingTransitState = { filter: "all", items: {} };
@@ -1541,10 +1543,14 @@ function scheduleWelcomeExit() {
     // Ignore session storage failures and keep the page usable.
   }
 
-  window.setTimeout(() => {
+  window.requestAnimationFrame(() => {
+    if (!root.classList.contains("intro-pending")) {
+      return;
+    }
+
     root.classList.add("intro-out");
-    window.setTimeout(finishWelcome, 460);
-  }, 80);
+    window.setTimeout(finishWelcome, introExitDurationMs + 40);
+  });
 }
 
 function syncReservedHeaderHeight(forceReset = false) {
@@ -1880,14 +1886,35 @@ function getScrollBehavior() {
   return reducedEffectsEnabled ? "auto" : "smooth";
 }
 
+function restartClassOnNextFrame(target, className) {
+  if (!target) {
+    return;
+  }
+
+  const pendingRestart = pendingClassRestarts.get(target);
+  if (pendingRestart?.frameId) {
+    window.cancelAnimationFrame(pendingRestart.frameId);
+  }
+
+  const nextRestart = pendingRestart || { classNames: new Set(), frameId: 0 };
+  nextRestart.classNames.add(className);
+  nextRestart.frameId = window.requestAnimationFrame(() => {
+    pendingClassRestarts.delete(target);
+    nextRestart.classNames.forEach((pendingClassName) => {
+      target.classList.add(pendingClassName);
+    });
+  });
+
+  pendingClassRestarts.set(target, nextRestart);
+}
+
 function animateCompletion(target) {
   if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
     return;
   }
 
   target.classList.remove("is-celebrating", "is-unlocking");
-  void target.getBoundingClientRect();
-  target.classList.add("is-celebrating");
+  restartClassOnNextFrame(target, "is-celebrating");
   window.setTimeout(() => {
     target.classList.remove("is-celebrating");
   }, 920);
@@ -1899,8 +1926,7 @@ function animateUnlock(target) {
   }
 
   target.classList.remove("is-unlocking");
-  void target.getBoundingClientRect();
-  target.classList.add("is-unlocking");
+  restartClassOnNextFrame(target, "is-unlocking");
   window.setTimeout(() => {
     target.classList.remove("is-unlocking");
   }, 1200);
@@ -1918,10 +1944,11 @@ function showSequenceNotice(requiredDay) {
 
   sequenceNotice.hidden = false;
   sequenceNotice.classList.remove("is-visible");
-  if (!reducedEffectsEnabled) {
-    void sequenceNotice.getBoundingClientRect();
+  if (reducedEffectsEnabled) {
+    sequenceNotice.classList.add("is-visible");
+  } else {
+    restartClassOnNextFrame(sequenceNotice, "is-visible");
   }
-  sequenceNotice.classList.add("is-visible");
 
   window.clearTimeout(sequenceNoticeTimer);
   sequenceNoticeTimer = window.setTimeout(() => {
@@ -2377,8 +2404,7 @@ async function scrollToChecklistDay(day) {
       });
 
       targetCard.classList.remove("is-route-target");
-      void targetCard.getBoundingClientRect();
-      targetCard.classList.add("is-route-target");
+      restartClassOnNextFrame(targetCard, "is-route-target");
       window.setTimeout(() => {
         targetCard.classList.remove("is-route-target");
       }, 1400);
