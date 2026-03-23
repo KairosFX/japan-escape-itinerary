@@ -1959,9 +1959,79 @@ html.has-modal-open body {
   color: var(--muted);
 }
 
+.budget-notes__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: 0.72rem;
+}
+
+.budget-setting {
+  display: grid;
+  gap: 0.52rem;
+  align-content: start;
+  min-width: 0;
+  padding: 0.92rem 0.96rem;
+  border: 1px solid rgba(31, 37, 39, 0.08);
+  border-radius: calc(var(--radius-lg) + 0.18rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 251, 246, 0.72)),
+    rgba(255, 255, 255, 0.66);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 10px 22px rgba(39, 27, 20, 0.045);
+}
+
+.budget-setting__label,
+.budget-notes__subheading {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: rgba(94, 103, 104, 0.92);
+}
+
+.budget-setting__input {
+  width: 6.4rem;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.66rem;
+  border: 1px solid rgba(31, 37, 39, 0.08);
+  border-radius: 0.92rem;
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52);
+}
+
+.budget-setting__checkbox-row {
+  display: flex;
+  align-items: start;
+  gap: 0.66rem;
+}
+
+.budget-setting__checkbox {
+  flex: none;
+  width: 1.06rem;
+  height: 1.06rem;
+  margin-top: 0.14rem;
+}
+
+.budget-setting__toggle-copy {
+  min-width: 0;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.budget-setting__hint {
+  min-width: 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
 .budget-notes__summary {
   display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(0, 0.92fr) minmax(0, 1.22fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.72rem;
   align-items: start;
 }
@@ -1986,6 +2056,10 @@ html.has-modal-open body {
   padding: 0.82rem 0.88rem;
 }
 
+.budget-summary-card--reminders {
+  grid-column: 1 / -1;
+}
+
 .budget-summary-card__label {
   margin: 0;
   font-size: 0.76rem;
@@ -1996,7 +2070,8 @@ html.has-modal-open body {
 }
 
 .budget-summary-card--estimate .budget-summary-card__label,
-.budget-summary-card--mix .budget-summary-card__label {
+.budget-summary-card--per-person .budget-summary-card__label,
+.budget-summary-card--optional .budget-summary-card__label {
   max-inline-size: 12ch;
   text-wrap: balance;
 }
@@ -2013,6 +2088,11 @@ html.has-modal-open body {
   font-size: 1.12rem;
 }
 
+.budget-summary-card__value--text {
+  font-size: 1rem;
+  line-height: 1.28;
+}
+
 .budget-summary-card__meta {
   margin: 0;
   font-size: 0.84rem;
@@ -2020,14 +2100,72 @@ html.has-modal-open body {
   color: var(--muted);
 }
 
-.budget-summary-card__pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.42rem;
+.budget-notes__breakdown-block {
+  display: grid;
+  gap: 0.62rem;
 }
 
-.budget-summary-card--mix .budget-summary-card__pills {
+.budget-notes__breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.72rem;
+}
+
+.budget-breakdown-card {
+  display: grid;
   gap: 0.34rem;
+  align-content: start;
+  min-width: 0;
+  padding: 0.82rem 0.88rem;
+  border: 1px solid rgba(31, 37, 39, 0.08);
+  border-radius: calc(var(--radius-lg) - 0.08rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 250, 245, 0.68)),
+    rgba(255, 255, 255, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.68),
+    0 10px 22px rgba(39, 27, 20, 0.04);
+}
+
+.budget-breakdown-card__label,
+.budget-breakdown-card__meta,
+.budget-breakdown-card__hint {
+  margin: 0;
+  min-width: 0;
+}
+
+.budget-breakdown-card__label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: rgba(94, 103, 104, 0.92);
+}
+
+.budget-breakdown-card__value {
+  display: block;
+  min-width: 0;
+  font-size: 1.02rem;
+  line-height: 1.18;
+  color: var(--text);
+}
+
+.budget-breakdown-card__value--text {
+  font-size: 0.94rem;
+  line-height: 1.34;
+}
+
+.budget-breakdown-card__meta {
+  font-size: 0.83rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.budget-breakdown-card__hint {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--muted);
 }
 
 .budget-pill,
@@ -2178,6 +2316,14 @@ html.has-modal-open body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.42rem;
+}
+
+.budget-day__estimate-meta {
+  margin: 0;
+  min-width: 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--muted);
 }
 
 .budget-chip {
@@ -3941,7 +4087,12 @@ html.intro-done .welcome-overlay {
   }
 
   .budget-notes__summary,
+  .budget-notes__breakdown,
   .budget-notes__days {
+    grid-template-columns: 1fr;
+  }
+
+  .budget-notes__controls {
     grid-template-columns: 1fr;
   }
 
@@ -4147,6 +4298,16 @@ html.intro-done .welcome-overlay {
     grid-template-columns: 1fr;
   }
 
+}
+
+@media (min-width: 721px) and (max-width: 920px) {
+  .budget-notes__controls {
+    grid-template-columns: 1fr;
+  }
+
+  .budget-notes__breakdown {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 520px) {
@@ -4650,7 +4811,9 @@ html[data-theme="dark"] .offline-tools__meta {
 }
 
 html[data-theme="dark"] .budget-summary-card,
-html[data-theme="dark"] .budget-day {
+html[data-theme="dark"] .budget-breakdown-card,
+html[data-theme="dark"] .budget-day,
+html[data-theme="dark"] .budget-setting {
   border-color: rgba(248, 239, 228, 0.08);
   background:
     linear-gradient(180deg, rgba(27, 30, 35, 0.94), rgba(19, 22, 27, 0.9)),
@@ -4661,20 +4824,38 @@ html[data-theme="dark"] .budget-day {
 }
 
 html[data-theme="dark"] .budget-summary-card__label,
+html[data-theme="dark"] .budget-breakdown-card__label,
+html[data-theme="dark"] .budget-setting__label,
+html[data-theme="dark"] .budget-notes__subheading,
 html[data-theme="dark"] .budget-day__legend,
 html[data-theme="dark"] .budget-day__note-label {
   color: rgba(232, 221, 209, 0.74);
 }
 
 html[data-theme="dark"] .budget-summary-card__meta,
+html[data-theme="dark"] .budget-breakdown-card__hint,
+html[data-theme="dark"] .budget-setting__hint,
 html[data-theme="dark"] .budget-day__region,
+html[data-theme="dark"] .budget-day__estimate-meta,
 html[data-theme="dark"] .budget-reminder-list span {
   color: rgba(232, 221, 209, 0.68);
+}
+
+html[data-theme="dark"] .budget-breakdown-card__meta,
+html[data-theme="dark"] .budget-setting__toggle-copy {
+  color: rgba(246, 239, 231, 0.9);
 }
 
 html[data-theme="dark"] .budget-reminder-list li {
   border-color: rgba(248, 239, 228, 0.08);
   background: rgba(28, 31, 37, 0.72);
+}
+
+html[data-theme="dark"] .budget-setting__input {
+  border-color: rgba(248, 239, 228, 0.08);
+  background: rgba(21, 24, 30, 0.82);
+  color: rgba(246, 239, 231, 0.94);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 html[data-theme="dark"] .budget-chip {

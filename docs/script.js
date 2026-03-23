@@ -41,8 +41,11 @@ const optionalSkipButton = document.querySelector("[data-optional-skip]");
 const optionalSectionNodes = document.querySelectorAll("[data-optional-section]");
 const budgetNotesCard = document.querySelector("[data-budget-notes-card]");
 const budgetSummaryNode = document.querySelector("[data-budget-summary]");
+const budgetBreakdownNode = document.querySelector("[data-budget-breakdown]");
 const budgetDaysNode = document.querySelector("[data-budget-days]");
 const budgetResetButtons = Array.from(document.querySelectorAll("[data-budget-reset-all]"));
+const budgetTravelersInput = document.querySelector("[data-budget-travelers]");
+const budgetIncludeExtrasInput = document.querySelector("[data-budget-include-extras]");
 const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-section]"));
 const packingMarkAllButtons = Array.from(document.querySelectorAll("[data-packing-mark-all-global]"));
 const packingResetButtons = Array.from(document.querySelectorAll("[data-packing-reset-all]"));
@@ -93,12 +96,16 @@ const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
 const transitDetailsDataUrl = "./assets/data/transit-details.json";
 const offlineSnapshotUrl = "./japan-escape-itinerary-offline.html";
 const serviceWorkerUrl = "./service-worker.js";
-const offlineBundleVersion = "2026-03-22-offline-v1";
+const offlineBundleVersion = "2026-03-23-offline-v2";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
 const inlineDataSelectors = {
   bookingTransit: "[data-booking-transit-inline]",
   transitDetails: "[data-transit-details-inline]"
 };
+const budgetDefaultTravelerCount = 2;
+const budgetTravelerCountMin = 1;
+const budgetTravelerCountMax = 12;
+const budgetSharedRoomOccupancy = 2;
 const fujiForecastCacheMaxAgeMs = 45 * 60 * 1000;
 const fujiForecastSourceUrl = "https://open-meteo.com/en/docs";
 const fujiForecastApiUrl = "https://api.open-meteo.com/v1/forecast";
@@ -237,12 +244,12 @@ const offlineLabels = {
     ja: "この保存版はオフラインでそのまま使える単体版です。"
   },
   standardMeta: {
-    en: "Cached bundle version 2026-03-22. Includes checklist, packing, budget notes, route preview, and transit details.",
-    ja: "キャッシュ版は 2026-03-22。チェックリスト、荷造り、予算メモ、ルート画像、移動詳細を含みます。"
+    en: "Cached bundle version 2026-03-23. Includes checklist, packing, upgraded budget notes, route preview, and transit details.",
+    ja: "キャッシュ版は 2026-03-23。チェックリスト、荷造り、強化した予算メモ、ルート画像、移動詳細を含みます。"
   },
   installHintMeta: {
-    en: "If no install button appears, use your browser menu or iPhone/iPad Share sheet to add the guide to the home screen. Snapshot version: 2026-03-22.",
-    ja: "追加ボタンが出ない場合は、ブラウザーのメニューや iPhone/iPad の共有メニューからホーム画面へ追加できます。保存版は 2026-03-22 です。"
+    en: "If no install button appears, use your browser menu or iPhone/iPad Share sheet to add the guide to the home screen. Snapshot version: 2026-03-23.",
+    ja: "追加ボタンが出ない場合は、ブラウザーのメニューや iPhone/iPad の共有メニューからホーム画面へ追加できます。保存版は 2026-03-23 です。"
   },
   snapshotMeta: {
     en: "This single-file snapshot keeps the local checklist, packing, budget notes, route preview, and transit details working without fetches.",
@@ -251,11 +258,74 @@ const offlineLabels = {
 };
 const budgetNotesLabels = {
   summaryTotal: { en: "Trip estimate", ja: "旅全体の目安" },
-  summaryMix: { en: "Spend mix", ja: "出費バランス" },
+  summaryPerPerson: { en: "Per person", ja: "1人あたり" },
+  summaryOptional: { en: "Optional-day impact", ja: "追加日の影響" },
   summaryWatch: { en: "Watch points", ja: "見ておく項目" },
   visibleDays: { en: "Visible days", ja: "表示中の日数" },
-  noteLabel: { en: "Quick note", ja: "メモ" },
-  spendLegend: { en: "Spend level", ja: "出費レベル" }
+  noteLabel: { en: "Budget note", ja: "予算メモ" },
+  spendLegend: { en: "Day pace", ja: "その日の出費感" },
+  travelersLabel: { en: "Travelers", ja: "人数" },
+  travelersHint: {
+    en: "Shared stay costs assume one room for every two travelers, then split the total back per person.",
+    ja: "共有の宿泊費は2人で1室を基本に計算し、その合計を人数で割り戻します。"
+  },
+  extrasLabel: { en: "Include optional extras", ja: "任意の追加費用を含める" },
+  extrasHint: {
+    en: "Adds a shopping and splurge cushion without turning the planner into exact accounting.",
+    ja: "買い物や少し贅沢する余白を足しますが、細かい家計簿にはしません。"
+  },
+  breakdownHeading: { en: "Estimated breakdown", ja: "見込み内訳" },
+  helperCopy: {
+    en: "Core totals combine shared lodging, per-person day costs, and a small trip-wide transit/buffer base. Days 8-9 only count after they are unlocked.",
+    ja: "合計は共有の宿泊費、1人ごとの日別費用、旅全体の小さな移動・予備費を合わせて計算します。8〜9日目は解放後のみ加算されます。"
+  },
+  totalRange: { en: "Range", ja: "幅" },
+  optionalInactive: { en: "Not included", ja: "未反映" },
+  optionalInactiveMeta: {
+    en: "Days 8-9 are still excluded from the estimate.",
+    ja: "8〜9日目はまだ見積もりに含めていません。"
+  },
+  optionalIncludedMeta: { en: "Included days", ja: "含まれる日数" }
+};
+const budgetCategoryDefinitions = [
+  {
+    id: "lodging",
+    label: { en: "Lodging", ja: "宿泊" },
+    meta: { en: "Shared / room-based", ja: "共有 / 部屋単位" }
+  },
+  {
+    id: "transit",
+    label: { en: "Transit", ja: "移動" },
+    meta: { en: "Per person + trip base", ja: "1人ごと＋旅全体" }
+  },
+  {
+    id: "food",
+    label: { en: "Food", ja: "食事" },
+    meta: { en: "Per person / day-based", ja: "1人ごと / 日別" }
+  },
+  {
+    id: "attractions",
+    label: { en: "Attractions", ja: "観光" },
+    meta: { en: "Per person / ticket-based", ja: "1人ごと / チケット系" }
+  },
+  {
+    id: "shoppingBuffer",
+    label: { en: "Shopping + buffer", ja: "買い物＋予備" },
+    meta: { en: "Per person + weather cushion", ja: "1人ごと＋予備" }
+  },
+  {
+    id: "optionalExtras",
+    label: { en: "Optional extras", ja: "任意の追加費用" },
+    meta: { en: "Optional / can be excluded", ja: "任意 / 除外可能" }
+  }
+];
+const budgetTripBaseCosts = {
+  transit: {
+    perPerson: 2500
+  },
+  shoppingBuffer: {
+    shared: 6000
+  }
 };
 const budgetReminderItems = [
   {
@@ -308,6 +378,14 @@ const budgetDayConfigs = [
       low: [8000, 14000],
       medium: [12000, 20000],
       high: [18000, 30000]
+    },
+    costs: {
+      lodgingShared: 16000,
+      transitPerPerson: 2800,
+      foodPerPerson: { low: 3500, medium: 5000, high: 8000 },
+      attractionsPerPerson: { low: 0, medium: 0, high: 1500 },
+      shoppingBufferPerPerson: { low: 1500, medium: 2500, high: 4500 },
+      optionalExtrasPerPerson: { low: 0, medium: 800, high: 1800 }
     }
   },
   {
@@ -323,6 +401,14 @@ const budgetDayConfigs = [
       low: [7000, 12000],
       medium: [10000, 17000],
       high: [16000, 26000]
+    },
+    costs: {
+      lodgingShared: 16000,
+      transitPerPerson: 1200,
+      foodPerPerson: { low: 3200, medium: 4500, high: 7000 },
+      attractionsPerPerson: { low: 1200, medium: 2200, high: 3800 },
+      shoppingBufferPerPerson: { low: 1000, medium: 1800, high: 3200 },
+      optionalExtrasPerPerson: { low: 400, medium: 800, high: 1600 }
     }
   },
   {
@@ -338,6 +424,14 @@ const budgetDayConfigs = [
       low: [9000, 15000],
       medium: [13000, 21000],
       high: [19000, 32000]
+    },
+    costs: {
+      lodgingShared: 16000,
+      transitPerPerson: 2200,
+      foodPerPerson: { low: 3800, medium: 5200, high: 8500 },
+      attractionsPerPerson: { low: 1800, medium: 3200, high: 5200 },
+      shoppingBufferPerPerson: { low: 1500, medium: 2600, high: 4500 },
+      optionalExtrasPerPerson: { low: 600, medium: 1200, high: 2200 }
     }
   },
   {
@@ -353,6 +447,14 @@ const budgetDayConfigs = [
       low: [24000, 38000],
       medium: [32000, 50000],
       high: [45000, 70000]
+    },
+    costs: {
+      lodgingShared: 36000,
+      transitPerPerson: 16500,
+      foodPerPerson: { low: 2400, medium: 3200, high: 4800 },
+      attractionsPerPerson: { low: 1600, medium: 2600, high: 4200 },
+      shoppingBufferPerPerson: { low: 1200, medium: 2200, high: 3800 },
+      optionalExtrasPerPerson: { low: 400, medium: 1000, high: 1800 }
     }
   },
   {
@@ -368,6 +470,14 @@ const budgetDayConfigs = [
       low: [12000, 20000],
       medium: [18000, 30000],
       high: [26000, 42000]
+    },
+    costs: {
+      lodgingShared: 22000,
+      transitPerPerson: 4200,
+      foodPerPerson: { low: 3200, medium: 4600, high: 7000 },
+      attractionsPerPerson: { low: 1000, medium: 1800, high: 3200 },
+      shoppingBufferPerPerson: { low: 1200, medium: 2200, high: 3600 },
+      optionalExtrasPerPerson: { low: 600, medium: 1200, high: 2200 }
     }
   },
   {
@@ -383,6 +493,14 @@ const budgetDayConfigs = [
       low: [8000, 14000],
       medium: [12000, 22000],
       high: [18000, 32000]
+    },
+    costs: {
+      lodgingShared: 22000,
+      transitPerPerson: 2200,
+      foodPerPerson: { low: 3200, medium: 4500, high: 6500 },
+      attractionsPerPerson: { low: 1200, medium: 2400, high: 4200 },
+      shoppingBufferPerPerson: { low: 1800, medium: 2800, high: 4200 },
+      optionalExtrasPerPerson: { low: 800, medium: 1400, high: 2500 }
     }
   },
   {
@@ -398,6 +516,14 @@ const budgetDayConfigs = [
       low: [10000, 17000],
       medium: [14000, 26000],
       high: [22000, 38000]
+    },
+    costs: {
+      lodgingShared: 24000,
+      transitPerPerson: 4600,
+      foodPerPerson: { low: 4200, medium: 6000, high: 9000 },
+      attractionsPerPerson: { low: 2200, medium: 3500, high: 6200 },
+      shoppingBufferPerPerson: { low: 2200, medium: 3800, high: 6000 },
+      optionalExtrasPerPerson: { low: 1000, medium: 1800, high: 3200 }
     }
   },
   {
@@ -414,6 +540,14 @@ const budgetDayConfigs = [
       low: [8000, 15000],
       medium: [12000, 22000],
       high: [20000, 36000]
+    },
+    costs: {
+      lodgingShared: 24000,
+      transitPerPerson: 1200,
+      foodPerPerson: { low: 4000, medium: 5800, high: 9000 },
+      attractionsPerPerson: { low: 2600, medium: 4200, high: 7000 },
+      shoppingBufferPerPerson: { low: 2600, medium: 4600, high: 8000 },
+      optionalExtrasPerPerson: { low: 1200, medium: 2200, high: 3800 }
     }
   },
   {
@@ -430,6 +564,14 @@ const budgetDayConfigs = [
       low: [7000, 14000],
       medium: [11000, 20000],
       high: [18000, 32000]
+    },
+    costs: {
+      lodgingShared: 0,
+      transitPerPerson: 1400,
+      foodPerPerson: { low: 3800, medium: 5600, high: 8500 },
+      attractionsPerPerson: { low: 1600, medium: 2800, high: 4500 },
+      shoppingBufferPerPerson: { low: 2200, medium: 3600, high: 6500 },
+      optionalExtrasPerPerson: { low: 900, medium: 1800, high: 3200 }
     }
   }
 ];
@@ -930,7 +1072,7 @@ let activeTransitDetailId = "";
 let lastTransitTrigger = null;
 let packingState = {};
 let packingInitialized = false;
-let budgetNotesState = {};
+let budgetNotesState = getDefaultBudgetNotesState();
 let budgetNotesInitialized = false;
 let routeMapInitialized = false;
 let activeRouteMapSelection = { type: "view", id: routeExplorerDefaultSelectionId };
@@ -3022,41 +3164,107 @@ function normalizeBudgetLevel(level, fallback = "medium") {
   return level === "low" || level === "medium" || level === "high" ? level : fallback;
 }
 
+function normalizeBudgetTravelerCount(value, fallback = budgetDefaultTravelerCount) {
+  const parsed = Number.parseInt(String(value), 10);
+  if (!Number.isFinite(parsed)) {
+    return fallback;
+  }
+
+  return Math.min(Math.max(parsed, budgetTravelerCountMin), budgetTravelerCountMax);
+}
+
+function getDefaultBudgetNotesState() {
+  return {
+    travelers: budgetDefaultTravelerCount,
+    includeExtras: true,
+    days: {}
+  };
+}
+
+function getBudgetTravelerCountFromState(state = budgetNotesState) {
+  return normalizeBudgetTravelerCount(state?.travelers, budgetDefaultTravelerCount);
+}
+
+function getBudgetIncludeExtrasFromState(state = budgetNotesState) {
+  return state?.includeExtras !== false;
+}
+
+function getBudgetDayEntriesFromState(state = budgetNotesState) {
+  const dayEntries = state?.days;
+  if (!dayEntries || typeof dayEntries !== "object" || Array.isArray(dayEntries)) {
+    return {};
+  }
+
+  return dayEntries;
+}
+
 function getBudgetConfig(day) {
   return budgetDayConfigMap.get(String(day)) || null;
+}
+
+function normalizeBudgetDayEntries(entriesCandidate) {
+  if (!entriesCandidate || typeof entriesCandidate !== "object" || Array.isArray(entriesCandidate)) {
+    return {};
+  }
+
+  return Object.entries(entriesCandidate).reduce((nextState, [day, entry]) => {
+    const config = getBudgetConfig(day);
+    if (!config || !entry || typeof entry !== "object" || Array.isArray(entry)) {
+      return nextState;
+    }
+
+    const level = normalizeBudgetLevel(entry.level, config.defaultLevel);
+    const note = typeof entry.note === "string" ? entry.note.slice(0, 280) : "";
+
+    if (level !== config.defaultLevel || note.trim()) {
+      nextState[String(config.day)] = { level, note };
+    }
+
+    return nextState;
+  }, {});
 }
 
 function readStoredBudgetNotesState() {
   try {
     const parsed = JSON.parse(window.localStorage.getItem(budgetNotesStorageKey) || "{}");
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      return {};
+      return getDefaultBudgetNotesState();
     }
 
-    return Object.entries(parsed).reduce((nextState, [day, entry]) => {
-      const config = getBudgetConfig(day);
-      if (!config || !entry || typeof entry !== "object" || Array.isArray(entry)) {
-        return nextState;
-      }
+    const usesNewBudgetShape =
+      Object.prototype.hasOwnProperty.call(parsed, "days") ||
+      Object.prototype.hasOwnProperty.call(parsed, "travelers") ||
+      Object.prototype.hasOwnProperty.call(parsed, "includeExtras");
 
-      const level = normalizeBudgetLevel(entry.level, config.defaultLevel);
-      const note = typeof entry.note === "string" ? entry.note.slice(0, 280) : "";
-
-      if (level !== config.defaultLevel || note.trim()) {
-        nextState[String(config.day)] = { level, note };
-      }
-
-      return nextState;
-    }, {});
+    return {
+      travelers: normalizeBudgetTravelerCount(parsed.travelers, budgetDefaultTravelerCount),
+      includeExtras: typeof parsed.includeExtras === "boolean" ? parsed.includeExtras : true,
+      days: normalizeBudgetDayEntries(usesNewBudgetShape ? parsed.days : parsed)
+    };
   } catch (error) {
-    return {};
+    return getDefaultBudgetNotesState();
   }
+}
+
+function hasBudgetNotesChanges(state = budgetNotesState) {
+  return (
+    getBudgetTravelerCountFromState(state) !== budgetDefaultTravelerCount ||
+    !getBudgetIncludeExtrasFromState(state) ||
+    Object.keys(getBudgetDayEntriesFromState(state)).length > 0
+  );
 }
 
 function storeBudgetNotesState() {
   try {
-    if (Object.keys(budgetNotesState).length) {
-      queueStorageValue(budgetNotesStorageKey, JSON.stringify(budgetNotesState));
+    if (hasBudgetNotesChanges()) {
+      queueStorageValue(
+        budgetNotesStorageKey,
+        JSON.stringify({
+          travelers: getBudgetTravelerCount(),
+          includeExtras: shouldIncludeBudgetExtras(),
+          days: getBudgetDayEntries()
+        })
+      );
       return;
     }
 
@@ -3066,9 +3274,21 @@ function storeBudgetNotesState() {
   }
 }
 
+function getBudgetTravelerCount() {
+  return getBudgetTravelerCountFromState(budgetNotesState);
+}
+
+function shouldIncludeBudgetExtras() {
+  return getBudgetIncludeExtrasFromState(budgetNotesState);
+}
+
+function getBudgetDayEntries() {
+  return getBudgetDayEntriesFromState(budgetNotesState);
+}
+
 function getBudgetDayState(day) {
   const config = getBudgetConfig(day);
-  const storedState = budgetNotesState[String(day)] || {};
+  const storedState = getBudgetDayEntries()[String(day)] || {};
 
   return {
     level: normalizeBudgetLevel(storedState.level, config?.defaultLevel || "medium"),
@@ -3077,7 +3297,10 @@ function getBudgetDayState(day) {
 }
 
 function formatBudgetAmount(amount) {
-  return `¥${Math.round(Number(amount) / 1000)}k`;
+  const normalizedAmount = Math.max(0, Math.round(Number(amount) || 0));
+  return normalizedAmount < 1000
+    ? `¥${normalizedAmount}`
+    : `¥${Math.round(normalizedAmount / 1000)}k`;
 }
 
 function getBudgetRangeCopy(range = [0, 0]) {
@@ -3095,50 +3318,260 @@ function getVisibleBudgetDayConfigs() {
 }
 
 function getBudgetResetEnabled() {
-  return Object.keys(budgetNotesState).length > 0;
+  return hasBudgetNotesChanges();
 }
 
-function renderBudgetSummaryMarkup() {
+function getBudgetSharedRoomCount(travelers = getBudgetTravelerCount()) {
+  return Math.max(1, Math.ceil(travelers / budgetSharedRoomOccupancy));
+}
+
+function resolveBudgetCostByLevel(costValue, level = "medium") {
+  if (typeof costValue === "number") {
+    return Math.max(Number(costValue) || 0, 0);
+  }
+
+  if (!costValue || typeof costValue !== "object" || Array.isArray(costValue)) {
+    return 0;
+  }
+
+  return Math.max(Number(costValue[level] ?? costValue.medium ?? 0) || 0, 0);
+}
+
+function createEmptyBudgetCategoryTotals() {
+  return budgetCategoryDefinitions.reduce((totals, category) => {
+    totals[category.id] = 0;
+    return totals;
+  }, {});
+}
+
+function addBudgetCategoryTotals(target, source = {}) {
+  budgetCategoryDefinitions.forEach((category) => {
+    target[category.id] = (target[category.id] || 0) + (Number(source[category.id]) || 0);
+  });
+
+  return target;
+}
+
+function getBudgetCategoryTotal(categories = {}) {
+  return budgetCategoryDefinitions.reduce(
+    (total, category) => total + (Number(categories[category.id]) || 0),
+    0
+  );
+}
+
+function getBudgetTripBaseCategories(
+  travelers = getBudgetTravelerCount(),
+  includeExtras = shouldIncludeBudgetExtras()
+) {
+  const sharedShoppingBuffer = Number(budgetTripBaseCosts.shoppingBuffer?.shared) || 0;
+  const transitPerPersonBase = Number(budgetTripBaseCosts.transit?.perPerson) || 0;
+  const optionalExtrasShared = includeExtras
+    ? Number(budgetTripBaseCosts.optionalExtras?.shared) || 0
+    : 0;
+  const optionalExtrasPerPerson = includeExtras
+    ? Number(budgetTripBaseCosts.optionalExtras?.perPerson) || 0
+    : 0;
+
+  return {
+    lodging: 0,
+    transit: transitPerPersonBase * travelers,
+    food: 0,
+    attractions: 0,
+    shoppingBuffer: sharedShoppingBuffer,
+    optionalExtras: optionalExtrasShared + optionalExtrasPerPerson * travelers
+  };
+}
+
+function getBudgetDayEstimate(config, options = {}) {
+  if (!config) {
+    return {
+      categories: createEmptyBudgetCategoryTotals(),
+      total: 0,
+      perPerson: 0,
+      roomCount: 0
+    };
+  }
+
+  const travelers = normalizeBudgetTravelerCount(options.travelers, getBudgetTravelerCount());
+  const level = normalizeBudgetLevel(options.level, config.defaultLevel);
+  const includeExtras =
+    typeof options.includeExtras === "boolean" ? options.includeExtras : shouldIncludeBudgetExtras();
+  const costs = config.costs || {};
+  const roomCount = resolveBudgetCostByLevel(costs.lodgingShared, level)
+    ? getBudgetSharedRoomCount(travelers)
+    : 0;
+  const categories = {
+    lodging: resolveBudgetCostByLevel(costs.lodgingShared, level) * roomCount,
+    transit: resolveBudgetCostByLevel(costs.transitPerPerson, level) * travelers,
+    food: resolveBudgetCostByLevel(costs.foodPerPerson, level) * travelers,
+    attractions: resolveBudgetCostByLevel(costs.attractionsPerPerson, level) * travelers,
+    shoppingBuffer: resolveBudgetCostByLevel(costs.shoppingBufferPerPerson, level) * travelers,
+    optionalExtras: includeExtras
+      ? resolveBudgetCostByLevel(costs.optionalExtrasPerPerson, level) * travelers
+      : 0
+  };
+  const total = getBudgetCategoryTotal(categories);
+
+  return {
+    categories,
+    total,
+    perPerson: total / travelers,
+    roomCount
+  };
+}
+
+function calculateBudgetEstimate() {
+  const travelers = getBudgetTravelerCount();
+  const includeExtras = shouldIncludeBudgetExtras();
+  const roomCount = getBudgetSharedRoomCount(travelers);
   const visibleConfigs = getVisibleBudgetDayConfigs();
   const spendCounts = { low: 0, medium: 0, high: 0 };
-  let totalMin = 0;
-  let totalMax = 0;
+  const categoryTotals = getBudgetTripBaseCategories(travelers, includeExtras);
+  let totalExpected = getBudgetCategoryTotal(categoryTotals);
+  let totalLow = getBudgetCategoryTotal(getBudgetTripBaseCategories(travelers, includeExtras));
+  let totalHigh = getBudgetCategoryTotal(getBudgetTripBaseCategories(travelers, includeExtras));
+  let optionalImpactTotal = 0;
+  let optionalImpactDays = 0;
 
   visibleConfigs.forEach((config) => {
     const state = getBudgetDayState(config.day);
-    const activeRange = config.ranges[state.level] || config.ranges[config.defaultLevel];
+    const expectedEstimate = getBudgetDayEstimate(config, {
+      travelers,
+      level: state.level,
+      includeExtras
+    });
+    const lowEstimate = getBudgetDayEstimate(config, {
+      travelers,
+      level: "low",
+      includeExtras
+    });
+    const highEstimate = getBudgetDayEstimate(config, {
+      travelers,
+      level: "high",
+      includeExtras
+    });
+
     spendCounts[state.level] += 1;
-    totalMin += activeRange[0];
-    totalMax += activeRange[1];
+    addBudgetCategoryTotals(categoryTotals, expectedEstimate.categories);
+    totalExpected += expectedEstimate.total;
+    totalLow += lowEstimate.total;
+    totalHigh += highEstimate.total;
+
+    if (config.optional) {
+      optionalImpactTotal += expectedEstimate.total;
+      optionalImpactDays += 1;
+    }
   });
+
+  const sharedBaseTotal = budgetCategoryDefinitions.reduce((total, category) => {
+    return total + (Number(budgetTripBaseCosts[category.id]?.shared) || 0);
+  }, 0);
+  const sharedTotal = categoryTotals.lodging + sharedBaseTotal;
+
+  return {
+    travelers,
+    includeExtras,
+    roomCount,
+    visibleConfigs,
+    spendCounts,
+    categoryTotals,
+    totalExpected,
+    totalLow,
+    totalHigh,
+    perPersonExpected: totalExpected / travelers,
+    perPersonLow: totalLow / travelers,
+    perPersonHigh: totalHigh / travelers,
+    optionalImpactTotal,
+    optionalImpactPerPerson: optionalImpactTotal / travelers,
+    optionalImpactDays,
+    sharedTotal,
+    perPersonVariableTotal: totalExpected - sharedTotal
+  };
+}
+
+function getBudgetDayTotalCopy(dayEstimate) {
+  return {
+    en: `${formatBudgetAmount(dayEstimate.total)} total`,
+    ja: `合計 ${formatBudgetAmount(dayEstimate.total)}`
+  };
+}
+
+function getBudgetDayEstimateMetaCopy(dayEstimate, lowEstimate, highEstimate, travelers) {
+  const range = `${formatBudgetAmount(lowEstimate.total)}-${formatBudgetAmount(highEstimate.total)}`;
+  if (travelers > 1) {
+    return {
+      en: `${formatBudgetAmount(dayEstimate.perPerson)} each • ${budgetNotesLabels.totalRange.en} ${range}`,
+      ja: `1人 ${formatBudgetAmount(dayEstimate.perPerson)} ・ ${budgetNotesLabels.totalRange.ja} ${range}`
+    };
+  }
+
+  return {
+    en: `${budgetNotesLabels.totalRange.en} ${range}`,
+    ja: `${budgetNotesLabels.totalRange.ja} ${range}`
+  };
+}
+
+function renderBudgetSummaryMarkup(estimate = calculateBudgetEstimate()) {
+  const totalRangeMeta = {
+    en: `${budgetNotesLabels.totalRange.en} ${formatBudgetAmount(estimate.totalLow)}-${formatBudgetAmount(
+      estimate.totalHigh
+    )} • ${budgetNotesLabels.visibleDays.en}: ${estimate.visibleConfigs.length}`,
+    ja: `${budgetNotesLabels.totalRange.ja} ${formatBudgetAmount(estimate.totalLow)}-${formatBudgetAmount(
+      estimate.totalHigh
+    )} ・ ${budgetNotesLabels.visibleDays.ja}: ${estimate.visibleConfigs.length}日`
+  };
+  const perPersonMeta = {
+    en: `${budgetNotesLabels.totalRange.en} ${formatBudgetAmount(
+      estimate.perPersonLow
+    )}-${formatBudgetAmount(estimate.perPersonHigh)} • ${estimate.travelers} ${
+      estimate.travelers === 1 ? "traveler" : "travelers"
+    } / ${estimate.roomCount} ${estimate.roomCount === 1 ? "room" : "rooms"}`,
+    ja: `${budgetNotesLabels.totalRange.ja} ${formatBudgetAmount(
+      estimate.perPersonLow
+    )}-${formatBudgetAmount(estimate.perPersonHigh)} ・ ${estimate.travelers}人 / ${estimate.roomCount}室想定`
+  };
+  const optionalValueCopy =
+    estimate.optionalImpactDays > 0
+      ? {
+          en: `+${formatBudgetAmount(estimate.optionalImpactTotal)} total`,
+          ja: `+${formatBudgetAmount(estimate.optionalImpactTotal)} 合計`
+        }
+      : budgetNotesLabels.optionalInactive;
+  const optionalMetaCopy =
+    estimate.optionalImpactDays > 0
+      ? {
+          en: `+${formatBudgetAmount(estimate.optionalImpactPerPerson)} each • ${budgetNotesLabels.optionalIncludedMeta.en}: ${estimate.optionalImpactDays}`,
+          ja: `1人 +${formatBudgetAmount(estimate.optionalImpactPerPerson)} ・ ${budgetNotesLabels.optionalIncludedMeta.ja}: ${estimate.optionalImpactDays}日`
+        }
+      : budgetNotesLabels.optionalInactiveMeta;
 
   return `
     <div class="budget-summary-card budget-summary-card--estimate budget-summary-card--compact">
       <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryTotal)}</p>
-      <strong class="budget-summary-card__value">${renderLocalizedContent(
-        getBudgetRangeCopy([totalMin, totalMax])
-      )}</strong>
-      <p class="budget-summary-card__meta">${renderLocalizedContent({
-        en: `${budgetNotesLabels.visibleDays.en}: ${visibleConfigs.length}`,
-        ja: `${budgetNotesLabels.visibleDays.ja}: ${visibleConfigs.length}日`
-      })}</p>
+      <strong class="budget-summary-card__value">${renderLocalizedContent({
+        en: `${formatBudgetAmount(estimate.totalExpected)} total`,
+        ja: `合計 ${formatBudgetAmount(estimate.totalExpected)}`
+      })}</strong>
+      <p class="budget-summary-card__meta">${renderLocalizedContent(totalRangeMeta)}</p>
     </div>
-    <div class="budget-summary-card budget-summary-card--mix budget-summary-card--compact">
-      <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryMix)}</p>
-      <div class="budget-summary-card__pills">
-        <span class="budget-pill budget-pill--low">${renderLocalizedContent({
-          en: `${spendCounts.low} low`,
-          ja: `低め ${spendCounts.low}日`
-        })}</span>
-        <span class="budget-pill budget-pill--medium">${renderLocalizedContent({
-          en: `${spendCounts.medium} medium`,
-          ja: `標準 ${spendCounts.medium}日`
-        })}</span>
-        <span class="budget-pill budget-pill--high">${renderLocalizedContent({
-          en: `${spendCounts.high} high`,
-          ja: `高め ${spendCounts.high}日`
-        })}</span>
-      </div>
+    <div class="budget-summary-card budget-summary-card--per-person budget-summary-card--compact">
+      <p class="budget-summary-card__label">${renderLocalizedContent(
+        budgetNotesLabels.summaryPerPerson
+      )}</p>
+      <strong class="budget-summary-card__value">${renderLocalizedContent({
+        en: `${formatBudgetAmount(estimate.perPersonExpected)} each`,
+        ja: `1人 ${formatBudgetAmount(estimate.perPersonExpected)}`
+      })}</strong>
+      <p class="budget-summary-card__meta">${renderLocalizedContent(perPersonMeta)}</p>
+    </div>
+    <div class="budget-summary-card budget-summary-card--optional budget-summary-card--compact">
+      <p class="budget-summary-card__label">${renderLocalizedContent(
+        budgetNotesLabels.summaryOptional
+      )}</p>
+      <strong class="budget-summary-card__value ${
+        estimate.optionalImpactDays > 0 ? "" : "budget-summary-card__value--text"
+      }">${renderLocalizedContent(optionalValueCopy)}</strong>
+      <p class="budget-summary-card__meta">${renderLocalizedContent(optionalMetaCopy)}</p>
     </div>
     <div class="budget-summary-card budget-summary-card--reminders">
       <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryWatch)}</p>
@@ -3158,11 +3591,66 @@ function renderBudgetSummaryMarkup() {
   `;
 }
 
+function renderBudgetBreakdownMarkup(estimate = calculateBudgetEstimate()) {
+  return budgetCategoryDefinitions
+    .map((category) => {
+      const total = estimate.categoryTotals[category.id] || 0;
+      const isOptionalCategory = category.id === "optionalExtras";
+      const isOptionalInactive = isOptionalCategory && !estimate.includeExtras;
+      const totalCopy = isOptionalInactive ? budgetNotesLabels.optionalInactive : { en: formatBudgetAmount(total), ja: formatBudgetAmount(total) };
+      const perPersonMeta =
+        category.id === "lodging"
+          ? {
+              en: `${formatBudgetAmount(total / estimate.travelers)} each • ${estimate.roomCount} ${
+                estimate.roomCount === 1 ? "room" : "rooms"
+              } assumed`,
+              ja: `1人 ${formatBudgetAmount(total / estimate.travelers)} ・ ${estimate.roomCount}室想定`
+            }
+          : isOptionalInactive
+            ? {
+                en: "Currently excluded from the estimate",
+                ja: "現在は見積もりから除外しています"
+              }
+            : {
+                en: `${formatBudgetAmount(total / estimate.travelers)} each`,
+                ja: `1人 ${formatBudgetAmount(total / estimate.travelers)}`
+              };
+
+      return `
+        <article class="budget-breakdown-card">
+          <p class="budget-breakdown-card__label">${renderLocalizedContent(category.label)}</p>
+          <strong class="budget-breakdown-card__value ${
+            isOptionalInactive ? "budget-breakdown-card__value--text" : ""
+          }">${renderLocalizedContent(totalCopy)}</strong>
+          <p class="budget-breakdown-card__meta">${renderLocalizedContent(perPersonMeta)}</p>
+          <p class="budget-breakdown-card__hint">${renderLocalizedContent(category.meta)}</p>
+        </article>
+      `;
+    })
+    .join("");
+}
+
 function renderBudgetDayMarkup(config) {
   const state = getBudgetDayState(config.day);
   const noteAriaEn = `Budget note for ${config.title.en}`;
   const noteAriaJa = `${config.title.ja}の予算メモ`;
-  const rangeCopy = getBudgetRangeCopy(config.ranges[state.level]);
+  const travelers = getBudgetTravelerCount();
+  const includeExtras = shouldIncludeBudgetExtras();
+  const dayEstimate = getBudgetDayEstimate(config, {
+    travelers,
+    level: state.level,
+    includeExtras
+  });
+  const lowEstimate = getBudgetDayEstimate(config, {
+    travelers,
+    level: "low",
+    includeExtras
+  });
+  const highEstimate = getBudgetDayEstimate(config, {
+    travelers,
+    level: "high",
+    includeExtras
+  });
   const isOptional = Boolean(config.optional);
 
   return `
@@ -3176,7 +3664,9 @@ function renderBudgetDayMarkup(config) {
           <h4 class="budget-day__title">${renderLocalizedContent(config.title)}</h4>
           <p class="budget-day__region">${renderLocalizedContent(config.region)}</p>
         </div>
-        <p class="budget-day__range" data-budget-range>${renderLocalizedContent(rangeCopy)}</p>
+        <p class="budget-day__range" data-budget-range>${renderLocalizedContent(
+          getBudgetDayTotalCopy(dayEstimate)
+        )}</p>
       </div>
 
       <div class="budget-day__tags">
@@ -3192,6 +3682,9 @@ function renderBudgetDayMarkup(config) {
           .map((tag) => `<span class="budget-chip">${renderLocalizedContent(tag)}</span>`)
           .join("")}
       </div>
+      <p class="budget-day__estimate-meta" data-budget-estimate-meta>${renderLocalizedContent(
+        getBudgetDayEstimateMetaCopy(dayEstimate, lowEstimate, highEstimate, travelers)
+      )}</p>
 
       <div class="budget-day__body">
         <fieldset class="budget-day__levels">
@@ -3235,13 +3728,25 @@ function renderBudgetDayMarkup(config) {
 }
 
 function renderBudgetNotes() {
-  if (!budgetNotesCard || !budgetSummaryNode || !budgetDaysNode) {
+  if (!budgetNotesCard || !budgetSummaryNode || !budgetBreakdownNode || !budgetDaysNode) {
     return;
   }
 
-  budgetSummaryNode.innerHTML = renderBudgetSummaryMarkup();
+  const estimate = calculateBudgetEstimate();
+  budgetSummaryNode.innerHTML = renderBudgetSummaryMarkup(estimate);
+  budgetBreakdownNode.innerHTML = renderBudgetBreakdownMarkup(estimate);
   budgetDaysNode.innerHTML = budgetDayConfigs.map((config) => renderBudgetDayMarkup(config)).join("");
   syncLocalizedNodes(budgetNotesCard);
+}
+
+function syncBudgetControlsUI() {
+  if (budgetTravelersInput && budgetTravelersInput.value !== String(getBudgetTravelerCount())) {
+    budgetTravelersInput.value = String(getBudgetTravelerCount());
+  }
+
+  if (budgetIncludeExtrasInput) {
+    budgetIncludeExtrasInput.checked = shouldIncludeBudgetExtras();
+  }
 }
 
 function syncBudgetDayUI(dayElement) {
@@ -3255,6 +3760,23 @@ function syncBudgetDayUI(dayElement) {
   }
 
   const state = getBudgetDayState(config.day);
+  const travelers = getBudgetTravelerCount();
+  const includeExtras = shouldIncludeBudgetExtras();
+  const dayEstimate = getBudgetDayEstimate(config, {
+    travelers,
+    level: state.level,
+    includeExtras
+  });
+  const lowEstimate = getBudgetDayEstimate(config, {
+    travelers,
+    level: "low",
+    includeExtras
+  });
+  const highEstimate = getBudgetDayEstimate(config, {
+    travelers,
+    level: "high",
+    includeExtras
+  });
   dayElement.hidden = Boolean(config.optional) && !areOptionalDaysUnlocked();
   dayElement.dataset.budgetLevelState = state.level;
 
@@ -3269,26 +3791,55 @@ function syncBudgetDayUI(dayElement) {
 
   const rangeNode = dayElement.querySelector("[data-budget-range]");
   if (rangeNode) {
-    rangeNode.innerHTML = renderLocalizedContent(getBudgetRangeCopy(config.ranges[state.level]));
+    rangeNode.innerHTML = renderLocalizedContent(getBudgetDayTotalCopy(dayEstimate));
     syncLocalizedNodes(rangeNode);
+  }
+
+  const estimateMetaNode = dayElement.querySelector("[data-budget-estimate-meta]");
+  if (estimateMetaNode) {
+    estimateMetaNode.innerHTML = renderLocalizedContent(
+      getBudgetDayEstimateMetaCopy(dayEstimate, lowEstimate, highEstimate, travelers)
+    );
+    syncLocalizedNodes(estimateMetaNode);
   }
 }
 
 function syncBudgetNotesUI() {
-  if (!budgetNotesCard || !budgetSummaryNode || !budgetDaysNode) {
+  if (!budgetNotesCard || !budgetSummaryNode || !budgetBreakdownNode || !budgetDaysNode) {
     return;
   }
 
+  const estimate = calculateBudgetEstimate();
   budgetDaysNode.querySelectorAll("[data-budget-day]").forEach((dayElement) => {
     syncBudgetDayUI(dayElement);
   });
 
-  budgetSummaryNode.innerHTML = renderBudgetSummaryMarkup();
+  syncBudgetControlsUI();
+  budgetSummaryNode.innerHTML = renderBudgetSummaryMarkup(estimate);
+  budgetBreakdownNode.innerHTML = renderBudgetBreakdownMarkup(estimate);
   syncLocalizedNodes(budgetSummaryNode);
+  syncLocalizedNodes(budgetBreakdownNode);
 
   budgetResetButtons.forEach((button) => {
     button.disabled = !getBudgetResetEnabled();
   });
+}
+
+function commitBudgetSettings(nextSettings = {}) {
+  const nextTravelers = Object.prototype.hasOwnProperty.call(nextSettings, "travelers")
+    ? normalizeBudgetTravelerCount(nextSettings.travelers, getBudgetTravelerCount())
+    : getBudgetTravelerCount();
+  const nextIncludeExtras = Object.prototype.hasOwnProperty.call(nextSettings, "includeExtras")
+    ? Boolean(nextSettings.includeExtras)
+    : shouldIncludeBudgetExtras();
+
+  budgetNotesState = {
+    travelers: nextTravelers,
+    includeExtras: nextIncludeExtras,
+    days: { ...getBudgetDayEntries() }
+  };
+  storeBudgetNotesState();
+  syncBudgetNotesUI();
 }
 
 function commitBudgetDayState(day, nextState) {
@@ -3299,19 +3850,25 @@ function commitBudgetDayState(day, nextState) {
 
   const level = normalizeBudgetLevel(nextState.level, config.defaultLevel);
   const note = typeof nextState.note === "string" ? nextState.note.slice(0, 280) : "";
+  const nextDays = { ...getBudgetDayEntries() };
 
   if (level === config.defaultLevel && !note.trim()) {
-    delete budgetNotesState[String(config.day)];
+    delete nextDays[String(config.day)];
   } else {
-    budgetNotesState[String(config.day)] = { level, note };
+    nextDays[String(config.day)] = { level, note };
   }
 
+  budgetNotesState = {
+    travelers: getBudgetTravelerCount(),
+    includeExtras: shouldIncludeBudgetExtras(),
+    days: nextDays
+  };
   storeBudgetNotesState();
   syncBudgetNotesUI();
 }
 
 function resetBudgetNotesState() {
-  budgetNotesState = {};
+  budgetNotesState = getDefaultBudgetNotesState();
   storeBudgetNotesState();
   syncBudgetNotesUI();
 }
@@ -3332,6 +3889,31 @@ function bindBudgetNotesUI() {
 
     button.dataset.budgetBound = "true";
   });
+
+  if (budgetTravelersInput && budgetTravelersInput.dataset.budgetBound !== "true") {
+    const commitTravelerCount = () => {
+      const parsedValue = Number.parseInt(budgetTravelersInput.value, 10);
+      if (Number.isNaN(parsedValue)) {
+        syncBudgetControlsUI();
+        return;
+      }
+
+      commitBudgetSettings({ travelers: parsedValue });
+    };
+
+    budgetTravelersInput.addEventListener("input", commitTravelerCount);
+    budgetTravelersInput.addEventListener("blur", () => {
+      syncBudgetControlsUI();
+    });
+    budgetTravelersInput.dataset.budgetBound = "true";
+  }
+
+  if (budgetIncludeExtrasInput && budgetIncludeExtrasInput.dataset.budgetBound !== "true") {
+    budgetIncludeExtrasInput.addEventListener("change", () => {
+      commitBudgetSettings({ includeExtras: budgetIncludeExtrasInput.checked });
+    });
+    budgetIncludeExtrasInput.dataset.budgetBound = "true";
+  }
 
   if (budgetDaysNode.dataset.budgetBound === "true") {
     return;
@@ -3375,7 +3957,7 @@ function bindBudgetNotesUI() {
 }
 
 function initializeBudgetNotes() {
-  if (!budgetNotesCard || !budgetSummaryNode || !budgetDaysNode) {
+  if (!budgetNotesCard || !budgetSummaryNode || !budgetBreakdownNode || !budgetDaysNode) {
     return;
   }
 
