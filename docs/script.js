@@ -27,6 +27,8 @@ const optionalPromptFeedback = document.querySelector("[data-optional-feedback]"
 const optionalUnlockButtons = document.querySelectorAll("[data-optional-unlock]");
 const optionalSkipButton = document.querySelector("[data-optional-skip]");
 const optionalSectionNodes = document.querySelectorAll("[data-optional-section]");
+const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-section]"));
+const packingResetButtons = Array.from(document.querySelectorAll("[data-packing-reset-all]"));
 const optionalProgressItems = Array.from(
   document.querySelectorAll("[data-progress-item][data-progress-optional='true']")
 );
@@ -48,6 +50,7 @@ const completedHistoryStorageKey = "japan-trip-completed-history";
 const optionalDaysUnlockedStorageKey = "japan-trip-optional-days-unlocked";
 const activePanelStorageKey = "japan-trip-active-panel";
 const bookingTransitStorageKey = "japan-trip-bookings-transit-state";
+const packingStorageKey = "japan-trip-packing-state";
 const introSeenSessionKey = "japan-trip-intro-seen";
 const introExitDurationMs = 180;
 const fujiForecastSessionKey = "japan-trip-fuji-forecast";
@@ -147,6 +150,8 @@ let storageWriteIdleHandle = 0;
 let bookingTransitState = { filter: "all", items: {} };
 let bookingTransitInitialized = false;
 let bookingTransitItemsPromise = null;
+let packingState = {};
+let packingInitialized = false;
 let fujiForecastResult = null;
 let fujiForecastPromise = null;
 let reducedEffectsEnabled = false;
@@ -1502,6 +1507,190 @@ function resetBookingTransitState() {
   }
 }
 
+function readStoredPackingState() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(packingStorageKey) || "{}");
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function storePackingState() {
+  try {
+    if (Object.keys(packingState).length) {
+      queueStorageValue(packingStorageKey, JSON.stringify(packingState));
+      return;
+    }
+
+    queueStorageRemoval(packingStorageKey);
+  } catch (error) {
+    // Ignore storage failures and keep the packing toggles usable.
+  }
+}
+
+function getPackingItems(sectionElement) {
+  return Array.from(sectionElement?.querySelectorAll("[data-packing-item]") || []);
+}
+
+function isPackingItemPacked(itemId) {
+  return Boolean(packingState[itemId]);
+}
+
+function syncPackingSectionUI(sectionElement) {
+  if (!sectionElement) {
+    return;
+  }
+
+  const items = getPackingItems(sectionElement);
+  let packedCount = 0;
+
+  items.forEach((itemElement) => {
+    const itemId = itemElement.dataset.packingItem || "";
+    const isPacked = isPackingItemPacked(itemId);
+    const checkbox = itemElement.querySelector("[data-packing-checkbox]");
+    itemElement.dataset.packingState = isPacked ? "packed" : "pending";
+
+    if (checkbox && checkbox.checked !== isPacked) {
+      checkbox.checked = isPacked;
+    }
+
+    if (isPacked) {
+      packedCount += 1;
+    }
+  });
+
+  const totalCount = items.length;
+  const isComplete = totalCount > 0 && packedCount === totalCount;
+  sectionElement.dataset.packingComplete = String(isComplete);
+
+  sectionElement.querySelectorAll("[data-packing-progress-language]").forEach((node) => {
+    if (node.dataset.packingProgressLanguage === "ja") {
+      node.textContent = `${packedCount} / ${totalCount} 完了`;
+      return;
+    }
+
+    node.textContent = `${packedCount} / ${totalCount} packed`;
+  });
+
+  const markAllButton = sectionElement.querySelector("[data-packing-mark-all]");
+  if (markAllButton) {
+    markAllButton.disabled = !totalCount || isComplete;
+  }
+
+  const clearButton = sectionElement.querySelector("[data-packing-clear-section]");
+  if (clearButton) {
+    clearButton.disabled = packedCount === 0;
+  }
+}
+
+function syncPackingUI() {
+  packingSectionCards.forEach((sectionElement) => {
+    syncPackingSectionUI(sectionElement);
+  });
+
+  const hasPackedItems = Object.keys(packingState).length > 0;
+  packingResetButtons.forEach((button) => {
+    button.disabled = !hasPackedItems;
+  });
+}
+
+function setPackingSectionState(sectionElement, packed) {
+  if (!sectionElement) {
+    return;
+  }
+
+  getPackingItems(sectionElement).forEach((itemElement) => {
+    const itemId = itemElement.dataset.packingItem || "";
+    if (!itemId) {
+      return;
+    }
+
+    if (packed) {
+      packingState[itemId] = true;
+    } else {
+      delete packingState[itemId];
+    }
+  });
+
+  storePackingState();
+  syncPackingUI();
+}
+
+function resetPackingState() {
+  packingState = {};
+  storePackingState();
+  syncPackingUI();
+}
+
+function bindPackingUI() {
+  packingResetButtons.forEach((button) => {
+    if (button.dataset.packingBound === "true") {
+      return;
+    }
+
+    button.addEventListener("click", () => {
+      resetPackingState();
+    });
+
+    button.dataset.packingBound = "true";
+  });
+
+  packingSectionCards.forEach((sectionElement) => {
+    if (sectionElement.dataset.packingBound === "true") {
+      return;
+    }
+
+    sectionElement.addEventListener("change", (event) => {
+      const checkbox = event.target.closest?.("[data-packing-checkbox]");
+      if (!checkbox) {
+        return;
+      }
+
+      const itemElement = checkbox.closest("[data-packing-item]");
+      const itemId = itemElement?.dataset.packingItem || "";
+      if (!itemId) {
+        return;
+      }
+
+      if (checkbox.checked) {
+        packingState[itemId] = true;
+      } else {
+        delete packingState[itemId];
+      }
+
+      storePackingState();
+      syncPackingUI();
+    });
+
+    sectionElement.querySelector("[data-packing-mark-all]")?.addEventListener("click", () => {
+      setPackingSectionState(sectionElement, true);
+    });
+
+    sectionElement
+      .querySelector("[data-packing-clear-section]")
+      ?.addEventListener("click", () => {
+        setPackingSectionState(sectionElement, false);
+      });
+
+    sectionElement.dataset.packingBound = "true";
+  });
+}
+
+function initializePackingToggles() {
+  if (!packingSectionCards.length) {
+    return;
+  }
+
+  if (!packingInitialized) {
+    packingState = readStoredPackingState();
+    packingInitialized = true;
+  }
+
+  bindPackingUI();
+  syncPackingUI();
+}
+
 function readStoredLanguage() {
   try {
     return window.localStorage.getItem(storageKey);
@@ -1627,6 +1816,12 @@ function setHeaderCondensed(nextState) {
   headerIsCondensed = nextState;
   siteHeader.classList.toggle("is-condensed", nextState);
   return true;
+}
+
+function getRemainingScrollDistance(scrollY = window.scrollY) {
+  const scrollRoot = document.scrollingElement || document.documentElement;
+  const maxScrollY = Math.max((scrollRoot?.scrollHeight || 0) - window.innerHeight, 0);
+  return Math.max(maxScrollY - scrollY, 0);
 }
 
 function scheduleDeferredGeometryRelease() {
@@ -1938,6 +2133,7 @@ function initEssentialsSection() {
   }
 
   registerRevealBlocks(panel);
+  initializePackingToggles();
   return initializeBookingTransit();
 }
 
@@ -2945,7 +3141,12 @@ function syncHeaderState() {
   }
 
   const intentDistance = Math.abs(currentScrollY - headerScrollIntentStartY);
-  if (intentDistance < headerScrollIntentThreshold) {
+  const shouldTreatBottomScrollAsIntent =
+    nextDirection > 0 &&
+    currentScrollY > headerCondenseScrollThreshold &&
+    getRemainingScrollDistance(currentScrollY) <= headerScrollIntentThreshold;
+
+  if (intentDistance < headerScrollIntentThreshold && !shouldTreatBottomScrollAsIntent) {
     lastScrollY = currentScrollY;
     return;
   }
