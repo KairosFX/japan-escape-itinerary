@@ -3425,6 +3425,52 @@ html.has-modal-open body {
   gap: 0.72rem;
 }
 
+.route-map__secondary {
+  display: grid;
+  gap: 0.52rem;
+}
+
+.route-map__interactive-hint,
+.route-map__secondary-label {
+  margin: 0;
+}
+
+.route-map__interactive-hint {
+  max-width: 38rem;
+  font-size: 0.84rem;
+  color: rgba(76, 66, 62, 0.86);
+}
+
+.route-map__secondary-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.route-map__stops {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.route-map__stop-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.route-map__stop-chip {
+  width: auto;
+  min-width: 0;
+}
+
+.route-map__stop-chip.is-related {
+  border-color: rgba(171, 74, 59, 0.18);
+  background: rgba(171, 74, 59, 0.08);
+  color: var(--accent-deep);
+}
+
 .route-map__filters {
   display: flex;
   flex-wrap: wrap;
@@ -3489,7 +3535,7 @@ html.has-modal-open body {
 
 .route-map__overlay {
   z-index: 2;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .route-map__markers {
@@ -3513,17 +3559,33 @@ html.has-modal-open body {
   stroke-width: 7px;
 }
 
+.route-map__path--base,
+.route-map__path--shadow {
+  pointer-events: none;
+}
+
 .route-map__path--segment {
   stroke-width: 8px;
+  pointer-events: stroke;
+  cursor: pointer;
   transition:
     opacity 180ms ease,
     stroke 180ms ease,
-    stroke-width 180ms ease;
+    stroke-width 180ms ease,
+    filter 180ms ease;
 }
 
 .route-map__path--segment.is-active {
   stroke: rgba(155, 60, 51, 0.94);
   opacity: 1;
+}
+
+.route-map__path--segment.is-selected,
+.route-map__path--segment:hover,
+.route-map__path--segment:focus-visible {
+  stroke-width: 10px;
+  filter: drop-shadow(0 0 6px rgba(171, 74, 59, 0.16));
+  outline: none;
 }
 
 .route-map__path--segment.is-muted {
@@ -3575,6 +3637,12 @@ html.has-modal-open body {
   inset: 0;
   background: rgba(171, 74, 59, 0.18);
   border-color: rgba(171, 74, 59, 0.36);
+}
+
+.route-map__marker.is-related::before {
+  inset: 0.04rem;
+  background: rgba(171, 74, 59, 0.12);
+  border-color: rgba(171, 74, 59, 0.24);
 }
 
 .route-map__marker.is-dimmed {
@@ -3699,6 +3767,11 @@ html.has-modal-open body {
   }
 
   .route-map__filter {
+    flex: 1 1 calc(50% - 0.4rem);
+    justify-content: center;
+  }
+
+  .route-map__stop-chip {
     flex: 1 1 calc(50% - 0.4rem);
     justify-content: center;
   }
@@ -4797,6 +4870,20 @@ html[data-theme="dark"] .route-map__hint {
   color: rgba(239, 230, 218, 0.68);
 }
 
+html[data-theme="dark"] .route-map__interactive-hint {
+  color: rgba(239, 230, 218, 0.72);
+}
+
+html[data-theme="dark"] .route-map__secondary-label {
+  color: rgba(236, 176, 165, 0.88);
+}
+
+html[data-theme="dark"] .route-map__stop-chip.is-related {
+  border-color: rgba(236, 176, 165, 0.22);
+  background: rgba(236, 176, 165, 0.12);
+  color: #f6ddd3;
+}
+
 html[data-theme="dark"] .route-map__stage {
   border-color: rgba(248, 239, 228, 0.08);
   background:
@@ -4829,6 +4916,12 @@ html[data-theme="dark"] .route-map__path--segment.is-active {
   stroke: rgba(228, 136, 120, 0.96);
 }
 
+html[data-theme="dark"] .route-map__path--segment.is-selected,
+html[data-theme="dark"] .route-map__path--segment:hover,
+html[data-theme="dark"] .route-map__path--segment:focus-visible {
+  filter: drop-shadow(0 0 8px rgba(236, 176, 165, 0.16));
+}
+
 html[data-theme="dark"] .route-map__path--segment.is-muted {
   stroke: rgba(248, 239, 228, 0.16);
 }
@@ -4841,6 +4934,11 @@ html[data-theme="dark"] .route-map__marker::before {
 
 html[data-theme="dark"] .route-map__marker-core {
   background: linear-gradient(180deg, rgba(196, 102, 87, 0.98), #8b392e);
+}
+
+html[data-theme="dark"] .route-map__marker.is-related::before {
+  background: rgba(236, 176, 165, 0.14);
+  border-color: rgba(236, 176, 165, 0.24);
 }
 
 html[data-theme="dark"] .route-reference {

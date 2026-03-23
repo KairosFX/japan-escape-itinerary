@@ -60,6 +60,7 @@ const offlineDownloadLink = document.querySelector("[data-offline-download]");
 const routeMapCard = document.querySelector(".route-map");
 const routeMapInteractive = document.querySelector("[data-route-map-interactive]");
 const routeMapFiltersNode = document.querySelector("[data-route-map-filters]");
+const routeMapStopsNode = document.querySelector("[data-route-map-stops]");
 const routeMapExplorerNode = document.querySelector("[data-route-map-explorer]");
 const routeMapOpenButtons = Array.from(document.querySelectorAll("[data-route-map-open]"));
 const optionalProgressItems = Array.from(
@@ -99,7 +100,7 @@ const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
 const transitDetailsDataUrl = "./assets/data/transit-details.json";
 const offlineSnapshotUrl = "./japan-escape-itinerary-offline.html";
 const serviceWorkerUrl = "./service-worker.js";
-const offlineBundleVersion = "2026-03-23-offline-v5";
+const offlineBundleVersion = "2026-03-23-offline-v6";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
 const inlineDataSelectors = {
   bookingTransit: "[data-booking-transit-inline]",
@@ -567,20 +568,217 @@ const budgetSectionDefinitionMap = new Map(
 const routeMapLabels = {
   days: { en: "Related days", ja: "関連日程" },
   tools: { en: "Quick tools", ja: "クイック操作" },
-  stopTag: { en: "Stop detail", ja: "地点詳細" }
+  stops: { en: "Major stops", ja: "主要地点" },
+  stopTag: { en: "Stop detail", ja: "地点詳細" },
+  segmentTag: { en: "Route leg", ja: "区間詳細" }
 };
 const routeExplorerDefaultSelectionId = "overview";
 const routeExplorerFullPathData =
   "M180 580 L238 448 L186 572 L202 548 L844 336 L824 350 L924 242 L1036 150";
 const routeExplorerPathDefinitions = [
-  { id: "osaka-kyoto", d: "M180 580 L238 448" },
-  { id: "kyoto-osaka", d: "M238 448 L186 572" },
-  { id: "osaka-shin-osaka", d: "M186 572 L202 548" },
-  { id: "shin-osaka-odawara", d: "M202 548 L844 336" },
-  { id: "odawara-hakone", d: "M844 336 L824 350" },
-  { id: "hakone-fuji", d: "M824 350 L924 242" },
-  { id: "fuji-tokyo", d: "M924 242 L1036 150" }
+  {
+    id: "osaka-kyoto",
+    d: "M180 580 L238 448",
+    title: { en: "Osaka -> Kyoto East", ja: "大阪 -> 京都東側" },
+    summary: {
+      en: "The Day 2 hop into Kyoto is a clean city-to-city leg before the temple-heavy walking day.",
+      ja: "2日目の京都入りは、寺社中心で歩く一日に入る前の分かりやすい都市間移動です。"
+    },
+    badges: [
+      { en: "Day 2", ja: "2日目" },
+      { en: "City rail", ja: "近距離鉄道" }
+    ],
+    notes: [
+      {
+        en: "Treat this as the east-side temple setup, not a luggage transfer day.",
+        ja: "ここは荷物移動ではなく、東側寺社の日へ入るための移動として考えると分かりやすいです。"
+      },
+      {
+        en: "The return to Osaka is a separate leg, so the Kyoto stop stays easy to reason about.",
+        ja: "大阪へ戻る動きは別区間に分けているので、京都の日程だけを素直に見やすくしています。"
+      }
+    ],
+    dayLinks: [{ day: 2 }],
+    stopIds: ["osaka", "kyoto"]
+  },
+  {
+    id: "kyoto-osaka",
+    d: "M238 448 L186 572",
+    title: { en: "Kyoto -> Osaka reset", ja: "京都 -> 大阪の戻り" },
+    summary: {
+      en: "This folds the Kyoto side back into Osaka before the aquarium-side finish and the Day 4 launch.",
+      ja: "京都から大阪へ戻して、海遊館側の締めと4日目の出発へつなぐ区間です。"
+    },
+    badges: [
+      { en: "Day 3", ja: "3日目" },
+      { en: "Return leg", ja: "戻り区間" }
+    ],
+    notes: [
+      {
+        en: "It keeps Arashiyama and the Osaka-side evening in one practical loop.",
+        ja: "嵐山と大阪側の夕方を、実用的な一つの流れとしてつなげる役目です。"
+      },
+      {
+        en: "Use this leg when you want the Osaka reset separated from the Kyoto temple day.",
+        ja: "京都の寺社日と分けて、大阪へ戻る動きだけを見たいときに使いやすい区間です。"
+      }
+    ],
+    dayLinks: [{ day: 3 }],
+    stopIds: ["kyoto", "osaka"]
+  },
+  {
+    id: "osaka-shin-osaka",
+    d: "M186 572 L202 548",
+    title: { en: "Osaka city -> Shin-Osaka", ja: "大阪市内 -> 新大阪" },
+    summary: {
+      en: "A short launch leg that turns the Osaka stay into the Day 4 long-distance departure.",
+      ja: "大阪滞在から4日目の長距離移動へ切り替える、短い出発区間です。"
+    },
+    badges: [
+      { en: "Day 4", ja: "4日目" },
+      { en: "Launch step", ja: "出発準備" }
+    ],
+    notes: [
+      {
+        en: "This is mainly a handoff move, so it stays lighter than the actual bullet train segment.",
+        ja: "ここは本格的な長距離移動前の引き渡し区間なので、新幹線区間より軽く見ています。"
+      },
+      {
+        en: "Use it when you want the Day 4 departure flow without opening the full Kansai view.",
+        ja: "関西全体を開かずに、4日目の出発動線だけ見たいときに便利です。"
+      }
+    ],
+    dayLinks: [{ day: 4 }],
+    stopIds: ["osaka", "shin-osaka"]
+  },
+  {
+    id: "shin-osaka-odawara",
+    d: "M202 548 L844 336",
+    title: { en: "Shin-Osaka -> Odawara", ja: "新大阪 -> 小田原" },
+    summary: {
+      en: "The longest rail segment in the trip, handled as the clean bullet-train handoff into Hakone.",
+      ja: "旅程で最長の鉄道区間で、箱根側へ入るための分かりやすい新幹線移動です。"
+    },
+    badges: [
+      { en: "Day 4", ja: "4日目" },
+      { en: "Shinkansen", ja: "新幹線" }
+    ],
+    notes: [
+      {
+        en: "Open the saved transit detail when you want the actual train choice and buffer notes.",
+        ja: "実際の列車選びや余裕の持たせ方を見たいときは、保存済み移動詳細を開くのが早いです。"
+      },
+      {
+        en: "This leg is intentionally isolated from the Hakone local loop so the long move stays readable.",
+        ja: "長距離移動を読みやすくするため、この区間は箱根ローカル周遊とは分けてあります。"
+      }
+    ],
+    dayLinks: [{ day: 4 }],
+    transitActions: [
+      {
+        id: "shin-osaka-odawara",
+        label: { en: "Shinkansen detail", ja: "新幹線詳細" }
+      }
+    ],
+    stopIds: ["shin-osaka", "odawara"]
+  },
+  {
+    id: "odawara-hakone",
+    d: "M844 336 L824 350",
+    title: { en: "Odawara -> Hakone local sequence", ja: "小田原 -> 箱根ローカル" },
+    summary: {
+      en: "This is the local handoff from the long rail arrival into ropeway, bus, and lake-side flow.",
+      ja: "長距離鉄道の到着から、ロープウェイ、バス、湖畔側の流れへ切り替えるローカル区間です。"
+    },
+    badges: [
+      { en: "Day 4", ja: "4日目" },
+      { en: "Local handoff", ja: "現地乗り継ぎ" }
+    ],
+    notes: [
+      {
+        en: "Use the Hakone local detail if you want the sequence through the loop rather than the geography only.",
+        ja: "地理だけでなく周遊の順番を見たいときは、箱根ローカル詳細を開くのが一番早いです。"
+      },
+      {
+        en: "Keeping this segment separate makes the Hakone arrival feel calmer on the map.",
+        ja: "この区間を分けておくことで、箱根到着後の流れが地図上でも落ち着いて見えます。"
+      }
+    ],
+    dayLinks: [{ day: 4 }],
+    transitActions: [
+      {
+        id: "hakone-loop",
+        label: { en: "Hakone local detail", ja: "箱根ローカル詳細" }
+      }
+    ],
+    stopIds: ["odawara", "hakone"]
+  },
+  {
+    id: "hakone-fuji",
+    d: "M824 350 L924 242",
+    title: { en: "Hakone -> Kawaguchiko", ja: "箱根 -> 河口湖" },
+    summary: {
+      en: "This is the transfer-heavy handoff from the ryokan side into the Fuji base via the Gotemba direction.",
+      ja: "旅館側から御殿場方面を経て富士側の拠点へ渡す、移動比重の高い区間です。"
+    },
+    badges: [
+      { en: "Day 5", ja: "5日目" },
+      { en: "Transfer-heavy", ja: "移動多め" }
+    ],
+    notes: [
+      {
+        en: "Treat it as a practical transfer first and a view day second.",
+        ja: "この日は景色より先に、まず実用的な移動日として考えると整えやすいです。"
+      },
+      {
+        en: "The transit detail keeps the Gotemba-side fallback options in one place.",
+        ja: "移動詳細には、御殿場側での代替ルートもまとめて入れています。"
+      }
+    ],
+    dayLinks: [{ day: 5 }],
+    transitActions: [
+      {
+        id: "hakone-kawaguchiko",
+        label: { en: "Hakone -> Kawaguchiko detail", ja: "箱根 -> 河口湖 詳細" }
+      }
+    ],
+    stopIds: ["hakone", "fuji"]
+  },
+  {
+    id: "fuji-tokyo",
+    d: "M924 242 L1036 150",
+    title: { en: "Kawaguchiko -> Tokyo / Shibuya", ja: "河口湖 -> 東京・渋谷" },
+    summary: {
+      en: "The final intercity leg exits the Fuji area and lands you in the Tokyo / Shibuya finish.",
+      ja: "富士エリアを離れて、東京・渋谷で締めるための最後の都市間移動です。"
+    },
+    badges: [
+      { en: "Day 7", ja: "7日目" },
+      { en: "Tokyo arrival", ja: "東京到着" }
+    ],
+    notes: [
+      {
+        en: "Use this segment when you want the Tokyo return leg without the Day 6 weather-flex context.",
+        ja: "6日目の天気優先行動と切り分けて、東京へ戻る区間だけ見たいときに向いています。"
+      },
+      {
+        en: "The linked transit detail keeps the bus and rail arrival options together.",
+        ja: "関連する移動詳細には、バスと鉄道の到着パターンをまとめています。"
+      }
+    ],
+    dayLinks: [{ day: 7 }],
+    transitActions: [
+      {
+        id: "kawaguchiko-tokyo",
+        label: { en: "Tokyo return detail", ja: "東京戻り詳細" }
+      }
+    ],
+    stopIds: ["fuji", "tokyo"]
+  }
 ];
+const routeExplorerSegmentMap = new Map(
+  routeExplorerPathDefinitions.map((segment) => [segment.id, segment])
+);
 const routeExplorerStopDefinitions = [
   {
     id: "osaka",
@@ -6581,6 +6779,10 @@ function getRouteExplorerViewById(viewId) {
   );
 }
 
+function getRouteExplorerSegmentById(segmentId) {
+  return routeExplorerSegmentMap.get(segmentId) || null;
+}
+
 function getVisibleRouteDayLinks(dayLinks = []) {
   return dayLinks.filter((link) => !link.optional || optionalDaysUnlocked);
 }
@@ -6593,11 +6795,27 @@ function getRouteMapMarkersNode() {
   return routeMapExplorerNode?.querySelector("[data-route-map-markers]") || null;
 }
 
+function getRouteMapStopsNode() {
+  return routeMapStopsNode;
+}
+
 function getRouteMapDetailNode() {
   return routeMapExplorerNode?.querySelector("[data-route-map-detail]") || null;
 }
 
 function getRouteMapSelectionState() {
+  if (activeRouteMapSelection.type === "segment") {
+    const segment = getRouteExplorerSegmentById(activeRouteMapSelection.id);
+    if (segment) {
+      return {
+        type: "segment",
+        config: segment,
+        stopIds: new Set(segment.stopIds || []),
+        segmentIds: new Set([segment.id])
+      };
+    }
+  }
+
   if (activeRouteMapSelection.type === "stop") {
     const stop = routeExplorerStopMap.get(activeRouteMapSelection.id);
     if (stop) {
@@ -6677,6 +6895,42 @@ function renderRouteMapFilters(selectionState) {
   routeMapFiltersNode.innerHTML = filtersMarkup;
 }
 
+function renderRouteMapStops(selectionState) {
+  const stopsNode = getRouteMapStopsNode();
+  if (!stopsNode) {
+    return;
+  }
+
+  const stopsMarkup = routeExplorerStopDefinitions
+    .map((stop) => {
+      const isSelected = selectionState.type === "stop" && selectionState.config.id === stop.id;
+      const isRelated = !isSelected && selectionState.stopIds.has(stop.id);
+      const ariaLabelEn = `Show ${stop.title.en} stop details`;
+      const ariaLabelJa = `${stop.title.ja}の詳細を表示`;
+
+      return `
+        <button
+          class="booking-transit__filter route-map__stop-chip ${isSelected ? "is-active" : ""} ${isRelated ? "is-related" : ""}"
+          type="button"
+          data-route-map-stop="${escapeHtml(stop.id)}"
+          aria-pressed="${String(isSelected)}"
+          data-aria-label-en="${escapeHtml(ariaLabelEn)}"
+          data-aria-label-ja="${escapeHtml(ariaLabelJa)}"
+          aria-label="${escapeHtml(getLocalizedText({ en: ariaLabelEn, ja: ariaLabelJa }))}">
+          ${renderLocalizedContent(stop.title)}
+        </button>
+      `;
+    })
+    .join("");
+
+  stopsNode.innerHTML = `
+    <p class="route-map__secondary-label">${renderLocalizedContent(routeMapLabels.stops)}</p>
+    <div class="route-map__stop-rail">
+      ${stopsMarkup}
+    </div>
+  `;
+}
+
 function renderRouteMapOverlay(selectionState) {
   const overlayNode = getRouteMapOverlayNode();
   if (!overlayNode) {
@@ -6689,11 +6943,21 @@ function renderRouteMapOverlay(selectionState) {
     ${routeExplorerPathDefinitions
       .map((path) => {
         const isActive = selectionState.segmentIds.has(path.id);
+        const isSelected = selectionState.type === "segment" && selectionState.config.id === path.id;
+        const ariaLabelEn = `Show ${path.title.en} route leg`;
+        const ariaLabelJa = `${path.title.ja}の区間詳細を表示`;
         return `
           <path
-            class="route-map__path route-map__path--segment ${isActive ? "is-active" : "is-muted"}"
+            class="route-map__path route-map__path--segment ${isActive ? "is-active" : "is-muted"} ${isSelected ? "is-selected" : ""}"
             d="${path.d}"
-            data-route-map-path="${escapeHtml(path.id)}"></path>
+            data-route-map-path="${escapeHtml(path.id)}"
+            tabindex="0"
+            role="button"
+            focusable="true"
+            aria-pressed="${String(isSelected)}"
+            data-aria-label-en="${escapeHtml(ariaLabelEn)}"
+            data-aria-label-ja="${escapeHtml(ariaLabelJa)}"
+            aria-label="${escapeHtml(getLocalizedText({ en: ariaLabelEn, ja: ariaLabelJa }))}"></path>
         `;
       })
       .join("")}
@@ -6709,14 +6973,15 @@ function renderRouteMapMarkers(selectionState) {
   const hasFocusedStops = selectionState.stopIds.size > 0;
   markersNode.innerHTML = routeExplorerStopDefinitions
     .map((stop) => {
-      const isActive = selectionState.stopIds.has(stop.id);
-      const isDimmed = hasFocusedStops && !isActive;
+      const isActive = selectionState.type === "stop" && selectionState.config.id === stop.id;
+      const isRelated = !isActive && selectionState.stopIds.has(stop.id);
+      const isDimmed = hasFocusedStops && !isActive && !isRelated;
       const ariaLabelEn = `Show ${stop.title.en} stop details`;
       const ariaLabelJa = `${stop.title.ja}の詳細を表示`;
 
       return `
         <button
-          class="route-map__marker ${isActive ? "is-active" : ""} ${isDimmed ? "is-dimmed" : ""}"
+          class="route-map__marker ${isActive ? "is-active" : ""} ${isRelated ? "is-related" : ""} ${isDimmed ? "is-dimmed" : ""}"
           type="button"
           data-route-map-stop="${escapeHtml(stop.id)}"
           aria-pressed="${String(isActive)}"
@@ -6808,7 +7073,13 @@ function renderRouteMapDetail(selectionState) {
   detailNode.innerHTML = `
     <div class="route-reference__copy">
       <p class="section-tag section-tag--route">
-        ${renderLocalizedContent(selectionState.type === "stop" ? routeMapLabels.stopTag : selectionState.config.label)}
+        ${renderLocalizedContent(
+          selectionState.type === "stop"
+            ? routeMapLabels.stopTag
+            : selectionState.type === "segment"
+              ? routeMapLabels.segmentTag
+              : selectionState.config.label
+        )}
       </p>
       <h4 class="route-reference__title">${renderLocalizedContent(config.title)}</h4>
       <p class="route-reference__summary">${renderLocalizedContent(config.summary)}</p>
@@ -6833,6 +7104,7 @@ function syncRouteMapUI() {
 
   const selectionState = getRouteMapSelectionState();
   renderRouteMapFilters(selectionState);
+  renderRouteMapStops(selectionState);
   renderRouteMapOverlay(selectionState);
   renderRouteMapMarkers(selectionState);
   renderRouteMapDetail(selectionState);
@@ -6881,6 +7153,14 @@ function handleRouteMapClick(event) {
     return;
   }
 
+  const pathTrigger = event.target.closest("[data-route-map-path]");
+  if (pathTrigger) {
+    event.preventDefault();
+    activeRouteMapSelection = { type: "segment", id: pathTrigger.dataset.routeMapPath || "" };
+    syncRouteMapUI();
+    return;
+  }
+
   const filterTrigger = event.target.closest("[data-route-map-filter]");
   if (filterTrigger) {
     event.preventDefault();
@@ -6914,6 +7194,21 @@ function handleRouteMapClick(event) {
   }
 }
 
+function handleRouteMapKeydown(event) {
+  const pathTrigger = event.target.closest?.("[data-route-map-path]");
+  if (!pathTrigger) {
+    return;
+  }
+
+  if (event.key !== "Enter" && event.key !== " ") {
+    return;
+  }
+
+  event.preventDefault();
+  activeRouteMapSelection = { type: "segment", id: pathTrigger.dataset.routeMapPath || "" };
+  syncRouteMapUI();
+}
+
 function initRouteSection() {
   const panel = getSectionPanel("route");
   if (!panel) {
@@ -6922,6 +7217,7 @@ function initRouteSection() {
 
   if (routeMapCard && panel.dataset.routeBound !== "true") {
     routeMapCard.addEventListener("click", handleRouteMapClick);
+    routeMapCard.addEventListener("keydown", handleRouteMapKeydown);
     panel.dataset.routeBound = "true";
   }
 
