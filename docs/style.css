@@ -2067,7 +2067,7 @@ html.has-modal-open body {
 
 .budget-summary-card--estimate .budget-summary-card__label,
 .budget-summary-card--per-person .budget-summary-card__label,
-.budget-summary-card--shared .budget-summary-card__label,
+.budget-summary-card--required .budget-summary-card__label,
 .budget-summary-card--optional .budget-summary-card__label {
   max-inline-size: 12ch;
   text-wrap: balance;
@@ -2421,6 +2421,21 @@ html.has-modal-open body {
 .budget-chip--optional {
   background: rgba(171, 74, 59, 0.12);
   color: var(--accent-deep);
+}
+
+.budget-chip--required {
+  background: rgba(96, 136, 108, 0.14);
+  color: #4d6b59;
+}
+
+.budget-chip--likely {
+  background: rgba(206, 154, 79, 0.16);
+  color: #7e5f28;
+}
+
+.budget-chip--excluded {
+  background: rgba(111, 124, 137, 0.14);
+  color: rgba(76, 86, 97, 0.92);
 }
 
 .budget-day__body {
@@ -4980,6 +4995,21 @@ html[data-theme="dark"] .budget-pill--medium,
 html[data-theme="dark"] .budget-level__input:checked + .budget-level__button {
   background: rgba(192, 95, 80, 0.18);
   color: #f5d6ca;
+}
+
+html[data-theme="dark"] .budget-chip--required {
+  background: rgba(96, 136, 108, 0.2);
+  color: #d4e8d8;
+}
+
+html[data-theme="dark"] .budget-chip--likely {
+  background: rgba(206, 154, 79, 0.18);
+  color: #f0d39b;
+}
+
+html[data-theme="dark"] .budget-chip--excluded {
+  background: rgba(111, 124, 137, 0.2);
+  color: #d5dde4;
 }
 
 html[data-theme="dark"] .budget-pill--low {

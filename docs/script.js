@@ -98,7 +98,7 @@ const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
 const transitDetailsDataUrl = "./assets/data/transit-details.json";
 const offlineSnapshotUrl = "./japan-escape-itinerary-offline.html";
 const serviceWorkerUrl = "./service-worker.js";
-const offlineBundleVersion = "2026-03-23-offline-v3";
+const offlineBundleVersion = "2026-03-23-offline-v4";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
 const inlineDataSelectors = {
   bookingTransit: "[data-booking-transit-inline]",
@@ -260,181 +260,104 @@ const offlineLabels = {
   }
 };
 const budgetNotesLabels = {
-  summaryTotal: { en: "Trip estimate", ja: "旅全体の目安" },
-  summaryPerPerson: { en: "Per person", ja: "1人あたり" },
-  summaryShared: { en: "Shared vs individual", ja: "共有と個人分" },
-  summaryOptional: { en: "Optional-day impact", ja: "追加日の影響" },
-  visibleDays: { en: "Visible days", ja: "表示中の日数" },
-  noteLabel: { en: "Budget note", ja: "予算メモ" },
-  spendLegend: { en: "Day pace", ja: "その日の出費感" },
+  summaryTotal: { en: "Lean essentials total", ja: "控えめな準備費用合計" },
+  summaryPerPerson: { en: "Current per person", ja: "現在の1人あたり" },
+  summaryRequired: { en: "Required prep", ja: "必須の準備費用" },
+  summaryOptional: { en: "Optional add-ons", ja: "任意の追加費用" },
+  noteLabel: { en: "Prep note", ja: "準備メモ" },
   travelersLabel: { en: "Travelers", ja: "人数" },
   travelersHint: {
-    en: "Shared stay costs use one room for every two travelers, then split the room total back per person.",
-    ja: "共有の宿泊費は2人で1室を基本にし、部屋代の合計を人数で割り戻します。"
+    en: "Shared prep items like luggage forwarding assume one shared unit for every two travelers.",
+    ja: "荷物配送のような共有の準備費用は、2人で1単位を基本に計算します。"
   },
-  extrasLabel: { en: "Include optional extras", ja: "任意の追加費用を含める" },
+  extrasLabel: { en: "Include optional prep purchases", ja: "任意の準備購入も含める" },
   extrasHint: {
-    en: "Adds the flex layer for nicer dinners, extra viewpoints, desserts, and shopping drift without hiding the core trip budget.",
-    ja: "少し良い食事、追加の展望、デザート、買い物のぶれを足しますが、旅の基礎予算は見えたままにします。"
+    en: "Adds luggage forwarding, adapter or power-bank refreshes, optional timed bookings, and small Hakone/Fuji top-ups. Hotels, meals, and day-by-day spend still stay out.",
+    ja: "荷物配送、変換プラグやモバイルバッテリーの買い足し、任意の時間指定予約、小さな箱根・富士向け追加購入を足します。ホテル代、食事代、毎日の出費は含めません。"
   },
-  breakdownHeading: { en: "Estimated breakdown", ja: "見込み内訳" },
-  sourcesHeading: { en: "Sources + assumptions", ja: "出典と前提" },
-  sourceMetaLabel: { en: "Budget basis", ja: "見積もりの基準" },
+  breakdownHeading: { en: "Essentials breakdown", ja: "準備ごとの内訳" },
+  sourcesHeading: { en: "What counts here", ja: "この見積もりに含めるもの" },
+  sourceMetaLabel: { en: "Essentials budget basis", ja: "準備予算の考え方" },
   sourceMetaFallback: {
-    en: "Current source notes are unavailable right now.",
-    ja: "現在は出典メモを表示できません。"
+    en: "Essentials budget notes are unavailable right now.",
+    ja: "現在は準備予算のメモを表示できません。"
   },
   helperCopy: {
-    en: "Core totals combine shared lodging, route-specific transport, city meal benchmarks, ticketed viewpoints, and explicit discretionary/contingency cushions. Days 8-9 only count after they are unlocked.",
-    ja: "合計は、共有の宿泊費、ルート別の交通費、都市別の食事相場、展望チケット、明示的な裁量・予備バッファを合わせて計算します。8〜9日目は解放後のみ加算されます。"
+    en: "This is a prep-only view tied to Essentials. Full lodging, full food, sightseeing totals, broad shopping, and large generic trip buffers are intentionally excluded.",
+    ja: "これはEssentialsにひもづく準備費用だけを見る表示です。宿泊費全体、食事代全体、観光費総額、広い買い物予算、大きな汎用バッファは意図的に除外しています。"
   },
-  totalRange: { en: "Range", ja: "幅" },
-  optionalInactive: { en: "Not included", ja: "未反映" },
-  optionalInactiveMeta: {
-    en: "Days 8-9 are still excluded from the estimate.",
-    ja: "8〜9日目はまだ見積もりに含めていません。"
+  noExtraCost: { en: "No extra cost", ja: "追加費用なし" },
+  optionalAvailable: { en: "Available", ja: "追加可能" },
+  optionalIncluded: { en: "Included", ja: "反映中" },
+  optionalExcludedMeta: {
+    en: "Optional prep purchases stay outside the lean total until you enable them.",
+    ja: "任意の準備購入は、有効にするまで控えめ合計へ入れません。"
   },
-  optionalIncludedMeta: { en: "Included days", ja: "含まれる日数" },
-  sharedMeta: { en: "Shared costs", ja: "共有費用" },
-  individualMeta: { en: "Individual costs", ja: "個人ごとの費用" }
+  optionalIncludedMeta: {
+    en: "Optional prep purchases are currently included in the per-person view.",
+    ja: "任意の準備購入は現在1人あたり表示へ反映しています。"
+  },
+  ownedExcludedMeta: { en: "Already-owned items excluded", ja: "所持済みの物は除外" },
+  sharedMeta: { en: "Shared prep", ja: "共有の準備費用" },
+  perPersonOnlyMeta: { en: "Per-person prep", ja: "1人ごとの準備費用" },
+  requiredBucket: { en: "Required", ja: "必須" },
+  likelyBucket: { en: "Likely", ja: "見込み" },
+  optionalBucket: { en: "Optional", ja: "任意" },
+  ownedBucket: { en: "Owned / excluded", ja: "所持済み・除外" }
 };
-const budgetCategoryDefinitions = [
+const budgetSectionDefinitions = [
   {
-    id: "lodging",
-    label: { en: "Lodging", ja: "宿泊" },
-    meta: { en: "Shared / room-based", ja: "共有 / 部屋単位" }
+    id: "documents-phone",
+    label: { en: "Documents + Phone", ja: "書類とスマホ" },
+    meta: {
+      en: "eSIM, small device prep, and backup copies only.",
+      ja: "eSIM、小さな端末準備、控えだけを対象にします。"
+    }
   },
   {
-    id: "intercityTransit",
-    label: { en: "Intercity transit", ja: "都市間移動" },
-    meta: { en: "Per person / route-specific", ja: "1人ごと / ルート別" }
+    id: "bookings-transit",
+    label: { en: "Bookings + Transit", ja: "予約と移動" },
+    meta: {
+      en: "Only the Essentials-side bookings and transfer prep stay here.",
+      ja: "Essentialsで事前に固める予約と移動準備だけをここへ残します。"
+    }
   },
   {
-    id: "localTransit",
-    label: { en: "Local transit", ja: "現地移動" },
-    meta: { en: "Per person / pass-based", ja: "1人ごと / パス基準" }
+    id: "offline-install",
+    label: { en: "Offline + Install", ja: "オフラインと追加" },
+    meta: {
+      en: "Usually no extra spend unless you choose a paid tool outside the base guide.",
+      ja: "通常は追加費用なしで、有料ツールを別途使う場合だけ追加になります。"
+    }
   },
   {
-    id: "food",
-    label: { en: "Food", ja: "食事" },
-    meta: { en: "Per person / benchmark-based", ja: "1人ごと / 相場ベース" }
+    id: "luggage-strategy",
+    label: { en: "Luggage Strategy", ja: "荷物戦略" },
+    meta: {
+      en: "Only route-specific luggage handling stays priced here.",
+      ja: "このルート特有の荷物対応だけを費用化します。"
+    }
   },
   {
-    id: "attractions",
-    label: { en: "Attractions", ja: "観光・チケット" },
-    meta: { en: "Per person / ticket-based", ja: "1人ごと / チケット基準" }
+    id: "daily-carry",
+    label: { en: "Daily Carry", ja: "毎日持つもの" },
+    meta: {
+      en: "Daily items are mostly assumed already owned.",
+      ja: "毎日持つ物は、ほとんどを既に持っている前提にします。"
+    }
   },
   {
-    id: "shoppingBuffer",
-    label: { en: "Shopping / buffer", ja: "買い物・裁量バッファ" },
-    meta: { en: "Per person / discretionary", ja: "1人ごと / 裁量分" }
-  },
-  {
-    id: "contingency",
-    label: { en: "Contingency / misc", ja: "予備費・雑費" },
-    meta: { en: "Per person / route cushion", ja: "1人ごと / 予備費" }
-  },
-  {
-    id: "optionalExtras",
-    label: { en: "Optional extras", ja: "任意の追加費用" },
-    meta: { en: "Optional / can be excluded", ja: "任意 / 除外可能" }
+    id: "hakone-fuji-day-kit",
+    label: { en: "Hakone + Fuji Day Kit", ja: "箱根と富士の日用キット" },
+    meta: {
+      en: "Only true extra day-kit purchases are priced by default.",
+      ja: "本当に追加購入が必要な日用キットだけを費用化します。"
+    }
   }
 ];
-const budgetDayConfigs = [
-  {
-    day: 1,
-    title: { en: "Day 1 - Osaka", ja: "1日目・大阪" },
-    region: { en: "Arrival + Minami", ja: "到着日＋ミナミ" },
-    defaultLevel: "medium",
-    tags: [
-      { en: "Arrival buffer", ja: "到着バッファ" },
-      { en: "Dinner night", ja: "夕食メイン" }
-    ]
-  },
-  {
-    day: 2,
-    title: { en: "Day 2 - Kyoto East", ja: "2日目・京都東側" },
-    region: { en: "Temple day", ja: "寺社メイン" },
-    defaultLevel: "medium",
-    tags: [
-      { en: "Transit light", ja: "移動は軽め" },
-      { en: "Snacks + tea", ja: "軽食とお茶" }
-    ]
-  },
-  {
-    day: 3,
-    title: { en: "Day 3 - Arashiyama + Osaka", ja: "3日目・嵐山＋大阪" },
-    region: { en: "Split day", ja: "エリア分割日" },
-    defaultLevel: "medium",
-    tags: [
-      { en: "Attraction tickets", ja: "入場系あり" },
-      { en: "Dinner flex", ja: "夕食は調整可" }
-    ]
-  },
-  {
-    day: 4,
-    title: { en: "Day 4 - Hakone Transfer", ja: "4日目・箱根移動日" },
-    region: { en: "Shinkansen + ryokan", ja: "新幹線＋旅館" },
-    defaultLevel: "high",
-    tags: [
-      { en: "Transfer heavy", ja: "移動多め" },
-      { en: "Ryokan night", ja: "旅館泊" }
-    ]
-  },
-  {
-    day: 5,
-    title: { en: "Day 5 - Hakone To Kawaguchiko", ja: "5日目・箱根から河口湖" },
-    region: { en: "Transfer + onsen buffer", ja: "移動＋温泉余白" },
-    defaultLevel: "medium",
-    tags: [
-      { en: "Transit heavy", ja: "移動多め" },
-      { en: "Cafe + snacks", ja: "カフェと軽食" }
-    ]
-  },
-  {
-    day: 6,
-    title: { en: "Day 6 - Fuji Weather Flex", ja: "6日目・富士の天気優先日" },
-    region: { en: "Viewpoints + local movement", ja: "展望地＋現地移動" },
-    defaultLevel: "medium",
-    tags: [
-      { en: "Weather flex", ja: "天気優先" },
-      { en: "Buffer day", ja: "予備日" }
-    ]
-  },
-  {
-    day: 7,
-    title: { en: "Day 7 - Tokyo", ja: "7日目・東京" },
-    region: { en: "Tokyo arrival + Shibuya", ja: "東京到着＋渋谷" },
-    defaultLevel: "medium",
-    tags: [
-      { en: "Transfer heavy", ja: "移動多め" },
-      { en: "Timed ticket", ja: "時間指定あり" }
-    ]
-  },
-  {
-    day: 8,
-    optional: true,
-    title: { en: "Day 8 - Tokyo Extra", ja: "8日目・東京追加日" },
-    region: { en: "Skytree + Akihabara", ja: "スカイツリー＋秋葉原" },
-    defaultLevel: "medium",
-    tags: [
-      { en: "Shopping drift", ja: "買い物しやすい日" },
-      { en: "Optional splurge", ja: "追加出費あり" }
-    ]
-  },
-  {
-    day: 9,
-    optional: true,
-    title: { en: "Day 9 - Tokyo Extra", ja: "9日目・東京追加日" },
-    region: { en: "Imperial Palace + Shinjuku", ja: "皇居＋新宿" },
-    defaultLevel: "medium",
-    tags: [
-      { en: "Final buffer", ja: "最後の予備日" },
-      { en: "Last shopping", ja: "最後の買い物" }
-    ]
-  }
-];
-const budgetDayConfigMap = new Map(budgetDayConfigs.map((config) => [String(config.day), config]));
+const budgetSectionDefinitionMap = new Map(
+  budgetSectionDefinitions.map((section) => [section.id, section])
+);
 const routeMapLabels = {
   days: { en: "Related days", ja: "関連日程" },
   tools: { en: "Quick tools", ja: "クイック操作" },
@@ -3931,6 +3854,894 @@ function bindBudgetNotesUI() {
 
     commitBudgetDayState(day, {
       ...getBudgetDayState(day),
+      note: noteField.value
+    });
+  });
+
+  budgetDaysNode.dataset.budgetBound = "true";
+}
+
+function initializeBudgetNotes() {
+  if (!budgetNotesCard || !budgetSummaryNode || !budgetBreakdownNode || !budgetDaysNode) {
+    return;
+  }
+
+  if (!budgetNotesInitialized) {
+    budgetNotesState = readStoredBudgetNotesState();
+    budgetNotesInitialized = true;
+  }
+
+  if (budgetNotesCard.dataset.budgetRendered !== "true") {
+    renderBudgetNotes();
+    budgetNotesCard.dataset.budgetRendered = "true";
+  }
+
+  bindBudgetNotesUI();
+  syncBudgetNotesUI();
+}
+
+function getBudgetEstimateSources() {
+  if (budgetEstimateSources) {
+    return budgetEstimateSources;
+  }
+
+  budgetEstimateSources =
+    getInlineJsonObject(inlineDataSelectors.budgetEstimate) || {
+      lastUpdated: "",
+      updatedCopy: { en: "", ja: "" },
+      metaCopy: { en: "", ja: "" },
+      helperCopy: { en: "", ja: "" },
+      sections: {},
+      sourceGroups: []
+    };
+
+  return budgetEstimateSources;
+}
+
+function joinBudgetCopySegments(segments = []) {
+  const enSegments = [];
+  const jaSegments = [];
+
+  segments.forEach((segment) => {
+    if (!segment || typeof segment !== "object") {
+      return;
+    }
+
+    if (segment.en) {
+      enSegments.push(segment.en);
+    }
+
+    if (segment.ja) {
+      jaSegments.push(segment.ja);
+    }
+  });
+
+  return {
+    en: enSegments.join(" • "),
+    ja: jaSegments.join(" ・ ")
+  };
+}
+
+function normalizeBudgetBucket(bucket) {
+  return bucket === "required" || bucket === "likely" || bucket === "optional" ? bucket : "owned";
+}
+
+function getBudgetBucketLabel(bucket) {
+  switch (normalizeBudgetBucket(bucket)) {
+    case "required":
+      return budgetNotesLabels.requiredBucket;
+    case "likely":
+      return budgetNotesLabels.likelyBucket;
+    case "optional":
+      return budgetNotesLabels.optionalBucket;
+    default:
+      return budgetNotesLabels.ownedBucket;
+  }
+}
+
+function getBudgetBucketChipClass(bucket) {
+  switch (normalizeBudgetBucket(bucket)) {
+    case "required":
+      return "budget-chip budget-chip--required";
+    case "likely":
+      return "budget-chip budget-chip--likely";
+    case "optional":
+      return "budget-chip budget-chip--optional";
+    default:
+      return "budget-chip budget-chip--excluded";
+  }
+}
+
+function getDefaultBudgetNotesState() {
+  return {
+    travelers: budgetDefaultTravelerCount,
+    includeExtras: false,
+    sections: {}
+  };
+}
+
+function getBudgetTravelerCountFromState(state = budgetNotesState) {
+  return normalizeBudgetTravelerCount(state?.travelers, budgetDefaultTravelerCount);
+}
+
+function getBudgetIncludeExtrasFromState(state = budgetNotesState) {
+  return state?.includeExtras === true;
+}
+
+function getBudgetSectionEntriesFromState(state = budgetNotesState) {
+  const sectionEntries = state?.sections;
+  if (!sectionEntries || typeof sectionEntries !== "object" || Array.isArray(sectionEntries)) {
+    return {};
+  }
+
+  return sectionEntries;
+}
+
+function getBudgetSectionConfig(sectionId) {
+  return budgetSectionDefinitionMap.get(String(sectionId)) || null;
+}
+
+function normalizeBudgetSectionEntries(entriesCandidate) {
+  if (!entriesCandidate || typeof entriesCandidate !== "object" || Array.isArray(entriesCandidate)) {
+    return {};
+  }
+
+  return Object.entries(entriesCandidate).reduce((nextState, [sectionId, entry]) => {
+    const config = getBudgetSectionConfig(sectionId);
+    if (!config || !entry || typeof entry !== "object" || Array.isArray(entry)) {
+      return nextState;
+    }
+
+    const note = typeof entry.note === "string" ? entry.note.slice(0, 280) : "";
+    if (note.trim()) {
+      nextState[config.id] = { note };
+    }
+
+    return nextState;
+  }, {});
+}
+
+function readStoredBudgetNotesState() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(budgetNotesStorageKey) || "{}");
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return getDefaultBudgetNotesState();
+    }
+
+    return {
+      travelers: normalizeBudgetTravelerCount(parsed.travelers, budgetDefaultTravelerCount),
+      includeExtras: typeof parsed.includeExtras === "boolean" ? parsed.includeExtras : false,
+      sections: normalizeBudgetSectionEntries(parsed.sections)
+    };
+  } catch (error) {
+    return getDefaultBudgetNotesState();
+  }
+}
+
+function hasBudgetNotesChanges(state = budgetNotesState) {
+  return (
+    getBudgetTravelerCountFromState(state) !== budgetDefaultTravelerCount ||
+    getBudgetIncludeExtrasFromState(state) ||
+    Object.keys(getBudgetSectionEntriesFromState(state)).length > 0
+  );
+}
+
+function storeBudgetNotesState() {
+  try {
+    if (hasBudgetNotesChanges()) {
+      queueStorageValue(
+        budgetNotesStorageKey,
+        JSON.stringify({
+          travelers: getBudgetTravelerCount(),
+          includeExtras: shouldIncludeBudgetExtras(),
+          sections: getBudgetSectionEntries()
+        })
+      );
+      return;
+    }
+
+    queueStorageRemoval(budgetNotesStorageKey);
+  } catch (error) {
+    // Ignore storage failures and keep the budget notes usable.
+  }
+}
+
+function getBudgetTravelerCount() {
+  return getBudgetTravelerCountFromState(budgetNotesState);
+}
+
+function shouldIncludeBudgetExtras() {
+  return getBudgetIncludeExtrasFromState(budgetNotesState);
+}
+
+function getBudgetSectionEntries() {
+  return getBudgetSectionEntriesFromState(budgetNotesState);
+}
+
+function getBudgetSectionState(sectionId) {
+  const config = getBudgetSectionConfig(sectionId);
+  const storedState = getBudgetSectionEntries()[config?.id || ""] || {};
+
+  return {
+    note: typeof storedState.note === "string" ? storedState.note : ""
+  };
+}
+
+function getBudgetResetEnabled() {
+  return hasBudgetNotesChanges();
+}
+
+function getBudgetSharedPrepUnitCount(travelers = getBudgetTravelerCount()) {
+  return Math.max(1, Math.ceil(travelers / budgetSharedRoomOccupancy));
+}
+
+function getBudgetSectionProfile(sectionId) {
+  return getBudgetEstimateSources().sections?.[sectionId] || null;
+}
+
+function getBudgetSectionItems(sectionId) {
+  const items = getBudgetSectionProfile(sectionId)?.items;
+  return Array.isArray(items) ? items : [];
+}
+
+function normalizeBudgetCostModel(cost) {
+  if (!cost || typeof cost !== "object" || Array.isArray(cost)) {
+    return { type: "none", amount: 0 };
+  }
+
+  const type =
+    cost.type === "perPerson" || cost.type === "sharedOnce" || cost.type === "perPair"
+      ? cost.type
+      : "none";
+
+  return {
+    type,
+    amount: Math.max(Number(cost.amount) || 0, 0)
+  };
+}
+
+function calculateBudgetItemCost(item, travelers = getBudgetTravelerCount()) {
+  const cost = normalizeBudgetCostModel(item?.cost);
+
+  switch (cost.type) {
+    case "perPerson":
+      return cost.amount * travelers;
+    case "sharedOnce":
+      return cost.amount;
+    case "perPair":
+      return cost.amount * getBudgetSharedPrepUnitCount(travelers);
+    default:
+      return 0;
+  }
+}
+
+function isBudgetItemIncluded(bucket, includeExtras = shouldIncludeBudgetExtras()) {
+  const normalizedBucket = normalizeBudgetBucket(bucket);
+  return normalizedBucket === "required" || normalizedBucket === "likely"
+    ? true
+    : normalizedBucket === "optional"
+      ? includeExtras
+      : false;
+}
+
+function calculateBudgetSectionEstimate(
+  definition,
+  options = {
+    travelers: getBudgetTravelerCount(),
+    includeExtras: shouldIncludeBudgetExtras()
+  }
+) {
+  const travelers = normalizeBudgetTravelerCount(options.travelers, getBudgetTravelerCount());
+  const includeExtras =
+    typeof options.includeExtras === "boolean" ? options.includeExtras : shouldIncludeBudgetExtras();
+  const state = getBudgetSectionState(definition?.id);
+  const counts = { required: 0, likely: 0, optional: 0, owned: 0 };
+  const bucketTotals = { required: 0, likely: 0, optional: 0 };
+  let total = 0;
+  let sharedTotal = 0;
+  const items = getBudgetSectionItems(definition?.id).map((item) => {
+    const bucket = normalizeBudgetBucket(item?.bucket);
+    const cost = calculateBudgetItemCost(item, travelers);
+    const costType = normalizeBudgetCostModel(item?.cost).type;
+    const included = isBudgetItemIncluded(bucket, includeExtras);
+
+    counts[bucket] += 1;
+
+    if (bucket === "required") {
+      bucketTotals.required += cost;
+    } else if (bucket === "likely") {
+      bucketTotals.likely += cost;
+    } else if (bucket === "optional") {
+      bucketTotals.optional += cost;
+    }
+
+    if (included) {
+      total += cost;
+      if (costType !== "perPerson" && cost > 0) {
+        sharedTotal += cost;
+      }
+    }
+
+    return {
+      ...item,
+      bucket,
+      cost,
+      included
+    };
+  });
+
+  return {
+    definition,
+    state,
+    items,
+    counts,
+    bucketTotals,
+    total,
+    sharedTotal
+  };
+}
+
+function calculateBudgetEstimate() {
+  const travelers = getBudgetTravelerCount();
+  const includeExtras = shouldIncludeBudgetExtras();
+  const sectionEstimates = budgetSectionDefinitions.map((definition) =>
+    calculateBudgetSectionEstimate(definition, { travelers, includeExtras })
+  );
+  const leanTotal = sectionEstimates.reduce(
+    (sum, estimate) => sum + estimate.bucketTotals.required + estimate.bucketTotals.likely,
+    0
+  );
+  const optionalAvailableTotal = sectionEstimates.reduce(
+    (sum, estimate) => sum + estimate.bucketTotals.optional,
+    0
+  );
+  const currentTotal = leanTotal + (includeExtras ? optionalAvailableTotal : 0);
+
+  return {
+    travelers,
+    includeExtras,
+    sectionEstimates,
+    categoryTotals: sectionEstimates.reduce((totals, estimate) => {
+      totals[estimate.definition.id] = estimate.total;
+      return totals;
+    }, {}),
+    leanTotal,
+    currentTotal,
+    requiredTotal: sectionEstimates.reduce((sum, estimate) => sum + estimate.bucketTotals.required, 0),
+    likelyTotal: sectionEstimates.reduce((sum, estimate) => sum + estimate.bucketTotals.likely, 0),
+    optionalAvailableTotal,
+    perPersonLean: leanTotal / travelers,
+    perPersonCurrent: currentTotal / travelers,
+    sharedTotal: sectionEstimates.reduce((sum, estimate) => sum + estimate.sharedTotal, 0),
+    perPersonVariableTotal:
+      currentTotal - sectionEstimates.reduce((sum, estimate) => sum + estimate.sharedTotal, 0),
+    ownedExcludedCount: sectionEstimates.reduce((sum, estimate) => sum + estimate.counts.owned, 0),
+    requiredItemCount: sectionEstimates.reduce((sum, estimate) => sum + estimate.counts.required, 0),
+    likelyItemCount: sectionEstimates.reduce((sum, estimate) => sum + estimate.counts.likely, 0),
+    optionalItemCount: sectionEstimates.reduce((sum, estimate) => sum + estimate.counts.optional, 0)
+  };
+}
+
+function getBudgetSectionTotalCopy(sectionEstimate) {
+  return sectionEstimate.total > 0
+    ? {
+        en: `${formatBudgetAmount(sectionEstimate.total)} total`,
+        ja: `合計 ${formatBudgetAmount(sectionEstimate.total)}`
+      }
+    : budgetNotesLabels.noExtraCost;
+}
+
+function getBudgetSectionItemMetaCopy(item, includeExtras = shouldIncludeBudgetExtras()) {
+  const costCopy =
+    item.bucket === "owned"
+      ? {
+          en: "already owned or no extra purchase assumed",
+          ja: "所持済み、または追加購入なし前提"
+        }
+      : item.bucket === "optional"
+        ? includeExtras
+          ? {
+              en: `${formatBudgetAmount(item.cost)} included`,
+              ja: `${formatBudgetAmount(item.cost)} を反映中`
+            }
+          : {
+              en: `+${formatBudgetAmount(item.cost)} available`,
+              ja: `+${formatBudgetAmount(item.cost)} を追加可能`
+            }
+        : {
+            en: `${formatBudgetAmount(item.cost)} total`,
+            ja: `合計 ${formatBudgetAmount(item.cost)}`
+          };
+
+  return joinBudgetCopySegments([
+    getBudgetBucketLabel(item.bucket),
+    costCopy,
+    item.body && typeof item.body === "object" ? item.body : null
+  ]);
+}
+
+function renderBudgetSummaryMarkup(estimate = calculateBudgetEstimate()) {
+  const leanMetaCopy = joinBudgetCopySegments([
+    {
+      en: `Required ${formatBudgetAmount(estimate.requiredTotal)}`,
+      ja: `必須 ${formatBudgetAmount(estimate.requiredTotal)}`
+    },
+    {
+      en: `Likely ${formatBudgetAmount(estimate.likelyTotal)}`,
+      ja: `見込み ${formatBudgetAmount(estimate.likelyTotal)}`
+    },
+    {
+      en: `${estimate.ownedExcludedCount} owned items excluded`,
+      ja: `${estimate.ownedExcludedCount}件の所持品を除外`
+    }
+  ]);
+  const perPersonMetaCopy = joinBudgetCopySegments([
+    {
+      en: `${estimate.travelers} ${estimate.travelers === 1 ? "traveler" : "travelers"}`,
+      ja: `${estimate.travelers}人`
+    },
+    estimate.sharedTotal > 0
+      ? {
+          en: `${formatBudgetAmount(estimate.sharedTotal)} shared prep`,
+          ja: `共有準備 ${formatBudgetAmount(estimate.sharedTotal)}`
+        }
+      : budgetNotesLabels.perPersonOnlyMeta,
+    estimate.includeExtras ? budgetNotesLabels.optionalIncludedMeta : budgetNotesLabels.optionalExcludedMeta
+  ]);
+  const requiredMetaCopy = joinBudgetCopySegments([
+    {
+      en: `${estimate.requiredItemCount} fixed prep item${estimate.requiredItemCount === 1 ? "" : "s"}`,
+      ja: `${estimate.requiredItemCount}件の固定準備項目`
+    },
+    {
+      en: "Mostly rail reservations and must-have setup",
+      ja: "主に鉄道予約と必須セットアップ"
+    }
+  ]);
+  const optionalValueCopy =
+    estimate.optionalAvailableTotal > 0
+      ? estimate.includeExtras
+        ? {
+            en: `${formatBudgetAmount(estimate.optionalAvailableTotal)} included`,
+            ja: `${formatBudgetAmount(estimate.optionalAvailableTotal)} を反映中`
+          }
+        : {
+            en: `+${formatBudgetAmount(estimate.optionalAvailableTotal)} available`,
+            ja: `+${formatBudgetAmount(estimate.optionalAvailableTotal)} を追加可能`
+          }
+      : budgetNotesLabels.noExtraCost;
+  const optionalMetaCopy = joinBudgetCopySegments([
+    {
+      en: `${estimate.optionalItemCount} add-on item${estimate.optionalItemCount === 1 ? "" : "s"}`,
+      ja: `${estimate.optionalItemCount}件の追加候補`
+    },
+    {
+      en: "Luggage handling, backup gear, and optional timed bookings",
+      ja: "荷物対応、予備の持ち物、任意の時間指定予約"
+    }
+  ]);
+
+  return `
+    <div class="budget-summary-card budget-summary-card--estimate budget-summary-card--compact">
+      <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryTotal)}</p>
+      <strong class="budget-summary-card__value">${renderLocalizedContent({
+        en: `${formatBudgetAmount(estimate.leanTotal)} total`,
+        ja: `合計 ${formatBudgetAmount(estimate.leanTotal)}`
+      })}</strong>
+      <p class="budget-summary-card__meta">${renderLocalizedContent(leanMetaCopy)}</p>
+    </div>
+    <div class="budget-summary-card budget-summary-card--per-person budget-summary-card--compact">
+      <p class="budget-summary-card__label">${renderLocalizedContent(
+        budgetNotesLabels.summaryPerPerson
+      )}</p>
+      <strong class="budget-summary-card__value">${renderLocalizedContent({
+        en: `${formatBudgetAmount(estimate.perPersonCurrent)} each`,
+        ja: `1人 ${formatBudgetAmount(estimate.perPersonCurrent)}`
+      })}</strong>
+      <p class="budget-summary-card__meta">${renderLocalizedContent(perPersonMetaCopy)}</p>
+    </div>
+    <div class="budget-summary-card budget-summary-card--required budget-summary-card--compact">
+      <p class="budget-summary-card__label">${renderLocalizedContent(
+        budgetNotesLabels.summaryRequired
+      )}</p>
+      <strong class="budget-summary-card__value">${renderLocalizedContent({
+        en: `${formatBudgetAmount(estimate.requiredTotal)} total`,
+        ja: `合計 ${formatBudgetAmount(estimate.requiredTotal)}`
+      })}</strong>
+      <p class="budget-summary-card__meta">${renderLocalizedContent(requiredMetaCopy)}</p>
+    </div>
+    <div class="budget-summary-card budget-summary-card--optional budget-summary-card--compact">
+      <p class="budget-summary-card__label">${renderLocalizedContent(
+        budgetNotesLabels.summaryOptional
+      )}</p>
+      <strong class="budget-summary-card__value ${
+        estimate.optionalAvailableTotal > 0 ? "" : "budget-summary-card__value--text"
+      }">${renderLocalizedContent(optionalValueCopy)}</strong>
+      <p class="budget-summary-card__meta">${renderLocalizedContent(optionalMetaCopy)}</p>
+    </div>
+  `;
+}
+
+function renderBudgetBreakdownMarkup(estimate = calculateBudgetEstimate()) {
+  return estimate.sectionEstimates
+    .map((sectionEstimate) => {
+      const totalCopy =
+        sectionEstimate.total > 0
+          ? { en: formatBudgetAmount(sectionEstimate.total), ja: formatBudgetAmount(sectionEstimate.total) }
+          : budgetNotesLabels.noExtraCost;
+      const metaCopy =
+        sectionEstimate.total > 0
+          ? sectionEstimate.sharedTotal > 0
+            ? joinBudgetCopySegments([
+                {
+                  en: `${formatBudgetAmount(sectionEstimate.sharedTotal)} shared`,
+                  ja: `共有 ${formatBudgetAmount(sectionEstimate.sharedTotal)}`
+                },
+                {
+                  en: `${formatBudgetAmount(sectionEstimate.total - sectionEstimate.sharedTotal)} per-person items`,
+                  ja: `個人項目 ${formatBudgetAmount(sectionEstimate.total - sectionEstimate.sharedTotal)}`
+                }
+              ])
+            : budgetNotesLabels.perPersonOnlyMeta
+          : budgetNotesLabels.ownedExcludedMeta;
+      const hintCopy = joinBudgetCopySegments([
+        sectionEstimate.bucketTotals.required > 0
+          ? {
+              en: `Required ${formatBudgetAmount(sectionEstimate.bucketTotals.required)}`,
+              ja: `必須 ${formatBudgetAmount(sectionEstimate.bucketTotals.required)}`
+            }
+          : null,
+        sectionEstimate.bucketTotals.likely > 0
+          ? {
+              en: `Likely ${formatBudgetAmount(sectionEstimate.bucketTotals.likely)}`,
+              ja: `見込み ${formatBudgetAmount(sectionEstimate.bucketTotals.likely)}`
+            }
+          : null,
+        sectionEstimate.bucketTotals.optional > 0
+          ? estimate.includeExtras
+            ? {
+                en: `Optional ${formatBudgetAmount(sectionEstimate.bucketTotals.optional)} included`,
+                ja: `任意 ${formatBudgetAmount(sectionEstimate.bucketTotals.optional)} を反映中`
+              }
+            : {
+                en: `+${formatBudgetAmount(sectionEstimate.bucketTotals.optional)} optional`,
+                ja: `+${formatBudgetAmount(sectionEstimate.bucketTotals.optional)} 任意`
+              }
+          : null,
+        sectionEstimate.counts.owned > 0
+          ? {
+              en: `${sectionEstimate.counts.owned} owned excluded`,
+              ja: `${sectionEstimate.counts.owned}件を除外`
+            }
+          : null
+      ]);
+
+      return `
+        <article class="budget-breakdown-card">
+          <p class="budget-breakdown-card__label">${renderLocalizedContent(
+            sectionEstimate.definition.label
+          )}</p>
+          <strong class="budget-breakdown-card__value ${
+            sectionEstimate.total > 0 ? "" : "budget-breakdown-card__value--text"
+          }">${renderLocalizedContent(totalCopy)}</strong>
+          <p class="budget-breakdown-card__meta">${renderLocalizedContent(metaCopy)}</p>
+          <p class="budget-breakdown-card__hint">${renderLocalizedContent(
+            hintCopy.en || hintCopy.ja ? hintCopy : sectionEstimate.definition.meta
+          )}</p>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderBudgetSourceMetaMarkup(sourceData = getBudgetEstimateSources()) {
+  const hasSourceData = Boolean(sourceData?.lastUpdated);
+
+  return `
+    <article class="budget-source-meta-card">
+      <p class="budget-source-meta-card__label">${renderLocalizedContent(
+        budgetNotesLabels.sourceMetaLabel
+      )}</p>
+      <p class="budget-source-meta-card__body">${renderLocalizedContent(
+        hasSourceData ? sourceData.updatedCopy : budgetNotesLabels.sourceMetaFallback
+      )}</p>
+      ${
+        hasSourceData
+          ? `<p class="budget-source-meta-card__body">${renderLocalizedContent(
+              sourceData.metaCopy || budgetNotesLabels.helperCopy
+            )}</p>
+             <p class="budget-source-meta-card__body">${renderLocalizedContent(
+               sourceData.helperCopy || budgetNotesLabels.helperCopy
+             )}</p>`
+          : ""
+      }
+    </article>
+  `;
+}
+
+function renderBudgetSourcesMarkup(sourceData = getBudgetEstimateSources()) {
+  const sourceGroups = Array.isArray(sourceData?.sourceGroups) ? sourceData.sourceGroups : [];
+  if (!sourceGroups.length) {
+    return "";
+  }
+
+  return sourceGroups
+    .map((group) => {
+      const links = Array.isArray(group.links) ? group.links : [];
+      return `
+        <article class="budget-source-card">
+          <p class="budget-source-card__label">${renderLocalizedContent(group.label)}</p>
+          <p class="budget-source-card__body">${renderLocalizedContent(group.body)}</p>
+          ${
+            links.length
+              ? `<div class="budget-source-card__links">
+                  ${links
+                    .map(
+                      (link) => `
+                        <a
+                          class="budget-source-card__link"
+                          href="${escapeHtml(link.url)}"
+                          target="_blank"
+                          rel="noreferrer noopener">
+                          ${renderLocalizedContent(link.label)}
+                        </a>
+                      `
+                    )
+                    .join("")}
+                </div>`
+              : ""
+          }
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderBudgetSectionMarkup(sectionEstimate, overallEstimate = calculateBudgetEstimate()) {
+  const noteAriaEn = `Prep note for ${sectionEstimate.definition.label.en}`;
+  const noteAriaJa = `${sectionEstimate.definition.label.ja}の準備メモ`;
+  const tagSummaries = [
+    sectionEstimate.counts.required > 0
+      ? {
+          className: getBudgetBucketChipClass("required"),
+          copy: joinBudgetCopySegments([
+            budgetNotesLabels.requiredBucket,
+            { en: String(sectionEstimate.counts.required), ja: `${sectionEstimate.counts.required}件` }
+          ])
+        }
+      : null,
+    sectionEstimate.counts.likely > 0
+      ? {
+          className: getBudgetBucketChipClass("likely"),
+          copy: joinBudgetCopySegments([
+            budgetNotesLabels.likelyBucket,
+            { en: String(sectionEstimate.counts.likely), ja: `${sectionEstimate.counts.likely}件` }
+          ])
+        }
+      : null,
+    sectionEstimate.counts.optional > 0
+      ? {
+          className: getBudgetBucketChipClass("optional"),
+          copy: joinBudgetCopySegments([
+            budgetNotesLabels.optionalBucket,
+            { en: String(sectionEstimate.counts.optional), ja: `${sectionEstimate.counts.optional}件` }
+          ])
+        }
+      : null,
+    sectionEstimate.counts.owned > 0
+      ? {
+          className: getBudgetBucketChipClass("owned"),
+          copy: joinBudgetCopySegments([
+            budgetNotesLabels.ownedBucket,
+            { en: String(sectionEstimate.counts.owned), ja: `${sectionEstimate.counts.owned}件` }
+          ])
+        }
+      : null
+  ].filter(Boolean);
+
+  return `
+    <article class="budget-day budget-day--prep" data-budget-section="${sectionEstimate.definition.id}">
+      <div class="budget-day__header">
+        <div class="budget-day__titles">
+          <h4 class="budget-day__title">${renderLocalizedContent(sectionEstimate.definition.label)}</h4>
+          <p class="budget-day__region">${renderLocalizedContent(sectionEstimate.definition.meta)}</p>
+        </div>
+        <p class="budget-day__range" data-budget-range>${renderLocalizedContent(
+          getBudgetSectionTotalCopy(sectionEstimate)
+        )}</p>
+      </div>
+
+      <div class="budget-day__tags">
+        ${tagSummaries
+          .map(
+            (tag) =>
+              `<span class="${tag.className}">${renderLocalizedContent(tag.copy)}</span>`
+          )
+          .join("")}
+      </div>
+
+      <div class="budget-day__body">
+        <ul class="budget-reminder-list budget-reminder-list--prep">
+          ${sectionEstimate.items
+            .map(
+              (item) => `
+                <li>
+                  <strong>${renderLocalizedContent(item.label)}</strong>
+                  <span>${renderLocalizedContent(
+                    getBudgetSectionItemMetaCopy(item, overallEstimate.includeExtras)
+                  )}</span>
+                </li>
+              `
+            )
+            .join("")}
+        </ul>
+
+        <label class="budget-day__note-field">
+          <span class="budget-day__note-label">${renderLocalizedContent(
+            budgetNotesLabels.noteLabel
+          )}</span>
+          <textarea
+            class="budget-day__note"
+            rows="3"
+            maxlength="280"
+            data-budget-note
+            data-aria-label-en="${escapeHtml(noteAriaEn)}"
+            data-aria-label-ja="${escapeHtml(noteAriaJa)}"
+            aria-label="${escapeHtml(noteAriaEn)}">${escapeHtml(sectionEstimate.state.note)}</textarea>
+        </label>
+      </div>
+    </article>
+  `;
+}
+
+function syncBudgetControlsUI() {
+  if (budgetTravelersInput && budgetTravelersInput.value !== String(getBudgetTravelerCount())) {
+    budgetTravelersInput.value = String(getBudgetTravelerCount());
+  }
+
+  if (budgetIncludeExtrasInput) {
+    budgetIncludeExtrasInput.checked = shouldIncludeBudgetExtras();
+  }
+
+  budgetResetButtons.forEach((button) => {
+    button.disabled = !getBudgetResetEnabled();
+  });
+}
+
+function renderBudgetNotes() {
+  if (!budgetNotesCard || !budgetSummaryNode || !budgetBreakdownNode || !budgetDaysNode) {
+    return;
+  }
+
+  const estimate = calculateBudgetEstimate();
+  budgetSummaryNode.innerHTML = renderBudgetSummaryMarkup(estimate);
+  budgetBreakdownNode.innerHTML = renderBudgetBreakdownMarkup(estimate);
+  if (budgetSourceMetaNode) {
+    budgetSourceMetaNode.innerHTML = renderBudgetSourceMetaMarkup();
+  }
+  if (budgetSourcesNode) {
+    budgetSourcesNode.innerHTML = renderBudgetSourcesMarkup();
+  }
+  budgetDaysNode.innerHTML = estimate.sectionEstimates
+    .map((sectionEstimate) => renderBudgetSectionMarkup(sectionEstimate, estimate))
+    .join("");
+  syncBudgetControlsUI();
+  syncLocalizedNodes(budgetNotesCard);
+}
+
+function syncBudgetNotesUI() {
+  if (!budgetNotesCard || !budgetSummaryNode || !budgetBreakdownNode || !budgetDaysNode) {
+    return;
+  }
+
+  renderBudgetNotes();
+}
+
+function commitBudgetSettings(nextSettings = {}) {
+  const nextTravelers = Object.prototype.hasOwnProperty.call(nextSettings, "travelers")
+    ? normalizeBudgetTravelerCount(nextSettings.travelers, getBudgetTravelerCount())
+    : getBudgetTravelerCount();
+  const nextIncludeExtras = Object.prototype.hasOwnProperty.call(nextSettings, "includeExtras")
+    ? Boolean(nextSettings.includeExtras)
+    : shouldIncludeBudgetExtras();
+
+  budgetNotesState = {
+    travelers: nextTravelers,
+    includeExtras: nextIncludeExtras,
+    sections: { ...getBudgetSectionEntries() }
+  };
+  storeBudgetNotesState();
+  syncBudgetNotesUI();
+}
+
+function commitBudgetSectionState(sectionId, nextState = {}) {
+  const config = getBudgetSectionConfig(sectionId);
+  if (!config) {
+    return;
+  }
+
+  const note = typeof nextState.note === "string" ? nextState.note.slice(0, 280) : "";
+  const nextSections = { ...getBudgetSectionEntries() };
+
+  if (!note.trim()) {
+    delete nextSections[config.id];
+  } else {
+    nextSections[config.id] = { note };
+  }
+
+  budgetNotesState = {
+    travelers: getBudgetTravelerCount(),
+    includeExtras: shouldIncludeBudgetExtras(),
+    sections: nextSections
+  };
+  storeBudgetNotesState();
+  syncBudgetControlsUI();
+}
+
+function resetBudgetNotesState() {
+  budgetNotesState = getDefaultBudgetNotesState();
+  storeBudgetNotesState();
+  syncBudgetNotesUI();
+}
+
+function bindBudgetNotesUI() {
+  if (!budgetNotesCard || !budgetDaysNode) {
+    return;
+  }
+
+  budgetResetButtons.forEach((button) => {
+    if (button.dataset.budgetBound === "true") {
+      return;
+    }
+
+    button.addEventListener("click", () => {
+      resetBudgetNotesState();
+    });
+
+    button.dataset.budgetBound = "true";
+  });
+
+  if (budgetTravelersInput && budgetTravelersInput.dataset.budgetBound !== "true") {
+    const commitTravelerCount = () => {
+      const parsedValue = Number.parseInt(budgetTravelersInput.value, 10);
+      if (Number.isNaN(parsedValue)) {
+        syncBudgetControlsUI();
+        return;
+      }
+
+      commitBudgetSettings({ travelers: parsedValue });
+    };
+
+    budgetTravelersInput.addEventListener("input", commitTravelerCount);
+    budgetTravelersInput.addEventListener("blur", () => {
+      syncBudgetControlsUI();
+    });
+    budgetTravelersInput.dataset.budgetBound = "true";
+  }
+
+  if (budgetIncludeExtrasInput && budgetIncludeExtrasInput.dataset.budgetBound !== "true") {
+    budgetIncludeExtrasInput.addEventListener("change", () => {
+      commitBudgetSettings({ includeExtras: budgetIncludeExtrasInput.checked });
+    });
+    budgetIncludeExtrasInput.dataset.budgetBound = "true";
+  }
+
+  if (budgetDaysNode.dataset.budgetBound === "true") {
+    return;
+  }
+
+  budgetDaysNode.addEventListener("input", (event) => {
+    const noteField = event.target.closest?.("[data-budget-note]");
+    if (!noteField) {
+      return;
+    }
+
+    const sectionId = noteField.closest("[data-budget-section]")?.dataset.budgetSection;
+    if (!sectionId) {
+      return;
+    }
+
+    commitBudgetSectionState(sectionId, {
       note: noteField.value
     });
   });
