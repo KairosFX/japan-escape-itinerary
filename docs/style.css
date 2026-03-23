@@ -49,7 +49,7 @@
     "Yu Mincho",
     "Hiragino Mincho ProN",
     serif;
-  --header-ease: 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  --header-ease: 260ms cubic-bezier(0.22, 1, 0.36, 1);
   --header-reserved-height: 9rem;
   --icon-overview: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s6-4.9 6-10a6 6 0 1 0-12 0c0 5.1 6 10 6 10Z'/%3E%3Ccircle cx='12' cy='11' r='2.4'/%3E%3C/svg%3E");
   --icon-timeline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3.5' y='5' width='17' height='15' rx='3'/%3E%3Cpath d='M8 3.5v4M16 3.5v4M3.5 9.5h17'/%3E%3C/svg%3E");
@@ -213,8 +213,7 @@ input:focus-visible {
   transition:
     background var(--header-ease),
     border-color var(--header-ease),
-    box-shadow var(--header-ease),
-    padding var(--header-ease);
+    box-shadow 220ms ease;
 }
 
 .header-inner {
@@ -225,11 +224,6 @@ input:focus-visible {
   gap: 1rem;
   align-items: end;
   justify-content: space-between;
-  transition:
-    padding var(--header-ease),
-    gap var(--header-ease),
-    width var(--header-ease),
-    justify-content var(--header-ease);
 }
 
 .brand-block {
@@ -240,9 +234,7 @@ input:focus-visible {
   overflow: hidden;
   transition:
     opacity 320ms ease,
-    transform var(--header-ease),
-    max-height var(--header-ease),
-    filter 320ms ease;
+    transform var(--header-ease);
 }
 
 .eyebrow,
@@ -377,10 +369,6 @@ h3 {
   align-items: center;
   justify-content: end;
   justify-items: end;
-  transition:
-    width var(--header-ease),
-    transform var(--header-ease),
-    gap var(--header-ease);
 }
 
 .section-nav {
@@ -2693,7 +2681,6 @@ html.intro-done .welcome-overlay {
   max-height: 0;
   opacity: 0;
   transform: translateY(-1.2rem);
-  filter: blur(12px);
   pointer-events: none;
 }
 

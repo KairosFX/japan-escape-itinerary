@@ -115,6 +115,7 @@ const headerTopRevealThreshold = 36;
 const headerCondenseScrollThreshold = 150;
 const headerScrollDeltaTolerance = 4;
 const headerScrollIntentThreshold = 24;
+let headerIsCondensed = Boolean(siteHeader?.classList.contains("is-condensed"));
 let lastScrollY = Math.max(window.scrollY, 0);
 let headerScrollIntentStartY = lastScrollY;
 let headerScrollIntentDirection = 0;
@@ -1618,6 +1619,16 @@ function lockHeaderState(duration = 420) {
   resetHeaderScrollTracking();
 }
 
+function setHeaderCondensed(nextState) {
+  if (!siteHeader || headerIsCondensed === nextState) {
+    return false;
+  }
+
+  headerIsCondensed = nextState;
+  siteHeader.classList.toggle("is-condensed", nextState);
+  return true;
+}
+
 function scheduleDeferredGeometryRelease() {
   if (!deferredGeometryWorkPending || deferredGeometryReleaseTimer) {
     return;
@@ -1675,11 +1686,15 @@ function preserveScrollPosition(callback) {
   const scrollX = window.scrollX;
   const scrollY = window.scrollY;
   callback();
+
+  if (window.scrollX === scrollX && window.scrollY === scrollY) {
+    return;
+  }
+
   window.requestAnimationFrame(() => {
-    window.scrollTo(scrollX, scrollY);
-    window.requestAnimationFrame(() => {
+    if (window.scrollX !== scrollX || window.scrollY !== scrollY) {
       window.scrollTo(scrollX, scrollY);
-    });
+    }
   });
 }
 
@@ -2916,7 +2931,7 @@ function syncHeaderState() {
   }
 
   if (currentScrollY <= headerTopRevealThreshold) {
-    siteHeader.classList.remove("is-condensed");
+    setHeaderCondensed(false);
     resetHeaderScrollTracking(currentScrollY);
     return;
   }
@@ -2936,13 +2951,13 @@ function syncHeaderState() {
   }
 
   if (nextDirection > 0 && currentScrollY > headerCondenseScrollThreshold) {
-    siteHeader.classList.add("is-condensed");
+    setHeaderCondensed(true);
     resetHeaderScrollTracking(currentScrollY);
     return;
   }
 
   if (nextDirection < 0) {
-    siteHeader.classList.remove("is-condensed");
+    setHeaderCondensed(false);
     resetHeaderScrollTracking(currentScrollY);
     return;
   }
@@ -2972,7 +2987,7 @@ if (siteHeader) {
   if ("ResizeObserver" in window) {
     const headerObserver = new window.ResizeObserver((entries) => {
       const nextHeight = getResizeObserverBlockSize(entries[0]);
-      applyReservedHeaderHeight(nextHeight, !siteHeader.classList.contains("is-condensed"));
+      applyReservedHeaderHeight(nextHeight, !headerIsCondensed);
     });
 
     headerObserver.observe(siteHeader);
@@ -2982,13 +2997,13 @@ if (siteHeader) {
 
   window.addEventListener("resize", () => {
     syncReducedEffectsMode();
-    const wasCondensed = siteHeader.classList.contains("is-condensed");
-    siteHeader.classList.remove("is-condensed");
+    const wasCondensed = headerIsCondensed;
+    setHeaderCondensed(false);
     if (!("ResizeObserver" in window)) {
       scheduleReservedHeaderHeightSync({ forceReset: true });
     }
     if (wasCondensed && window.scrollY > 150) {
-      siteHeader.classList.add("is-condensed");
+      setHeaderCondensed(true);
     }
     syncProgressTimeline();
     scheduleDayCardRowHeights();
