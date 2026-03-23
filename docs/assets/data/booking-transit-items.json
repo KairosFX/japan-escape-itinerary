@@ -25,6 +25,7 @@
   },
   {
     "id": "shin-osaka-odawara",
+    "transitDetailId": "shin-osaka-odawara",
     "group": "bookings",
     "filters": ["to-book"],
     "kind": "booking",
@@ -49,6 +50,7 @@
   },
   {
     "id": "hakone-freepass",
+    "transitDetailId": "hakone-loop",
     "group": "transit",
     "filters": ["transit"],
     "kind": "prep",
@@ -73,6 +75,7 @@
   },
   {
     "id": "hakone-status",
+    "transitDetailId": "hakone-loop",
     "group": "transit",
     "filters": ["transit"],
     "kind": "reference",
@@ -97,6 +100,7 @@
   },
   {
     "id": "hakone-kawaguchiko",
+    "transitDetailId": "hakone-kawaguchiko",
     "group": "transit",
     "filters": ["transit"],
     "kind": "reference",
@@ -121,6 +125,7 @@
   },
   {
     "id": "kawaguchiko-tokyo",
+    "transitDetailId": "kawaguchiko-tokyo",
     "group": "transit",
     "filters": ["transit"],
     "kind": "reference",

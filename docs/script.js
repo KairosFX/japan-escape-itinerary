@@ -4,6 +4,8 @@ const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const sectionTabs = Array.from(document.querySelectorAll("[data-panel-target]"));
 const contentPanels = Array.from(document.querySelectorAll("[data-panel]"));
 const siteHeader = document.querySelector(".site-header");
+const mainContent = document.querySelector("#main-content");
+const siteFooter = document.querySelector(".site-footer");
 const welcomeOverlay = document.querySelector(".welcome-overlay");
 const sequenceNotice = document.querySelector("[data-sequence-notice]");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
@@ -19,6 +21,16 @@ const resetProgressOpenButtons = Array.from(document.querySelectorAll("[data-res
 const resetProgressModal = document.querySelector("[data-reset-progress-modal]");
 const resetProgressCancelButton = document.querySelector("[data-reset-progress-cancel]");
 const resetProgressConfirmButton = document.querySelector("[data-reset-progress-confirm]");
+const transitDetailModal = document.querySelector("[data-transit-detail-modal]");
+const transitDetailCloseButtons = Array.from(document.querySelectorAll("[data-transit-detail-close]"));
+const transitDetailTagNodes = Array.from(
+  document.querySelectorAll("[data-transit-detail-tag-language]")
+);
+const transitDetailTitleNode = document.querySelector("[data-transit-detail-title]");
+const transitDetailSummaryNode = document.querySelector("[data-transit-detail-summary]");
+const transitDetailMetaNode = document.querySelector("[data-transit-detail-meta]");
+const transitDetailSectionsNode = document.querySelector("[data-transit-detail-sections]");
+const transitDetailActionLink = document.querySelector("[data-transit-detail-action]");
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
 const optionalPrompt = document.querySelector("[data-optional-prompt]");
 const optionalPromptExpanded = document.querySelector("[data-optional-prompt-expanded]");
@@ -63,6 +75,7 @@ const timelineLinkOverlapPx = 1;
 const deferredGeometryReleaseDelayMs = 160;
 const deferredNonCriticalLayoutTimeoutMs = 700;
 const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
+const transitDetailsDataUrl = "./assets/data/transit-details.json";
 const fujiForecastCacheMaxAgeMs = 45 * 60 * 1000;
 const fujiForecastSourceUrl = "https://open-meteo.com/en/docs";
 const fujiForecastApiUrl = "https://api.open-meteo.com/v1/forecast";
@@ -110,8 +123,58 @@ const bookingTransitGroupDefinitions = [
     }
   }
 ];
+const transitDetailLabels = {
+  defaultTag: { en: "Transit detail", ja: "移動詳細" },
+  segment: { en: "Segment", ja: "区間" },
+  from: { en: "From", ja: "出発" },
+  to: { en: "To", ja: "到着" },
+  transport: { en: "Recommended transport", ja: "おすすめ移動手段" },
+  why: { en: "Why this fits", ja: "このルートが合う理由" },
+  practicalNotes: { en: "Practical notes", ja: "実用メモ" },
+  prepReminders: { en: "Booking + prep", ja: "予約・事前準備" },
+  fallbackOptions: { en: "Fallback options", ja: "代替案" },
+  loadingTitle: { en: "Loading transit detail", ja: "移動詳細を読み込み中" },
+  loadingSummary: {
+    en: "Loading the notes for this transit leg...",
+    ja: "この移動区間のメモを読み込んでいます..."
+  },
+  loadingBody: {
+    en: "Practical transfer notes will appear here.",
+    ja: "実用的な移動メモがここに表示されます。"
+  },
+  unavailableTitle: {
+    en: "Transit detail unavailable",
+    ja: "移動詳細を表示できません"
+  },
+  unavailableSummary: {
+    en: "This leg does not have a saved popup yet.",
+    ja: "この区間にはまだ保存済みのポップアップがありません。"
+  },
+  unavailableBody: {
+    en: "Use the existing route and booking references for now.",
+    ja: "ひとまず既存のルートと予約メモを使ってください。"
+  },
+  errorTitle: {
+    en: "Transit detail could not load",
+    ja: "移動詳細を読み込めませんでした"
+  },
+  errorSummary: {
+    en: "The transit notes could not be loaded right now.",
+    ja: "移動メモを現在読み込めません。"
+  },
+  errorBody: {
+    en: "Close this popup and try again in a moment.",
+    ja: "このポップアップを閉じて、少ししてからもう一度試してください。"
+  },
+  fallbackAction: {
+    en: "Open reference",
+    ja: "参照を開く"
+  }
+};
 let bookingTransitItems = [];
 let bookingTransitItemMap = new Map();
+let transitDetailItems = [];
+let transitDetailItemMap = new Map();
 let checklistState = {};
 let reservedHeaderHeight = headerReservedHeightFallbackPx;
 let headerLockUntil = 0;
@@ -151,6 +214,9 @@ let storageWriteIdleHandle = 0;
 let bookingTransitState = { filter: "all", items: {} };
 let bookingTransitInitialized = false;
 let bookingTransitItemsPromise = null;
+let transitDetailItemsPromise = null;
+let activeTransitDetailId = "";
+let lastTransitTrigger = null;
 let packingState = {};
 let packingInitialized = false;
 let fujiForecastResult = null;
@@ -269,6 +335,248 @@ function loadBookingTransitItems() {
     });
 
   return bookingTransitItemsPromise;
+}
+
+function loadTransitDetailItems() {
+  if (transitDetailItems.length) {
+    return Promise.resolve(transitDetailItems);
+  }
+
+  if (transitDetailItemsPromise) {
+    return transitDetailItemsPromise;
+  }
+
+  transitDetailItemsPromise = window.fetch(transitDetailsDataUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Transit detail data request failed: ${response.status}`);
+      }
+
+      return response.json();
+    })
+    .then((items) => {
+      transitDetailItems = Array.isArray(items) ? items : [];
+      transitDetailItemMap = new Map(transitDetailItems.map((item) => [item.id, item]));
+      return transitDetailItems;
+    })
+    .catch((error) => {
+      transitDetailItemsPromise = null;
+      throw error;
+    });
+
+  return transitDetailItemsPromise;
+}
+
+function setTransitDetailTag(tag = transitDetailLabels.defaultTag) {
+  transitDetailTagNodes.forEach((node) => {
+    node.textContent =
+      node.dataset.transitDetailTagLanguage === "ja" ? tag.ja : tag.en;
+  });
+}
+
+function renderTransitDetailTextSection(title, copy) {
+  if (!copy?.en && !copy?.ja) {
+    return "";
+  }
+
+  return `
+    <section class="transit-modal__section">
+      <h3 class="transit-modal__section-title">${renderLocalizedContent(title)}</h3>
+      <p class="transit-modal__section-copy">${renderLocalizedContent(copy)}</p>
+    </section>
+  `;
+}
+
+function renderTransitDetailListSection(title, items) {
+  if (!Array.isArray(items) || !items.length) {
+    return "";
+  }
+
+  return `
+    <section class="transit-modal__section">
+      <h3 class="transit-modal__section-title">${renderLocalizedContent(title)}</h3>
+      <ul class="transit-modal__list">
+        ${items
+          .map(
+            (item) => `<li class="transit-modal__list-item">${renderLocalizedContent(item)}</li>`
+          )
+          .join("")}
+      </ul>
+    </section>
+  `;
+}
+
+function renderTransitDetailFact(title, value) {
+  if (!value?.en && !value?.ja) {
+    return "";
+  }
+
+  return `
+    <article class="transit-modal__fact">
+      <p class="transit-modal__fact-label">${renderLocalizedContent(title)}</p>
+      <p class="transit-modal__fact-value">${renderLocalizedContent(value)}</p>
+    </article>
+  `;
+}
+
+function renderTransitDetailPlaceholder(title, summary, body) {
+  if (!transitDetailModal) {
+    return;
+  }
+
+  setTransitDetailTag(transitDetailLabels.defaultTag);
+
+  if (transitDetailTitleNode) {
+    transitDetailTitleNode.innerHTML = renderLocalizedContent(title);
+  }
+
+  if (transitDetailSummaryNode) {
+    transitDetailSummaryNode.innerHTML = renderLocalizedContent(summary);
+  }
+
+  if (transitDetailMetaNode) {
+    transitDetailMetaNode.hidden = true;
+    transitDetailMetaNode.innerHTML = "";
+  }
+
+  if (transitDetailSectionsNode) {
+    transitDetailSectionsNode.innerHTML = `
+      <section class="transit-modal__section transit-modal__section--loading">
+        <p class="transit-modal__section-copy">${renderLocalizedContent(body)}</p>
+      </section>
+    `;
+  }
+
+  if (transitDetailActionLink) {
+    transitDetailActionLink.hidden = true;
+    transitDetailActionLink.removeAttribute("href");
+  }
+
+  syncLocalizedNodes(transitDetailModal);
+}
+
+function renderTransitDetailLoadingState() {
+  renderTransitDetailPlaceholder(
+    transitDetailLabels.loadingTitle,
+    transitDetailLabels.loadingSummary,
+    transitDetailLabels.loadingBody
+  );
+}
+
+function renderTransitDetailUnavailableState() {
+  renderTransitDetailPlaceholder(
+    transitDetailLabels.unavailableTitle,
+    transitDetailLabels.unavailableSummary,
+    transitDetailLabels.unavailableBody
+  );
+}
+
+function renderTransitDetailErrorState() {
+  renderTransitDetailPlaceholder(
+    transitDetailLabels.errorTitle,
+    transitDetailLabels.errorSummary,
+    transitDetailLabels.errorBody
+  );
+}
+
+function renderTransitDetail(detail) {
+  if (!transitDetailModal) {
+    return;
+  }
+
+  setTransitDetailTag(detail.tag || transitDetailLabels.defaultTag);
+
+  if (transitDetailTitleNode) {
+    transitDetailTitleNode.innerHTML = renderLocalizedContent(detail.title);
+  }
+
+  if (transitDetailSummaryNode) {
+    transitDetailSummaryNode.innerHTML = renderLocalizedContent(detail.summary);
+  }
+
+  if (transitDetailMetaNode) {
+    const metaMarkup = [
+      renderTransitDetailFact(transitDetailLabels.segment, detail.segment),
+      renderTransitDetailFact(transitDetailLabels.from, detail.from),
+      renderTransitDetailFact(transitDetailLabels.to, detail.to),
+      renderTransitDetailFact(transitDetailLabels.transport, detail.transport)
+    ]
+      .filter(Boolean)
+      .join("");
+
+    transitDetailMetaNode.hidden = !metaMarkup;
+    transitDetailMetaNode.innerHTML = metaMarkup;
+  }
+
+  if (transitDetailSectionsNode) {
+    transitDetailSectionsNode.innerHTML = [
+      renderTransitDetailTextSection(transitDetailLabels.why, detail.why),
+      renderTransitDetailListSection(
+        transitDetailLabels.practicalNotes,
+        detail.practicalNotes
+      ),
+      renderTransitDetailListSection(
+        transitDetailLabels.prepReminders,
+        detail.prepReminders
+      ),
+      renderTransitDetailListSection(
+        transitDetailLabels.fallbackOptions,
+        detail.fallbackOptions
+      )
+    ]
+      .filter(Boolean)
+      .join("");
+  }
+
+  if (transitDetailActionLink) {
+    if (detail.action?.href) {
+      transitDetailActionLink.hidden = false;
+      transitDetailActionLink.href = detail.action.href;
+      transitDetailActionLink.innerHTML = renderLocalizedContent(
+        detail.action.label || transitDetailLabels.fallbackAction
+      );
+    } else {
+      transitDetailActionLink.hidden = true;
+      transitDetailActionLink.removeAttribute("href");
+    }
+  }
+
+  syncLocalizedNodes(transitDetailModal);
+}
+
+function openTransitDetail(detailId, triggerElement) {
+  if (!transitDetailModal || !detailId) {
+    return;
+  }
+
+  if (resetProgressModal && !resetProgressModal.hidden) {
+    setResetModalOpen(false);
+  }
+
+  lastTransitTrigger = triggerElement || document.activeElement;
+  activeTransitDetailId = detailId;
+  renderTransitDetailLoadingState();
+  setTransitModalOpen(true);
+
+  loadTransitDetailItems()
+    .then(() => {
+      if (activeTransitDetailId !== detailId) {
+        return;
+      }
+
+      const detail = transitDetailItemMap.get(detailId);
+      if (!detail) {
+        renderTransitDetailUnavailableState();
+        return;
+      }
+
+      renderTransitDetail(detail);
+    })
+    .catch(() => {
+      if (activeTransitDetailId === detailId) {
+        renderTransitDetailErrorState();
+      }
+    });
 }
 
 function clamp(value, min, max) {
@@ -1248,11 +1556,24 @@ function updateStoredBookingTransitItemState(itemId, nextState) {
 }
 
 function renderLocalizedContent(content) {
-  return `<span data-language="en">${content.en}</span><span data-language="ja" hidden>${content.ja}</span>`;
+  return `<span data-language="en">${escapeHtml(content?.en ?? "")}</span><span data-language="ja" hidden>${escapeHtml(content?.ja ?? "")}</span>`;
 }
 
 function renderBookingTransitItem(item) {
   const state = getBookingTransitItemState(item.id);
+  const transitTriggerMarkup = item.transitDetailId
+    ? `
+          <div class="booking-item__support">
+            <button
+              class="transit-trigger transit-trigger--booking"
+              type="button"
+              data-transit-detail-trigger="${escapeHtml(item.transitDetailId)}">
+              <span data-language="en">Transit details</span>
+              <span data-language="ja" hidden>移動詳細</span>
+            </button>
+          </div>
+      `
+    : "";
 
   return `
     <details
@@ -1280,10 +1601,11 @@ function renderBookingTransitItem(item) {
       <div class="booking-item__details">
         <div class="booking-item__details-inner">
           <p class="booking-item__detail-copy">${renderLocalizedContent(item.details)}</p>
+          ${transitTriggerMarkup}
           <div class="booking-item__actions">
             <a
               class="booking-item__cta booking-item__cta--primary"
-              href="${item.action.href}"
+              href="${escapeHtml(item.action.href)}"
               target="_blank"
               rel="noopener noreferrer">
               ${renderLocalizedContent(item.action.label)}
@@ -1469,6 +1791,12 @@ function bindBookingTransitUI() {
         done: !state.done
       });
       updateBookingTransitUI();
+    });
+
+    itemElement.querySelector("[data-transit-detail-trigger]")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      const trigger = event.currentTarget;
+      openTransitDetail(trigger.dataset.transitDetailTrigger || "", trigger);
     });
 
     itemElement.dataset.bookingBound = "true";
@@ -2071,19 +2399,35 @@ function initOverviewSection() {
 }
 
 function handleChecklistPanelClick(event) {
+  const transitTrigger = event.target.closest("[data-transit-detail-trigger]");
   const dayCard = event.target.closest(".day-card[data-day]");
-  if (!dayCard) {
+  if (transitTrigger) {
+    if (!dayCard) {
+      return;
+    }
+
+    const day = Number(dayCard.dataset.day);
+    if (day > accessibleDay) {
+      event.preventDefault();
+      event.stopPropagation();
+      showSequenceNotice(accessibleDay);
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    openTransitDetail(transitTrigger.dataset.transitDetailTrigger || "", transitTrigger);
     return;
   }
 
-  const day = Number(dayCard.dataset.day);
-  if (day <= accessibleDay) {
-    return;
+  if (dayCard) {
+    const day = Number(dayCard.dataset.day);
+    if (day > accessibleDay) {
+      event.preventDefault();
+      event.stopPropagation();
+      showSequenceNotice(accessibleDay);
+    }
   }
-
-  event.preventDefault();
-  event.stopPropagation();
-  showSequenceNotice(accessibleDay);
 }
 
 function handleChecklistPanelChange(event) {
@@ -2467,19 +2811,58 @@ function confirmOptionalDaysUnlock() {
   unlockOptionalDays();
 }
 
+function syncModalOpenState() {
+  const isModalOpen =
+    Boolean(resetProgressModal && !resetProgressModal.hidden) ||
+    Boolean(transitDetailModal && !transitDetailModal.hidden);
+
+  root.classList.toggle("has-modal-open", isModalOpen);
+  [siteHeader, mainContent, siteFooter].forEach((node) => {
+    if (node) {
+      node.toggleAttribute("inert", isModalOpen);
+    }
+  });
+}
+
+function setTransitModalOpen(isOpen) {
+  if (!transitDetailModal) {
+    return;
+  }
+
+  transitDetailModal.hidden = !isOpen;
+  syncModalOpenState();
+
+  if (isOpen) {
+    window.requestAnimationFrame(() => {
+      transitDetailCloseButtons[0]?.focus();
+    });
+    return;
+  }
+
+  activeTransitDetailId = "";
+
+  if (lastTransitTrigger && document.contains(lastTransitTrigger)) {
+    lastTransitTrigger.focus();
+  }
+}
+
 function setResetModalOpen(isOpen) {
   if (!resetProgressModal) {
     return;
   }
 
+  if (isOpen && transitDetailModal && !transitDetailModal.hidden) {
+    setTransitModalOpen(false);
+  }
+
   resetProgressModal.hidden = !isOpen;
-  root.classList.toggle("has-modal-open", isOpen);
+  syncModalOpenState();
 
   if (isOpen) {
     window.requestAnimationFrame(() => {
       resetProgressCancelButton?.focus();
     });
-  } else {
+  } else if (lastResetTrigger && document.contains(lastResetTrigger)) {
     lastResetTrigger?.focus();
   }
 }
@@ -3128,6 +3511,20 @@ if (resetProgressModal) {
   });
 }
 
+transitDetailCloseButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setTransitModalOpen(false);
+  });
+});
+
+if (transitDetailModal) {
+  transitDetailModal.addEventListener("click", (event) => {
+    if (event.target === transitDetailModal) {
+      setTransitModalOpen(false);
+    }
+  });
+}
+
 [reducedMotionQuery, coarsePointerQuery, compactViewportQuery].forEach((query) => {
   bindMediaQueryChange(query, () => {
     syncReducedEffectsMode({ force: true });
@@ -3135,7 +3532,16 @@ if (resetProgressModal) {
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && resetProgressModal && !resetProgressModal.hidden) {
+  if (event.key !== "Escape") {
+    return;
+  }
+
+  if (transitDetailModal && !transitDetailModal.hidden) {
+    setTransitModalOpen(false);
+    return;
+  }
+
+  if (resetProgressModal && !resetProgressModal.hidden) {
     setResetModalOpen(false);
   }
 });
