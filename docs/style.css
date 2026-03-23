@@ -1898,11 +1898,10 @@ html.has-modal-open body {
 }
 
 .packing-section__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.56rem 0.92rem;
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: 0.62rem;
 }
 
 .packing-section__progress {
@@ -1922,7 +1921,7 @@ html.has-modal-open body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, max-content));
   gap: 0.38rem;
-  justify-content: end;
+  justify-content: start;
   align-items: stretch;
 }
 
@@ -1967,6 +1966,10 @@ html.has-modal-open body {
 
 .packing-checklist .packing-item {
   padding-left: 0;
+}
+
+.packing-checklist {
+  margin-top: 0.14rem;
 }
 
 .packing-checklist .packing-item::before,
@@ -3122,10 +3125,6 @@ html.intro-done .welcome-overlay {
   .booking-item__actions {
     display: grid;
     grid-template-columns: 1fr;
-  }
-
-  .packing-section__meta {
-    align-items: stretch;
   }
 
   .packing-section__actions {
