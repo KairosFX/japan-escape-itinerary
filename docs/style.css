@@ -3146,6 +3146,316 @@ html.has-modal-open body {
   max-width: 30rem;
 }
 
+.route-map__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.route-map__launch {
+  min-width: 0;
+}
+
+.route-map__hint {
+  margin: 0;
+  max-width: 28rem;
+  font-size: 0.84rem;
+  color: rgba(76, 66, 62, 0.86);
+}
+
+.route-map__interactive {
+  display: grid;
+  gap: 0.82rem;
+}
+
+.route-map__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: start;
+  gap: 0.72rem;
+}
+
+.route-map__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.route-map__filter {
+  width: auto;
+  min-width: 0;
+}
+
+.route-map__collapse {
+  width: auto;
+  min-width: 0;
+}
+
+.route-map__explorer {
+  display: grid;
+  grid-template-columns: minmax(0, 1.42fr) minmax(18rem, 0.92fr);
+  gap: 0.92rem;
+  align-items: stretch;
+}
+
+.route-map__stage {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 5 / 3;
+  border-radius: calc(var(--radius-lg) - 4px);
+  border: 1px solid rgba(171, 74, 59, 0.12);
+  background:
+    radial-gradient(circle at 80% 18%, rgba(171, 74, 59, 0.08), rgba(171, 74, 59, 0) 28%),
+    linear-gradient(180deg, rgba(255, 254, 250, 0.96), rgba(245, 238, 231, 0.92));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 18px 34px rgba(55, 35, 22, 0.08);
+}
+
+.route-map__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 82%, rgba(171, 74, 59, 0.08), rgba(171, 74, 59, 0) 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.route-map__stage-image,
+.route-map__overlay,
+.route-map__markers {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.route-map__stage-image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.route-map__overlay {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.route-map__markers {
+  z-index: 3;
+}
+
+.route-map__path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.route-map__path--shadow {
+  stroke: rgba(255, 248, 242, 0.84);
+  stroke-width: 18px;
+  opacity: 0.94;
+}
+
+.route-map__path--base {
+  stroke: rgba(98, 74, 68, 0.14);
+  stroke-width: 7px;
+}
+
+.route-map__path--segment {
+  stroke-width: 8px;
+  transition:
+    opacity 180ms ease,
+    stroke 180ms ease,
+    stroke-width 180ms ease;
+}
+
+.route-map__path--segment.is-active {
+  stroke: rgba(155, 60, 51, 0.94);
+  opacity: 1;
+}
+
+.route-map__path--segment.is-muted {
+  stroke: rgba(98, 74, 68, 0.16);
+  opacity: 0.24;
+}
+
+.route-map__marker {
+  position: absolute;
+  left: var(--route-marker-x);
+  top: var(--route-marker-y);
+  width: 1.52rem;
+  height: 1.52rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+.route-map__marker::before {
+  content: "";
+  position: absolute;
+  inset: 0.12rem;
+  border-radius: 50%;
+  background: rgba(255, 250, 245, 0.8);
+  border: 1px solid rgba(171, 74, 59, 0.18);
+  box-shadow: 0 10px 20px rgba(55, 35, 22, 0.12);
+}
+
+.route-map__marker-core {
+  position: relative;
+  z-index: 1;
+  width: 0.58rem;
+  height: 0.58rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(171, 74, 59, 0.98), rgba(133, 47, 38, 1));
+}
+
+.route-map__marker.is-active {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.route-map__marker.is-active::before {
+  inset: 0;
+  background: rgba(171, 74, 59, 0.18);
+  border-color: rgba(171, 74, 59, 0.36);
+}
+
+.route-map__marker.is-dimmed {
+  opacity: 0.42;
+}
+
+.route-map__marker:hover,
+.route-map__marker:focus-visible {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.route-reference {
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
+  padding: 1rem 1.02rem;
+  border-radius: calc(var(--radius-lg) - 4px);
+  border: 1px solid rgba(171, 74, 59, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 249, 0.95), rgba(248, 241, 234, 0.9)),
+    rgba(255, 252, 248, 0.84);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 16px 30px rgba(55, 35, 22, 0.08);
+}
+
+.route-reference__copy {
+  display: grid;
+  gap: 0.44rem;
+}
+
+.route-reference__title {
+  font-size: 1.22rem;
+  color: var(--text);
+}
+
+.route-reference__summary,
+.route-reference__group-label,
+.route-reference__list {
+  margin: 0;
+}
+
+.route-reference__summary,
+.route-reference__list {
+  color: var(--muted);
+}
+
+.route-reference__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.42rem;
+}
+
+.route-reference__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.34rem 0.62rem;
+  border-radius: 999px;
+  background: rgba(171, 74, 59, 0.1);
+  color: var(--accent-deep);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.route-reference__list {
+  padding-left: 1.08rem;
+  display: grid;
+  gap: 0.38rem;
+}
+
+.route-reference__list-item {
+  min-width: 0;
+}
+
+.route-reference__group {
+  display: grid;
+  gap: 0.48rem;
+}
+
+.route-reference__group-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.route-reference__group-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.44rem;
+}
+
+.route-reference__day-button,
+.route-reference__tool {
+  min-width: 0;
+}
+
+@media (max-width: 920px) {
+  .route-map__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .route-map__explorer {
+    grid-template-columns: 1fr;
+  }
+
+  .route-map__collapse {
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .route-map__toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .route-map__filters {
+    width: 100%;
+  }
+
+  .route-map__filter {
+    flex: 1 1 calc(50% - 0.4rem);
+    justify-content: center;
+  }
+}
+
 @media (hover: hover) {
   .booking-transit__filter:hover,
   .booking-item__cta:hover {
@@ -4212,6 +4522,80 @@ html[data-theme="dark"] .route-map__preview::before {
 
 html[data-theme="dark"] .route-map__preview-image {
   filter: brightness(0.84) saturate(0.92);
+}
+
+html[data-theme="dark"] .route-map__hint {
+  color: rgba(239, 230, 218, 0.68);
+}
+
+html[data-theme="dark"] .route-map__stage {
+  border-color: rgba(248, 239, 228, 0.08);
+  background:
+    radial-gradient(circle at 80% 18%, rgba(192, 95, 80, 0.16), rgba(192, 95, 80, 0) 28%),
+    linear-gradient(180deg, rgba(20, 23, 28, 0.98), rgba(11, 13, 16, 0.98));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 24px 42px rgba(7, 8, 9, 0.34);
+}
+
+html[data-theme="dark"] .route-map__stage::before {
+  background:
+    radial-gradient(circle at 18% 82%, rgba(192, 95, 80, 0.12), rgba(192, 95, 80, 0) 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+}
+
+html[data-theme="dark"] .route-map__stage-image {
+  filter: brightness(0.78) saturate(0.88);
+}
+
+html[data-theme="dark"] .route-map__path--shadow {
+  stroke: rgba(12, 14, 18, 0.84);
+}
+
+html[data-theme="dark"] .route-map__path--base {
+  stroke: rgba(248, 239, 228, 0.08);
+}
+
+html[data-theme="dark"] .route-map__path--segment.is-active {
+  stroke: rgba(228, 136, 120, 0.96);
+}
+
+html[data-theme="dark"] .route-map__path--segment.is-muted {
+  stroke: rgba(248, 239, 228, 0.16);
+}
+
+html[data-theme="dark"] .route-map__marker::before {
+  background: rgba(17, 20, 24, 0.84);
+  border-color: rgba(236, 176, 165, 0.2);
+  box-shadow: 0 12px 22px rgba(2, 3, 5, 0.24);
+}
+
+html[data-theme="dark"] .route-map__marker-core {
+  background: linear-gradient(180deg, rgba(196, 102, 87, 0.98), #8b392e);
+}
+
+html[data-theme="dark"] .route-reference {
+  border-color: rgba(248, 239, 228, 0.08);
+  background:
+    linear-gradient(180deg, rgba(27, 30, 35, 0.94), rgba(19, 22, 27, 0.9)),
+    rgba(18, 20, 24, 0.88);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 16px 30px rgba(3, 4, 6, 0.24);
+}
+
+html[data-theme="dark"] .route-reference__title {
+  color: #f3eadf;
+}
+
+html[data-theme="dark"] .route-reference__summary,
+html[data-theme="dark"] .route-reference__list {
+  color: rgba(239, 230, 218, 0.72);
+}
+
+html[data-theme="dark"] .route-reference__pill {
+  background: rgba(192, 95, 80, 0.18);
+  color: #f5d6ca;
 }
 
 html[data-theme="dark"] .progress-overview__reset,
