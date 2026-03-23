@@ -39,6 +39,10 @@ const optionalPromptFeedback = document.querySelector("[data-optional-feedback]"
 const optionalUnlockButtons = document.querySelectorAll("[data-optional-unlock]");
 const optionalSkipButton = document.querySelector("[data-optional-skip]");
 const optionalSectionNodes = document.querySelectorAll("[data-optional-section]");
+const budgetNotesCard = document.querySelector("[data-budget-notes-card]");
+const budgetSummaryNode = document.querySelector("[data-budget-summary]");
+const budgetDaysNode = document.querySelector("[data-budget-days]");
+const budgetResetButtons = Array.from(document.querySelectorAll("[data-budget-reset-all]"));
 const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-section]"));
 const packingMarkAllButtons = Array.from(document.querySelectorAll("[data-packing-mark-all-global]"));
 const packingResetButtons = Array.from(document.querySelectorAll("[data-packing-reset-all]"));
@@ -64,6 +68,7 @@ const optionalDaysUnlockedStorageKey = "japan-trip-optional-days-unlocked";
 const activePanelStorageKey = "japan-trip-active-panel";
 const bookingTransitStorageKey = "japan-trip-bookings-transit-state";
 const packingStorageKey = "japan-trip-packing-state";
+const budgetNotesStorageKey = "japan-trip-budget-notes";
 const introSeenSessionKey = "japan-trip-intro-seen";
 const introExitDurationMs = 180;
 const fujiForecastSessionKey = "japan-trip-fuji-forecast";
@@ -171,6 +176,196 @@ const transitDetailLabels = {
     ja: "参照を開く"
   }
 };
+const budgetLevelLabels = {
+  low: { en: "Low", ja: "低め" },
+  medium: { en: "Medium", ja: "標準" },
+  high: { en: "High", ja: "高め" }
+};
+const budgetNotesLabels = {
+  summaryTotal: { en: "Trip estimate", ja: "旅全体の目安" },
+  summaryMix: { en: "Spend mix", ja: "出費バランス" },
+  summaryWatch: { en: "Watch points", ja: "見ておく項目" },
+  visibleDays: { en: "Visible days", ja: "表示中の日数" },
+  noteLabel: { en: "Quick note", ja: "メモ" },
+  spendLegend: { en: "Spend level", ja: "出費レベル" }
+};
+const budgetReminderItems = [
+  {
+    title: { en: "Transit", ja: "移動" },
+    body: {
+      en: "Days 4, 5, and 7 are the main swing days because the long transfers stack up quickly.",
+      ja: "4日目、5日目、7日目は長めの移動が重なるので、出費がぶれやすい日です。"
+    }
+  },
+  {
+    title: { en: "Food", ja: "食事" },
+    body: {
+      en: "Osaka and Tokyo are the easy splurge spots, so leave room for a nicer dinner or extra snacks.",
+      ja: "大阪と東京は食事を少し贅沢にしやすいので、少し良い夕食や軽食分の余裕を残します。"
+    }
+  },
+  {
+    title: { en: "Stay", ja: "宿" },
+    body: {
+      en: "The Hakone and Fuji-area nights can outweigh daytime sightseeing costs on their own.",
+      ja: "箱根と富士エリアの宿は、昼の観光費より大きくなりやすいです。"
+    }
+  },
+  {
+    title: { en: "Attractions", ja: "観光" },
+    body: {
+      en: "Timed tickets such as Shibuya Sky or paid viewpoints are the easiest costs to prebook early.",
+      ja: "渋谷スカイや有料展望スポットなどの時間指定券は、早めに予算へ入れやすい項目です。"
+    }
+  },
+  {
+    title: { en: "Buffer", ja: "予備" },
+    body: {
+      en: "Keep a small shopping or weather-flex cushion on the Fuji and Tokyo days.",
+      ja: "富士エリアと東京の日は、買い物や天候対応のための小さな予備を残します。"
+    }
+  }
+];
+const budgetDayConfigs = [
+  {
+    day: 1,
+    title: { en: "Day 1 - Osaka", ja: "1日目・大阪" },
+    region: { en: "Arrival + Minami", ja: "到着日＋ミナミ" },
+    defaultLevel: "medium",
+    tags: [
+      { en: "Arrival buffer", ja: "到着バッファ" },
+      { en: "Dinner night", ja: "夕食メイン" }
+    ],
+    ranges: {
+      low: [8000, 14000],
+      medium: [12000, 20000],
+      high: [18000, 30000]
+    }
+  },
+  {
+    day: 2,
+    title: { en: "Day 2 - Kyoto East", ja: "2日目・京都東側" },
+    region: { en: "Temple day", ja: "寺社メイン" },
+    defaultLevel: "medium",
+    tags: [
+      { en: "Transit light", ja: "移動は軽め" },
+      { en: "Snacks + tea", ja: "軽食とお茶" }
+    ],
+    ranges: {
+      low: [7000, 12000],
+      medium: [10000, 17000],
+      high: [16000, 26000]
+    }
+  },
+  {
+    day: 3,
+    title: { en: "Day 3 - Arashiyama + Osaka", ja: "3日目・嵐山＋大阪" },
+    region: { en: "Split day", ja: "エリア分割日" },
+    defaultLevel: "medium",
+    tags: [
+      { en: "Attraction tickets", ja: "入場系あり" },
+      { en: "Dinner flex", ja: "夕食は調整可" }
+    ],
+    ranges: {
+      low: [9000, 15000],
+      medium: [13000, 21000],
+      high: [19000, 32000]
+    }
+  },
+  {
+    day: 4,
+    title: { en: "Day 4 - Hakone Transfer", ja: "4日目・箱根移動日" },
+    region: { en: "Shinkansen + ryokan", ja: "新幹線＋旅館" },
+    defaultLevel: "high",
+    tags: [
+      { en: "Transfer heavy", ja: "移動多め" },
+      { en: "Ryokan night", ja: "旅館泊" }
+    ],
+    ranges: {
+      low: [24000, 38000],
+      medium: [32000, 50000],
+      high: [45000, 70000]
+    }
+  },
+  {
+    day: 5,
+    title: { en: "Day 5 - Hakone To Kawaguchiko", ja: "5日目・箱根から河口湖" },
+    region: { en: "Transfer + onsen buffer", ja: "移動＋温泉余白" },
+    defaultLevel: "medium",
+    tags: [
+      { en: "Transit heavy", ja: "移動多め" },
+      { en: "Cafe + snacks", ja: "カフェと軽食" }
+    ],
+    ranges: {
+      low: [12000, 20000],
+      medium: [18000, 30000],
+      high: [26000, 42000]
+    }
+  },
+  {
+    day: 6,
+    title: { en: "Day 6 - Fuji Weather Flex", ja: "6日目・富士の天気優先日" },
+    region: { en: "Viewpoints + local movement", ja: "展望地＋現地移動" },
+    defaultLevel: "medium",
+    tags: [
+      { en: "Weather flex", ja: "天気優先" },
+      { en: "Buffer day", ja: "予備日" }
+    ],
+    ranges: {
+      low: [8000, 14000],
+      medium: [12000, 22000],
+      high: [18000, 32000]
+    }
+  },
+  {
+    day: 7,
+    title: { en: "Day 7 - Tokyo", ja: "7日目・東京" },
+    region: { en: "Tokyo arrival + Shibuya", ja: "東京到着＋渋谷" },
+    defaultLevel: "medium",
+    tags: [
+      { en: "Transfer heavy", ja: "移動多め" },
+      { en: "Timed ticket", ja: "時間指定あり" }
+    ],
+    ranges: {
+      low: [10000, 17000],
+      medium: [14000, 26000],
+      high: [22000, 38000]
+    }
+  },
+  {
+    day: 8,
+    optional: true,
+    title: { en: "Day 8 - Tokyo Extra", ja: "8日目・東京追加日" },
+    region: { en: "Skytree + Akihabara", ja: "スカイツリー＋秋葉原" },
+    defaultLevel: "medium",
+    tags: [
+      { en: "Shopping drift", ja: "買い物しやすい日" },
+      { en: "Optional splurge", ja: "追加出費あり" }
+    ],
+    ranges: {
+      low: [8000, 15000],
+      medium: [12000, 22000],
+      high: [20000, 36000]
+    }
+  },
+  {
+    day: 9,
+    optional: true,
+    title: { en: "Day 9 - Tokyo Extra", ja: "9日目・東京追加日" },
+    region: { en: "Imperial Palace + Shinjuku", ja: "皇居＋新宿" },
+    defaultLevel: "medium",
+    tags: [
+      { en: "Final buffer", ja: "最後の予備日" },
+      { en: "Last shopping", ja: "最後の買い物" }
+    ],
+    ranges: {
+      low: [7000, 14000],
+      medium: [11000, 20000],
+      high: [18000, 32000]
+    }
+  }
+];
+const budgetDayConfigMap = new Map(budgetDayConfigs.map((config) => [String(config.day), config]));
 let bookingTransitItems = [];
 let bookingTransitItemMap = new Map();
 let transitDetailItems = [];
@@ -219,6 +414,8 @@ let activeTransitDetailId = "";
 let lastTransitTrigger = null;
 let packingState = {};
 let packingInitialized = false;
+let budgetNotesState = {};
+let budgetNotesInitialized = false;
 let fujiForecastResult = null;
 let fujiForecastPromise = null;
 let reducedEffectsEnabled = false;
@@ -2069,6 +2266,381 @@ function initializePackingToggles() {
   syncPackingUI();
 }
 
+function normalizeBudgetLevel(level, fallback = "medium") {
+  return level === "low" || level === "medium" || level === "high" ? level : fallback;
+}
+
+function getBudgetConfig(day) {
+  return budgetDayConfigMap.get(String(day)) || null;
+}
+
+function readStoredBudgetNotesState() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(budgetNotesStorageKey) || "{}");
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return {};
+    }
+
+    return Object.entries(parsed).reduce((nextState, [day, entry]) => {
+      const config = getBudgetConfig(day);
+      if (!config || !entry || typeof entry !== "object" || Array.isArray(entry)) {
+        return nextState;
+      }
+
+      const level = normalizeBudgetLevel(entry.level, config.defaultLevel);
+      const note = typeof entry.note === "string" ? entry.note.slice(0, 280) : "";
+
+      if (level !== config.defaultLevel || note.trim()) {
+        nextState[String(config.day)] = { level, note };
+      }
+
+      return nextState;
+    }, {});
+  } catch (error) {
+    return {};
+  }
+}
+
+function storeBudgetNotesState() {
+  try {
+    if (Object.keys(budgetNotesState).length) {
+      queueStorageValue(budgetNotesStorageKey, JSON.stringify(budgetNotesState));
+      return;
+    }
+
+    queueStorageRemoval(budgetNotesStorageKey);
+  } catch (error) {
+    // Ignore storage failures and keep the budget notes usable.
+  }
+}
+
+function getBudgetDayState(day) {
+  const config = getBudgetConfig(day);
+  const storedState = budgetNotesState[String(day)] || {};
+
+  return {
+    level: normalizeBudgetLevel(storedState.level, config?.defaultLevel || "medium"),
+    note: typeof storedState.note === "string" ? storedState.note : ""
+  };
+}
+
+function formatBudgetAmount(amount) {
+  return `¥${Math.round(Number(amount) / 1000)}k`;
+}
+
+function getBudgetRangeCopy(range = [0, 0]) {
+  const min = formatBudgetAmount(range[0]);
+  const max = formatBudgetAmount(range[1]);
+
+  return {
+    en: `Approx. ${min}-${max}`,
+    ja: `目安 ${min}-${max}`
+  };
+}
+
+function getVisibleBudgetDayConfigs() {
+  return budgetDayConfigs.filter((config) => !config.optional || areOptionalDaysUnlocked());
+}
+
+function getBudgetResetEnabled() {
+  return Object.keys(budgetNotesState).length > 0;
+}
+
+function renderBudgetSummaryMarkup() {
+  const visibleConfigs = getVisibleBudgetDayConfigs();
+  const spendCounts = { low: 0, medium: 0, high: 0 };
+  let totalMin = 0;
+  let totalMax = 0;
+
+  visibleConfigs.forEach((config) => {
+    const state = getBudgetDayState(config.day);
+    const activeRange = config.ranges[state.level] || config.ranges[config.defaultLevel];
+    spendCounts[state.level] += 1;
+    totalMin += activeRange[0];
+    totalMax += activeRange[1];
+  });
+
+  return `
+    <div class="budget-summary-card">
+      <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryTotal)}</p>
+      <strong class="budget-summary-card__value">${renderLocalizedContent(
+        getBudgetRangeCopy([totalMin, totalMax])
+      )}</strong>
+      <p class="budget-summary-card__meta">${renderLocalizedContent({
+        en: `${budgetNotesLabels.visibleDays.en}: ${visibleConfigs.length}`,
+        ja: `${budgetNotesLabels.visibleDays.ja}: ${visibleConfigs.length}日`
+      })}</p>
+    </div>
+    <div class="budget-summary-card">
+      <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryMix)}</p>
+      <div class="budget-summary-card__pills">
+        <span class="budget-pill budget-pill--low">${renderLocalizedContent({
+          en: `${spendCounts.low} low`,
+          ja: `低め ${spendCounts.low}日`
+        })}</span>
+        <span class="budget-pill budget-pill--medium">${renderLocalizedContent({
+          en: `${spendCounts.medium} medium`,
+          ja: `標準 ${spendCounts.medium}日`
+        })}</span>
+        <span class="budget-pill budget-pill--high">${renderLocalizedContent({
+          en: `${spendCounts.high} high`,
+          ja: `高め ${spendCounts.high}日`
+        })}</span>
+      </div>
+    </div>
+    <div class="budget-summary-card budget-summary-card--reminders">
+      <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryWatch)}</p>
+      <ul class="budget-reminder-list">
+        ${budgetReminderItems
+          .map(
+            (item) => `
+              <li>
+                <strong>${renderLocalizedContent(item.title)}</strong>
+                <span>${renderLocalizedContent(item.body)}</span>
+              </li>
+            `
+          )
+          .join("")}
+      </ul>
+    </div>
+  `;
+}
+
+function renderBudgetDayMarkup(config) {
+  const state = getBudgetDayState(config.day);
+  const noteAriaEn = `Budget note for ${config.title.en}`;
+  const noteAriaJa = `${config.title.ja}の予算メモ`;
+  const rangeCopy = getBudgetRangeCopy(config.ranges[state.level]);
+  const isOptional = Boolean(config.optional);
+
+  return `
+    <article
+      class="budget-day"
+      data-budget-day="${config.day}"
+      data-budget-level-state="${state.level}"
+      ${isOptional ? 'data-budget-optional="true"' : ""}>
+      <div class="budget-day__header">
+        <div class="budget-day__titles">
+          <h4 class="budget-day__title">${renderLocalizedContent(config.title)}</h4>
+          <p class="budget-day__region">${renderLocalizedContent(config.region)}</p>
+        </div>
+        <p class="budget-day__range" data-budget-range>${renderLocalizedContent(rangeCopy)}</p>
+      </div>
+
+      <div class="budget-day__tags">
+        ${
+          isOptional
+            ? `<span class="budget-chip budget-chip--optional">${renderLocalizedContent({
+                en: "Optional day",
+                ja: "追加日"
+              })}</span>`
+            : ""
+        }
+        ${config.tags
+          .map((tag) => `<span class="budget-chip">${renderLocalizedContent(tag)}</span>`)
+          .join("")}
+      </div>
+
+      <div class="budget-day__body">
+        <fieldset class="budget-day__levels">
+          <legend class="budget-day__legend">${renderLocalizedContent(
+            budgetNotesLabels.spendLegend
+          )}</legend>
+          ${Object.entries(budgetLevelLabels)
+            .map(
+              ([level, label]) => `
+                <label class="budget-level" data-budget-level-option="${level}">
+                  <input
+                    class="budget-level__input"
+                    type="radio"
+                    name="budget-day-${config.day}-level"
+                    value="${level}"
+                    data-budget-level
+                    ${state.level === level ? "checked" : ""}>
+                  <span class="budget-level__button">${renderLocalizedContent(label)}</span>
+                </label>
+              `
+            )
+            .join("")}
+        </fieldset>
+
+        <label class="budget-day__note-field">
+          <span class="budget-day__note-label">${renderLocalizedContent(
+            budgetNotesLabels.noteLabel
+          )}</span>
+          <textarea
+            class="budget-day__note"
+            rows="3"
+            maxlength="280"
+            data-budget-note
+            data-aria-label-en="${escapeHtml(noteAriaEn)}"
+            data-aria-label-ja="${escapeHtml(noteAriaJa)}"
+            aria-label="${escapeHtml(noteAriaEn)}">${escapeHtml(state.note)}</textarea>
+        </label>
+      </div>
+    </article>
+  `;
+}
+
+function renderBudgetNotes() {
+  if (!budgetNotesCard || !budgetSummaryNode || !budgetDaysNode) {
+    return;
+  }
+
+  budgetSummaryNode.innerHTML = renderBudgetSummaryMarkup();
+  budgetDaysNode.innerHTML = budgetDayConfigs.map((config) => renderBudgetDayMarkup(config)).join("");
+  syncLocalizedNodes(budgetNotesCard);
+}
+
+function syncBudgetDayUI(dayElement) {
+  if (!dayElement) {
+    return;
+  }
+
+  const config = getBudgetConfig(dayElement.dataset.budgetDay);
+  if (!config) {
+    return;
+  }
+
+  const state = getBudgetDayState(config.day);
+  dayElement.hidden = Boolean(config.optional) && !areOptionalDaysUnlocked();
+  dayElement.dataset.budgetLevelState = state.level;
+
+  dayElement.querySelectorAll("[data-budget-level]").forEach((input) => {
+    input.checked = input.value === state.level;
+  });
+
+  const noteField = dayElement.querySelector("[data-budget-note]");
+  if (noteField && noteField.value !== state.note) {
+    noteField.value = state.note;
+  }
+
+  const rangeNode = dayElement.querySelector("[data-budget-range]");
+  if (rangeNode) {
+    rangeNode.innerHTML = renderLocalizedContent(getBudgetRangeCopy(config.ranges[state.level]));
+    syncLocalizedNodes(rangeNode);
+  }
+}
+
+function syncBudgetNotesUI() {
+  if (!budgetNotesCard || !budgetSummaryNode || !budgetDaysNode) {
+    return;
+  }
+
+  budgetDaysNode.querySelectorAll("[data-budget-day]").forEach((dayElement) => {
+    syncBudgetDayUI(dayElement);
+  });
+
+  budgetSummaryNode.innerHTML = renderBudgetSummaryMarkup();
+  syncLocalizedNodes(budgetSummaryNode);
+
+  budgetResetButtons.forEach((button) => {
+    button.disabled = !getBudgetResetEnabled();
+  });
+}
+
+function commitBudgetDayState(day, nextState) {
+  const config = getBudgetConfig(day);
+  if (!config) {
+    return;
+  }
+
+  const level = normalizeBudgetLevel(nextState.level, config.defaultLevel);
+  const note = typeof nextState.note === "string" ? nextState.note.slice(0, 280) : "";
+
+  if (level === config.defaultLevel && !note.trim()) {
+    delete budgetNotesState[String(config.day)];
+  } else {
+    budgetNotesState[String(config.day)] = { level, note };
+  }
+
+  storeBudgetNotesState();
+  syncBudgetNotesUI();
+}
+
+function resetBudgetNotesState() {
+  budgetNotesState = {};
+  storeBudgetNotesState();
+  syncBudgetNotesUI();
+}
+
+function bindBudgetNotesUI() {
+  if (!budgetNotesCard || !budgetDaysNode) {
+    return;
+  }
+
+  budgetResetButtons.forEach((button) => {
+    if (button.dataset.budgetBound === "true") {
+      return;
+    }
+
+    button.addEventListener("click", () => {
+      resetBudgetNotesState();
+    });
+
+    button.dataset.budgetBound = "true";
+  });
+
+  if (budgetDaysNode.dataset.budgetBound === "true") {
+    return;
+  }
+
+  budgetDaysNode.addEventListener("change", (event) => {
+    const levelInput = event.target.closest?.("[data-budget-level]");
+    if (!levelInput) {
+      return;
+    }
+
+    const day = levelInput.closest("[data-budget-day]")?.dataset.budgetDay;
+    if (!day) {
+      return;
+    }
+
+    commitBudgetDayState(day, {
+      ...getBudgetDayState(day),
+      level: levelInput.value
+    });
+  });
+
+  budgetDaysNode.addEventListener("input", (event) => {
+    const noteField = event.target.closest?.("[data-budget-note]");
+    if (!noteField) {
+      return;
+    }
+
+    const day = noteField.closest("[data-budget-day]")?.dataset.budgetDay;
+    if (!day) {
+      return;
+    }
+
+    commitBudgetDayState(day, {
+      ...getBudgetDayState(day),
+      note: noteField.value
+    });
+  });
+
+  budgetDaysNode.dataset.budgetBound = "true";
+}
+
+function initializeBudgetNotes() {
+  if (!budgetNotesCard || !budgetSummaryNode || !budgetDaysNode) {
+    return;
+  }
+
+  if (!budgetNotesInitialized) {
+    budgetNotesState = readStoredBudgetNotesState();
+    budgetNotesInitialized = true;
+  }
+
+  if (budgetNotesCard.dataset.budgetRendered !== "true") {
+    renderBudgetNotes();
+    budgetNotesCard.dataset.budgetRendered = "true";
+  }
+
+  bindBudgetNotesUI();
+  syncBudgetNotesUI();
+}
+
 function readStoredLanguage() {
   try {
     return window.localStorage.getItem(storageKey);
@@ -2509,6 +3081,7 @@ function initNotesSection() {
   }
 
   registerRevealBlocks(panel);
+  initializeBudgetNotes();
 }
 
 function initRouteSection() {
@@ -2757,6 +3330,7 @@ function syncOptionalDaysUI() {
     optionalPromptCompact.hidden = true;
   }
 
+  syncBudgetNotesUI();
   scheduleDayCardRowHeights();
 }
 
