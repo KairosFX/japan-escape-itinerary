@@ -42,6 +42,8 @@ const optionalSectionNodes = document.querySelectorAll("[data-optional-section]"
 const budgetNotesCard = document.querySelector("[data-budget-notes-card]");
 const budgetSummaryNode = document.querySelector("[data-budget-summary]");
 const budgetBreakdownNode = document.querySelector("[data-budget-breakdown]");
+const budgetSourceMetaNode = document.querySelector("[data-budget-source-meta]");
+const budgetSourcesNode = document.querySelector("[data-budget-sources]");
 const budgetDaysNode = document.querySelector("[data-budget-days]");
 const budgetResetButtons = Array.from(document.querySelectorAll("[data-budget-reset-all]"));
 const budgetTravelersInput = document.querySelector("[data-budget-travelers]");
@@ -96,15 +98,16 @@ const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
 const transitDetailsDataUrl = "./assets/data/transit-details.json";
 const offlineSnapshotUrl = "./japan-escape-itinerary-offline.html";
 const serviceWorkerUrl = "./service-worker.js";
-const offlineBundleVersion = "2026-03-23-offline-v2";
+const offlineBundleVersion = "2026-03-23-offline-v3";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
 const inlineDataSelectors = {
   bookingTransit: "[data-booking-transit-inline]",
+  budgetEstimate: "[data-budget-estimate-inline]",
   transitDetails: "[data-transit-details-inline]"
 };
 const budgetDefaultTravelerCount = 2;
 const budgetTravelerCountMin = 1;
-const budgetTravelerCountMax = 12;
+const budgetTravelerCountMax = 24;
 const budgetSharedRoomOccupancy = 2;
 const fujiForecastCacheMaxAgeMs = 45 * 60 * 1000;
 const fujiForecastSourceUrl = "https://open-meteo.com/en/docs";
@@ -203,7 +206,7 @@ const transitDetailLabels = {
 };
 const budgetLevelLabels = {
   low: { en: "Low", ja: "低め" },
-  medium: { en: "Medium", ja: "標準" },
+  medium: { en: "Expected", ja: "標準" },
   high: { en: "High", ja: "高め" }
 };
 const offlineLabels = {
@@ -259,25 +262,31 @@ const offlineLabels = {
 const budgetNotesLabels = {
   summaryTotal: { en: "Trip estimate", ja: "旅全体の目安" },
   summaryPerPerson: { en: "Per person", ja: "1人あたり" },
+  summaryShared: { en: "Shared vs individual", ja: "共有と個人分" },
   summaryOptional: { en: "Optional-day impact", ja: "追加日の影響" },
-  summaryWatch: { en: "Watch points", ja: "見ておく項目" },
   visibleDays: { en: "Visible days", ja: "表示中の日数" },
   noteLabel: { en: "Budget note", ja: "予算メモ" },
   spendLegend: { en: "Day pace", ja: "その日の出費感" },
   travelersLabel: { en: "Travelers", ja: "人数" },
   travelersHint: {
-    en: "Shared stay costs assume one room for every two travelers, then split the total back per person.",
-    ja: "共有の宿泊費は2人で1室を基本に計算し、その合計を人数で割り戻します。"
+    en: "Shared stay costs use one room for every two travelers, then split the room total back per person.",
+    ja: "共有の宿泊費は2人で1室を基本にし、部屋代の合計を人数で割り戻します。"
   },
   extrasLabel: { en: "Include optional extras", ja: "任意の追加費用を含める" },
   extrasHint: {
-    en: "Adds a shopping and splurge cushion without turning the planner into exact accounting.",
-    ja: "買い物や少し贅沢する余白を足しますが、細かい家計簿にはしません。"
+    en: "Adds the flex layer for nicer dinners, extra viewpoints, desserts, and shopping drift without hiding the core trip budget.",
+    ja: "少し良い食事、追加の展望、デザート、買い物のぶれを足しますが、旅の基礎予算は見えたままにします。"
   },
   breakdownHeading: { en: "Estimated breakdown", ja: "見込み内訳" },
+  sourcesHeading: { en: "Sources + assumptions", ja: "出典と前提" },
+  sourceMetaLabel: { en: "Budget basis", ja: "見積もりの基準" },
+  sourceMetaFallback: {
+    en: "Current source notes are unavailable right now.",
+    ja: "現在は出典メモを表示できません。"
+  },
   helperCopy: {
-    en: "Core totals combine shared lodging, per-person day costs, and a small trip-wide transit/buffer base. Days 8-9 only count after they are unlocked.",
-    ja: "合計は共有の宿泊費、1人ごとの日別費用、旅全体の小さな移動・予備費を合わせて計算します。8〜9日目は解放後のみ加算されます。"
+    en: "Core totals combine shared lodging, route-specific transport, city meal benchmarks, ticketed viewpoints, and explicit discretionary/contingency cushions. Days 8-9 only count after they are unlocked.",
+    ja: "合計は、共有の宿泊費、ルート別の交通費、都市別の食事相場、展望チケット、明示的な裁量・予備バッファを合わせて計算します。8〜9日目は解放後のみ加算されます。"
   },
   totalRange: { en: "Range", ja: "幅" },
   optionalInactive: { en: "Not included", ja: "未反映" },
@@ -285,7 +294,9 @@ const budgetNotesLabels = {
     en: "Days 8-9 are still excluded from the estimate.",
     ja: "8〜9日目はまだ見積もりに含めていません。"
   },
-  optionalIncludedMeta: { en: "Included days", ja: "含まれる日数" }
+  optionalIncludedMeta: { en: "Included days", ja: "含まれる日数" },
+  sharedMeta: { en: "Shared costs", ja: "共有費用" },
+  individualMeta: { en: "Individual costs", ja: "個人ごとの費用" }
 };
 const budgetCategoryDefinitions = [
   {
@@ -294,74 +305,39 @@ const budgetCategoryDefinitions = [
     meta: { en: "Shared / room-based", ja: "共有 / 部屋単位" }
   },
   {
-    id: "transit",
-    label: { en: "Transit", ja: "移動" },
-    meta: { en: "Per person + trip base", ja: "1人ごと＋旅全体" }
+    id: "intercityTransit",
+    label: { en: "Intercity transit", ja: "都市間移動" },
+    meta: { en: "Per person / route-specific", ja: "1人ごと / ルート別" }
+  },
+  {
+    id: "localTransit",
+    label: { en: "Local transit", ja: "現地移動" },
+    meta: { en: "Per person / pass-based", ja: "1人ごと / パス基準" }
   },
   {
     id: "food",
     label: { en: "Food", ja: "食事" },
-    meta: { en: "Per person / day-based", ja: "1人ごと / 日別" }
+    meta: { en: "Per person / benchmark-based", ja: "1人ごと / 相場ベース" }
   },
   {
     id: "attractions",
-    label: { en: "Attractions", ja: "観光" },
-    meta: { en: "Per person / ticket-based", ja: "1人ごと / チケット系" }
+    label: { en: "Attractions", ja: "観光・チケット" },
+    meta: { en: "Per person / ticket-based", ja: "1人ごと / チケット基準" }
   },
   {
     id: "shoppingBuffer",
-    label: { en: "Shopping + buffer", ja: "買い物＋予備" },
-    meta: { en: "Per person + weather cushion", ja: "1人ごと＋予備" }
+    label: { en: "Shopping / buffer", ja: "買い物・裁量バッファ" },
+    meta: { en: "Per person / discretionary", ja: "1人ごと / 裁量分" }
+  },
+  {
+    id: "contingency",
+    label: { en: "Contingency / misc", ja: "予備費・雑費" },
+    meta: { en: "Per person / route cushion", ja: "1人ごと / 予備費" }
   },
   {
     id: "optionalExtras",
     label: { en: "Optional extras", ja: "任意の追加費用" },
     meta: { en: "Optional / can be excluded", ja: "任意 / 除外可能" }
-  }
-];
-const budgetTripBaseCosts = {
-  transit: {
-    perPerson: 2500
-  },
-  shoppingBuffer: {
-    shared: 6000
-  }
-};
-const budgetReminderItems = [
-  {
-    title: { en: "Transit", ja: "移動" },
-    body: {
-      en: "Days 4, 5, and 7 are the main swing days because the long transfers stack up quickly.",
-      ja: "4日目、5日目、7日目は長めの移動が重なるので、出費がぶれやすい日です。"
-    }
-  },
-  {
-    title: { en: "Food", ja: "食事" },
-    body: {
-      en: "Osaka and Tokyo are the easy splurge spots, so leave room for a nicer dinner or extra snacks.",
-      ja: "大阪と東京は食事を少し贅沢にしやすいので、少し良い夕食や軽食分の余裕を残します。"
-    }
-  },
-  {
-    title: { en: "Stay", ja: "宿" },
-    body: {
-      en: "The Hakone and Fuji-area nights can outweigh daytime sightseeing costs on their own.",
-      ja: "箱根と富士エリアの宿は、昼の観光費より大きくなりやすいです。"
-    }
-  },
-  {
-    title: { en: "Attractions", ja: "観光" },
-    body: {
-      en: "Timed tickets such as Shibuya Sky or paid viewpoints are the easiest costs to prebook early.",
-      ja: "渋谷スカイや有料展望スポットなどの時間指定券は、早めに予算へ入れやすい項目です。"
-    }
-  },
-  {
-    title: { en: "Buffer", ja: "予備" },
-    body: {
-      en: "Keep a small shopping or weather-flex cushion on the Fuji and Tokyo days.",
-      ja: "富士エリアと東京の日は、買い物や天候対応のための小さな予備を残します。"
-    }
   }
 ];
 const budgetDayConfigs = [
@@ -373,20 +349,7 @@ const budgetDayConfigs = [
     tags: [
       { en: "Arrival buffer", ja: "到着バッファ" },
       { en: "Dinner night", ja: "夕食メイン" }
-    ],
-    ranges: {
-      low: [8000, 14000],
-      medium: [12000, 20000],
-      high: [18000, 30000]
-    },
-    costs: {
-      lodgingShared: 16000,
-      transitPerPerson: 2800,
-      foodPerPerson: { low: 3500, medium: 5000, high: 8000 },
-      attractionsPerPerson: { low: 0, medium: 0, high: 1500 },
-      shoppingBufferPerPerson: { low: 1500, medium: 2500, high: 4500 },
-      optionalExtrasPerPerson: { low: 0, medium: 800, high: 1800 }
-    }
+    ]
   },
   {
     day: 2,
@@ -396,20 +359,7 @@ const budgetDayConfigs = [
     tags: [
       { en: "Transit light", ja: "移動は軽め" },
       { en: "Snacks + tea", ja: "軽食とお茶" }
-    ],
-    ranges: {
-      low: [7000, 12000],
-      medium: [10000, 17000],
-      high: [16000, 26000]
-    },
-    costs: {
-      lodgingShared: 16000,
-      transitPerPerson: 1200,
-      foodPerPerson: { low: 3200, medium: 4500, high: 7000 },
-      attractionsPerPerson: { low: 1200, medium: 2200, high: 3800 },
-      shoppingBufferPerPerson: { low: 1000, medium: 1800, high: 3200 },
-      optionalExtrasPerPerson: { low: 400, medium: 800, high: 1600 }
-    }
+    ]
   },
   {
     day: 3,
@@ -419,20 +369,7 @@ const budgetDayConfigs = [
     tags: [
       { en: "Attraction tickets", ja: "入場系あり" },
       { en: "Dinner flex", ja: "夕食は調整可" }
-    ],
-    ranges: {
-      low: [9000, 15000],
-      medium: [13000, 21000],
-      high: [19000, 32000]
-    },
-    costs: {
-      lodgingShared: 16000,
-      transitPerPerson: 2200,
-      foodPerPerson: { low: 3800, medium: 5200, high: 8500 },
-      attractionsPerPerson: { low: 1800, medium: 3200, high: 5200 },
-      shoppingBufferPerPerson: { low: 1500, medium: 2600, high: 4500 },
-      optionalExtrasPerPerson: { low: 600, medium: 1200, high: 2200 }
-    }
+    ]
   },
   {
     day: 4,
@@ -442,20 +379,7 @@ const budgetDayConfigs = [
     tags: [
       { en: "Transfer heavy", ja: "移動多め" },
       { en: "Ryokan night", ja: "旅館泊" }
-    ],
-    ranges: {
-      low: [24000, 38000],
-      medium: [32000, 50000],
-      high: [45000, 70000]
-    },
-    costs: {
-      lodgingShared: 36000,
-      transitPerPerson: 16500,
-      foodPerPerson: { low: 2400, medium: 3200, high: 4800 },
-      attractionsPerPerson: { low: 1600, medium: 2600, high: 4200 },
-      shoppingBufferPerPerson: { low: 1200, medium: 2200, high: 3800 },
-      optionalExtrasPerPerson: { low: 400, medium: 1000, high: 1800 }
-    }
+    ]
   },
   {
     day: 5,
@@ -465,20 +389,7 @@ const budgetDayConfigs = [
     tags: [
       { en: "Transit heavy", ja: "移動多め" },
       { en: "Cafe + snacks", ja: "カフェと軽食" }
-    ],
-    ranges: {
-      low: [12000, 20000],
-      medium: [18000, 30000],
-      high: [26000, 42000]
-    },
-    costs: {
-      lodgingShared: 22000,
-      transitPerPerson: 4200,
-      foodPerPerson: { low: 3200, medium: 4600, high: 7000 },
-      attractionsPerPerson: { low: 1000, medium: 1800, high: 3200 },
-      shoppingBufferPerPerson: { low: 1200, medium: 2200, high: 3600 },
-      optionalExtrasPerPerson: { low: 600, medium: 1200, high: 2200 }
-    }
+    ]
   },
   {
     day: 6,
@@ -488,20 +399,7 @@ const budgetDayConfigs = [
     tags: [
       { en: "Weather flex", ja: "天気優先" },
       { en: "Buffer day", ja: "予備日" }
-    ],
-    ranges: {
-      low: [8000, 14000],
-      medium: [12000, 22000],
-      high: [18000, 32000]
-    },
-    costs: {
-      lodgingShared: 22000,
-      transitPerPerson: 2200,
-      foodPerPerson: { low: 3200, medium: 4500, high: 6500 },
-      attractionsPerPerson: { low: 1200, medium: 2400, high: 4200 },
-      shoppingBufferPerPerson: { low: 1800, medium: 2800, high: 4200 },
-      optionalExtrasPerPerson: { low: 800, medium: 1400, high: 2500 }
-    }
+    ]
   },
   {
     day: 7,
@@ -511,20 +409,7 @@ const budgetDayConfigs = [
     tags: [
       { en: "Transfer heavy", ja: "移動多め" },
       { en: "Timed ticket", ja: "時間指定あり" }
-    ],
-    ranges: {
-      low: [10000, 17000],
-      medium: [14000, 26000],
-      high: [22000, 38000]
-    },
-    costs: {
-      lodgingShared: 24000,
-      transitPerPerson: 4600,
-      foodPerPerson: { low: 4200, medium: 6000, high: 9000 },
-      attractionsPerPerson: { low: 2200, medium: 3500, high: 6200 },
-      shoppingBufferPerPerson: { low: 2200, medium: 3800, high: 6000 },
-      optionalExtrasPerPerson: { low: 1000, medium: 1800, high: 3200 }
-    }
+    ]
   },
   {
     day: 8,
@@ -535,20 +420,7 @@ const budgetDayConfigs = [
     tags: [
       { en: "Shopping drift", ja: "買い物しやすい日" },
       { en: "Optional splurge", ja: "追加出費あり" }
-    ],
-    ranges: {
-      low: [8000, 15000],
-      medium: [12000, 22000],
-      high: [20000, 36000]
-    },
-    costs: {
-      lodgingShared: 24000,
-      transitPerPerson: 1200,
-      foodPerPerson: { low: 4000, medium: 5800, high: 9000 },
-      attractionsPerPerson: { low: 2600, medium: 4200, high: 7000 },
-      shoppingBufferPerPerson: { low: 2600, medium: 4600, high: 8000 },
-      optionalExtrasPerPerson: { low: 1200, medium: 2200, high: 3800 }
-    }
+    ]
   },
   {
     day: 9,
@@ -559,20 +431,7 @@ const budgetDayConfigs = [
     tags: [
       { en: "Final buffer", ja: "最後の予備日" },
       { en: "Last shopping", ja: "最後の買い物" }
-    ],
-    ranges: {
-      low: [7000, 14000],
-      medium: [11000, 20000],
-      high: [18000, 32000]
-    },
-    costs: {
-      lodgingShared: 0,
-      transitPerPerson: 1400,
-      foodPerPerson: { low: 3800, medium: 5600, high: 8500 },
-      attractionsPerPerson: { low: 1600, medium: 2800, high: 4500 },
-      shoppingBufferPerPerson: { low: 2200, medium: 3600, high: 6500 },
-      optionalExtrasPerPerson: { low: 900, medium: 1800, high: 3200 }
-    }
+    ]
   }
 ];
 const budgetDayConfigMap = new Map(budgetDayConfigs.map((config) => [String(config.day), config]));
@@ -1027,6 +886,7 @@ let bookingTransitItems = [];
 let bookingTransitItemMap = new Map();
 let transitDetailItems = [];
 let transitDetailItemMap = new Map();
+let budgetEstimateSources = null;
 const inlineJsonPayloadCache = new Map();
 let checklistState = {};
 let reservedHeaderHeight = headerReservedHeightFallbackPx;
@@ -1533,6 +1393,30 @@ function readInlineJsonPayload(selector) {
 function getInlineJsonArray(selector) {
   const parsed = readInlineJsonPayload(selector);
   return Array.isArray(parsed) ? parsed : null;
+}
+
+function getInlineJsonObject(selector) {
+  const parsed = readInlineJsonPayload(selector);
+  return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
+}
+
+function getBudgetEstimateSources() {
+  if (budgetEstimateSources) {
+    return budgetEstimateSources;
+  }
+
+  budgetEstimateSources =
+    getInlineJsonObject(inlineDataSelectors.budgetEstimate) || {
+      lastUpdated: "",
+      updatedCopy: { en: "", ja: "" },
+      metaCopy: { en: "", ja: "" },
+      fx: null,
+      tripBaseCosts: {},
+      dayProfiles: {},
+      sourceGroups: []
+    };
+
+  return budgetEstimateSources;
 }
 
 function getOfflineStatusContent() {
@@ -3363,23 +3247,28 @@ function getBudgetTripBaseCategories(
   travelers = getBudgetTravelerCount(),
   includeExtras = shouldIncludeBudgetExtras()
 ) {
-  const sharedShoppingBuffer = Number(budgetTripBaseCosts.shoppingBuffer?.shared) || 0;
-  const transitPerPersonBase = Number(budgetTripBaseCosts.transit?.perPerson) || 0;
-  const optionalExtrasShared = includeExtras
-    ? Number(budgetTripBaseCosts.optionalExtras?.shared) || 0
-    : 0;
-  const optionalExtrasPerPerson = includeExtras
-    ? Number(budgetTripBaseCosts.optionalExtras?.perPerson) || 0
-    : 0;
+  const sourceData = getBudgetEstimateSources();
+  const tripBaseCosts = sourceData.tripBaseCosts || {};
+  const getSharedBase = (key) => Math.max(Number(tripBaseCosts?.[key]?.shared ?? tripBaseCosts?.[key] ?? 0) || 0, 0);
+  const getPerPersonBase = (key) =>
+    Math.max(Number(tripBaseCosts?.[key]?.perPerson ?? 0) || 0, 0) * travelers;
 
   return {
-    lodging: 0,
-    transit: transitPerPersonBase * travelers,
-    food: 0,
-    attractions: 0,
-    shoppingBuffer: sharedShoppingBuffer,
-    optionalExtras: optionalExtrasShared + optionalExtrasPerPerson * travelers
+    lodging: getSharedBase("lodging"),
+    intercityTransit: getPerPersonBase("intercityTransit"),
+    localTransit: getPerPersonBase("localTransit"),
+    food: getPerPersonBase("food"),
+    attractions: getPerPersonBase("attractions"),
+    shoppingBuffer: getPerPersonBase("shoppingBuffer") + getSharedBase("shoppingBuffer"),
+    contingency: getPerPersonBase("contingency") + getSharedBase("contingency"),
+    optionalExtras: includeExtras
+      ? getPerPersonBase("optionalExtras") + getSharedBase("optionalExtras")
+      : 0
   };
+}
+
+function getBudgetDaySourceProfile(day) {
+  return getBudgetEstimateSources().dayProfiles?.[String(day)] || null;
 }
 
 function getBudgetDayEstimate(config, options = {}) {
@@ -3396,18 +3285,23 @@ function getBudgetDayEstimate(config, options = {}) {
   const level = normalizeBudgetLevel(options.level, config.defaultLevel);
   const includeExtras =
     typeof options.includeExtras === "boolean" ? options.includeExtras : shouldIncludeBudgetExtras();
-  const costs = config.costs || {};
+  const costs = getBudgetDaySourceProfile(config.day)?.costs || {};
   const roomCount = resolveBudgetCostByLevel(costs.lodgingShared, level)
     ? getBudgetSharedRoomCount(travelers)
     : 0;
   const categories = {
     lodging: resolveBudgetCostByLevel(costs.lodgingShared, level) * roomCount,
-    transit: resolveBudgetCostByLevel(costs.transitPerPerson, level) * travelers,
+    intercityTransit: resolveBudgetCostByLevel(costs.intercityTransitPerPerson, level) * travelers,
+    localTransit: resolveBudgetCostByLevel(costs.localTransitPerPerson, level) * travelers,
     food: resolveBudgetCostByLevel(costs.foodPerPerson, level) * travelers,
     attractions: resolveBudgetCostByLevel(costs.attractionsPerPerson, level) * travelers,
     shoppingBuffer: resolveBudgetCostByLevel(costs.shoppingBufferPerPerson, level) * travelers,
+    contingency:
+      resolveBudgetCostByLevel(costs.contingencyShared, level) +
+      resolveBudgetCostByLevel(costs.contingencyPerPerson, level) * travelers,
     optionalExtras: includeExtras
-      ? resolveBudgetCostByLevel(costs.optionalExtrasPerPerson, level) * travelers
+      ? resolveBudgetCostByLevel(costs.optionalExtrasShared, level) +
+        resolveBudgetCostByLevel(costs.optionalExtrasPerPerson, level) * travelers
       : 0
   };
   const total = getBudgetCategoryTotal(categories);
@@ -3463,8 +3357,9 @@ function calculateBudgetEstimate() {
     }
   });
 
+  const tripBaseCosts = getBudgetEstimateSources().tripBaseCosts || {};
   const sharedBaseTotal = budgetCategoryDefinitions.reduce((total, category) => {
-    return total + (Number(budgetTripBaseCosts[category.id]?.shared) || 0);
+    return total + (Number(tripBaseCosts?.[category.id]?.shared ?? 0) || 0);
   }, 0);
   const sharedTotal = categoryTotals.lodging + sharedBaseTotal;
 
@@ -3544,6 +3439,14 @@ function renderBudgetSummaryMarkup(estimate = calculateBudgetEstimate()) {
           ja: `1人 +${formatBudgetAmount(estimate.optionalImpactPerPerson)} ・ ${budgetNotesLabels.optionalIncludedMeta.ja}: ${estimate.optionalImpactDays}日`
         }
       : budgetNotesLabels.optionalInactiveMeta;
+  const sharedMetaCopy = {
+    en: `${budgetNotesLabels.individualMeta.en} ${formatBudgetAmount(
+      estimate.perPersonVariableTotal
+    )} total • ${formatBudgetAmount(estimate.perPersonVariableTotal / estimate.travelers)} each`,
+    ja: `${budgetNotesLabels.individualMeta.ja} ${formatBudgetAmount(
+      estimate.perPersonVariableTotal
+    )} 合計 ・ 1人 ${formatBudgetAmount(estimate.perPersonVariableTotal / estimate.travelers)}`
+  };
 
   return `
     <div class="budget-summary-card budget-summary-card--estimate budget-summary-card--compact">
@@ -3564,6 +3467,16 @@ function renderBudgetSummaryMarkup(estimate = calculateBudgetEstimate()) {
       })}</strong>
       <p class="budget-summary-card__meta">${renderLocalizedContent(perPersonMeta)}</p>
     </div>
+    <div class="budget-summary-card budget-summary-card--shared budget-summary-card--compact">
+      <p class="budget-summary-card__label">${renderLocalizedContent(
+        budgetNotesLabels.summaryShared
+      )}</p>
+      <strong class="budget-summary-card__value">${renderLocalizedContent({
+        en: `${formatBudgetAmount(estimate.sharedTotal)} shared`,
+        ja: `共有 ${formatBudgetAmount(estimate.sharedTotal)}`
+      })}</strong>
+      <p class="budget-summary-card__meta">${renderLocalizedContent(sharedMetaCopy)}</p>
+    </div>
     <div class="budget-summary-card budget-summary-card--optional budget-summary-card--compact">
       <p class="budget-summary-card__label">${renderLocalizedContent(
         budgetNotesLabels.summaryOptional
@@ -3572,21 +3485,6 @@ function renderBudgetSummaryMarkup(estimate = calculateBudgetEstimate()) {
         estimate.optionalImpactDays > 0 ? "" : "budget-summary-card__value--text"
       }">${renderLocalizedContent(optionalValueCopy)}</strong>
       <p class="budget-summary-card__meta">${renderLocalizedContent(optionalMetaCopy)}</p>
-    </div>
-    <div class="budget-summary-card budget-summary-card--reminders">
-      <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryWatch)}</p>
-      <ul class="budget-reminder-list">
-        ${budgetReminderItems
-          .map(
-            (item) => `
-              <li>
-                <strong>${renderLocalizedContent(item.title)}</strong>
-                <span>${renderLocalizedContent(item.body)}</span>
-              </li>
-            `
-          )
-          .join("")}
-      </ul>
     </div>
   `;
 }
@@ -3624,6 +3522,76 @@ function renderBudgetBreakdownMarkup(estimate = calculateBudgetEstimate()) {
           }">${renderLocalizedContent(totalCopy)}</strong>
           <p class="budget-breakdown-card__meta">${renderLocalizedContent(perPersonMeta)}</p>
           <p class="budget-breakdown-card__hint">${renderLocalizedContent(category.meta)}</p>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderBudgetSourceMetaMarkup(sourceData = getBudgetEstimateSources()) {
+  const hasSourceData = Boolean(sourceData?.lastUpdated);
+  const fxSummary = sourceData?.fx?.summary || budgetNotesLabels.sourceMetaFallback;
+  const fxLink = sourceData?.fx?.sourceUrl
+    ? `
+        <a
+          class="budget-source-card__link"
+          href="${escapeHtml(sourceData.fx.sourceUrl)}"
+          target="_blank"
+          rel="noreferrer noopener">
+          ${renderLocalizedContent(sourceData.fx.label || { en: "FX source", ja: "為替出典" })}
+        </a>
+      `
+    : "";
+
+  return `
+    <article class="budget-source-meta-card">
+      <p class="budget-source-meta-card__label">${renderLocalizedContent(
+        budgetNotesLabels.sourceMetaLabel
+      )}</p>
+      <p class="budget-source-meta-card__body">${renderLocalizedContent(
+        hasSourceData ? sourceData.updatedCopy : budgetNotesLabels.sourceMetaFallback
+      )}</p>
+      ${
+        hasSourceData
+          ? `<p class="budget-source-meta-card__body">${renderLocalizedContent(
+              sourceData.metaCopy
+            )}</p>
+             <p class="budget-source-meta-card__body">${renderLocalizedContent(fxSummary)}</p>
+             <div class="budget-source-card__links">${fxLink}</div>`
+          : ""
+      }
+    </article>
+  `;
+}
+
+function renderBudgetSourcesMarkup(sourceData = getBudgetEstimateSources()) {
+  const sourceGroups = Array.isArray(sourceData?.sourceGroups) ? sourceData.sourceGroups : [];
+  if (!sourceGroups.length) {
+    return "";
+  }
+
+  return sourceGroups
+    .map((group) => {
+      const links = Array.isArray(group.links) ? group.links : [];
+      return `
+        <article class="budget-source-card">
+          <p class="budget-source-card__label">${renderLocalizedContent(group.label)}</p>
+          <p class="budget-source-card__body">${renderLocalizedContent(group.body)}</p>
+          <div class="budget-source-card__links">
+            ${links
+              .map(
+                (link) => `
+                  <a
+                    class="budget-source-card__link"
+                    href="${escapeHtml(link.url)}"
+                    target="_blank"
+                    rel="noreferrer noopener">
+                    ${renderLocalizedContent(link.label)}
+                  </a>
+                `
+              )
+              .join("")}
+          </div>
         </article>
       `;
     })
@@ -3735,6 +3703,12 @@ function renderBudgetNotes() {
   const estimate = calculateBudgetEstimate();
   budgetSummaryNode.innerHTML = renderBudgetSummaryMarkup(estimate);
   budgetBreakdownNode.innerHTML = renderBudgetBreakdownMarkup(estimate);
+  if (budgetSourceMetaNode) {
+    budgetSourceMetaNode.innerHTML = renderBudgetSourceMetaMarkup();
+  }
+  if (budgetSourcesNode) {
+    budgetSourcesNode.innerHTML = renderBudgetSourcesMarkup();
+  }
   budgetDaysNode.innerHTML = budgetDayConfigs.map((config) => renderBudgetDayMarkup(config)).join("");
   syncLocalizedNodes(budgetNotesCard);
 }
@@ -3817,6 +3791,14 @@ function syncBudgetNotesUI() {
   syncBudgetControlsUI();
   budgetSummaryNode.innerHTML = renderBudgetSummaryMarkup(estimate);
   budgetBreakdownNode.innerHTML = renderBudgetBreakdownMarkup(estimate);
+  if (budgetSourceMetaNode) {
+    budgetSourceMetaNode.innerHTML = renderBudgetSourceMetaMarkup();
+    syncLocalizedNodes(budgetSourceMetaNode);
+  }
+  if (budgetSourcesNode) {
+    budgetSourcesNode.innerHTML = renderBudgetSourcesMarkup();
+    syncLocalizedNodes(budgetSourcesNode);
+  }
   syncLocalizedNodes(budgetSummaryNode);
   syncLocalizedNodes(budgetBreakdownNode);
 

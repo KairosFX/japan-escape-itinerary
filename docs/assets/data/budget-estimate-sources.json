@@ -1,0 +1,327 @@
+{
+  "lastUpdated": "2026-03-23",
+  "updatedCopy": {
+    "en": "Updated Mar 23, 2026",
+    "ja": "2026年3月23日更新"
+  },
+  "metaCopy": {
+    "en": "Uses current operator fares, live booking-platform room quotes, city meal benchmarks, and a 2-travelers-per-room shared-stay rule.",
+    "ja": "現行の事業者運賃、予約サイトの客室価格、都市別の食事相場、2人で1室の共有宿泊前提を使っています。"
+  },
+  "fx": {
+    "label": {
+      "en": "ECB USD/JPY basis",
+      "ja": "ECBのUSD/JPY基準"
+    },
+    "summary": {
+      "en": "USD/JPY 158.55 derived from ECB daily rates on Mar 23, 2026 (EUR/USD 1.1596, EUR/JPY 183.86).",
+      "ja": "2026年3月23日のECB日次レート（EUR/USD 1.1596、EUR/JPY 183.86）から算出したUSD/JPY 158.55を使用。"
+    },
+    "usdToJpy": 158.55,
+    "eurUsd": 1.1596,
+    "eurJpy": 183.86,
+    "sourceUrl": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+  },
+  "tripBaseCosts": {
+    "lodging": 0,
+    "intercityTransit": 0,
+    "localTransit": 0,
+    "food": 0,
+    "attractions": 0,
+    "shoppingBuffer": 0,
+    "contingency": 0,
+    "optionalExtras": 0
+  },
+  "dayProfiles": {
+    "1": {
+      "costs": {
+        "lodgingShared": { "low": 8720, "medium": 9120, "high": 9510 },
+        "intercityTransitPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "localTransitPerPerson": { "low": 620, "medium": 820, "high": 820 },
+        "foodPerPerson": { "low": 2400, "medium": 3400, "high": 4700 },
+        "attractionsPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "shoppingBufferPerPerson": { "low": 700, "medium": 1200, "high": 2200 },
+        "contingencyPerPerson": { "low": 500, "medium": 800, "high": 1200 },
+        "optionalExtrasPerPerson": { "low": 0, "medium": 900, "high": 1800 }
+      }
+    },
+    "2": {
+      "costs": {
+        "lodgingShared": { "low": 8720, "medium": 9120, "high": 9510 },
+        "intercityTransitPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "localTransitPerPerson": { "low": 1100, "medium": 1100, "high": 1100 },
+        "foodPerPerson": { "low": 2800, "medium": 3900, "high": 5200 },
+        "attractionsPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "shoppingBufferPerPerson": { "low": 800, "medium": 1200, "high": 2000 },
+        "contingencyPerPerson": { "low": 600, "medium": 900, "high": 1400 },
+        "optionalExtrasPerPerson": { "low": 400, "medium": 800, "high": 1500 }
+      }
+    },
+    "3": {
+      "costs": {
+        "lodgingShared": { "low": 8720, "medium": 9120, "high": 9510 },
+        "intercityTransitPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "localTransitPerPerson": { "low": 1100, "medium": 1100, "high": 1100 },
+        "foodPerPerson": { "low": 2600, "medium": 3600, "high": 5000 },
+        "attractionsPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "shoppingBufferPerPerson": { "low": 900, "medium": 1500, "high": 2600 },
+        "contingencyPerPerson": { "low": 700, "medium": 1100, "high": 1600 },
+        "optionalExtrasPerPerson": { "low": 600, "medium": 1200, "high": 2500 }
+      }
+    },
+    "4": {
+      "costs": {
+        "lodgingShared": { "low": 35280, "medium": 38570, "high": 41860 },
+        "intercityTransitPerPerson": { "low": 12650, "medium": 12650, "high": 12650 },
+        "localTransitPerPerson": { "low": 3000, "medium": 3000, "high": 3000 },
+        "foodPerPerson": { "low": 3000, "medium": 3900, "high": 5200 },
+        "attractionsPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "shoppingBufferPerPerson": { "low": 600, "medium": 900, "high": 1600 },
+        "contingencyPerPerson": { "low": 1000, "medium": 1500, "high": 2200 },
+        "optionalExtrasPerPerson": { "low": 600, "medium": 1200, "high": 2400 }
+      }
+    },
+    "5": {
+      "costs": {
+        "lodgingShared": { "low": 21720, "medium": 22360, "high": 22990 },
+        "intercityTransitPerPerson": { "low": 1750, "medium": 1750, "high": 1750 },
+        "localTransitPerPerson": { "low": 4000, "medium": 4000, "high": 4000 },
+        "foodPerPerson": { "low": 3000, "medium": 3900, "high": 5200 },
+        "attractionsPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "shoppingBufferPerPerson": { "low": 700, "medium": 1200, "high": 2200 },
+        "contingencyPerPerson": { "low": 800, "medium": 1200, "high": 1800 },
+        "optionalExtrasPerPerson": { "low": 700, "medium": 1300, "high": 2400 }
+      }
+    },
+    "6": {
+      "costs": {
+        "lodgingShared": { "low": 21720, "medium": 22360, "high": 22990 },
+        "intercityTransitPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "localTransitPerPerson": { "low": 1000, "medium": 1000, "high": 1000 },
+        "foodPerPerson": { "low": 3000, "medium": 4200, "high": 5600 },
+        "attractionsPerPerson": { "low": 0, "medium": 1000, "high": 2100 },
+        "shoppingBufferPerPerson": { "low": 1000, "medium": 1600, "high": 2800 },
+        "contingencyPerPerson": { "low": 700, "medium": 1000, "high": 1600 },
+        "optionalExtrasPerPerson": { "low": 800, "medium": 1400, "high": 2600 }
+      }
+    },
+    "7": {
+      "costs": {
+        "lodgingShared": { "low": 25290, "medium": 25570, "high": 25840 },
+        "intercityTransitPerPerson": { "low": 2200, "medium": 2200, "high": 2200 },
+        "localTransitPerPerson": { "low": 1000, "medium": 1000, "high": 1000 },
+        "foodPerPerson": { "low": 3200, "medium": 4500, "high": 6000 },
+        "attractionsPerPerson": { "low": 0, "medium": 2200, "high": 2200 },
+        "shoppingBufferPerPerson": { "low": 1500, "medium": 2400, "high": 4200 },
+        "contingencyPerPerson": { "low": 900, "medium": 1300, "high": 2000 },
+        "optionalExtrasPerPerson": { "low": 1000, "medium": 1800, "high": 3200 }
+      }
+    },
+    "8": {
+      "costs": {
+        "lodgingShared": { "low": 25290, "medium": 25570, "high": 25840 },
+        "intercityTransitPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "localTransitPerPerson": { "low": 1000, "medium": 1000, "high": 1000 },
+        "foodPerPerson": { "low": 3200, "medium": 4500, "high": 6000 },
+        "attractionsPerPerson": { "low": 0, "medium": 2100, "high": 2100 },
+        "shoppingBufferPerPerson": { "low": 1800, "medium": 3000, "high": 5200 },
+        "contingencyPerPerson": { "low": 900, "medium": 1300, "high": 2000 },
+        "optionalExtrasPerPerson": { "low": 1200, "medium": 2200, "high": 3600 }
+      }
+    },
+    "9": {
+      "costs": {
+        "lodgingShared": { "low": 0, "medium": 0, "high": 0 },
+        "intercityTransitPerPerson": { "low": 0, "medium": 0, "high": 0 },
+        "localTransitPerPerson": { "low": 1000, "medium": 1000, "high": 1000 },
+        "foodPerPerson": { "low": 3200, "medium": 4300, "high": 5800 },
+        "attractionsPerPerson": { "low": 0, "medium": 0, "high": 2100 },
+        "shoppingBufferPerPerson": { "low": 1500, "medium": 2600, "high": 4600 },
+        "contingencyPerPerson": { "low": 700, "medium": 1000, "high": 1600 },
+        "optionalExtrasPerPerson": { "low": 900, "medium": 1800, "high": 3200 }
+      }
+    }
+  },
+  "sourceGroups": [
+    {
+      "id": "lodging",
+      "label": { "en": "Lodging", "ja": "宿泊" },
+      "body": {
+        "en": "Nightly room estimates come from current Expedia quotes for practical stays in Osaka, Hakone, Fujikawaguchiko, and Shibuya. USD room quotes are converted to yen with the ECB rate above, then split across travelers using one room per two travelers.",
+        "ja": "宿泊は大阪、箱根、富士河口湖、渋谷の現行Expedia価格を使い、上記のECB為替で円換算したうえで、2人で1室を基本に人数へ按分しています。"
+      },
+      "links": [
+        {
+          "label": { "en": "Tokyu Stay Osaka Honmachi", "ja": "Tokyu Stay Osaka Honmachi" },
+          "url": "https://www.expedia.com/Osaka-Hotels-Tokyu-Stay-Osaka-Honmachi.h39286570.Hotel-Information"
+        },
+        {
+          "label": { "en": "Hakone Pax Yoshino", "ja": "Hakone Pax Yoshino" },
+          "url": "https://www.expedia.com/es/Hakone-Hoteles-Hakone-Pax-Yoshino.h8738351.Informacion-Hotel"
+        },
+        {
+          "label": { "en": "Kawaguchiko Park Hotel", "ja": "Kawaguchiko Park Hotel" },
+          "url": "https://www.expedia.com/Fujikawaguchiko-Hotels-Kawaguchiko-Park-Hotel.h22353607.Hotel-Information"
+        },
+        {
+          "label": { "en": "Shibuya Granbell Hotel", "ja": "Shibuya Granbell Hotel" },
+          "url": "https://www.expedia.com/Tokyo-Hotels-Shibuya-Granbell-Hotel.h8150500.Hotel-Information"
+        },
+        {
+          "label": { "en": "ECB daily FX", "ja": "ECB日次為替" },
+          "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+        }
+      ]
+    },
+    {
+      "id": "intercityTransit",
+      "label": { "en": "Intercity transit", "ja": "都市間移動" },
+      "body": {
+        "en": "Long-haul transport uses the official Smart EX Shin-Osaka -> Odawara reserved fare, the uncovered Gotemba -> Kawaguchiko leg from the current Hakone/Fuji route guide, and the official highway-bus fare back into Tokyo/Shibuya.",
+        "ja": "長距離移動は、Smart EXの新大阪→小田原指定席運賃、現行の箱根→富士ルート案内にある御殿場→河口湖の実費区間、東京・渋谷へ戻る公式高速バス運賃を使っています。"
+      },
+      "links": [
+        {
+          "label": { "en": "Smart EX reserved fares PDF", "ja": "Smart EX運賃PDF" },
+          "url": "https://smart-ex.jp/en/product/plan/service/pdf/service_fares_reserved.pdf"
+        },
+        {
+          "label": { "en": "Japan-guide Hakone -> Fuji Five Lakes", "ja": "Japan-guide 箱根→富士五湖" },
+          "url": "https://www.japan-guide.com/e/e6905.html?aFROM=5200_6900"
+        },
+        {
+          "label": { "en": "Highway-buses.jp Shibuya terminal / fares", "ja": "Highway-buses.jp 渋谷ターミナル" },
+          "url": "https://highway-buses.jp/terminal/shibuya.php"
+        }
+      ]
+    },
+    {
+      "id": "localTransit",
+      "label": { "en": "Local transit", "ja": "現地移動" },
+      "body": {
+        "en": "City and sightseeing transit uses current pass prices from Osaka Metro, Kyoto City, Odakyu's Hakone Freepass, Fujikyu sightseeing buses, and Tokyo Metro. Hakone and Fuji passes are split across the days that actually use them.",
+        "ja": "市内・現地移動は、大阪メトロ、京都市、Odakyuの箱根フリーパス、富士急の周遊バス、東京メトロの現行パス料金を使い、箱根と富士のパスは実際に使う日に分けて計上しています。"
+      },
+      "links": [
+        {
+          "label": { "en": "Osaka Metro 1-day pass", "ja": "大阪メトロ1日券" },
+          "url": "https://www.osakametro.co.jp/en/"
+        },
+        {
+          "label": { "en": "Kyoto Subway & Bus 1-day Pass", "ja": "京都市営地下鉄・バス1日券" },
+          "url": "https://www.city.kyoto.lg.jp/kotsu/page/0000028378.html"
+        },
+        {
+          "label": { "en": "Hakone Freepass", "ja": "箱根フリーパス" },
+          "url": "https://www.odakyu.jp/english/passes/hakone/"
+        },
+        {
+          "label": { "en": "Mt. Fuji World Heritage Loop Bus", "ja": "富士山世界遺産ループバス" },
+          "url": "https://www.fujikyubus.co.jp/en/rosen/detail/id/1/"
+        },
+        {
+          "label": { "en": "Tokyo Subway Ticket", "ja": "Tokyo Subway Ticket" },
+          "url": "https://www.tokyometro.jp/en/ticket/travel/index.html"
+        }
+      ]
+    },
+    {
+      "id": "food",
+      "label": { "en": "Food", "ja": "食事" },
+      "body": {
+        "en": "Daily food budgets are anchored to current Numbeo meal benchmarks for Osaka, Kyoto, and Tokyo, then adjusted into a practical day mix of one inexpensive meal, one stronger dinner/cafe moment, and snacks or drinks.",
+        "ja": "食事はNumbeoの大阪・京都・東京の現行相場を基準にし、安めの食事1回、しっかりした食事やカフェ1回、軽食や飲み物を足した実用的な1日分へ調整しています。"
+      },
+      "links": [
+        {
+          "label": { "en": "Numbeo Osaka", "ja": "Numbeo 大阪" },
+          "url": "https://www.numbeo.com/cost-of-living/in/Osaka/"
+        },
+        {
+          "label": { "en": "Numbeo Kyoto", "ja": "Numbeo 京都" },
+          "url": "https://www.numbeo.com/cost-of-living/in/Kyoto/"
+        },
+        {
+          "label": { "en": "Numbeo Tokyo", "ja": "Numbeo 東京" },
+          "url": "https://www.numbeo.com/cost-of-living/in/Tokyo/"
+        }
+      ]
+    },
+    {
+      "id": "attractions",
+      "label": { "en": "Attractions", "ja": "観光・チケット" },
+      "body": {
+        "en": "Ticketed attractions use current public prices that match this route: Mt. Fuji Panorama Ropeway, SHIBUYA SKY, and TOKYO SKYTREE. Days without a strong ticket anchor stay conservative and let contingency or optional extras absorb smaller admissions.",
+        "ja": "チケット系は、この旅程に直接合う富士山パノラマロープウェイ、SHIBUYA SKY、TOKYO SKYTREEの現行公開料金を使っています。はっきりしたチケット基準がない日は、控えめに見積もり、細かな入場料は予備費や任意費用で吸収します。"
+      },
+      "links": [
+        {
+          "label": { "en": "Mt. Fuji Panorama Ropeway", "ja": "富士山パノラマロープウェイ" },
+          "url": "https://www.mtfujiropeway.jp/en/price-hours/"
+        },
+        {
+          "label": { "en": "GO TOKYO SHIBUYA SKY", "ja": "GO TOKYO SHIBUYA SKY" },
+          "url": "https://www.gotokyo.org/en/spot/1732/index.html"
+        },
+        {
+          "label": { "en": "TOKYO SKYTREE ticket prices", "ja": "TOKYO SKYTREE料金" },
+          "url": "https://www.tokyo-skytree.jp/en/ticket/individual/"
+        }
+      ]
+    },
+    {
+      "id": "shoppingBuffer",
+      "label": { "en": "Shopping / discretionary buffer", "ja": "買い物・裁量バッファ" },
+      "body": {
+        "en": "This is an explicit planning cushion layered on top of sourced food and ticket costs. It stays light on Osaka/Kyoto days and grows on Fuji/Tokyo days where weather pivots, souvenirs, or extra cafes are more likely.",
+        "ja": "これは、出典のある食事・チケット費に上乗せする明示的な計画バッファです。大阪・京都では軽め、天候変更や土産、カフェが増えやすい富士・東京では厚めにしています。"
+      },
+      "links": [
+        {
+          "label": { "en": "Food sources", "ja": "食事の出典" },
+          "url": "https://www.numbeo.com/cost-of-living/in/Tokyo/"
+        },
+        {
+          "label": { "en": "Attraction sources", "ja": "観光の出典" },
+          "url": "https://www.tokyo-skytree.jp/en/ticket/individual/"
+        }
+      ]
+    },
+    {
+      "id": "contingency",
+      "label": { "en": "Contingency / misc", "ja": "予備費・雑費" },
+      "body": {
+        "en": "Contingency is a transparent misc cushion for lockers, platform snacks, weather changes, coin laundry, and small routing misses. It deliberately scales up on the heavier transfer days instead of pretending the trip runs perfectly.",
+        "ja": "予備費は、ロッカー、ホームでの軽食、天候変更、コインランドリー、小さな乗り継ぎミスを吸収するための明示的な雑費です。すべて完璧に進む前提にはせず、移動の重い日に厚めにしています。"
+      },
+      "links": [
+        {
+          "label": { "en": "Transit basis", "ja": "移動の基準" },
+          "url": "https://smart-ex.jp/en/product/plan/service/pdf/service_fares_reserved.pdf"
+        },
+        {
+          "label": { "en": "Food basis", "ja": "食事の基準" },
+          "url": "https://www.numbeo.com/cost-of-living/in/Tokyo/"
+        }
+      ]
+    },
+    {
+      "id": "optionalExtras",
+      "label": { "en": "Optional extras", "ja": "任意の追加費用" },
+      "body": {
+        "en": "Optional extras are the non-essential flex layer: dessert stops, nicer drinks, one more paid view, or a small splurge dinner. The toggle keeps them separate from the core estimate so the total stays understandable.",
+        "ja": "任意の追加費用は、デザート、少し良い飲み物、もう1つの有料展望、少し贅沢な夕食などの柔軟な出費です。トグルで基礎見積もりから分け、合計を分かりやすく保ちます。"
+      },
+      "links": [
+        {
+          "label": { "en": "SHIBUYA SKY", "ja": "SHIBUYA SKY" },
+          "url": "https://www.gotokyo.org/en/spot/1732/index.html"
+        },
+        {
+          "label": { "en": "TOKYO SKYTREE", "ja": "TOKYO SKYTREE" },
+          "url": "https://www.tokyo-skytree.jp/en/ticket/individual/"
+        }
+      ]
+    }
+  ]
+}

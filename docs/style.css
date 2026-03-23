@@ -2031,7 +2031,7 @@ html.has-modal-open body {
 
 .budget-notes__summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.72rem;
   align-items: start;
 }
@@ -2056,10 +2056,6 @@ html.has-modal-open body {
   padding: 0.82rem 0.88rem;
 }
 
-.budget-summary-card--reminders {
-  grid-column: 1 / -1;
-}
-
 .budget-summary-card__label {
   margin: 0;
   font-size: 0.76rem;
@@ -2071,6 +2067,7 @@ html.has-modal-open body {
 
 .budget-summary-card--estimate .budget-summary-card__label,
 .budget-summary-card--per-person .budget-summary-card__label,
+.budget-summary-card--shared .budget-summary-card__label,
 .budget-summary-card--optional .budget-summary-card__label {
   max-inline-size: 12ch;
   text-wrap: balance;
@@ -2109,6 +2106,96 @@ html.has-modal-open body {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.72rem;
+}
+
+.budget-notes__source-block {
+  display: grid;
+  gap: 0.62rem;
+}
+
+.budget-notes__source-meta {
+  display: grid;
+}
+
+.budget-source-meta-card,
+.budget-source-card {
+  display: grid;
+  gap: 0.42rem;
+  align-content: start;
+  min-width: 0;
+  padding: 0.82rem 0.88rem;
+  border: 1px solid rgba(31, 37, 39, 0.08);
+  border-radius: calc(var(--radius-lg) - 0.08rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 250, 245, 0.68)),
+    rgba(255, 255, 255, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.68),
+    0 10px 22px rgba(39, 27, 20, 0.04);
+}
+
+.budget-source-meta-card__label,
+.budget-source-card__label,
+.budget-source-meta-card__body,
+.budget-source-card__body {
+  margin: 0;
+  min-width: 0;
+}
+
+.budget-source-meta-card__label,
+.budget-source-card__label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: rgba(94, 103, 104, 0.92);
+}
+
+.budget-source-meta-card__body,
+.budget-source-card__body {
+  font-size: 0.82rem;
+  line-height: 1.58;
+  color: var(--muted);
+}
+
+.budget-notes__sources {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.72rem;
+}
+
+.budget-source-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.budget-source-card__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.88rem;
+  padding: 0.24rem 0.6rem;
+  border: 1px solid rgba(171, 74, 59, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--accent-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.35;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.budget-source-card__link:hover,
+.budget-source-card__link:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(171, 74, 59, 0.24);
+  background: rgba(255, 252, 248, 0.92);
+  box-shadow: 0 10px 20px rgba(39, 27, 20, 0.06);
 }
 
 .budget-breakdown-card {
@@ -4088,6 +4175,7 @@ html.intro-done .welcome-overlay {
 
   .budget-notes__summary,
   .budget-notes__breakdown,
+  .budget-notes__sources,
   .budget-notes__days {
     grid-template-columns: 1fr;
   }
@@ -4301,6 +4389,11 @@ html.intro-done .welcome-overlay {
 }
 
 @media (min-width: 721px) and (max-width: 920px) {
+  .budget-notes__summary,
+  .budget-notes__sources {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .budget-notes__controls {
     grid-template-columns: 1fr;
   }
@@ -4811,6 +4904,8 @@ html[data-theme="dark"] .offline-tools__meta {
 }
 
 html[data-theme="dark"] .budget-summary-card,
+html[data-theme="dark"] .budget-source-meta-card,
+html[data-theme="dark"] .budget-source-card,
 html[data-theme="dark"] .budget-breakdown-card,
 html[data-theme="dark"] .budget-day,
 html[data-theme="dark"] .budget-setting {
@@ -4824,6 +4919,8 @@ html[data-theme="dark"] .budget-setting {
 }
 
 html[data-theme="dark"] .budget-summary-card__label,
+html[data-theme="dark"] .budget-source-meta-card__label,
+html[data-theme="dark"] .budget-source-card__label,
 html[data-theme="dark"] .budget-breakdown-card__label,
 html[data-theme="dark"] .budget-setting__label,
 html[data-theme="dark"] .budget-notes__subheading,
@@ -4834,6 +4931,8 @@ html[data-theme="dark"] .budget-day__note-label {
 
 html[data-theme="dark"] .budget-summary-card__meta,
 html[data-theme="dark"] .budget-breakdown-card__hint,
+html[data-theme="dark"] .budget-source-meta-card__body,
+html[data-theme="dark"] .budget-source-card__body,
 html[data-theme="dark"] .budget-setting__hint,
 html[data-theme="dark"] .budget-day__region,
 html[data-theme="dark"] .budget-day__estimate-meta,
@@ -4844,6 +4943,19 @@ html[data-theme="dark"] .budget-reminder-list span {
 html[data-theme="dark"] .budget-breakdown-card__meta,
 html[data-theme="dark"] .budget-setting__toggle-copy {
   color: rgba(246, 239, 231, 0.9);
+}
+
+html[data-theme="dark"] .budget-source-card__link {
+  border-color: rgba(248, 239, 228, 0.12);
+  background: rgba(24, 27, 33, 0.86);
+  color: rgba(246, 239, 231, 0.92);
+}
+
+html[data-theme="dark"] .budget-source-card__link:hover,
+html[data-theme="dark"] .budget-source-card__link:focus-visible {
+  border-color: rgba(216, 148, 131, 0.24);
+  background: rgba(31, 35, 42, 0.94);
+  box-shadow: 0 12px 24px rgba(3, 4, 6, 0.18);
 }
 
 html[data-theme="dark"] .budget-reminder-list li {
