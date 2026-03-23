@@ -1919,15 +1919,18 @@ html.has-modal-open body {
 }
 
 .packing-section__actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
   gap: 0.38rem;
+  justify-content: end;
+  align-items: stretch;
 }
 
 .packing-section__action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   min-height: 2.18rem;
   padding: 0.44rem 0.78rem;
   border: 1px solid rgba(31, 37, 39, 0.08);
@@ -3127,11 +3130,12 @@ html.intro-done .welcome-overlay {
 
   .packing-section__actions {
     width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
   }
 
   .packing-section__action {
-    flex: 1 1 10rem;
-    justify-content: center;
+    min-width: 0;
   }
 
   .booking-item__cta {
