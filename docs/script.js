@@ -28,6 +28,7 @@ const optionalUnlockButtons = document.querySelectorAll("[data-optional-unlock]"
 const optionalSkipButton = document.querySelector("[data-optional-skip]");
 const optionalSectionNodes = document.querySelectorAll("[data-optional-section]");
 const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-section]"));
+const packingMarkAllButtons = Array.from(document.querySelectorAll("[data-packing-mark-all-global]"));
 const packingResetButtons = Array.from(document.querySelectorAll("[data-packing-reset-all]"));
 const optionalProgressItems = Array.from(
   document.querySelectorAll("[data-progress-item][data-progress-optional='true']")
@@ -1533,6 +1534,10 @@ function getPackingItems(sectionElement) {
   return Array.from(sectionElement?.querySelectorAll("[data-packing-item]") || []);
 }
 
+function getAllPackingItems() {
+  return packingSectionCards.flatMap((sectionElement) => getPackingItems(sectionElement));
+}
+
 function isPackingItemPacked(itemId) {
   return Boolean(packingState[itemId]);
 }
@@ -1589,7 +1594,18 @@ function syncPackingUI() {
     syncPackingSectionUI(sectionElement);
   });
 
+  const allPackingItems = getAllPackingItems();
+  const totalPackingItems = allPackingItems.length;
+  const packedItemCount = allPackingItems.filter((itemElement) =>
+    isPackingItemPacked(itemElement.dataset.packingItem || "")
+  ).length;
   const hasPackedItems = Object.keys(packingState).length > 0;
+  const areAllItemsPacked = totalPackingItems > 0 && packedItemCount === totalPackingItems;
+
+  packingMarkAllButtons.forEach((button) => {
+    button.disabled = !totalPackingItems || areAllItemsPacked;
+  });
+
   packingResetButtons.forEach((button) => {
     button.disabled = !hasPackedItems;
   });
@@ -1623,7 +1639,31 @@ function resetPackingState() {
   syncPackingUI();
 }
 
+function markAllPackingItemsPacked() {
+  getAllPackingItems().forEach((itemElement) => {
+    const itemId = itemElement.dataset.packingItem || "";
+    if (itemId) {
+      packingState[itemId] = true;
+    }
+  });
+
+  storePackingState();
+  syncPackingUI();
+}
+
 function bindPackingUI() {
+  packingMarkAllButtons.forEach((button) => {
+    if (button.dataset.packingBound === "true") {
+      return;
+    }
+
+    button.addEventListener("click", () => {
+      markAllPackingItemsPacked();
+    });
+
+    button.dataset.packingBound = "true";
+  });
+
   packingResetButtons.forEach((button) => {
     if (button.dataset.packingBound === "true") {
       return;

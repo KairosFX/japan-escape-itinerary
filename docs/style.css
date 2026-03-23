@@ -1891,10 +1891,14 @@ html.has-modal-open body {
 }
 
 .packing-reset {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.48rem;
   margin-top: 0.82rem;
+}
+
+.packing-reset .packing-section__action {
+  min-width: 0;
 }
 
 .packing-section__meta {
@@ -3135,6 +3139,10 @@ html.intro-done .welcome-overlay {
 
   .packing-section__action {
     min-width: 0;
+  }
+
+  .packing-reset {
+    grid-template-columns: 1fr;
   }
 
   .booking-item__cta {
