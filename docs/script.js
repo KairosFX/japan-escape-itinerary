@@ -2361,7 +2361,7 @@ function renderBudgetSummaryMarkup() {
   });
 
   return `
-    <div class="budget-summary-card">
+    <div class="budget-summary-card budget-summary-card--estimate budget-summary-card--compact">
       <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryTotal)}</p>
       <strong class="budget-summary-card__value">${renderLocalizedContent(
         getBudgetRangeCopy([totalMin, totalMax])
@@ -2371,7 +2371,7 @@ function renderBudgetSummaryMarkup() {
         ja: `${budgetNotesLabels.visibleDays.ja}: ${visibleConfigs.length}日`
       })}</p>
     </div>
-    <div class="budget-summary-card">
+    <div class="budget-summary-card budget-summary-card--mix budget-summary-card--compact">
       <p class="budget-summary-card__label">${renderLocalizedContent(budgetNotesLabels.summaryMix)}</p>
       <div class="budget-summary-card__pills">
         <span class="budget-pill budget-pill--low">${renderLocalizedContent({

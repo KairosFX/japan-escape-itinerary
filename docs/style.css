@@ -1961,8 +1961,9 @@ html.has-modal-open body {
 
 .budget-notes__summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 0.92fr) minmax(0, 1.22fr);
   gap: 0.72rem;
+  align-items: start;
 }
 
 .budget-summary-card {
@@ -1980,6 +1981,11 @@ html.has-modal-open body {
     0 10px 22px rgba(39, 27, 20, 0.04);
 }
 
+.budget-summary-card--compact {
+  gap: 0.46rem;
+  padding: 0.82rem 0.88rem;
+}
+
 .budget-summary-card__label {
   margin: 0;
   font-size: 0.76rem;
@@ -1989,12 +1995,22 @@ html.has-modal-open body {
   color: rgba(94, 103, 104, 0.92);
 }
 
+.budget-summary-card--estimate .budget-summary-card__label,
+.budget-summary-card--mix .budget-summary-card__label {
+  max-inline-size: 12ch;
+  text-wrap: balance;
+}
+
 .budget-summary-card__value {
   display: block;
   min-width: 0;
   font-size: 1.18rem;
   line-height: 1.16;
   color: var(--text);
+}
+
+.budget-summary-card--estimate .budget-summary-card__value {
+  font-size: 1.12rem;
 }
 
 .budget-summary-card__meta {
@@ -2008,6 +2024,10 @@ html.has-modal-open body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.42rem;
+}
+
+.budget-summary-card--mix .budget-summary-card__pills {
+  gap: 0.34rem;
 }
 
 .budget-pill,
