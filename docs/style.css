@@ -2620,6 +2620,53 @@ html.has-modal-open body {
   order: 10;
 }
 
+.essentials-card--offline {
+  grid-column: 1 / -1;
+  order: 11;
+  gap: 0.9rem;
+}
+
+.offline-tools__status,
+.offline-tools__meta {
+  margin: 0;
+}
+
+.offline-tools__status {
+  padding: 0.84rem 0.92rem;
+  border: 1px solid rgba(171, 74, 59, 0.12);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 252, 248, 0.92), rgba(255, 248, 242, 0.86)),
+    rgba(255, 252, 248, 0.78);
+  color: var(--accent-deep);
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48);
+}
+
+.offline-tools__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  gap: 0.42rem;
+  justify-content: start;
+  align-items: stretch;
+}
+
+.offline-tools__actions .packing-section__action {
+  min-width: 0;
+}
+
+.offline-tools__download {
+  text-decoration: none;
+}
+
+.offline-tools__meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.54;
+  max-width: 52ch;
+}
+
 .booking-transit {
   display: grid;
   gap: 0.82rem;
@@ -3710,6 +3757,11 @@ html.intro-done .welcome-overlay {
     grid-template-columns: 1fr;
   }
 
+  .offline-tools__actions {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
   .budget-notes__reset {
     width: 100%;
   }
@@ -4196,6 +4248,21 @@ html[data-theme="dark"] .packing-section__action:hover,
 html[data-theme="dark"] .packing-section__action:focus-visible {
   border-color: rgba(248, 239, 228, 0.14);
   box-shadow: 0 12px 24px rgba(2, 3, 5, 0.24);
+}
+
+html[data-theme="dark"] .offline-tools__status {
+  border-color: rgba(192, 95, 80, 0.16);
+  background:
+    linear-gradient(180deg, rgba(30, 33, 38, 0.94), rgba(20, 23, 28, 0.9)),
+    rgba(18, 20, 24, 0.88);
+  color: #efe6da;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 12px 24px rgba(3, 4, 6, 0.16);
+}
+
+html[data-theme="dark"] .offline-tools__meta {
+  color: rgba(232, 221, 209, 0.68);
 }
 
 html[data-theme="dark"] .budget-summary-card,

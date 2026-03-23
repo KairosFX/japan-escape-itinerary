@@ -4,7 +4,8 @@
     "build:css": "cleancss -o docs/style.min.css docs/style.css",
     "build:js": "terser docs/script.js -c -m -o docs/script.min.js",
     "build:html": "node scripts/inline-css.js",
-    "build": "npm run build:css && npm run build:js && npm run build:html"
+    "build:offline-snapshot": "node scripts/build-offline-snapshot.js",
+    "build": "npm run build:css && npm run build:js && npm run build:html && npm run build:offline-snapshot"
   },
   "devDependencies": {
     "clean-css-cli": "^5.6.3",

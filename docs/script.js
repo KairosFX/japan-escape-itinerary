@@ -46,6 +46,11 @@ const budgetResetButtons = Array.from(document.querySelectorAll("[data-budget-re
 const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-section]"));
 const packingMarkAllButtons = Array.from(document.querySelectorAll("[data-packing-mark-all-global]"));
 const packingResetButtons = Array.from(document.querySelectorAll("[data-packing-reset-all]"));
+const offlineToolsCard = document.querySelector("[data-offline-tools]");
+const offlineStatusNode = document.querySelector("[data-offline-status]");
+const offlineMetaNode = document.querySelector("[data-offline-meta]");
+const offlineInstallButton = document.querySelector("[data-offline-install]");
+const offlineDownloadLink = document.querySelector("[data-offline-download]");
 const optionalProgressItems = Array.from(
   document.querySelectorAll("[data-progress-item][data-progress-optional='true']")
 );
@@ -81,6 +86,14 @@ const deferredGeometryReleaseDelayMs = 160;
 const deferredNonCriticalLayoutTimeoutMs = 700;
 const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
 const transitDetailsDataUrl = "./assets/data/transit-details.json";
+const offlineSnapshotUrl = "./japan-escape-itinerary-offline.html";
+const serviceWorkerUrl = "./service-worker.js";
+const offlineBundleVersion = "2026-03-22-offline-v1";
+const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
+const inlineDataSelectors = {
+  bookingTransit: "[data-booking-transit-inline]",
+  transitDetails: "[data-transit-details-inline]"
+};
 const fujiForecastCacheMaxAgeMs = 45 * 60 * 1000;
 const fujiForecastSourceUrl = "https://open-meteo.com/en/docs";
 const fujiForecastApiUrl = "https://api.open-meteo.com/v1/forecast";
@@ -180,6 +193,56 @@ const budgetLevelLabels = {
   low: { en: "Low", ja: "低め" },
   medium: { en: "Medium", ja: "標準" },
   high: { en: "High", ja: "高め" }
+};
+const offlineLabels = {
+  checking: {
+    en: "Checking offline support on this device...",
+    ja: "この端末でのオフライン利用を確認しています..."
+  },
+  caching: {
+    en: "Preparing offline access on this device...",
+    ja: "この端末でオフライン利用の準備をしています..."
+  },
+  ready: {
+    en: "Offline access is ready after this first online load.",
+    ja: "最初のオンライン読み込み後、この端末でオフライン利用できます。"
+  },
+  readyInstallable: {
+    en: "Offline access is ready. You can also install this guide on supported browsers.",
+    ja: "オフライン利用の準備ができました。対応ブラウザーではこのガイドを追加できます。"
+  },
+  installed: {
+    en: "This guide is installed and ready for repeat offline use.",
+    ja: "このガイドは追加済みで、繰り返しオフライン利用できます。"
+  },
+  activeOffline: {
+    en: "Offline mode is active on this device.",
+    ja: "この端末ではオフライン利用中です。"
+  },
+  unsupported: {
+    en: "Live offline install is not available here, but the downloadable snapshot still works.",
+    ja: "この環境ではライブ版のオフライン追加は使えませんが、保存版は利用できます。"
+  },
+  error: {
+    en: "Offline install could not be prepared right now. The downloadable snapshot is still available.",
+    ja: "現在はオフライン追加を準備できません。保存版は引き続き利用できます。"
+  },
+  snapshot: {
+    en: "This downloaded snapshot is self-contained for offline use.",
+    ja: "この保存版はオフラインでそのまま使える単体版です。"
+  },
+  standardMeta: {
+    en: "Cached bundle version 2026-03-22. Includes checklist, packing, budget notes, route preview, and transit details.",
+    ja: "キャッシュ版は 2026-03-22。チェックリスト、荷造り、予算メモ、ルート画像、移動詳細を含みます。"
+  },
+  installHintMeta: {
+    en: "If no install button appears, use your browser menu or iPhone/iPad Share sheet to add the guide to the home screen. Snapshot version: 2026-03-22.",
+    ja: "追加ボタンが出ない場合は、ブラウザーのメニューや iPhone/iPad の共有メニューからホーム画面へ追加できます。保存版は 2026-03-22 です。"
+  },
+  snapshotMeta: {
+    en: "This single-file snapshot keeps the local checklist, packing, budget notes, route preview, and transit details working without fetches.",
+    ja: "この単体保存版は、フェッチなしでチェックリスト、荷造り、予算メモ、ルート画像、移動詳細を使えます。"
+  }
 };
 const budgetNotesLabels = {
   summaryTotal: { en: "Trip estimate", ja: "旅全体の目安" },
@@ -370,6 +433,7 @@ let bookingTransitItems = [];
 let bookingTransitItemMap = new Map();
 let transitDetailItems = [];
 let transitDetailItemMap = new Map();
+const inlineJsonPayloadCache = new Map();
 let checklistState = {};
 let reservedHeaderHeight = headerReservedHeightFallbackPx;
 let headerLockUntil = 0;
@@ -416,6 +480,12 @@ let packingState = {};
 let packingInitialized = false;
 let budgetNotesState = {};
 let budgetNotesInitialized = false;
+let offlineExperienceBooted = false;
+let offlineRegistration = null;
+let offlineRegistrationReady = false;
+let offlineRegistrationError = false;
+let deferredInstallPrompt = null;
+let offlineAppInstalled = isStandaloneDisplayMode();
 let fujiForecastResult = null;
 let fujiForecastPromise = null;
 let reducedEffectsEnabled = false;
@@ -509,6 +579,13 @@ function loadBookingTransitItems() {
     return Promise.resolve(bookingTransitItems);
   }
 
+  const inlineItems = getInlineJsonArray(inlineDataSelectors.bookingTransit);
+  if (inlineItems) {
+    bookingTransitItems = inlineItems;
+    bookingTransitItemMap = new Map(bookingTransitItems.map((item) => [item.id, item]));
+    return Promise.resolve(bookingTransitItems);
+  }
+
   if (bookingTransitItemsPromise) {
     return bookingTransitItemsPromise;
   }
@@ -536,6 +613,13 @@ function loadBookingTransitItems() {
 
 function loadTransitDetailItems() {
   if (transitDetailItems.length) {
+    return Promise.resolve(transitDetailItems);
+  }
+
+  const inlineItems = getInlineJsonArray(inlineDataSelectors.transitDetails);
+  if (inlineItems) {
+    transitDetailItems = inlineItems;
+    transitDetailItemMap = new Map(transitDetailItems.map((item) => [item.id, item]));
     return Promise.resolve(transitDetailItems);
   }
 
@@ -810,6 +894,207 @@ function syncLocalizedNodes(scope = document) {
   scope.querySelectorAll("[data-language]").forEach((node) => {
     node.hidden = node.dataset.language !== activeLanguage;
   });
+}
+
+function setLocalizedNodeContent(node, content) {
+  if (!node) {
+    return;
+  }
+
+  node.innerHTML = renderLocalizedContent(content);
+  syncLocalizedNodes(node);
+}
+
+function isStandaloneDisplayMode() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
+function readInlineJsonPayload(selector) {
+  if (inlineJsonPayloadCache.has(selector)) {
+    return inlineJsonPayloadCache.get(selector);
+  }
+
+  const node = document.querySelector(selector);
+  if (!node) {
+    inlineJsonPayloadCache.set(selector, null);
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(node.textContent || "null");
+    inlineJsonPayloadCache.set(selector, parsed);
+    return parsed;
+  } catch (error) {
+    inlineJsonPayloadCache.set(selector, null);
+    return null;
+  }
+}
+
+function getInlineJsonArray(selector) {
+  const parsed = readInlineJsonPayload(selector);
+  return Array.isArray(parsed) ? parsed : null;
+}
+
+function getOfflineStatusContent() {
+  if (offlineSnapshotMode) {
+    return offlineLabels.snapshot;
+  }
+
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) {
+    return offlineLabels.unsupported;
+  }
+
+  if (offlineRegistrationError) {
+    return offlineLabels.error;
+  }
+
+  if (offlineRegistrationReady) {
+    if (!navigator.onLine) {
+      return offlineLabels.activeOffline;
+    }
+
+    if (offlineAppInstalled) {
+      return offlineLabels.installed;
+    }
+
+    return deferredInstallPrompt ? offlineLabels.readyInstallable : offlineLabels.ready;
+  }
+
+  return offlineExperienceBooted ? offlineLabels.caching : offlineLabels.checking;
+}
+
+function getOfflineMetaContent() {
+  if (offlineSnapshotMode) {
+    return offlineLabels.snapshotMeta;
+  }
+
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) {
+    return offlineLabels.installHintMeta;
+  }
+
+  if (deferredInstallPrompt || offlineAppInstalled) {
+    return offlineLabels.standardMeta;
+  }
+
+  return offlineLabels.installHintMeta;
+}
+
+function syncOfflineToolsUI() {
+  if (offlineToolsCard) {
+    offlineToolsCard.dataset.offlineVersion = offlineBundleVersion;
+  }
+
+  if (offlineDownloadLink) {
+    offlineDownloadLink.setAttribute("href", offlineSnapshotUrl);
+  }
+
+  setLocalizedNodeContent(offlineStatusNode, getOfflineStatusContent());
+  setLocalizedNodeContent(offlineMetaNode, getOfflineMetaContent());
+
+  if (!offlineInstallButton) {
+    return;
+  }
+
+  const canPromptInstall =
+    !offlineSnapshotMode &&
+    !offlineAppInstalled &&
+    Boolean(deferredInstallPrompt);
+
+  offlineInstallButton.hidden = !canPromptInstall;
+  offlineInstallButton.disabled = !canPromptInstall;
+}
+
+async function promptOfflineInstall() {
+  if (!deferredInstallPrompt) {
+    syncOfflineToolsUI();
+    return;
+  }
+
+  try {
+    await deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+    if (choice?.outcome === "accepted") {
+      offlineAppInstalled = true;
+    }
+  } catch (error) {
+    // Keep the UI stable if the browser rejects or ignores the prompt.
+  }
+
+  deferredInstallPrompt = null;
+  syncOfflineToolsUI();
+}
+
+function bootOfflineExperience() {
+  if (offlineInstallButton && offlineInstallButton.dataset.offlineBound !== "true") {
+    offlineInstallButton.addEventListener("click", () => {
+      void promptOfflineInstall();
+    });
+    offlineInstallButton.dataset.offlineBound = "true";
+  }
+
+  if (offlineExperienceBooted) {
+    syncOfflineToolsUI();
+    return;
+  }
+
+  offlineExperienceBooted = true;
+  offlineAppInstalled = isStandaloneDisplayMode();
+  offlineRegistrationReady = Boolean(navigator.serviceWorker?.controller);
+
+  window.addEventListener("online", syncOfflineToolsUI);
+  window.addEventListener("offline", syncOfflineToolsUI);
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    syncOfflineToolsUI();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    offlineAppInstalled = true;
+    syncOfflineToolsUI();
+  });
+
+  if (offlineSnapshotMode) {
+    syncOfflineToolsUI();
+    return;
+  }
+
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) {
+    syncOfflineToolsUI();
+    return;
+  }
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    offlineRegistrationReady = true;
+    syncOfflineToolsUI();
+  });
+
+  navigator.serviceWorker
+    .register(serviceWorkerUrl)
+    .then((registration) => {
+      offlineRegistration = registration;
+      offlineRegistrationError = false;
+      syncOfflineToolsUI();
+      return navigator.serviceWorker.ready;
+    })
+    .then((registration) => {
+      offlineRegistration = registration;
+      offlineRegistrationReady = true;
+      syncOfflineToolsUI();
+    })
+    .catch(() => {
+      offlineRegistration = null;
+      offlineRegistrationReady = false;
+      offlineRegistrationError = true;
+      syncOfflineToolsUI();
+    });
+
+  syncOfflineToolsUI();
 }
 
 function getChecklistInputs() {
@@ -1449,8 +1734,20 @@ function initializeFujiForecast() {
     return Promise.resolve(fujiForecastResult);
   }
 
+  const cachedForecast = readCachedFujiForecast();
+  if (cachedForecast) {
+    fujiForecastResult = cachedForecast;
+    renderFujiSuggestion(cachedForecast);
+    return Promise.resolve(cachedForecast);
+  }
+
   if (fujiForecastPromise) {
     return fujiForecastPromise;
+  }
+
+  if (!navigator.onLine) {
+    renderFujiForecastError();
+    return Promise.resolve(null);
   }
 
   renderFujiForecastLoading();
@@ -3100,6 +3397,7 @@ function initEssentialsSection() {
   }
 
   registerRevealBlocks(panel);
+  syncOfflineToolsUI();
   initializePackingToggles();
   return initializeBookingTransit();
 }
@@ -3980,6 +4278,8 @@ async function bootApp() {
     document.title = pageTitles.en;
     updateLanguageButtons("en");
   }
+
+  bootOfflineExperience();
 
   const siteFooter = document.querySelector(".site-footer");
   const initialPanelId = getInitialPanelId();
