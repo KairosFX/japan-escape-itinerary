@@ -1468,6 +1468,7 @@ let transitDetailItems = [];
 let transitDetailItemMap = new Map();
 let budgetEstimateSources = null;
 const inlineJsonPayloadCache = new Map();
+const localizedMarkupCache = new WeakMap();
 let checklistState = {};
 let reservedHeaderHeight = headerReservedHeightFallbackPx;
 let headerLockUntil = 0;
@@ -1521,8 +1522,14 @@ const routeMapModeState = {
   interactive: createRouteMapModeState()
 };
 let routeMapActivePopup = null;
+let routeMapActivePopupSelectionKey = "";
 let activeRouteMapSelection = { type: "view", id: routeExplorerDefaultSelectionId };
 let lastRouteMapTrigger = null;
+let routeMapUISyncFrame = 0;
+let pendingRouteMapUISyncOptions = {
+  updateCamera: false,
+  animateCamera: false
+};
 let offlineExperienceBooted = false;
 let offlineRegistration = null;
 let offlineRegistrationReady = false;
@@ -1532,6 +1539,7 @@ let offlineAppInstalled = isStandaloneDisplayMode();
 let fujiForecastResult = null;
 let fujiForecastPromise = null;
 let reducedEffectsEnabled = false;
+let lastTimelineSpineFillHeight = null;
 
 function getSystemTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -1939,6 +1947,25 @@ function syncLocalizedNodes(scope = document) {
   });
 }
 
+function setLocalizedMarkupIfChanged(node, markup) {
+  if (!node) {
+    return false;
+  }
+
+  if (localizedMarkupCache.get(node) === markup) {
+    return false;
+  }
+
+  node.innerHTML = markup;
+  localizedMarkupCache.set(node, markup);
+
+  if (root.lang === "ja") {
+    syncLocalizedNodes(node);
+  }
+
+  return true;
+}
+
 function setLocalizedNodeContent(node, content) {
   if (!node) {
     return;
@@ -2115,7 +2142,6 @@ function bootOfflineExperience() {
   window.addEventListener("offline", syncOfflineToolsUI);
 
   window.addEventListener("beforeinstallprompt", (event) => {
-    event.preventDefault();
     deferredInstallPrompt = event;
     syncOfflineToolsUI();
   });
@@ -7593,7 +7619,8 @@ function createRouteMapModeState() {
     failed: false,
     promise: null,
     map: null,
-    markers: []
+    markers: [],
+    markerStateKey: ""
   };
 }
 
@@ -7626,6 +7653,58 @@ function setRouteMapModeShellState(mode, state = "ready") {
   if (shellNode) {
     shellNode.setAttribute("data-map-state", state);
   }
+}
+
+function getRouteMapSelectionSignature(selectionState) {
+  if (!selectionState?.config?.id) {
+    return "view:route-overview";
+  }
+
+  const segmentIds = Array.from(selectionState.segmentIds || []).sort().join(",");
+  const stopIds = Array.from(selectionState.stopIds || []).sort().join(",");
+
+  return [
+    selectionState.type,
+    selectionState.config.id,
+    segmentIds,
+    stopIds,
+    optionalDaysUnlocked ? "optional" : "base"
+  ].join("|");
+}
+
+function getSerializedRouteMapValue(value) {
+  return typeof value === "string" ? value : JSON.stringify(value);
+}
+
+function setRouteMapPaintPropertyIfChanged(map, layerId, property, value) {
+  if (!map?.getLayer(layerId)) {
+    return;
+  }
+
+  const cacheKey = `${layerId}:${property}`;
+  const serializedValue = getSerializedRouteMapValue(value);
+  const cache = map.__routeMapPaintCache || (map.__routeMapPaintCache = new Map());
+  if (cache.get(cacheKey) === serializedValue) {
+    return;
+  }
+
+  map.setPaintProperty(layerId, property, value);
+  cache.set(cacheKey, serializedValue);
+}
+
+function setRouteMapFilterIfChanged(map, layerId, value) {
+  if (!map?.getLayer(layerId)) {
+    return;
+  }
+
+  const serializedValue = getSerializedRouteMapValue(value);
+  const cache = map.__routeMapFilterCache || (map.__routeMapFilterCache = new Map());
+  if (cache.get(layerId) === serializedValue) {
+    return;
+  }
+
+  map.setFilter(layerId, value);
+  cache.set(layerId, serializedValue);
 }
 
 function hasRouteMapWebGLSupport() {
@@ -8199,7 +8278,7 @@ function renderRouteMapFilters(selectionState) {
     })
     .join("");
 
-  routeMapFiltersNode.innerHTML = filtersMarkup;
+  setLocalizedMarkupIfChanged(routeMapFiltersNode, filtersMarkup);
 }
 
 function renderRouteMapStops(selectionState) {
@@ -8230,12 +8309,15 @@ function renderRouteMapStops(selectionState) {
     })
     .join("");
 
-  stopsNode.innerHTML = `
+  setLocalizedMarkupIfChanged(
+    stopsNode,
+    `
     <p class="route-map__secondary-label">${renderLocalizedContent(routeMapLabels.stops)}</p>
     <div class="route-map__stop-rail">
       ${stopsMarkup}
     </div>
-  `;
+  `
+  );
 }
 
 function renderRouteMapDayButton(link) {
@@ -8312,7 +8394,9 @@ function renderRouteMapDetail(selectionState) {
       `
     : "";
 
-  detailNode.innerHTML = `
+  setLocalizedMarkupIfChanged(
+    detailNode,
+    `
     <div class="route-reference__copy">
       <p class="section-tag section-tag--route">
         ${renderLocalizedContent(
@@ -8330,7 +8414,8 @@ function renderRouteMapDetail(selectionState) {
     ${notesMarkup ? `<ul class="route-reference__list">${notesMarkup}</ul>` : ""}
     ${daysMarkup}
     ${transitActionsMarkup}
-  `;
+  `
+  );
 }
 
 function clearRouteMapMarkers(markers = []) {
@@ -8378,11 +8463,18 @@ function updateRouteMapMarkerElement(entry, selectionState, interactive = false)
   const isActive = selectionState.type === "stop" && selectionState.config.id === stop.id;
   const isRelated = !isActive && selectionState.stopIds.has(stop.id);
   const isDimmed = selectionState.stopIds.size > 0 && !isActive && !isRelated;
+  const markerStateKey = `${root.lang}|${isActive ? 1 : 0}|${isRelated ? 1 : 0}|${isDimmed ? 1 : 0}|${interactive ? 1 : 0}`;
+
+  if (entry.stateKey === markerStateKey) {
+    return;
+  }
+
   entry.labelNode.textContent = getLocalizedText(stop.title);
 
   entry.element.classList.toggle("is-active", isActive);
   entry.element.classList.toggle("is-related", isRelated);
   entry.element.classList.toggle("is-dimmed", isDimmed);
+  entry.stateKey = markerStateKey;
 
   if (!interactive) {
     return;
@@ -8428,9 +8520,16 @@ function installRouteMapMarkers(map, interactive = false) {
 
 function syncRouteMapModeMarkers(mode, selectionState) {
   const config = getRouteMapModeConfig(mode);
-  getRouteMapModeState(mode).markers.forEach((entry) => {
+  const state = getRouteMapModeState(mode);
+  const markerStateKey = `${root.lang}|${getRouteMapSelectionSignature(selectionState)}`;
+  if (state.markerStateKey === markerStateKey) {
+    return;
+  }
+
+  state.markers.forEach((entry) => {
     updateRouteMapMarkerElement(entry, selectionState, config.interactive);
   });
+  state.markerStateKey = markerStateKey;
 }
 
 function applyRouteMapPaintTheme(map) {
@@ -8449,9 +8548,7 @@ function applyRouteMapPaintTheme(map) {
   ];
 
   themeSetters.forEach(([layerId, property, value]) => {
-    if (map.getLayer(layerId)) {
-      map.setPaintProperty(layerId, property, value);
-    }
+    setRouteMapPaintPropertyIfChanged(map, layerId, property, value);
   });
 }
 
@@ -8464,36 +8561,38 @@ function syncRouteMapSelectionLayers(map, selectionState) {
   const selectedId = selectionState.type === "segment" ? selectionState.config.id : "__none__";
   const palette = getRouteMapPalette();
   const inactiveOpacity = activeIds.length ? 0.24 : 0.18;
+  const selectionLayerKey = `${getCurrentTheme()}|${getRouteMapSelectionSignature(selectionState)}`;
+
+  if (map.__routeMapSelectionLayerKey === selectionLayerKey) {
+    return;
+  }
 
   if (map.getLayer("route-map-segments-active")) {
-    map.setPaintProperty("route-map-segments-active", "line-color", [
-      "match",
-      ["get", "id"],
-      activeIds,
-      palette.segmentActive,
-      palette.segmentMuted
-    ]);
-    map.setPaintProperty("route-map-segments-active", "line-opacity", [
-      "match",
-      ["get", "id"],
-      activeIds,
-      0.94,
-      inactiveOpacity
-    ]);
-    map.setPaintProperty("route-map-segments-active", "line-width", [
-      "interpolate",
-      ["linear"],
-      ["zoom"],
-      4.3,
-      ["match", ["get", "id"], activeIds, 4.8, 3.2],
-      7.3,
-      ["match", ["get", "id"], activeIds, 7.4, 5.2]
-    ]);
+    const lineColor = activeIds.length
+      ? ["match", ["get", "id"], activeIds, palette.segmentActive, palette.segmentMuted]
+      : palette.segmentMuted;
+    const lineOpacity = activeIds.length
+      ? ["match", ["get", "id"], activeIds, 0.94, inactiveOpacity]
+      : inactiveOpacity;
+    const lineWidth = activeIds.length
+      ? [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          4.3,
+          ["match", ["get", "id"], activeIds, 4.8, 3.2],
+          7.3,
+          ["match", ["get", "id"], activeIds, 7.4, 5.2]
+        ]
+      : ["interpolate", ["linear"], ["zoom"], 4.3, 3.2, 7.3, 5.2];
+
+    setRouteMapPaintPropertyIfChanged(map, "route-map-segments-active", "line-color", lineColor);
+    setRouteMapPaintPropertyIfChanged(map, "route-map-segments-active", "line-opacity", lineOpacity);
+    setRouteMapPaintPropertyIfChanged(map, "route-map-segments-active", "line-width", lineWidth);
   }
 
-  if (map.getLayer("route-map-segment-selected")) {
-    map.setFilter("route-map-segment-selected", ["==", ["get", "id"], selectedId]);
-  }
+  setRouteMapFilterIfChanged(map, "route-map-segment-selected", ["==", ["get", "id"], selectedId]);
+  map.__routeMapSelectionLayerKey = selectionLayerKey;
 }
 
 function clearRouteMapPopup() {
@@ -8501,6 +8600,7 @@ function clearRouteMapPopup() {
     routeMapActivePopup.remove();
     routeMapActivePopup = null;
   }
+  routeMapActivePopupSelectionKey = "";
 }
 
 function renderRouteMapPopup(selectionState) {
@@ -8526,12 +8626,18 @@ function renderRouteMapPopup(selectionState) {
 }
 
 function syncRouteMapPopup(selectionState) {
-  clearRouteMapPopup();
-
   const interactiveState = getRouteMapModeState("interactive");
   if (!interactiveState.ready || !interactiveState.map || selectionState.type === "view") {
+    clearRouteMapPopup();
     return;
   }
+
+  const popupSelectionKey = getRouteMapSelectionSignature(selectionState);
+  if (routeMapActivePopup && routeMapActivePopupSelectionKey === popupSelectionKey) {
+    return;
+  }
+
+  clearRouteMapPopup();
 
   const coordinates =
     selectionState.type === "stop"
@@ -8560,6 +8666,7 @@ function syncRouteMapPopup(selectionState) {
     .addTo(interactiveState.map);
 
   syncLocalizedNodes(routeMapActivePopup.getElement());
+  routeMapActivePopupSelectionKey = popupSelectionKey;
 }
 
 function focusRouteMapSelection(map, selectionState, { animate = false } = {}) {
@@ -8617,7 +8724,7 @@ function bindRouteMapInteractiveEvents(map) {
     }
 
     activeRouteMapSelection = { type: "segment", id: segmentId };
-    syncRouteMapUI({ updateCamera: true, animateCamera: true });
+    scheduleRouteMapUISync({ updateCamera: true, animateCamera: true });
   });
 
   map.__routeMapEventsBound = true;
@@ -8767,10 +8874,30 @@ function syncRouteMapUI(options = {}) {
   renderRouteMapFilters(selectionState);
   renderRouteMapStops(selectionState);
   renderRouteMapDetail(selectionState);
-  syncLocalizedNodes(routeMapInteractive || routeMapExplorerNode || routeMapCard);
 
   syncRouteMapMode("preview", selectionState);
   syncRouteMapMode("interactive", selectionState, { updateCamera, animateCamera });
+}
+
+function scheduleRouteMapUISync(options = {}) {
+  pendingRouteMapUISyncOptions = {
+    updateCamera: pendingRouteMapUISyncOptions.updateCamera || Boolean(options.updateCamera),
+    animateCamera: pendingRouteMapUISyncOptions.animateCamera || Boolean(options.animateCamera)
+  };
+
+  if (routeMapUISyncFrame) {
+    return;
+  }
+
+  routeMapUISyncFrame = window.requestAnimationFrame(() => {
+    const nextOptions = pendingRouteMapUISyncOptions;
+    routeMapUISyncFrame = 0;
+    pendingRouteMapUISyncOptions = {
+      updateCamera: false,
+      animateCamera: false
+    };
+    syncRouteMapUI(nextOptions);
+  });
 }
 
 function refreshRouteMapsIfReady(options = {}) {
@@ -8812,6 +8939,10 @@ function ensureRouteMapInitialized() {
   }
 
   routeMapExplorerNode.innerHTML = renderRouteMapExplorerShell();
+  localizedMarkupCache.set(routeMapExplorerNode, routeMapExplorerNode.innerHTML);
+  if (root.lang === "ja") {
+    syncLocalizedNodes(routeMapExplorerNode);
+  }
   routeMapInitialized = true;
   syncRouteMapUI();
 }
@@ -8848,7 +8979,6 @@ function handleRouteMapClick(event) {
     lastRouteMapTrigger = openTrigger;
     ensureRouteMapInitialized();
     setRouteMapOpen(true);
-    syncRouteMapUI();
     void ensureRouteMapInteractiveReady();
     return;
   }
@@ -8864,7 +8994,7 @@ function handleRouteMapClick(event) {
   if (filterTrigger) {
     event.preventDefault();
     activeRouteMapSelection = { type: "view", id: filterTrigger.dataset.routeMapFilter || "" };
-    syncRouteMapUI({ updateCamera: true, animateCamera: true });
+    scheduleRouteMapUISync({ updateCamera: true, animateCamera: true });
     return;
   }
 
@@ -8872,7 +9002,7 @@ function handleRouteMapClick(event) {
   if (stopTrigger) {
     event.preventDefault();
     activeRouteMapSelection = { type: "stop", id: stopTrigger.dataset.routeMapStop || "" };
-    syncRouteMapUI({ updateCamera: true, animateCamera: true });
+    scheduleRouteMapUISync({ updateCamera: true, animateCamera: true });
     return;
   }
 
@@ -8893,8 +9023,6 @@ function handleRouteMapClick(event) {
   }
 }
 
-function handleRouteMapKeydown() {}
-
 function initRouteSection() {
   const panel = getSectionPanel("route");
   if (!panel) {
@@ -8909,7 +9037,6 @@ function initRouteSection() {
   registerRevealBlocks(panel);
   ensureRouteMapInitialized();
   syncRouteMapOpenButtons(routeMapInteractive ? !routeMapInteractive.hidden : false);
-  syncRouteMapUI();
 
   const previewState = getRouteMapModeState("preview");
   if (!previewState.ready && !previewState.failed) {
@@ -9163,21 +9290,16 @@ function syncOptionalDaysUI() {
     optionalPromptCompact.hidden = true;
   }
 
-  syncBudgetNotesUI();
-  syncRouteMapUI();
+  refreshBudgetNotesIfReady();
+  if (routeMapInitialized || initializedSections.has("route")) {
+    scheduleRouteMapUISync();
+  }
   scheduleDayCardRowHeights();
 }
 
 function scheduleDayCardRowHeights() {
-  if (!initializedSections.has("checklist")) {
-    return;
-  }
-
-  dayGrids.forEach((grid) => {
-    grid.querySelectorAll(".day-card").forEach((card) => {
-      card.style.minHeight = "";
-    });
-  });
+  // The equal-height day-card pass was removed. Keep the hook so older callers
+  // do not trigger a full grid walk and inline-style write on every resize/update.
 }
 
 function unlockOptionalDays() {
@@ -9383,7 +9505,10 @@ function updateTimelineSpine() {
     progressTimeline.querySelector(".progress-item");
 
   if (!anchorItem) {
-    progressTimeline.style.setProperty("--timeline-spine-fill", "0px");
+    if (lastTimelineSpineFillHeight !== 0) {
+      progressTimeline.style.setProperty("--timeline-spine-fill", "0px");
+      lastTimelineSpineFillHeight = 0;
+    }
     return;
   }
 
@@ -9395,7 +9520,12 @@ function updateTimelineSpine() {
   const fillEnd = anchorItem.offsetTop + nodeTop + linkOverlap;
   const fillHeight = Math.max(fillEnd - fillStart, 0);
 
+  if (fillHeight === lastTimelineSpineFillHeight) {
+    return;
+  }
+
   progressTimeline.style.setProperty("--timeline-spine-fill", `${fillHeight}px`);
+  lastTimelineSpineFillHeight = fillHeight;
 }
 
 function scrollProgressTimelineToActive(force = false) {
