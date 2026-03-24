@@ -2003,6 +2003,10 @@ html.has-modal-open body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52);
 }
 
+.budget-setting__input--full {
+  width: 100%;
+}
+
 .budget-setting__checkbox-row {
   display: flex;
   align-items: start;
@@ -2031,7 +2035,7 @@ html.has-modal-open body {
 
 .budget-notes__summary {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
   gap: 0.72rem;
   align-items: start;
 }
@@ -3222,10 +3226,15 @@ html.has-modal-open body {
 
 .booking-item__actions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.38rem;
+  gap: 0.58rem;
   margin-top: 0.58rem;
   align-items: stretch;
+}
+
+.booking-item__link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.42rem;
 }
 
 .booking-item__cta {
@@ -3249,6 +3258,26 @@ html.has-modal-open body {
     background-color 180ms ease,
     color 180ms ease,
     box-shadow 180ms ease;
+}
+
+.booking-item__cta--stacked {
+  display: grid;
+  justify-items: start;
+  gap: 0.18rem;
+  min-height: 3.25rem;
+  text-align: left;
+}
+
+.booking-item__cta-label,
+.booking-item__cta-note {
+  width: 100%;
+}
+
+.booking-item__cta-note {
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.4;
+  opacity: 0.86;
 }
 
 .booking-item__cta--primary {
@@ -4687,6 +4716,10 @@ html.intro-done .welcome-overlay {
     grid-template-columns: 1fr;
   }
 
+  .booking-item__link-grid {
+    grid-template-columns: 1fr;
+  }
+
   .packing-section__actions {
     width: 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5724,6 +5757,47 @@ html[data-theme="light"] body {
   padding: 0;
   display: grid;
   gap: 0.6rem;
+}
+
+.budget-day-card__stay-field {
+  display: grid;
+  gap: 0.38rem;
+  padding: 0.82rem 0.86rem;
+  border: 1px solid rgba(171, 74, 59, 0.12);
+  border-radius: 1rem;
+  background: rgba(255, 251, 247, 0.82);
+}
+
+.budget-day-card__stay-label {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.budget-day-card__stay-select {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: 0.56rem 0.72rem;
+  border: 1px solid rgba(31, 37, 39, 0.1);
+  border-radius: 0.92rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text);
+}
+
+.budget-day-card__stay-select:focus-visible {
+  outline: 3px solid rgba(171, 74, 59, 0.18);
+  outline-offset: 2px;
+  border-color: rgba(171, 74, 59, 0.28);
+}
+
+.budget-day-card__stay-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.81rem;
+  line-height: 1.58;
 }
 
 .budget-line-item {

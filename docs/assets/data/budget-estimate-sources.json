@@ -9,8 +9,8 @@
     "ja": "以前の合計が膨らんでいた主因は、1〜3日目を有料の大阪ホテル泊として扱っていたこと、2日目を京都宿泊ではなく大阪発の日帰り前提で組んでいたこと、そして食費が通常の日本旅行より高めの外食寄りになっていたことです。"
   },
   "helperCopy": {
-    "en": "Each day now has its own stay selector. The defaults follow the real plan, and you can still switch any relevant day to a hotel, ryokan, relative stay, or no-cost stay without hiding why the total changed.",
-    "ja": "各日に滞在セレクターを付けました。初期値は実際の計画に合わせつつ、必要な日はホテル、旅館、親族宅、宿泊費なしへ切り替えられ、合計が変わる理由も見えるままです。"
+    "en": "Each day now has its own stay selector. Paid hotel and ryokan quotes stay as quoted stay totals, the accommodation split control handles the per-person math, and all booking or fare links now live in Essentials.",
+    "ja": "各日に滞在セレクターを付けました。有料のホテル・旅館は見積り総額のまま扱い、宿泊費の分け方コントロールで1人あたり計算を行い、予約や運賃リンクはすべてEssentialsへ移しました。"
   },
   "assumptionCopy": {
     "en": "This estimate now follows the actual stay plan: Osaka aunt/relative stays on Days 1 and 3, a Kyoto hotel on Day 2, a practical Hakone ryokan on Day 4, Kawaguchiko hotel nights on Days 5-6, and a Tokyo hotel on Day 7 plus Day 8 only when the optional day is active.",

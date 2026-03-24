@@ -48,6 +48,9 @@ const budgetSourcesNode = document.querySelector("[data-budget-sources]");
 const budgetDaysNode = document.querySelector("[data-budget-days]");
 const budgetResetButtons = Array.from(document.querySelectorAll("[data-budget-reset-all]"));
 const budgetTravelersInput = document.querySelector("[data-budget-travelers]");
+const budgetAccommodationShareModeInput = document.querySelector("[data-budget-share-mode]");
+const budgetAccommodationShareCountField = document.querySelector("[data-budget-share-count-field]");
+const budgetAccommodationShareCountInput = document.querySelector("[data-budget-share-count]");
 const budgetIncludeExtrasInput = document.querySelector("[data-budget-include-extras]");
 const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-section]"));
 const packingMarkAllButtons = Array.from(document.querySelectorAll("[data-packing-mark-all-global]"));
@@ -116,6 +119,8 @@ const budgetDefaultTravelerCount = 2;
 const budgetTravelerCountMin = 1;
 const budgetTravelerCountMax = 24;
 const budgetSharedRoomOccupancy = 2;
+const budgetAccommodationShareModeDefault = "all-travelers";
+const budgetAccommodationShareModes = ["not-shared", "all-travelers", "custom"];
 const budgetSourceUpdatedAt = "2026-03-23";
 const budgetAssumptionCopy = {
   en:
@@ -152,7 +157,7 @@ const budgetStayDefinitions = {
     label: { en: "Osaka compact hotel", ja: "大阪の控えめホテル" },
     bucket: "booked",
     sourceGroup: "accommodation",
-    cost: { mode: "perRoom", amount: 9400, sourceCostId: "osaka-compact-hotel" }
+    cost: { mode: "perGroup", amount: 9400, sourceCostId: "osaka-compact-hotel" }
   },
   "kyoto-midrange-hotel": {
     id: "kyoto-midrange-hotel",
@@ -160,7 +165,7 @@ const budgetStayDefinitions = {
     label: { en: "Kyoto mid-range hotel", ja: "京都の中価格帯ホテル" },
     bucket: "booked",
     sourceGroup: "accommodation",
-    cost: { mode: "perRoom", amount: 13200, sourceCostId: "kyoto-midrange-hotel" }
+    cost: { mode: "perGroup", amount: 13200, sourceCostId: "kyoto-midrange-hotel" }
   },
   "hakone-practical-ryokan": {
     id: "hakone-practical-ryokan",
@@ -168,7 +173,7 @@ const budgetStayDefinitions = {
     label: { en: "Hakone ryokan", ja: "箱根旅館" },
     bucket: "booked",
     sourceGroup: "accommodation",
-    cost: { mode: "perRoom", amount: 18000, sourceCostId: "hakone-practical-ryokan" }
+    cost: { mode: "perGroup", amount: 18000, sourceCostId: "hakone-practical-ryokan" }
   },
   "kawaguchiko-base-hotel": {
     id: "kawaguchiko-base-hotel",
@@ -176,7 +181,7 @@ const budgetStayDefinitions = {
     label: { en: "Kawaguchiko hotel", ja: "河口湖ホテル" },
     bucket: "booked",
     sourceGroup: "accommodation",
-    cost: { mode: "perRoom", amount: 15700, sourceCostId: "kawaguchiko-base-hotel" }
+    cost: { mode: "perGroup", amount: 15700, sourceCostId: "kawaguchiko-base-hotel" }
   },
   "tokyo-base-hotel": {
     id: "tokyo-base-hotel",
@@ -184,7 +189,7 @@ const budgetStayDefinitions = {
     label: { en: "Tokyo hotel", ja: "東京ホテル" },
     bucket: "booked",
     sourceGroup: "accommodation",
-    cost: { mode: "perRoom", amount: 19820, sourceCostId: "tokyo-base-hotel" }
+    cost: { mode: "perGroup", amount: 19820, sourceCostId: "tokyo-base-hotel" }
   },
   "relative-stay": {
     id: "relative-stay",
@@ -4477,6 +4482,7 @@ const itineraryBudgetLabels = {
   summaryTotalLocked: { en: "Days 1-7 estimate", ja: "1〜7日目の見積り" },
   summaryTotalUnlocked: { en: "Trip estimate", ja: "旅程合計" },
   summaryPerPerson: { en: "Per person", ja: "1人あたり" },
+  summaryAccommodationSplit: { en: "Stay split / person", ja: "宿泊の1人分" },
   summaryBookedRequired: { en: "Booked + required", ja: "予約前提 + 必須" },
   summaryOptionalLocked: { en: "Days 8-9 add-on", ja: "8日目と9日目の追加分" },
   summaryOptionalUnlocked: { en: "Optional Days 8-9 included", ja: "追加の8日目と9日目を含む" },
@@ -4490,6 +4496,11 @@ const itineraryBudgetLabels = {
     ja: "節約したい所、少し使いたい所、先に予約したい所をメモ。"
   },
   stayLabel: { en: "Stay type", ja: "滞在タイプ" },
+  shareModeLabel: { en: "Accommodation split", ja: "宿泊費の分け方" },
+  shareCountLabel: { en: "People sharing stays", ja: "宿泊費を分ける人数" },
+  shareModeAllTravelers: { en: "Share across all travelers", ja: "全員で分ける" },
+  shareModeNotShared: { en: "Not shared", ja: "分けない" },
+  shareModeCustom: { en: "Custom share count", ja: "人数を指定して分ける" },
   stayHintFallback: {
     en: "Switch between the real default stay and any cheaper or free fallback you actually have.",
     ja: "実際の初期滞在と、実際に使える安い・無料の代替滞在を切り替えられます。"
@@ -4510,11 +4521,27 @@ const itineraryBudgetLabels = {
     en: "Stay selectors now control each accommodation night directly, so Osaka aunt-house nights stay at JPY 0 unless you switch them to a paid stay.",
     ja: "各宿泊日は滞在セレクターで直接切り替える形にし、大阪の叔母宅の夜は有料宿へ変更しない限り0円のままです。"
   },
+  shareHint: {
+    en: "Paid hotel and ryokan quotes now stay as one quoted stay-total. Split that total across all travelers, keep it unshared, or divide it across a custom number of people.",
+    ja: "有料のホテル・旅館は、見積り総額をそのまま保持する形へ変えました。その総額を旅行者全員、分割なし、または指定人数で分けられます。"
+  },
+  shareCountHint: {
+    en: "Use a custom count only when fewer people are actually splitting the paid room or ryokan total.",
+    ja: "有料の部屋や旅館の総額を、旅行者全員ではなく一部だけで分ける時だけ指定人数を使います。"
+  },
   extrasHint: {
     en: "Adds optional luggage handling and weather-pivot extras. Optional Days 8-9 stay separate until unlocked.",
     ja: "荷物対応や天候回避の任意追加費用を反映します。8日目と9日目は解放するまで別枠です。"
   },
   totalMeta: { en: "Checklist-linked total", ja: "チェックリスト連動の合計" },
+  noPaidAccommodationMeta: {
+    en: "No paid hotel or ryokan stays are selected right now.",
+    ja: "現在は有料のホテル・旅館宿泊が選ばれていません。"
+  },
+  notesLinkHubMeta: {
+    en: "All booking, fare, and official resource links now live in Essentials so Budget Notes stays focused on costs and assumptions.",
+    ja: "予約・運賃・公式リソースのリンクはすべてEssentialsへ移し、予算メモは費用と前提だけに絞っています。"
+  },
   bookedRequiredMeta: { en: "Booked and required items only", ja: "予約前提と必須項目のみ" },
   sharedMeta: { en: "Shared stays and group costs", ja: "共有の宿泊費と共通費" },
   variableMeta: { en: "Per-person variable spend", ja: "1人ごとの変動費" },
@@ -5903,6 +5930,27 @@ function initializeBudgetNotes() {
 
     return clamp(parsed, budgetTravelerCountMin, budgetTravelerCountMax);
   };
+  const normalizeShareMode = (value, fallback = budgetAccommodationShareModeDefault) =>
+    budgetAccommodationShareModes.includes(value) ? value : fallback;
+  const getShareModeLabel = (shareMode) => {
+    switch (normalizeShareMode(shareMode)) {
+      case "not-shared":
+        return itineraryBudgetLabels.shareModeNotShared;
+      case "custom":
+        return itineraryBudgetLabels.shareModeCustom;
+      default:
+        return itineraryBudgetLabels.shareModeAllTravelers;
+    }
+  };
+  const normalizeShareCount = (value, travelers = budgetDefaultTravelerCount) => {
+    const normalizedTravelers = normalizeTravelerCount(travelers, budgetDefaultTravelerCount);
+    const parsed = Number.parseInt(String(value ?? ""), 10);
+    if (Number.isNaN(parsed)) {
+      return normalizedTravelers;
+    }
+
+    return clamp(parsed, 1, normalizedTravelers);
+  };
   const getBudgetSourceData = () => {
     const sourceData = getBudgetEstimateSources();
     return sourceData && typeof sourceData === "object" && !Array.isArray(sourceData) ? sourceData : {};
@@ -5997,6 +6045,8 @@ function initializeBudgetNotes() {
   };
   const getDefaultState = () => ({
     travelers: budgetDefaultTravelerCount,
+    accommodationShareMode: budgetAccommodationShareModeDefault,
+    accommodationShareCount: budgetDefaultTravelerCount,
     includeExtras: false,
     days: {}
   });
@@ -6034,6 +6084,14 @@ function initializeBudgetNotes() {
 
       return {
         travelers: normalizeTravelerCount(parsed.travelers, fallbackState.travelers),
+        accommodationShareMode: normalizeShareMode(
+          parsed.accommodationShareMode,
+          fallbackState.accommodationShareMode
+        ),
+        accommodationShareCount: normalizeShareCount(
+          parsed.accommodationShareCount,
+          normalizeTravelerCount(parsed.travelers, fallbackState.travelers)
+        ),
         includeExtras: parsed.includeExtras === true,
         days: normalizeDayEntries(parsed.days)
       };
@@ -6045,6 +6103,10 @@ function initializeBudgetNotes() {
     if (
       normalizeTravelerCount(budgetNotesState.travelers, budgetDefaultTravelerCount) !==
         budgetDefaultTravelerCount ||
+      normalizeShareMode(
+        budgetNotesState.accommodationShareMode,
+        budgetAccommodationShareModeDefault
+      ) !== budgetAccommodationShareModeDefault ||
       budgetNotesState.includeExtras === true
     ) {
       return true;
@@ -6067,6 +6129,14 @@ function initializeBudgetNotes() {
         budgetNotesStorageKey,
         JSON.stringify({
           travelers: normalizeTravelerCount(budgetNotesState.travelers, budgetDefaultTravelerCount),
+          accommodationShareMode: normalizeShareMode(
+            budgetNotesState.accommodationShareMode,
+            budgetAccommodationShareModeDefault
+          ),
+          accommodationShareCount: normalizeShareCount(
+            budgetNotesState.accommodationShareCount,
+            normalizeTravelerCount(budgetNotesState.travelers, budgetDefaultTravelerCount)
+          ),
           includeExtras: budgetNotesState.includeExtras === true,
           days: normalizeDayEntries(budgetNotesState.days)
         })
@@ -6078,6 +6148,26 @@ function initializeBudgetNotes() {
   };
   const getTravelerCount = () =>
     normalizeTravelerCount(budgetNotesState.travelers, budgetDefaultTravelerCount);
+  const getStoredCustomShareCount = (travelers = getTravelerCount()) =>
+    normalizeShareCount(budgetNotesState.accommodationShareCount, travelers);
+  const getAccommodationShareMode = () =>
+    normalizeShareMode(
+      budgetNotesState.accommodationShareMode,
+      budgetAccommodationShareModeDefault
+    );
+  const getAccommodationShareCount = (travelers = getTravelerCount()) => {
+    const normalizedTravelers = normalizeTravelerCount(travelers, budgetDefaultTravelerCount);
+    const shareMode = getAccommodationShareMode();
+    if (shareMode === "not-shared") {
+      return 1;
+    }
+
+    if (shareMode === "custom") {
+      return getStoredCustomShareCount(normalizedTravelers);
+    }
+
+    return normalizedTravelers;
+  };
   const includeExtras = () => budgetNotesState.includeExtras === true;
   const getDayState = (day) => {
     const entry =
@@ -6157,6 +6247,24 @@ function initializeBudgetNotes() {
       return item.formulaCopy;
     }
 
+    if (item?.category === "accommodation" && item?.accommodationShare && item.accommodationShare.total > 0) {
+      if (item.accommodationShare.shareCount <= 1) {
+        return {
+          en: `Stay total ${formatCurrency(item.accommodationShare.total)} · not shared`,
+          ja: `宿泊合計 ${formatCurrency(item.accommodationShare.total)} ・ 分割なし`
+        };
+      }
+
+      return {
+        en: `Stay total ${formatCurrency(item.accommodationShare.total)} · split by ${
+          item.accommodationShare.shareCount
+        } = ${formatCurrency(item.accommodationShare.perPersonTotal)} pp`,
+        ja: `宿泊合計 ${formatCurrency(item.accommodationShare.total)} ・ ${
+          item.accommodationShare.shareCount
+        }人で分割 = 1人 ${formatCurrency(item.accommodationShare.perPersonTotal)}`
+      };
+    }
+
     if (itemCost.mode === "perPerson") {
       return {
         en: `${formatCurrency(itemCost.amount)} x ${itemCost.quantity} traveler${
@@ -6192,6 +6300,32 @@ function initializeBudgetNotes() {
 
     return { en: "No extra ticketed cost", ja: "追加費用なし" };
   };
+  const getAccommodationShareBreakdown = (itemCost, travelers) => {
+    if (!itemCost || itemCost.total <= 0) {
+      return null;
+    }
+
+    const shareCount = getAccommodationShareCount(travelers);
+    return {
+      mode: getAccommodationShareMode(),
+      travelers: normalizeTravelerCount(travelers, budgetDefaultTravelerCount),
+      shareCount,
+      total: itemCost.total,
+      perPersonTotal: shareCount > 0 ? itemCost.total / shareCount : 0
+    };
+  };
+  const getPersonalLineTotal = (item, travelers) => {
+    if (!item?.itemCost?.included) {
+      return 0;
+    }
+
+    if (item.category === "accommodation" && item.accommodationShare) {
+      return item.accommodationShare.perPersonTotal;
+    }
+
+    const normalizedTravelers = normalizeTravelerCount(travelers, budgetDefaultTravelerCount);
+    return item.lineTotal / normalizedTravelers;
+  };
   const getAccommodationItem = (definition) => {
     const stayDefinition = getStayDefinitionForDay(definition, getDayState(definition.day).stayId);
     if (!stayDefinition) {
@@ -6224,10 +6358,15 @@ function initializeBudgetNotes() {
       const dayItems = [getAccommodationItem(definition), ...definition.items].filter(Boolean);
       const itemEstimates = dayItems.map((item) => {
         const itemCost = calculateItemCost(item, travelers, withExtras);
+        const lineTotal = itemCost.included ? itemCost.total : 0;
         return {
           ...item,
           itemCost,
-          lineTotal: itemCost.included ? itemCost.total : 0
+          lineTotal,
+          accommodationShare:
+            item.category === "accommodation" && lineTotal > 0
+              ? getAccommodationShareBreakdown(itemCost, travelers)
+              : null
         };
       });
 
@@ -6256,13 +6395,41 @@ function initializeBudgetNotes() {
       });
     });
 
+    const accommodationTotal = categoryTotals.accommodation || 0;
+    const accommodationShareCount = accommodationTotal > 0 ? getAccommodationShareCount(travelers) : 0;
+    const accommodationPerPerson = visibleDayEstimates.reduce(
+      (sum, dayEstimate) =>
+        sum +
+        dayEstimate.itemEstimates.reduce(
+          (daySum, item) =>
+            item.category === "accommodation" && item.accommodationShare
+              ? daySum + item.accommodationShare.perPersonTotal
+              : daySum,
+          0
+        ),
+      0
+    );
+    const perPerson = visibleDayEstimates.reduce(
+      (sum, dayEstimate) =>
+        sum +
+        dayEstimate.itemEstimates.reduce(
+          (daySum, item) => daySum + getPersonalLineTotal(item, travelers),
+          0
+        ),
+      0
+    );
+
     return {
       travelers,
+      accommodationShareMode: getAccommodationShareMode(),
+      accommodationShareCount,
+      accommodationTotal,
+      accommodationPerPerson,
       includeExtras: withExtras,
       visibleDayEstimates,
       optionalDayAddOnEstimates,
       total: visibleDayEstimates.reduce((sum, day) => sum + day.total, 0),
-      perPerson: visibleDayEstimates.reduce((sum, day) => sum + day.total, 0) / travelers,
+      perPerson,
       optionalDaysAddOnTotal: optionalDayAddOnEstimates.reduce((sum, day) => sum + day.total, 0),
       bookedAndFixedTotal: (bucketTotals.booked || 0) + (bucketTotals.required || 0),
       bucketTotals,
@@ -6274,6 +6441,7 @@ function initializeBudgetNotes() {
     const optionalVisibleTotal = estimate.visibleDayEstimates
       .filter((day) => day.optional)
       .reduce((sum, day) => sum + day.total, 0);
+    const shareModeLabel = getShareModeLabel(estimate.accommodationShareMode);
     const summaryCards = [
       {
         className: "budget-summary-card budget-summary-card--estimate budget-summary-card--compact",
@@ -6288,9 +6456,27 @@ function initializeBudgetNotes() {
         label: itineraryBudgetLabels.summaryPerPerson,
         value: formatCurrency(estimate.perPerson),
         meta: {
-          en: `${estimate.travelers} traveler${estimate.travelers === 1 ? "" : "s"} • stay selectors follow the real route defaults and keep Osaka relative stays at JPY 0 until you switch them`,
-          ja: `${estimate.travelers}人 ・ 滞在セレクターは実際の旅程初期値に合わせ、大阪の親族宅は切り替えない限り0円のままです`
+          en: `${estimate.travelers} traveler${estimate.travelers === 1 ? "" : "s"} • stay split: ${
+            shareModeLabel.en
+          } • Osaka relative stays stay at JPY 0 unless you switch them`,
+          ja: `${estimate.travelers}人 ・ 宿泊費の分け方: ${shareModeLabel.ja} ・ 大阪の親族宅は切り替えない限り0円のままです`
         }
+      },
+      {
+        className: "budget-summary-card budget-summary-card--accommodation budget-summary-card--compact",
+        label: itineraryBudgetLabels.summaryAccommodationSplit,
+        value: formatCurrency(estimate.accommodationPerPerson),
+        meta:
+          estimate.accommodationTotal > 0
+            ? {
+                en: `${formatCurrency(estimate.accommodationTotal)} total stay cost • ${
+                  shareModeLabel.en
+                } • split by ${estimate.accommodationShareCount}`,
+                ja: `宿泊合計 ${formatCurrency(estimate.accommodationTotal)} ・ ${
+                  shareModeLabel.ja
+                } ・ ${estimate.accommodationShareCount}人で分割`
+              }
+            : itineraryBudgetLabels.noPaidAccommodationMeta
       },
       {
         className: "budget-summary-card budget-summary-card--shared budget-summary-card--compact",
@@ -6382,40 +6568,13 @@ function initializeBudgetNotes() {
             )}</p>`
           : ""
       }
+      <p class="budget-source-meta-card__body">${renderLocalizedContent(
+        itineraryBudgetLabels.notesLinkHubMeta
+      )}</p>
       <p class="budget-source-meta-card__body">${renderLocalizedContent(getSourceUpdatedCopy())}</p>
     </article>
   `;
-  const renderSourcesMarkup = () =>
-    getSourceGroups()
-      .map((group) => {
-        const links = Array.isArray(group.links) ? group.links : [];
-        return `
-          <article class="budget-source-card">
-            <h4>${renderLocalizedContent(group.title)}</h4>
-            <p>${renderLocalizedContent(group.summary)}</p>
-            ${
-              links.length
-                ? `<div class="budget-source-card__links">
-                    ${links
-                      .map(
-                        (link) => `
-                          <a
-                            class="budget-source-card__link"
-                            href="${escapeHtml(link.url)}"
-                            target="_blank"
-                            rel="noreferrer noopener">
-                            ${renderLocalizedContent(link.label)}
-                          </a>
-                        `
-                      )
-                      .join("")}
-                  </div>`
-                : ""
-            }
-          </article>
-        `;
-      })
-      .join("");
+  const renderSourcesMarkup = () => "";
   const renderDayMarkup = (dayEstimate) => {
     const noteAriaEn = `Budget note for ${dayEstimate.title.en}`;
     const noteAriaJa = `${dayEstimate.title.ja}の予算メモ`;
@@ -6544,6 +6703,29 @@ function initializeBudgetNotes() {
       budgetTravelersInput.value = String(getTravelerCount());
     }
 
+    if (budgetAccommodationShareModeInput) {
+      Array.from(budgetAccommodationShareModeInput.options).forEach((option) => {
+        option.textContent = getLocalizedText(getShareModeLabel(option.value));
+      });
+
+      if (budgetAccommodationShareModeInput.value !== getAccommodationShareMode()) {
+        budgetAccommodationShareModeInput.value = getAccommodationShareMode();
+      }
+    }
+
+    if (budgetAccommodationShareCountInput) {
+      budgetAccommodationShareCountInput.max = String(getTravelerCount());
+      const customShareCount = getStoredCustomShareCount();
+      if (budgetAccommodationShareCountInput.value !== String(customShareCount)) {
+        budgetAccommodationShareCountInput.value = String(customShareCount);
+      }
+      budgetAccommodationShareCountInput.disabled = getAccommodationShareMode() !== "custom";
+    }
+
+    if (budgetAccommodationShareCountField) {
+      budgetAccommodationShareCountField.hidden = getAccommodationShareMode() !== "custom";
+    }
+
     if (budgetIncludeExtrasInput) {
       budgetIncludeExtrasInput.checked = includeExtras();
     }
@@ -6567,7 +6749,8 @@ function initializeBudgetNotes() {
     }
 
     if (budgetSourcesNode) {
-      budgetSourcesNode.innerHTML = renderSourcesMarkup();
+      budgetSourcesNode.innerHTML = "";
+      budgetSourcesNode.hidden = true;
     }
 
     [budgetSummaryNode, budgetBreakdownNode, budgetDaysNode, budgetSourceMetaNode, budgetSourcesNode]
@@ -6585,9 +6768,15 @@ function initializeBudgetNotes() {
     syncControls();
   };
   const commitSettings = () => {
-    budgetNotesState.travelers = normalizeTravelerCount(
-      budgetTravelersInput?.value,
-      budgetDefaultTravelerCount
+    const nextTravelers = normalizeTravelerCount(budgetTravelersInput?.value, budgetDefaultTravelerCount);
+    budgetNotesState.travelers = nextTravelers;
+    budgetNotesState.accommodationShareMode = normalizeShareMode(
+      budgetAccommodationShareModeInput?.value,
+      budgetAccommodationShareModeDefault
+    );
+    budgetNotesState.accommodationShareCount = normalizeShareCount(
+      budgetAccommodationShareCountInput?.value ?? budgetNotesState.accommodationShareCount,
+      nextTravelers
     );
     budgetNotesState.includeExtras = budgetIncludeExtrasInput?.checked === true;
     storeState();
@@ -6612,6 +6801,10 @@ function initializeBudgetNotes() {
         }
 
         budgetNotesState.travelers = normalizeTravelerCount(parsedValue, budgetDefaultTravelerCount);
+        budgetNotesState.accommodationShareCount = normalizeShareCount(
+          budgetNotesState.accommodationShareCount,
+          budgetNotesState.travelers
+        );
         storeState();
         syncUI();
       });
@@ -6619,6 +6812,49 @@ function initializeBudgetNotes() {
         syncControls();
       });
       budgetTravelersInput.dataset.itineraryBudgetBound = "true";
+    }
+
+    if (
+      budgetAccommodationShareModeInput &&
+      budgetAccommodationShareModeInput.dataset.itineraryBudgetBound !== "true"
+    ) {
+      budgetAccommodationShareModeInput.addEventListener("change", () => {
+        budgetNotesState.accommodationShareMode = normalizeShareMode(
+          budgetAccommodationShareModeInput.value,
+          budgetAccommodationShareModeDefault
+        );
+        budgetNotesState.accommodationShareCount = normalizeShareCount(
+          budgetAccommodationShareCountInput?.value ?? budgetNotesState.accommodationShareCount,
+          getTravelerCount()
+        );
+        storeState();
+        syncUI();
+      });
+      budgetAccommodationShareModeInput.dataset.itineraryBudgetBound = "true";
+    }
+
+    if (
+      budgetAccommodationShareCountInput &&
+      budgetAccommodationShareCountInput.dataset.itineraryBudgetBound !== "true"
+    ) {
+      budgetAccommodationShareCountInput.addEventListener("input", () => {
+        const parsedValue = Number.parseInt(budgetAccommodationShareCountInput.value, 10);
+        if (Number.isNaN(parsedValue)) {
+          syncControls();
+          return;
+        }
+
+        budgetNotesState.accommodationShareCount = normalizeShareCount(
+          parsedValue,
+          getTravelerCount()
+        );
+        storeState();
+        syncUI();
+      });
+      budgetAccommodationShareCountInput.addEventListener("blur", () => {
+        syncControls();
+      });
+      budgetAccommodationShareCountInput.dataset.itineraryBudgetBound = "true";
     }
 
     if (budgetIncludeExtrasInput && budgetIncludeExtrasInput.dataset.itineraryBudgetBound !== "true") {
