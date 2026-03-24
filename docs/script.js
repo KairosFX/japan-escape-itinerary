@@ -46,6 +46,7 @@ const budgetBreakdownNode = document.querySelector("[data-budget-breakdown]");
 const budgetSourceMetaNode = document.querySelector("[data-budget-source-meta]");
 const budgetSourcesNode = document.querySelector("[data-budget-sources]");
 const budgetDaysNode = document.querySelector("[data-budget-days]");
+const tripNotesGridNode = document.querySelector("[data-trip-notes-grid]");
 const budgetResetButtons = Array.from(document.querySelectorAll("[data-budget-reset-all]"));
 const budgetTravelersInput = document.querySelector("[data-budget-travelers]");
 const budgetAccommodationShareModeInput = document.querySelector("[data-budget-share-mode]");
@@ -120,6 +121,10 @@ const budgetSharedRoomOccupancy = 2;
 const budgetAccommodationShareModeDefault = "all-travelers";
 const budgetAccommodationShareModes = ["not-shared", "all-travelers", "custom"];
 const budgetSourceUpdatedAt = "2026-03-23";
+const budgetDisplayExchangeRates = {
+  cadPerJpy: 1 / 109,
+  usdPerJpy: 1 / 149
+};
 const budgetAssumptionCopy = {
   en:
     "This estimate now follows the itinerary with reusable route-based areas: a private/local or no-cost Osaka option on Days 1 and 3, a Shijo / Karasuma Kyoto base on Day 2, a Motohakone / Kojiri-side Hakone ryokan on Day 4, a Kawaguchiko station-to-lake base on Days 5-6, and a Shibuya-access Tokyo hotel on Day 7 plus Day 8 only when the optional day is active.",
@@ -281,7 +286,7 @@ const budgetStayDefinitions = {
     cost: { mode: "none", amount: 0 },
     formulaCopy: { en: "No room charge", ja: "宿泊費なし" },
     routeReason: {
-      en: "Use this for any private or local stay already arranged. The accommodation cost stays at JPY 0 and the route-based hotel logic does not override it unless you deliberately switch stay type.",
+      en: "Use this for any private or local stay already arranged. The accommodation cost stays free and the route-based hotel logic does not override it unless you deliberately switch stay type.",
       ja: "すでに決まっているローカル・プライベート滞在に使います。滞在タイプを明示的に切り替えない限り宿泊費は0円のままで、動線ベースのホテルロジックも上書きしません。"
     },
     assumption: {
@@ -639,6 +644,97 @@ const budgetDayDefinitions = [
       cost: { mode: "perPerson", amount: 1500, range: { lean: 1200, expected: 1500, high: 2400 } }
     }
   ] }
+];
+const tripNotesLabels = {
+  optionalBadge: { en: "Optional extension", ja: "追加日程" },
+  lockedBadge: { en: "Locked for now", ja: "現在はロック中" },
+  lockedSummary: {
+    en: "Unlock Days 8 and 9 in the checklist after Day 7 if you want these extra Tokyo notes to open automatically.",
+    ja: "7日目のあとにチェックリストで8日目と9日目を解放すると、この追加の東京メモが自動で開きます。"
+  }
+};
+const tripNoteDefinitions = [
+  {
+    day: 1,
+    optional: false,
+    title: { en: "Day 1 - Osaka", ja: "1日目・大阪" },
+    summary: {
+      en: "Keep arrival day easy: settle into Osaka, walk Dotonbori and Shinsaibashi, eat around Minami, and let the first night be about getting your rhythm rather than crossing the city too hard.",
+      ja: "到着日は無理をせず、大阪へ入ってから道頓堀と心斎橋を歩き、ミナミで食事して、街を詰め込みすぎずに旅のリズムを作る日にします。"
+    }
+  },
+  {
+    day: 2,
+    optional: false,
+    title: { en: "Day 2 - Kyoto East", ja: "2日目・京都東側" },
+    summary: {
+      en: "Treat Kyoto East as one clean walking day: Kiyomizu-dera, Ninenzaka, Yasaka Pagoda, Gion, and Nanzen-ji, then stay in Kyoto so the temple-heavy side stays calm and Day 3 starts cleaner.",
+      ja: "京都東側は、清水寺、二年坂、八坂の塔、祇園、南禅寺をひとつの流れで回る一日にします。そのまま京都に泊まることで、寺社中心の日を落ち着いて回れて、3日目の出発もきれいになります。"
+    }
+  },
+  {
+    day: 3,
+    optional: false,
+    title: { en: "Day 3 - Arashiyama, then Osaka", ja: "3日目・嵐山のあと大阪" },
+    summary: {
+      en: "Give Arashiyama its own space in the morning, then fold the day back into Osaka for Kaiyukan, Tempozan, or a lighter Osaka-side finish before returning to the aunt-house stay.",
+      ja: "朝は嵐山にしっかり時間を使い、そのあと大阪へ戻って海遊館や天保山、またはもう少し軽い大阪側の締め方にしてから叔母宅へ戻る流れにします。"
+    }
+  },
+  {
+    day: 4,
+    optional: false,
+    title: { en: "Day 4 - Shin-Osaka to Hakone", ja: "4日目・新大阪から箱根" },
+    summary: {
+      en: "This is the big transfer day: launch from Shin-Osaka, reach Odawara, then turn that arrival into one Hakone loop with ropeway, Owakudani, Lake Ashi, and the ryokan night placed to keep the next morning practical.",
+      ja: "この日は大きな移動日です。新大阪から出て小田原へ着き、そのままロープウェイ、大涌谷、芦ノ湖、旅館泊へつなげる箱根の一周ルートとして組み、翌朝の動きも実用的に保ちます。"
+    }
+  },
+  {
+    day: 5,
+    optional: false,
+    title: { en: "Day 5 - Hakone to Kawaguchiko", ja: "5日目・箱根から河口湖" },
+    summary: {
+      en: "Keep the morning softer with the ryokan and onsen, then treat the move through Gotemba as the main job so Kawaguchiko becomes an arrival-views and sunset day instead of another crowded transfer stack.",
+      ja: "朝は旅館と温泉をゆっくり使い、そのあと御殿場経由の移動を主役にして、河口湖では到着後の景色や夕景を見る日に寄せます。箱根をさらに詰め込まない方が全体が整います。"
+    }
+  },
+  {
+    day: 6,
+    optional: false,
+    title: { en: "Day 6 - Fuji weather flex", ja: "6日目・富士の天気優先日" },
+    summary: {
+      en: "Use the clearest weather window first: Chureito if Fuji is visible, then Lake Kawaguchiko, then Oshino Hakkai, with the whole day acting as a flexible local loop rather than a rigid point-by-point checklist.",
+      ja: "一番見えそうな時間帯を先に使い、富士山が見えるなら最初に忠霊塔、そのあと河口湖、最後に忍野八海へ回します。固定の順番を守るより、天気に合わせた柔軟な現地周遊日にする方が実用的です。"
+    }
+  },
+  {
+    day: 7,
+    optional: false,
+    title: { en: "Day 7 - Tokyo / Shibuya", ja: "7日目・東京・渋谷" },
+    summary: {
+      en: "Come back from Kawaguchiko and keep Tokyo deliberately narrow: Shibuya Crossing, a food walk, wandering the area, and Shibuya Sky at night so the arrival day still feels focused instead of spread across Tokyo.",
+      ja: "河口湖から東京へ戻ったあとは、渋谷スクランブル交差点、食べ歩き、周辺の街歩き、夜の渋谷スカイに絞って、到着日でも東京を広げすぎないようにします。"
+    }
+  },
+  {
+    day: 8,
+    optional: true,
+    title: { en: "Optional Day 8 - Tokyo East", ja: "追加8日目・東京東側" },
+    summary: {
+      en: "If you unlock the extra Tokyo day, use it for the east-side cluster: Tokyo Skytree, Solamachi, and Akihabara, with enough slack to slow down for shopping, food, or weather pivots instead of forcing another packed march.",
+      ja: "追加の東京日を解放するなら、東京スカイツリー、ソラマチ、秋葉原をまとめる東側の日として使います。買い物や食事、天候対応の余白も残して、詰め込みすぎない一日にするのが実用的です。"
+    }
+  },
+  {
+    day: 9,
+    optional: true,
+    title: { en: "Optional Day 9 - Final Tokyo buffer", ja: "追加9日目・東京の最終調整日" },
+    summary: {
+      en: "Keep the last extra day lighter: Imperial Palace-side time, Shinjuku or another final Tokyo area, and any departure prep, gift shopping, or cleanup tasks you do not want fighting the core route days.",
+      ja: "最後の追加日は少し軽めにし、皇居側の時間、新宿など最後に見たい東京エリア、そして出発準備やお土産、やり残しの整理に使うのが自然です。主要ルート日と競合させないための余白日として考えます。"
+    }
+  }
 ];
 const fujiForecastCacheMaxAgeMs = 45 * 60 * 1000;
 const fujiForecastSourceUrl = "https://open-meteo.com/en/docs";
@@ -3269,6 +3365,120 @@ function renderLocalizedContent(content) {
   return `<span data-language="en">${escapeHtml(content?.en ?? "")}</span><span data-language="ja" hidden>${escapeHtml(content?.ja ?? "")}</span>`;
 }
 
+function renderTripNotes() {
+  if (!tripNotesGridNode) {
+    return;
+  }
+
+  const notesMarkup = tripNoteDefinitions
+    .map((definition) => {
+      const isLocked = definition.optional && !areOptionalDaysUnlocked();
+      const badges = [
+        definition.optional
+          ? `<span class="note-card__pill note-card__pill--optional">${renderLocalizedContent(
+              tripNotesLabels.optionalBadge
+            )}</span>`
+          : "",
+        isLocked
+          ? `<span class="note-card__pill note-card__pill--locked">${renderLocalizedContent(
+              tripNotesLabels.lockedBadge
+            )}</span>`
+          : ""
+      ]
+        .filter(Boolean)
+        .join("");
+
+      return `
+        <article class="note-card note-card--trip card${isLocked ? " note-card--locked" : ""}" data-trip-note-day="${definition.day}">
+          ${badges ? `<div class="note-card__meta-row">${badges}</div>` : ""}
+          <h3>${renderLocalizedContent(definition.title)}</h3>
+          <p>${renderLocalizedContent(isLocked ? tripNotesLabels.lockedSummary : definition.summary)}</p>
+        </article>
+      `;
+    })
+    .join("");
+
+  tripNotesGridNode.innerHTML = notesMarkup;
+  syncLocalizedNodes(tripNotesGridNode);
+}
+
+function refreshTripNotesIfReady() {
+  if (!tripNotesGridNode) {
+    return;
+  }
+
+  renderTripNotes();
+}
+
+function getBudgetDayDefinition(day) {
+  return (
+    budgetDayDefinitions.find((definition) => definition.day === Number.parseInt(String(day), 10)) ||
+    null
+  );
+}
+
+function getBudgetSelectedStayDefinition(day) {
+  if (typeof ensureBudgetNotesStateHydrated === "function") {
+    ensureBudgetNotesStateHydrated();
+  }
+
+  const definition = getBudgetDayDefinition(day);
+  if (!definition || (definition.optional && !areOptionalDaysUnlocked())) {
+    return null;
+  }
+
+  const selectedStayId =
+    typeof getBudgetDayState === "function"
+      ? getBudgetDayState(day)?.stayId || definition.defaultStayId || null
+      : definition.defaultStayId || null;
+
+  if (!selectedStayId || typeof budgetStayDefinitions[selectedStayId] !== "object") {
+    return null;
+  }
+
+  return budgetStayDefinitions[selectedStayId];
+}
+
+function itemMatchesBookingTransitStayVisibility(itemConfig) {
+  const visibility = itemConfig?.stayVisibility;
+  if (!visibility || typeof visibility !== "object" || Array.isArray(visibility)) {
+    return true;
+  }
+
+  const visibilityDays = Array.isArray(visibility.days)
+    ? visibility.days
+    : visibility.day
+      ? [visibility.day]
+      : [];
+  const allowedStayIds = new Set(
+    Array.isArray(visibility.stayIds) ? visibility.stayIds.filter(Boolean) : []
+  );
+  const allowedStayTypes = new Set(
+    Array.isArray(visibility.stayTypes) ? visibility.stayTypes.filter(Boolean) : []
+  );
+
+  if (!visibilityDays.length || (!allowedStayIds.size && !allowedStayTypes.size)) {
+    return true;
+  }
+
+  return visibilityDays.some((day) => {
+    const selectedStay = getBudgetSelectedStayDefinition(day);
+    if (!selectedStay) {
+      return false;
+    }
+
+    return allowedStayIds.has(selectedStay.id) || allowedStayTypes.has(selectedStay.type);
+  });
+}
+
+function refreshBookingTransitIfReady() {
+  if (!bookingTransitInitialized) {
+    return;
+  }
+
+  updateBookingTransitUI();
+}
+
 function getPreferredBookingTransitLink(item) {
   const links = Array.isArray(item.links) && item.links.length
     ? item.links
@@ -3456,7 +3666,9 @@ function updateBookingTransitUI() {
     }
 
     const state = getBookingTransitItemState(itemConfig.id);
-    const isVisible = itemMatchesBookingTransitFilter(itemConfig, state);
+    const isVisible =
+      itemMatchesBookingTransitFilter(itemConfig, state) &&
+      itemMatchesBookingTransitStayVisibility(itemConfig);
     itemElement.hidden = !isVisible;
     if (isVisible) {
       hasVisibleItems = true;
@@ -4778,7 +4990,7 @@ const itineraryBudgetLabels = {
     ja: "単一の水増し見積りではなく、実際の滞在計画、修正済みの移動、チケット時間帯、食費パターン帯で組み立てています。"
   },
   travelersHint: {
-    en: "Stay selectors now control each accommodation night directly, so private/local or no-cost Osaka nights stay at JPY 0 unless you switch them to a paid stay.",
+    en: "Stay selectors now control each accommodation night directly, so private/local or no-cost Osaka nights stay free unless you switch them to a paid stay.",
     ja: "各宿泊日は滞在セレクターで直接切り替える形にし、大阪のローカル・プライベート滞在や宿泊費なしの夜は、有料宿へ変更しない限り0円のままです。"
   },
   shareHint: {
@@ -4804,6 +5016,10 @@ const itineraryBudgetLabels = {
   notesLinkHubMeta: {
     en: "All booking, fare, and official resource links now live in Essentials so Budget Notes stays focused on costs and assumptions.",
     ja: "予約・運賃・公式リソースのリンクはすべてEssentialsへ移し、予算メモは費用と前提だけに絞っています。"
+  },
+  currencyDisplayMeta: {
+    en: "English view converts the same JPY trip model into CAD and USD with fixed planning FX for readability (C$1 ≈ JPY 109, US$1 ≈ JPY 149). Japanese view stays in yen.",
+    ja: "日本語表示は見積りの基準通貨である円のままです。英語表示では同じ円ベースの計算結果を、固定の旅行用為替前提（C$1 ≈ 109円、US$1 ≈ 149円）でCADとUSDへ換算しています。"
   },
   bookedRequiredMeta: {
     en: "The base route costs before optional extras and before Days 8-9 are unlocked",
@@ -6182,12 +6398,41 @@ function initializeBudgetNotes() {
       en: bucketId,
       ja: bucketId
     };
-  const formatCurrency = (amount) =>
-    new Intl.NumberFormat("ja-JP", {
-      style: "currency",
-      currency: "JPY",
+  const formatWholeNumber = (amount, locale) =>
+    new Intl.NumberFormat(locale, {
       maximumFractionDigits: 0
     }).format(Math.round(Number(amount) || 0));
+  const convertBudgetAmount = (amount, targetCurrency) => {
+    const normalizedAmount = Math.round(Number(amount) || 0);
+    switch (targetCurrency) {
+      case "CAD":
+        return normalizedAmount * budgetDisplayExchangeRates.cadPerJpy;
+      case "USD":
+        return normalizedAmount * budgetDisplayExchangeRates.usdPerJpy;
+      default:
+        return normalizedAmount;
+    }
+  };
+  const formatCurrencyForLanguage = (amount, language = root.lang) => {
+    const normalizedAmount = Math.round(Number(amount) || 0);
+    if (language === "ja") {
+      return new Intl.NumberFormat("ja-JP", {
+        style: "currency",
+        currency: "JPY",
+        maximumFractionDigits: 0
+      }).format(normalizedAmount);
+    }
+
+    const cadAmount = convertBudgetAmount(normalizedAmount, "CAD");
+    const usdAmount = convertBudgetAmount(normalizedAmount, "USD");
+    return `C$${formatWholeNumber(cadAmount, "en-CA")} / US$${formatWholeNumber(usdAmount, "en-US")}`;
+  };
+  const formatCurrency = (amount, language = root.lang) =>
+    formatCurrencyForLanguage(amount, language);
+  const formatCurrencyCopy = (amount) => ({
+    en: formatCurrencyForLanguage(amount, "en"),
+    ja: formatCurrencyForLanguage(amount, "ja")
+  });
   const normalizeTravelerCount = (value, fallback = budgetDefaultTravelerCount) => {
     const parsed = Number.parseInt(String(value ?? ""), 10);
     if (Number.isNaN(parsed)) {
@@ -6322,19 +6567,23 @@ function initializeBudgetNotes() {
       available
         ? `${itineraryBudgetLabels.rangeAvailablePrefix.en}: `
         : ""
-    }${itineraryBudgetLabels.rangeCompactPrefix.en} ${formatCurrency(
-      getBudgetRangeValue(range, "lean")
-    )} • ${itineraryBudgetLabels.rangeCompactSuffix.en} ${formatCurrency(
-      getBudgetRangeValue(range, "high")
+    }${itineraryBudgetLabels.rangeCompactPrefix.en} ${formatCurrencyForLanguage(
+      getBudgetRangeValue(range, "lean"),
+      "en"
+    )} • ${itineraryBudgetLabels.rangeCompactSuffix.en} ${formatCurrencyForLanguage(
+      getBudgetRangeValue(range, "high"),
+      "en"
     )}`,
     ja: `${
       available
         ? `${itineraryBudgetLabels.rangeAvailablePrefix.ja}: `
         : ""
-    }${itineraryBudgetLabels.rangeCompactPrefix.ja} ${formatCurrency(
-      getBudgetRangeValue(range, "lean")
-    )} ・ ${itineraryBudgetLabels.rangeCompactSuffix.ja} ${formatCurrency(
-      getBudgetRangeValue(range, "high")
+    }${itineraryBudgetLabels.rangeCompactPrefix.ja} ${formatCurrencyForLanguage(
+      getBudgetRangeValue(range, "lean"),
+      "ja"
+    )} ・ ${itineraryBudgetLabels.rangeCompactSuffix.ja} ${formatCurrencyForLanguage(
+      getBudgetRangeValue(range, "high"),
+      "ja"
     )}`
   });
   const renderBudgetRangeRows = (range, variant = "summary") =>
@@ -6375,11 +6624,13 @@ function initializeBudgetNotes() {
       ? getCompactRangeCopy(range, { available })
       : available && hasBudgetRangeValue(range)
         ? {
-            en: `${itineraryBudgetLabels.rangeAvailablePrefix.en}: ${formatCurrency(
-              getBudgetRangeValue(range, "expected")
+            en: `${itineraryBudgetLabels.rangeAvailablePrefix.en}: ${formatCurrencyForLanguage(
+              getBudgetRangeValue(range, "expected"),
+              "en"
             )}`,
-            ja: `${itineraryBudgetLabels.rangeAvailablePrefix.ja}: ${formatCurrency(
-              getBudgetRangeValue(range, "expected")
+            ja: `${itineraryBudgetLabels.rangeAvailablePrefix.ja}: ${formatCurrencyForLanguage(
+              getBudgetRangeValue(range, "expected"),
+              "ja"
             )}`
           }
         : itineraryBudgetLabels.rangeFixedNote;
@@ -6507,7 +6758,16 @@ function initializeBudgetNotes() {
       return fallbackState;
     }
   };
+  const hydrateState = () => {
+    if (!budgetNotesInitialized) {
+      budgetNotesState = readState();
+      budgetNotesInitialized = true;
+    }
+
+    return budgetNotesState;
+  };
   const hasChanges = () => {
+    hydrateState();
     if (
       normalizeTravelerCount(budgetNotesState.travelers, budgetDefaultTravelerCount) !==
         budgetDefaultTravelerCount ||
@@ -6554,15 +6814,21 @@ function initializeBudgetNotes() {
       // Ignore storage failures and keep the budget notes usable.
     }
   };
-  const getTravelerCount = () =>
-    normalizeTravelerCount(budgetNotesState.travelers, budgetDefaultTravelerCount);
-  const getStoredCustomShareCount = (travelers = getTravelerCount()) =>
-    normalizeShareCount(budgetNotesState.accommodationShareCount, travelers);
-  const getAccommodationShareMode = () =>
-    normalizeShareMode(
+  const getTravelerCount = () => {
+    hydrateState();
+    return normalizeTravelerCount(budgetNotesState.travelers, budgetDefaultTravelerCount);
+  };
+  const getStoredCustomShareCount = (travelers = getTravelerCount()) => {
+    hydrateState();
+    return normalizeShareCount(budgetNotesState.accommodationShareCount, travelers);
+  };
+  const getAccommodationShareMode = () => {
+    hydrateState();
+    return normalizeShareMode(
       budgetNotesState.accommodationShareMode,
       budgetAccommodationShareModeDefault
     );
+  };
   const getAccommodationShareCount = (travelers = getTravelerCount()) => {
     const normalizedTravelers = normalizeTravelerCount(travelers, budgetDefaultTravelerCount);
     const shareMode = getAccommodationShareMode();
@@ -6576,8 +6842,12 @@ function initializeBudgetNotes() {
 
     return normalizedTravelers;
   };
-  const includeExtras = () => budgetNotesState.includeExtras === true;
+  const includeExtras = () => {
+    hydrateState();
+    return budgetNotesState.includeExtras === true;
+  };
   const getDayState = (day) => {
+    hydrateState();
     const entry =
       budgetNotesState.days && typeof budgetNotesState.days[String(day)] === "object"
         ? budgetNotesState.days[String(day)]
@@ -6590,6 +6860,7 @@ function initializeBudgetNotes() {
     };
   };
   const updateDayState = (day, nextState) => {
+    hydrateState();
     const key = String(day);
     const definition = getDayDefinition(day);
     const note = typeof nextState?.note === "string" ? nextState.note.slice(0, 280) : "";
@@ -6664,49 +6935,54 @@ function initializeBudgetNotes() {
     }
 
     if (item?.category === "accommodation" && item?.accommodationShare && item.accommodationShare.total > 0) {
+      const totalCopy = formatCurrencyCopy(item.accommodationShare.total);
       if (item.accommodationShare.shareCount <= 1) {
         return {
-          en: `Stay total ${formatCurrency(item.accommodationShare.total)} · not shared`,
-          ja: `宿泊合計 ${formatCurrency(item.accommodationShare.total)} ・ 分割なし`
+          en: `Stay total ${totalCopy.en} · not shared`,
+          ja: `宿泊合計 ${totalCopy.ja} ・ 分割なし`
         };
       }
 
+      const perPersonCopy = formatCurrencyCopy(item.accommodationShare.perPersonTotal);
       return {
-        en: `Stay total ${formatCurrency(item.accommodationShare.total)} · split by ${
+        en: `Stay total ${totalCopy.en} · split by ${
           item.accommodationShare.shareCount
-        } = ${formatCurrency(item.accommodationShare.perPersonTotal)} pp`,
-        ja: `宿泊合計 ${formatCurrency(item.accommodationShare.total)} ・ ${
+        } = ${perPersonCopy.en} pp`,
+        ja: `宿泊合計 ${totalCopy.ja} ・ ${
           item.accommodationShare.shareCount
-        }人で分割 = 1人 ${formatCurrency(item.accommodationShare.perPersonTotal)}`
+        }人で分割 = 1人 ${perPersonCopy.ja}`
       };
     }
 
     if (itemCost.mode === "perPerson") {
+      const amountCopy = formatCurrencyCopy(itemCost.amount);
       return {
-        en: `${formatCurrency(itemCost.amount)} x ${itemCost.quantity} traveler${
+        en: `${amountCopy.en} x ${itemCost.quantity} traveler${
           itemCost.quantity === 1 ? "" : "s"
         }`,
-        ja: `${formatCurrency(itemCost.amount)} x ${itemCost.quantity}人`
+        ja: `${amountCopy.ja} x ${itemCost.quantity}人`
       };
     }
 
     if (itemCost.mode === "perRoom") {
+      const amountCopy = formatCurrencyCopy(itemCost.amount);
       return {
-        en: `${formatCurrency(itemCost.amount)} x ${itemCost.quantity} room${
+        en: `${amountCopy.en} x ${itemCost.quantity} room${
           itemCost.quantity === 1 ? "" : "s"
         }${itemCost.roomCapacity ? ` (up to ${itemCost.roomCapacity} guests)` : ""}`,
-        ja: `${formatCurrency(itemCost.amount)} x ${itemCost.quantity}室${
+        ja: `${amountCopy.ja} x ${itemCost.quantity}室${
           itemCost.roomCapacity ? `（${itemCost.roomCapacity}人定員）` : ""
         }`
       };
     }
 
     if (itemCost.mode === "perPair") {
+      const amountCopy = formatCurrencyCopy(itemCost.amount);
       return {
-        en: `${formatCurrency(itemCost.amount)} x ${itemCost.quantity} shared item${
+        en: `${amountCopy.en} x ${itemCost.quantity} shared item${
           itemCost.quantity === 1 ? "" : "s"
         }`,
-        ja: `${formatCurrency(itemCost.amount)} x ${itemCost.quantity}件`
+        ja: `${amountCopy.ja} x ${itemCost.quantity}件`
       };
     }
 
@@ -6973,8 +7249,8 @@ function initializeBudgetNotes() {
           },
           { en: `stay split: ${shareModeLabel.en}`, ja: `宿泊費の分け方: ${shareModeLabel.ja}` },
           {
-            en: "private/local or no-cost Osaka stays stay at JPY 0 unless you switch them",
-            ja: "大阪のローカル・プライベート滞在や宿泊費なしは切り替えない限り0円のままです"
+            en: "private/local or no-cost Osaka stays remain free unless you switch them",
+            ja: "大阪のローカル・プライベート滞在や宿泊費なしは切り替えない限り無料のままです"
           }
         ])
       },
@@ -7077,10 +7353,7 @@ function initializeBudgetNotes() {
           const total =
             bucketId === "optional" && !estimate.includeExtras
               ? itineraryBudgetLabels.optionalInactive
-              : {
-                  en: formatCurrency(estimate.bucketTotals[bucketId] || 0),
-                  ja: formatCurrency(estimate.bucketTotals[bucketId] || 0)
-                };
+              : formatCurrencyCopy(estimate.bucketTotals[bucketId] || 0);
 
           return `
             <span class="budget-breakdown-pill budget-breakdown-pill--${bucketId}">
@@ -7111,6 +7384,9 @@ function initializeBudgetNotes() {
             )}</p>`
           : ""
       }
+      <p class="budget-source-meta-card__body">${renderLocalizedContent(
+        itineraryBudgetLabels.currencyDisplayMeta
+      )}</p>
       <div class="budget-range-legend">
         <p class="budget-source-meta-card__label">${renderLocalizedContent(
           itineraryBudgetLabels.rangeLegendTitle
@@ -7269,7 +7545,7 @@ function initializeBudgetNotes() {
                   : `budget-chip budget-chip--${escapeHtml(item.bucket)}`;
               const amountCopy =
                 item.itemCost.included || item.bucket === "free"
-                  ? { en: formatCurrency(item.lineTotal), ja: formatCurrency(item.lineTotal) }
+                  ? formatCurrencyCopy(item.lineTotal)
                   : itineraryBudgetLabels.optionalInactive;
               const rangeCopy =
                 item.itemCost.included || item.bucket === "free"
@@ -7422,6 +7698,7 @@ function initializeBudgetNotes() {
 
     syncStatus(estimate);
     syncControls();
+    refreshBookingTransitIfReady();
   };
   const commitSettings = () => {
     const nextTravelers = normalizeTravelerCount(budgetTravelersInput?.value, budgetDefaultTravelerCount);
@@ -7568,11 +7845,7 @@ function initializeBudgetNotes() {
       return Promise.resolve();
     }
 
-    if (!budgetNotesInitialized) {
-      budgetNotesState = readState();
-      budgetNotesInitialized = true;
-    }
-
+    hydrateState();
     bindUI();
     syncUI();
     return Promise.resolve();
@@ -7585,6 +7858,7 @@ function initializeBudgetNotes() {
   getBudgetRoomCount = getRoomCount;
   getDefaultBudgetNotesState = getDefaultState;
   readStoredBudgetNotesState = readState;
+  ensureBudgetNotesStateHydrated = hydrateState;
   hasBudgetNotesChanges = hasChanges;
   storeBudgetNotesState = storeState;
   getBudgetTravelerCount = getTravelerCount;
@@ -8056,6 +8330,7 @@ function initNotesSection() {
     return;
   }
 
+  renderTripNotes();
   registerRevealBlocks(panel);
   initializeBudgetNotes();
 }
@@ -9697,7 +9972,9 @@ function syncOptionalDaysUI() {
     optionalPromptCompact.hidden = true;
   }
 
+  refreshTripNotesIfReady();
   refreshBudgetNotesIfReady();
+  refreshBookingTransitIfReady();
   if (routeMapInitialized || initializedSections.has("route")) {
     scheduleRouteMapUISync();
   }
@@ -10138,6 +10415,9 @@ function setLanguage(language) {
   updateLanguageButtons(nextLanguage);
 
   storeLanguage(nextLanguage);
+  refreshTripNotesIfReady();
+  refreshBudgetNotesIfReady();
+  refreshBookingTransitIfReady();
   refreshChecklistProgressState();
   syncProgressTimeline();
   refreshRouteMapsIfReady();
