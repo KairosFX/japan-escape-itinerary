@@ -273,8 +273,8 @@
       "ja": "河口湖 -> 東京・渋谷 戻り"
     },
     "summary": {
-      "en": "Keep one rail-first return and one fallback ready so the final move into Tokyo does not become the stressful part of the day.",
-      "ja": "東京へ入る最後の移動は、鉄道案と代替案を一つずつ持っておくと落ち着いて進められます。"
+      "en": "Use the cheaper direct bus as the default, and keep Fuji Excursion only as the cleaner rail fallback if you still want it.",
+      "ja": "より安い直通バスを初期値にし、富士回遊は必要な時だけ使う鉄道代替として持っておきます。"
     },
     "segment": {
       "en": "Kawaguchiko -> Tokyo core -> Shibuya",
@@ -283,12 +283,12 @@
     "from": { "en": "Kawaguchiko area", "ja": "河口湖エリア" },
     "to": { "en": "Tokyo / Shibuya side", "ja": "東京・渋谷側" },
     "transport": {
-      "en": "Fuji Excursion if reserved; otherwise highway bus or rail via Otsuki as the practical fallback.",
-      "ja": "予約できれば富士回遊。難しければ高速バスや大月経由の鉄道を現実的な代替にします。"
+      "en": "Direct highway bus toward Shibuya/Tokyo first; Fuji Excursion or rail via Otsuki only if you prefer the train enough to pay more.",
+      "ja": "まずは渋谷・東京方面への直通高速バス。列車を使いたいなら、追加コストを受け入れて富士回遊や大月経由の鉄道へ切り替えます。"
     },
     "why": {
-      "en": "It keeps the Tokyo handoff direct, leaves room for luggage timing, and avoids overcommitting to a single return mode.",
-      "ja": "東京への受け渡しを素直にしつつ、荷物や到着時刻の余裕を残し、一つの帰路に固定しすぎません。"
+      "en": "The bus keeps the budget more believable, gets you closer to the Shibuya end of the day, and avoids overpaying for the return just because the direct train exists.",
+      "ja": "バスの方が予算の現実味を保ちやすく、その日の終点である渋谷にも寄せやすいため、直通列車があるだけで帰路を高くしすぎずに済みます。"
     },
     "practicalNotes": [
       {
@@ -300,24 +300,24 @@
         "ja": "東京側の到着目標を一つ決めて保存し、最後の市内移動を一回に抑えます。"
       },
       {
-        "en": "If you want the direct train, treat the reservation as the premium option rather than the only option.",
-        "ja": "直通列車を使いたい場合も、それだけを唯一案にせず、優先案として考えます。"
+        "en": "Treat Fuji Excursion as the premium rail option, not the default price assumption for the whole day.",
+        "ja": "富士回遊は、その日の標準価格ではなく、あくまで上振れしやすい鉄道優先案として考えます。"
       }
     ],
     "prepReminders": [
       {
-        "en": "Book Fuji Excursion early if you want the most direct rail return.",
-        "ja": "最も素直な鉄道戻りを使いたいなら、富士回遊は早めに押さえます。"
+        "en": "Save the direct bus page first because that is now the budgeting default.",
+        "ja": "まずは直通バスのページを保存します。これが現在の予算初期値です。"
       },
       {
-        "en": "Save one bus fallback and one rail fallback before the day starts.",
-        "ja": "当日開始前に、バス代替と鉄道代替を一つずつ保存します。"
+        "en": "Keep Fuji Excursion or Otsuki rail saved only as a backup if the bus timing stops fitting your day.",
+        "ja": "バス時刻が合わなくなった時だけ使えるよう、富士回遊や大月経由の鉄道も代替として保存しておきます。"
       }
     ],
     "fallbackOptions": [
       {
-        "en": "If the direct return is gone, use the bus to Tokyo side or rail through Otsuki instead of waiting around for the perfect seat.",
-        "ja": "直通が厳しい時は、理想の席を待つより、東京方面バスか大月経由の鉄道へ切り替えます。"
+        "en": "If the direct bus timing stops fitting, switch to Fuji Excursion or rail via Otsuki instead of forcing the whole day around one departure.",
+        "ja": "直通バスの時刻が合わなくなったら、その便に旅程を合わせすぎず、富士回遊や大月経由の鉄道へ切り替えます。"
       },
       {
         "en": "If Tokyo arrival is running late, cut the first Tokyo activity and protect the rest of the evening.",
@@ -325,8 +325,8 @@
       }
     ],
     "action": {
-      "href": "https://www.eki-net.com/en/jreast-train-reservation/Top/Index",
-      "label": { "en": "Check Fuji Excursion", "ja": "富士回遊を確認" }
+      "href": "https://highway-buses.jp/course/shibuya.php",
+      "label": { "en": "Open direct bus", "ja": "直通バスを開く" }
     }
   }
 ]
