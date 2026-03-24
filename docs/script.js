@@ -9103,7 +9103,29 @@ function waitForRouteMapLoad(map, timeoutMs = 20000) {
       return;
     }
 
-    if (typeof map.isStyleLoaded === "function" && map.isStyleLoaded()) {
+    const hasStyleLayers = () => {
+      try {
+        const style = map.getStyle?.();
+        return Array.isArray(style?.layers) && style.layers.length > 0;
+      } catch (error) {
+        return false;
+      }
+    };
+
+    const hasSizedCanvas = () => {
+      const canvas = map.getCanvas?.();
+      return Boolean(canvas && canvas.width > 0 && canvas.height > 0);
+    };
+
+    const isReady = () => hasStyleLayers() && hasSizedCanvas();
+
+    try {
+      map.resize?.();
+    } catch (error) {
+      // Ignore early resize failures and keep waiting for the style lifecycle.
+    }
+
+    if (isReady()) {
       resolve();
       return;
     }
@@ -9112,21 +9134,12 @@ function waitForRouteMapLoad(map, timeoutMs = 20000) {
     let timeoutId = 0;
     let lastError = null;
 
-    const isReady = () => {
-      try {
-        const style = map.getStyle?.();
-        return Boolean(map.isStyleLoaded?.()) && Array.isArray(style?.layers) && style.layers.length > 0;
-      } catch (error) {
-        return false;
-      }
-    };
-
     const cleanup = () => {
       if (timeoutId) {
         window.clearTimeout(timeoutId);
       }
+      map.off?.("style.load", handleLoad);
       map.off?.("load", handleLoad);
-      map.off?.("idle", handleLoad);
       map.off?.("styledata", handleLoad);
       map.off?.("error", handleError);
     };
@@ -9142,11 +9155,21 @@ function waitForRouteMapLoad(map, timeoutMs = 20000) {
     };
 
     const handleLoad = () => {
-      if (!isReady()) {
+      if (!hasStyleLayers()) {
         return;
       }
 
-      settle(() => resolve());
+      window.requestAnimationFrame(() => {
+        try {
+          map.resize?.();
+        } catch (error) {
+          // Ignore late resize failures and continue resolving from the parsed style.
+        }
+
+        if (isReady() || hasStyleLayers()) {
+          settle(() => resolve());
+        }
+      });
     };
 
     const handleError = (event) => {
@@ -9155,7 +9178,13 @@ function waitForRouteMapLoad(map, timeoutMs = 20000) {
     };
 
     timeoutId = window.setTimeout(() => {
-      if (isReady()) {
+      try {
+        map.resize?.();
+      } catch (error) {
+        // Ignore timeout-time resize failures and resolve from the parsed style when possible.
+      }
+
+      if (isReady() || hasStyleLayers()) {
         settle(() => resolve());
         return;
       }
@@ -9165,8 +9194,8 @@ function waitForRouteMapLoad(map, timeoutMs = 20000) {
       );
     }, timeoutMs);
 
+    map.once("style.load", handleLoad);
     map.once("load", handleLoad);
-    map.on("idle", handleLoad);
     map.on("styledata", handleLoad);
     map.on("error", handleError);
   });
@@ -9715,6 +9744,7 @@ function ensureRouteMapReady() {
       ...routeMapBaseOptions
     });
 
+    routeMapState.map.resize();
     await waitForRouteMapLoad(routeMapState.map);
 
     ensureRouteMapAttributionControl(routeMapState.map);
