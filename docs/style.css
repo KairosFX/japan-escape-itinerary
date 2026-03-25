@@ -7088,10 +7088,15 @@ html[data-theme="dark"] .budget-chip--free {
 
 /* Header, packing, and route overrides */
 
+.site-header {
+  padding-top: 0.2rem;
+}
+
 .header-inner {
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 43rem);
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 35rem);
   grid-template-areas: "brand actions";
-  gap: 0.62rem 1.5rem;
+  padding: 0.48rem 0 0.54rem;
+  gap: 0.4rem 1.1rem;
   align-items: start;
 }
 
@@ -7103,56 +7108,118 @@ html[data-theme="dark"] .budget-chip--free {
     "theme"
     "nav"
     "language";
-  gap: 0.46rem;
-  justify-items: start;
+  gap: 0.3rem;
+  justify-items: end;
   align-content: start;
   min-width: 0;
-  width: min(100%, 43rem);
-  padding-top: 0.16rem;
+  width: min(100%, 35rem);
+  padding-top: 0.02rem;
   transition:
     gap var(--header-ease),
+    padding-top var(--header-ease),
     transform var(--header-ease),
     opacity var(--header-ease);
+}
+
+.brand-block {
+  gap: 0.18rem;
+  max-width: 31rem;
+}
+
+.brand-block h1 {
+  font-size: clamp(1.94rem, 3.5vw, 2.8rem);
+  line-height: 1.02;
+}
+
+.eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+}
+
+.hero-copy {
+  max-width: 49ch;
+  font-size: 0.9rem;
 }
 
 .theme-switcher,
 .language-switcher {
   width: fit-content;
   max-width: 100%;
-  justify-self: start;
+  justify-self: end;
+  gap: 0.18rem;
+  padding: 0.14rem;
+  max-height: 3rem;
+  overflow: clip;
+  visibility: visible;
+  transform-origin: top right;
+  transition:
+    gap var(--header-ease),
+    padding var(--header-ease),
+    max-height var(--header-ease),
+    opacity 180ms ease,
+    transform var(--header-ease),
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    visibility 0s linear 0s;
 }
 
 .section-nav {
-  width: 100%;
-  justify-self: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.28rem;
+  width: min(100%, 35rem);
+  justify-self: end;
+}
+
+.section-tab {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: max-content;
+  padding: 0.38rem 0.62rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+}
+
+.language-button {
+  min-width: 4.2rem;
+  padding: 0.36rem 0.72rem;
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+.theme-button {
+  width: 2.28rem;
+  min-width: 2.28rem;
+  min-height: 2.28rem;
+  padding: 0.34rem;
+}
+
+.theme-button__emoji {
+  font-size: 0.96rem;
 }
 
 .site-header.is-condensed .header-inner {
   grid-template-columns: 0 minmax(0, 1fr);
   grid-template-areas: "brand actions";
-  padding: 0.32rem 0 0.4rem;
-  align-items: center;
+  padding: 0.18rem 0 0.22rem;
+  align-items: start;
 }
 
 .site-header.is-condensed .header-actions {
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas:
-    "theme nav"
-    "language nav";
-  gap: 0.28rem 0.72rem;
-  align-items: center;
-  width: 100%;
+  gap: 0;
+  justify-items: end;
+  width: min(100%, 35rem);
 }
 
 .site-header.is-condensed .section-nav {
-  display: flex;
   flex-wrap: nowrap;
   justify-content: flex-end;
-  gap: 0.34rem;
-  align-self: center;
+  gap: 0.22rem;
+  align-self: start;
   overflow-x: auto;
   scrollbar-width: none;
-  padding-bottom: 0.08rem;
+  padding-bottom: 0;
 }
 
 .site-header.is-condensed .section-nav::-webkit-scrollbar {
@@ -7163,12 +7230,30 @@ html[data-theme="dark"] .budget-chip--free {
   flex: 0 0 auto;
   width: auto;
   min-width: max-content;
-  padding: 0.38rem 0.64rem;
+  padding: 0.32rem 0.56rem;
+  font-size: 0.72rem;
 }
 
 .site-header.is-condensed .theme-switcher,
 .site-header.is-condensed .language-switcher {
-  justify-self: start;
+  max-height: 0;
+  padding: 0;
+  gap: 0;
+  opacity: 0;
+  border-color: transparent;
+  box-shadow: none;
+  transform: translateY(-0.26rem);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    gap var(--header-ease),
+    padding var(--header-ease),
+    max-height var(--header-ease),
+    opacity 140ms ease,
+    transform var(--header-ease),
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    visibility 0s linear 220ms;
 }
 
 .essentials-group--packing .essentials-grid {
@@ -7303,11 +7388,11 @@ html[data-theme="dark"] .budget-chip--free {
     grid-template-areas:
       "brand"
       "actions";
-    gap: 0.58rem;
+    gap: 0.5rem;
   }
 
   .header-actions {
-    width: 100%;
+    width: min(100%, 30rem);
   }
 
   .essentials-group--packing .essentials-grid {
@@ -7316,34 +7401,73 @@ html[data-theme="dark"] .budget-chip--free {
 }
 
 @media (max-width: 720px) {
+  .site-header {
+    padding-top: 0.14rem;
+  }
+
   .header-inner {
     width: min(calc(100% - 1.2rem), var(--content-width));
-    padding: 0.54rem 0 0.66rem;
+    padding: 0.4rem 0 0.46rem;
+    gap: 0.44rem;
   }
 
   .header-actions {
-    gap: 0.38rem;
+    width: 100%;
+    gap: 0.24rem;
+  }
+
+  .brand-block {
+    gap: 0.14rem;
+  }
+
+  .brand-block h1 {
+    font-size: 1.98rem;
+  }
+
+  .hero-copy {
+    font-size: 0.84rem;
+  }
+
+  .section-nav {
+    gap: 0.22rem;
+  }
+
+  .section-tab {
+    padding: 0.34rem 0.52rem;
+    font-size: 0.71rem;
+  }
+
+  .theme-switcher,
+  .language-switcher {
+    gap: 0.14rem;
+    padding: 0.1rem;
+  }
+
+  .language-button {
+    min-width: 3.88rem;
+    padding: 0.3rem 0.62rem;
+    font-size: 0.74rem;
+  }
+
+  .theme-button {
+    width: 2.12rem;
+    min-width: 2.12rem;
+    min-height: 2.12rem;
+    padding: 0.28rem;
   }
 
   .site-header.is-condensed .header-inner {
     grid-template-columns: 0 minmax(0, 1fr);
-  }
-
-  .site-header.is-condensed .header-actions {
-    grid-template-columns: auto minmax(0, 1fr);
-    grid-template-areas:
-      "theme nav"
-      "language nav";
-    gap: 0.24rem 0.56rem;
+    padding: 0.14rem 0 0.18rem;
   }
 
   .site-header.is-condensed .section-nav {
-    gap: 0.28rem;
+    gap: 0.18rem;
   }
 
   .site-header.is-condensed .section-tab {
-    padding: 0.36rem 0.56rem;
-    font-size: 0.74rem;
+    padding: 0.28rem 0.48rem;
+    font-size: 0.69rem;
   }
 
   .packing-checklist--documents {
