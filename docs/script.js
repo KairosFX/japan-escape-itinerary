@@ -4,6 +4,7 @@ const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const sectionTabs = Array.from(document.querySelectorAll("[data-panel-target]"));
 const contentPanels = Array.from(document.querySelectorAll("[data-panel]"));
 const siteHeader = document.querySelector(".site-header");
+const headerAccessoryGroups = Array.from(document.querySelectorAll(".language-switcher, .theme-switcher"));
 const mainContent = document.querySelector("#main-content");
 const siteFooter = document.querySelector(".site-footer");
 const sequenceNotice = document.querySelector("[data-sequence-notice]");
@@ -1687,6 +1688,7 @@ const headerCondenseScrollThreshold = 150;
 const headerScrollDeltaTolerance = 4;
 const headerScrollIntentThreshold = 24;
 let headerIsCondensed = Boolean(siteHeader?.classList.contains("is-condensed"));
+syncHeaderAccessoryVisibility(headerIsCondensed);
 let lastScrollY = Math.max(window.scrollY, 0);
 let headerScrollIntentStartY = lastScrollY;
 let headerScrollIntentDirection = 0;
@@ -8086,6 +8088,18 @@ function lockHeaderState(duration = 420) {
   resetHeaderScrollTracking();
 }
 
+function syncHeaderAccessoryVisibility(isCondensed) {
+  headerAccessoryGroups.forEach((group) => {
+    group.toggleAttribute("inert", isCondensed);
+    if (isCondensed) {
+      group.setAttribute("aria-hidden", "true");
+      return;
+    }
+
+    group.removeAttribute("aria-hidden");
+  });
+}
+
 function setHeaderCondensed(nextState) {
   if (!siteHeader || headerIsCondensed === nextState) {
     return false;
@@ -8093,6 +8107,7 @@ function setHeaderCondensed(nextState) {
 
   headerIsCondensed = nextState;
   siteHeader.classList.toggle("is-condensed", nextState);
+  syncHeaderAccessoryVisibility(nextState);
   return true;
 }
 
