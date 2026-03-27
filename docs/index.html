@@ -454,8 +454,8 @@
           <span data-language="ja" hidden>7日間の旅程</span>
         </h2>
         <p class="section-intro">
-          <span data-language="en">A day-by-day checklist optimized around geographic clustering and cleaner transfers.</span>
-          <span data-language="ja" hidden>地理的なまとまりと移動のしやすさを優先して組み直した、日ごとのチェックリストです。</span>
+          <span data-language="en">A short day-by-day checklist for the fixed 7-day route.</span>
+          <span data-language="ja" hidden>固定の7日間ルートを短く見やすくまとめた日別チェックリストです。</span>
         </p>
       </div>
 
@@ -491,13 +491,6 @@
                 <input id="day1-dinner" type="checkbox">
                 <span class="check-copy" data-language="en">Dinner in Minami</span>
                 <span class="check-copy" data-language="ja" hidden>ミナミで夕食</span>
-              </label>
-            </li>
-            <li>
-              <label class="check-item" for="day1-dotonbori">
-                <input id="day1-dotonbori" type="checkbox">
-                <span class="check-copy" data-language="en">Nightlife</span>
-                <span class="check-copy" data-language="ja" hidden>夜の街歩き</span>
               </label>
             </li>
           </ul>
@@ -568,15 +561,15 @@
             <li>
               <label class="check-item" for="day3-castle">
                 <input id="day3-castle" type="checkbox">
-                <span class="check-copy" data-language="en">Arashiyama early</span>
-                <span class="check-copy" data-language="ja" hidden>嵐山を朝に回る</span>
+                <span class="check-copy" data-language="en">Arashiyama</span>
+                <span class="check-copy" data-language="ja" hidden>嵐山</span>
               </label>
             </li>
             <li>
               <label class="check-item" for="day3-return">
                 <input id="day3-return" type="checkbox">
-                <span class="check-copy" data-language="en">Return to Osaka</span>
-                <span class="check-copy" data-language="ja" hidden>大阪へ戻る</span>
+                <span class="check-copy" data-language="en">Transfer to Osaka</span>
+                <span class="check-copy" data-language="ja" hidden>大阪へ移動</span>
               </label>
             </li>
             <li>
@@ -584,13 +577,6 @@
                 <input id="day3-kaiyukan" type="checkbox">
                 <span class="check-copy" data-language="en">Kaiyukan / Tempozan</span>
                 <span class="check-copy" data-language="ja" hidden>海遊館 / 天保山</span>
-              </label>
-            </li>
-            <li>
-              <label class="check-item" for="day3-flex">
-                <input id="day3-flex" type="checkbox">
-                <span class="check-copy" data-language="en">Final Osaka night</span>
-                <span class="check-copy" data-language="ja" hidden>最後の大阪の夜</span>
               </label>
             </li>
           </ul>
@@ -635,22 +621,22 @@
                 <li>
                   <label class="check-item" for="day4-lake-arrival">
                     <input id="day4-lake-arrival" type="checkbox">
-                    <span class="check-copy" data-language="en">Lake arrival views</span>
-                    <span class="check-copy" data-language="ja" hidden>到着後の湖の景色</span>
+                    <span class="check-copy" data-language="en">Lake Kawaguchiko</span>
+                    <span class="check-copy" data-language="ja" hidden>河口湖</span>
                   </label>
                 </li>
                 <li>
                   <label class="check-item" for="day4-sunset">
                     <input id="day4-sunset" type="checkbox">
-                    <span class="check-copy" data-language="en">Quiet sunset</span>
-                    <span class="check-copy" data-language="ja" hidden>静かな夕景</span>
+                    <span class="check-copy" data-language="en">Sunset stop</span>
+                    <span class="check-copy" data-language="ja" hidden>夕景スポット</span>
                   </label>
                 </li>
                 <li>
                   <label class="check-item" for="day4-onsen-night">
                     <input id="day4-onsen-night" type="checkbox">
-                    <span class="check-copy" data-language="en">Onsen or hotel night</span>
-                    <span class="check-copy" data-language="ja" hidden>温泉またはホテル泊</span>
+                    <span class="check-copy" data-language="en">Hotel / onsen check-in</span>
+                    <span class="check-copy" data-language="ja" hidden>ホテル・温泉チェックイン</span>
                   </label>
                 </li>
               </ul>
@@ -687,8 +673,8 @@
                 <li class="checklist-list__item checklist-list__item--with-detail">
                   <label class="check-item" for="day5-fuji-check">
                     <input id="day5-fuji-check" type="checkbox">
-                    <span class="check-copy" data-language="en">Fuji check at dawn</span>
-                    <span class="check-copy" data-language="ja" hidden>夜明けに富士山を確認</span>
+                    <span class="check-copy" data-language="en">Fuji dawn check</span>
+                    <span class="check-copy" data-language="ja" hidden>富士山の朝チェック</span>
                   </label>
                   <button class="transit-trigger transit-trigger--checklist" type="button" data-transit-detail-trigger="fuji-local-hops" aria-haspopup="dialog" aria-controls="transit-detail-modal">
                     <span data-language="en">Transit details</span>
@@ -705,8 +691,8 @@
                 <li>
                   <label class="check-item" for="day5-lake-wrap">
                     <input id="day5-lake-wrap" type="checkbox">
-                    <span class="check-copy" data-language="en">Lake Kawaguchiko wrap-up</span>
-                    <span class="check-copy" data-language="ja" hidden>河口湖まわりを軽く締める</span>
+                    <span class="check-copy" data-language="en">Lake Kawaguchiko</span>
+                    <span class="check-copy" data-language="ja" hidden>河口湖</span>
                   </label>
                 </li>
                 <li class="checklist-list__item checklist-list__item--with-detail">
@@ -721,17 +707,10 @@
                   </button>
                 </li>
                 <li>
-                  <label class="check-item" for="day5-arrival-evening">
-                    <input id="day5-arrival-evening" type="checkbox">
-                    <span class="check-copy" data-language="en">Easy Shibuya arrival evening</span>
-                    <span class="check-copy" data-language="ja" hidden>無理のない渋谷到着の夜</span>
-                  </label>
-                </li>
-                <li>
                   <label class="check-item" for="day5-food">
                     <input id="day5-food" type="checkbox">
-                    <span class="check-copy" data-language="en">Shibuya Crossing / food walk</span>
-                    <span class="check-copy" data-language="ja" hidden>渋谷交差点と食べ歩き</span>
+                    <span class="check-copy" data-language="en">Shibuya Crossing</span>
+                    <span class="check-copy" data-language="ja" hidden>渋谷交差点</span>
                   </label>
                 </li>
                 <li>
@@ -823,8 +802,8 @@
             <li>
               <label class="check-item" for="day7-meal">
                 <input id="day7-meal" type="checkbox">
-                <span class="check-copy" data-language="en">Coffee / light meal buffer</span>
-                <span class="check-copy" data-language="ja" hidden>軽い食事とコーヒー休憩</span>
+                <span class="check-copy" data-language="en">Coffee stop</span>
+                <span class="check-copy" data-language="ja" hidden>コーヒー休憩</span>
               </label>
             </li>
             <li>
@@ -837,8 +816,8 @@
             <li>
               <label class="check-item" for="day7-airport">
                 <input id="day7-airport" type="checkbox">
-                <span class="check-copy" data-language="en">Airport transfer with buffer</span>
-                <span class="check-copy" data-language="ja" hidden>空港移動は余裕を持って</span>
+                <span class="check-copy" data-language="en">Airport transfer</span>
+                <span class="check-copy" data-language="ja" hidden>空港へ移動</span>
               </label>
             </li>
           </ul>
@@ -1056,8 +1035,8 @@
           <span data-language="ja" hidden>ルート</span>
         </h2>
         <p class="section-intro">
-          <span data-language="en">Protomaps keeps the Osaka-to-Tokyo itinerary live in one place, with core stops, transfer waypoints, and related days tied to the same route surface.</span>
-          <span data-language="ja" hidden>Protomaps を使って、大阪から東京までの旅程をひとつの地図面にまとめ、主要地点、乗り継ぎ地点、関連日程を同じ流れで追えるようにしています。</span>
+          <span data-language="en">Live route preview and day links for the fixed 7-day trip.</span>
+          <span data-language="ja" hidden>固定の7日間ルートを、地図と日別リンクで短く確認できます。</span>
         </p>
       </div>
 
@@ -1069,12 +1048,12 @@
               <span data-language="ja" hidden>Protomaps ルート地図</span>
             </h3>
             <p>
-              <span data-language="en">The itinerary now runs on a Protomaps basemap, so Osaka, Kyoto, the Mt. Fuji area, and Tokyo stay on one live west-to-east view while the route detail panel updates in place.</span>
-              <span data-language="ja" hidden>旅程地図は Protomaps ベースマップを使う構成にし、大阪、京都、富士エリア、東京をひとつのライブ地図で見渡しながら、西から東への流れと詳細パネルをその場で切り替えられるようにしました。</span>
+              <span data-language="en">This map shows our trip across Japan at a glance.</span>
+              <span data-language="ja" hidden>この地図で、日本を横断する今回の旅をひと目で確認できます。</span>
             </p>
             <p class="route-map__meta">
-              <span data-language="en">Core route: Osaka -&gt; Kyoto -&gt; Mt. Fuji area -&gt; Tokyo, with Shin-Osaka and Mishima shown as transfer waypoints.</span>
-              <span data-language="ja" hidden>主要ルート: 大阪 -&gt; 京都 -&gt; 富士エリア -&gt; 東京。新大阪と三島は乗り継ぎ地点として表示します。</span>
+              <span data-language="en">Main route: Osaka -&gt; Kyoto -&gt; Mt. Fuji area -&gt; Tokyo<br>Transfer points: Shin-Osaka and Mishima</span>
+              <span data-language="ja" hidden>メインルート: 大阪 -&gt; 京都 -&gt; 富士エリア -&gt; 東京<br>乗り継ぎ地点: 新大阪と三島</span>
             </p>
           </div>
           <div class="route-map__header-actions">

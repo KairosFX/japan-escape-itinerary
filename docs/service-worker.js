@@ -1,4 +1,4 @@
-const OFFLINE_CACHE_VERSION = "2026-03-27-offline-v19";
+const OFFLINE_CACHE_VERSION = "2026-03-27-offline-v20";
 const OFFLINE_CACHE_NAME = `japan-escape-itinerary-${OFFLINE_CACHE_VERSION}`;
 const APP_SCOPE_URL = new URL("./", self.location);
 const APP_SCOPE_PATH = APP_SCOPE_URL.pathname;
@@ -40,6 +40,14 @@ function matchesCachedAppAsset(url) {
     url.pathname === APP_SCOPE_PATH ||
     url.pathname === `${APP_SCOPE_PATH}index.html` ||
     url.pathname.startsWith(`${APP_SCOPE_PATH}assets/`)
+  );
+}
+
+function isNetworkFirstAppAsset(url) {
+  return (
+    APP_SHELL_URL_SET.has(url.href) ||
+    url.pathname === APP_SCOPE_PATH ||
+    url.pathname === `${APP_SCOPE_PATH}index.html`
   );
 }
 
@@ -124,6 +132,21 @@ async function respondToCachedAsset(request) {
   }
 }
 
+async function respondToNetworkFirstAsset(request) {
+  const cache = await caches.open(OFFLINE_CACHE_NAME);
+  const networkRequest = new Request(request, { cache: "no-cache" });
+
+  try {
+    const networkResponse = await fetch(networkRequest);
+    if (isCacheableResponse(networkResponse)) {
+      await cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  } catch (error) {
+    return (await cache.match(request, { ignoreSearch: true })) || Response.error();
+  }
+}
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") {
     return;
@@ -144,6 +167,10 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (matchesCachedAppAsset(requestUrl)) {
-    event.respondWith(respondToCachedAsset(event.request));
+    event.respondWith(
+      isNetworkFirstAppAsset(requestUrl)
+        ? respondToNetworkFirstAsset(event.request)
+        : respondToCachedAsset(event.request)
+    );
   }
 });
