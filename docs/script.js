@@ -74,15 +74,16 @@ const pageTitles = {
 };
 const storageKey = "japan-trip-language";
 const themeStorageKey = "japan-trip-theme";
-const checklistStorageKey = "japan-trip-checklist-state";
-const completedHistoryStorageKey = "japan-trip-completed-history";
-const activePanelStorageKey = "japan-trip-active-panel";
-const bookingTransitStorageKey = "japan-trip-bookings-transit-state";
-const packingStorageKey = "japan-trip-packing-state";
-const budgetNotesStorageKey = "japan-trip-budget-notes";
-const fujiForecastSessionKey = "japan-trip-fuji-forecast";
+const itineraryStateVersion = "2026-03-27-flight-home-v1";
+const checklistStorageKey = `japan-trip-checklist-state-${itineraryStateVersion}`;
+const completedHistoryStorageKey = `japan-trip-completed-history-${itineraryStateVersion}`;
+const activePanelStorageKey = `japan-trip-active-panel-${itineraryStateVersion}`;
+const bookingTransitStorageKey = `japan-trip-bookings-transit-state-${itineraryStateVersion}`;
+const packingStorageKey = `japan-trip-packing-state-${itineraryStateVersion}`;
+const budgetNotesStorageKey = `japan-trip-budget-notes-${itineraryStateVersion}`;
+const fujiForecastSessionKey = `japan-trip-fuji-forecast-${itineraryStateVersion}`;
 const queuedStorageWrites = new Map();
-const headerReservedHeightFallbackPx = 144;
+const headerReservedHeightFallbackPx = 118;
 const timelineNodeTopRem = 1.36;
 const timelineNodeSizeRem = 1.42;
 const timelineLinkOverlapPx = 1;
@@ -92,7 +93,7 @@ const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
 const transitDetailsDataUrl = "./assets/data/transit-details.json";
 const offlineSnapshotUrl = "./japan-escape-itinerary-offline.html";
 const serviceWorkerUrl = "./service-worker.js";
-const offlineBundleVersion = "2026-03-27-offline-v16";
+const offlineBundleVersion = "2026-03-27-offline-v17";
 const routeMapLibraryScriptUrl = "./assets/vendor/maplibre/maplibre-gl.js";
 const routeMapLibraryStyleUrl = "./assets/vendor/maplibre/maplibre-gl.css";
 const routeMapOpenFreeMapStyleUrl = "https://tiles.openfreemap.org/styles/liberty";
@@ -115,9 +116,9 @@ const budgetDisplayExchangeRates = {
 };
 const budgetAssumptionCopy = {
   en:
-    "The cost model now matches one fixed 7-day route: Osaka, Kyoto, Mt. Fuji area, and Tokyo. Route extras cover luggage forwarding, Fuji visibility pivots, and other small transfer-day add-ons.",
+    "The cost model now matches one fixed 7-day route: Osaka, Kyoto, Mt. Fuji area, and Tokyo. Route extras cover luggage forwarding, Fuji visibility pivots, the Tokyo handoff, and a light airport-day buffer.",
   ja:
-    "費用モデルは、固定の7日間ルートである大阪、京都、富士エリア、東京に合わせて更新しました。ルート追加費用は、荷物配送、富士山の見え方に応じた動き直し、移動日の小さな追加費用を想定しています。"
+    "費用モデルは、固定の7日間ルートである大阪、京都、富士エリア、東京に合わせて更新しました。ルート追加費用は、荷物配送、富士山の見え方に応じた動き直し、東京への受け渡し、帰国日の小さな追加費用を想定しています。"
 };
 const budgetCategoryDefinitions = [
   {
@@ -292,8 +293,8 @@ const budgetSourceGroups = [
     id: "accommodation",
     title: { en: "Accommodation quotes", ja: "宿泊見積り" },
     summary: {
-      en: "The stay plan is route-based instead of city-generic: a private/local or Minami Osaka option on Days 1 and 3, Shijo / Karasuma for Kyoto East + Day 3 departures, one Kawaguchiko-side stay on Day 4, and west-Shibuya access for the Tokyo nights on Days 5-7.",
-      ja: "宿泊計画は、都市名だけでなく実際の動線ベースへ変更しました。1日目と3日目の大阪はローカル・プライベート滞在またはミナミ拠点、2日目は京都東側と3日目出発に合う四条烏丸、4日目は河口湖側の1泊、東京は5日目から7日目まで渋谷西側アクセス重視です。"
+      en: "The stay plan is route-based instead of city-generic: a private/local or Minami Osaka option on Days 1 and 3, Shijo / Karasuma for Kyoto East + Day 3 departures, one Kawaguchiko-side stay on Day 4, Tokyo hotel nights on Days 5 and 6, and no paid stay by default on the Day 7 flight-home wrap-up.",
+      ja: "宿泊計画は、都市名だけでなく実際の動線ベースへ変更しました。1日目と3日目の大阪はローカル・プライベート滞在またはミナミ拠点、2日目は京都東側と3日目出発に合う四条烏丸、4日目は河口湖側の1泊、東京ホテルは5日目と6日目で、7日目は帰国日のため初期値では有料宿泊を入れていません。"
     },
     links: [
       {
@@ -474,7 +475,8 @@ const budgetDayDefinitions = [
     subtitle: { en: "Fuji first, then a Shibuya evening handoff", ja: "朝は富士優先、そのあと渋谷の夜へ渡す日" },
     items: [
       { label: { en: "Fuji check at dawn", ja: "夜明けに富士山を確認" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Chureito if clear", ja: "晴れていれば忠霊塔" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Chureito / Shimoyoshida if clear", ja: "晴れていれば忠霊塔・下吉田" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Lake Kawaguchiko wrap-up", ja: "河口湖まわりを軽く締める" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
       {
         label: { en: "Transfer to Tokyo / Shibuya", ja: "東京・渋谷へ移動" },
         category: "intercityTransit",
@@ -483,9 +485,9 @@ const budgetDayDefinitions = [
         cost: { mode: "perPerson", amount: 2200, range: { lean: 2100, expected: 2200, high: 4130 } }
       },
       { label: { en: "Shibuya local hop", ja: "渋谷周辺の移動" }, category: "localTransit", bucket: "required", sourceGroup: "core-transit", cost: { mode: "perPerson", amount: 220 } },
-      { label: { en: "Shibuya Crossing", ja: "渋谷スクランブル交差点" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Easy Shibuya arrival evening", ja: "無理のない渋谷到着の夜" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
       {
-        label: { en: "Shibuya food walk", ja: "渋谷で食べ歩き" },
+        label: { en: "Shibuya Crossing / food walk", ja: "渋谷交差点と食べ歩き" },
         category: "meals",
         bucket: "flexible",
         sourceGroup: "meals",
@@ -504,32 +506,7 @@ const budgetDayDefinitions = [
     day: 6,
     defaultStayId: "tokyo-base-hotel",
     stayOptions: ["tokyo-base-hotel", "relative-stay", "no-accommodation"],
-    title: { en: "Day 6 - Tokyo Central / West", ja: "6日目・東京中心・西側" },
-    subtitle: { en: "Relaxed Tokyo core day", ja: "少しゆるめの東京中心日" },
-    items: [
-      { label: { en: "Tokyo Imperial Palace", ja: "皇居" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Shinjuku", ja: "新宿" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      {
-        label: { en: "Tokyo city hops", ja: "東京市内の移動" },
-        category: "localTransit",
-        bucket: "required",
-        sourceGroup: "core-transit",
-        cost: { mode: "perPerson", amount: 330, range: { lean: 260, expected: 330, high: 460 } }
-      },
-      {
-        label: { en: "Tokyo central / west meals", ja: "東京中心・西側の日の食事" },
-        category: "meals",
-        bucket: "flexible",
-        sourceGroup: "meals",
-        cost: { mode: "perPerson", amount: 1700, range: { lean: 1400, expected: 1700, high: 2500 } }
-      }
-    ]
-  },
-  {
-    day: 7,
-    defaultStayId: "tokyo-base-hotel",
-    stayOptions: ["tokyo-base-hotel", "relative-stay", "no-accommodation"],
-    title: { en: "Day 7 - Tokyo East", ja: "7日目・東京東側" },
+    title: { en: "Day 6 - Tokyo East / Full Day", ja: "6日目・東京東側の観光メイン日" },
     subtitle: { en: "Skytree, Solamachi, and Akihabara", ja: "スカイツリー、ソラマチ、秋葉原" },
     items: [
       { label: { en: "Tokyo subway day pass", ja: "東京サブウェイ1日券" }, category: "localTransit", bucket: "required", sourceGroup: "core-transit", cost: { mode: "perPerson", amount: 800, sourceCostId: "tokyo-subway-24h" } },
@@ -538,16 +515,47 @@ const budgetDayDefinitions = [
         category: "ticketsAdmissions",
         bucket: "booked",
         sourceGroup: "tickets",
-        cost: { mode: "perPerson", amount: 2400, range: { lean: 2100, expected: 2400, high: 2700 } }
+        cost: { mode: "perPerson", amount: 2400, range: { lean: 2100, expected: 2400, high: 3500 } }
       },
       { label: { en: "Tokyo Solamachi", ja: "東京ソラマチ" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
       { label: { en: "Akihabara", ja: "秋葉原" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
       {
-        label: { en: "Tokyo east-side meals", ja: "東京東側の日の食事" },
+        label: { en: "Tokyo east full-day meals", ja: "東京東側の観光日の食事" },
         category: "meals",
         bucket: "flexible",
         sourceGroup: "meals",
         cost: { mode: "perPerson", amount: 1900, range: { lean: 1500, expected: 1900, high: 2800 } }
+      }
+    ]
+  },
+  {
+    day: 7,
+    defaultStayId: "no-accommodation",
+    stayOptions: ["no-accommodation", "tokyo-base-hotel", "relative-stay"],
+    title: { en: "Day 7 - Tokyo wrap-up + flight home", ja: "7日目・東京の軽い締めと帰国日" },
+    subtitle: { en: "Tokyo Station, bags, and airport buffer", ja: "東京駅まわり、荷物、空港の余白" },
+    items: [
+      { label: { en: "Tokyo Station / Marunouchi", ja: "東京駅・丸の内" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      {
+        label: { en: "Breakfast + last-minute souvenir buffer", ja: "朝食と最後のおみやげバッファ" },
+        category: "meals",
+        bucket: "flexible",
+        sourceGroup: "meals",
+        cost: { mode: "perPerson", amount: 1300, range: { lean: 900, expected: 1300, high: 2000 } }
+      },
+      {
+        label: { en: "Airport transfer reserve", ja: "空港移動の予備費" },
+        category: "intercityTransit",
+        bucket: "required",
+        sourceGroup: "core-transit",
+        cost: { mode: "perPerson", amount: 1600, range: { lean: 600, expected: 1600, high: 3400 } }
+      },
+      {
+        label: { en: "Bag storage or handoff if needed", ja: "必要なら荷物預け・受け渡し" },
+        category: "baggage",
+        bucket: "optional",
+        sourceGroup: "assumptions",
+        cost: { mode: "perPerson", amount: 800, range: { lean: 500, expected: 800, high: 1200 } }
       }
     ]
   }
@@ -589,24 +597,24 @@ const tripNoteDefinitions = [
     day: 5,
     title: { en: "Day 5 - Mt. Fuji Area to Tokyo / Shibuya", ja: "5日目・富士エリアから東京・渋谷" },
     summary: {
-      en: "Use Fuji visibility early, go to Chureito only if it is worth it, then hand the route forward into Tokyo so the day ends with a focused Shibuya evening.",
-      ja: "朝は富士山の見え方を先に使い、忠霊塔は条件が合う時だけにして、そのあと東京へ渡して渋谷の夜に集中する流れにします。"
+      en: "Use Fuji visibility early, keep Chureito conditional, wrap the lake side cleanly, then hand the route forward into Tokyo so the day still lands in Shibuya with realistic evening energy.",
+      ja: "朝は富士山の見え方を先に使い、忠霊塔は条件付きにし、湖側を無理なく締めてから東京へ渡し、渋谷の夜へ現実的につなげます。"
     }
   },
   {
     day: 6,
-    title: { en: "Day 6 - Tokyo Central / West", ja: "6日目・東京中心・西側" },
+    title: { en: "Day 6 - Tokyo East / Full Day", ja: "6日目・東京東側の観光メイン日" },
     summary: {
-      en: "Keep Tokyo central and west relaxed: Imperial Palace first, Shinjuku after, with enough slack to avoid turning the middle Tokyo day into a sprint.",
-      ja: "6日目の東京中心・西側は少しゆるめにし、皇居を先、新宿を後にして、真ん中の東京日を走り回る日にしないようにします。"
+      en: "Use Day 6 as the fuller Tokyo sightseeing block: Skytree first, then Solamachi and Akihabara, so the denser city day lands before the departure buffer.",
+      ja: "6日目は東京観光の本番日にし、スカイツリー、ソラマチ、秋葉原をまとめて回して、密度の高い都内日程を帰国日前に置きます。"
     }
   },
   {
     day: 7,
-    title: { en: "Day 7 - Tokyo East", ja: "7日目・東京東側" },
+    title: { en: "Day 7 - Tokyo wrap-up + flight home", ja: "7日目・東京の軽い締めと帰国日" },
     summary: {
-      en: "Finish with the east-side Tokyo cluster of Skytree, Solamachi, and Akihabara so the old extra-city ideas are now part of the fixed route instead of a separate add-on.",
-      ja: "最後はスカイツリー、ソラマチ、秋葉原の東京東側のまとまりで締め、以前は追加扱いだった都内案を固定ルートの本編へ入れています。"
+      en: "Keep Day 7 deliberately light: breakfast, a short Tokyo Station or Marunouchi block, bag handling, and enough airport buffer to close the trip calmly.",
+      ja: "7日目はあえて軽くし、朝食、東京駅や丸の内の短い寄り道、荷物対応、空港までの余白を残して静かに締めます。"
     }
   }
 ];
@@ -1240,8 +1248,8 @@ const routeExplorerStopDefinitions = [
     id: "tokyo",
     title: { en: "Tokyo", ja: "東京" },
     summary: {
-      en: "Tokyo now absorbs the Shibuya arrival, the central/west day, and the east-side finish into one main route close.",
-      ja: "東京は、渋谷到着、中央西側の日、東側の締めを一つの本編ルート終盤へまとめています。"
+      en: "Tokyo now absorbs the Shibuya arrival, one fuller east-side sightseeing day, and a lighter departure-day wrap-up into the same main-route finish.",
+      ja: "東京は、渋谷到着、東側の観光本番日、そして軽い帰国日をまとめて、本編ルート終盤のひとまとまりにしています。"
     },
     badges: [
       { en: "Days 5-7", ja: "5日目-7日目" },
@@ -1253,8 +1261,8 @@ const routeExplorerStopDefinitions = [
         ja: "5日目は渋谷に入り、スクランブル交差点、食べ歩き、渋谷スカイへつなげます。"
       },
       {
-        en: "Days 6 and 7 stay inside the fixed route: Imperial Palace and Shinjuku first, then Skytree, Solamachi, and Akihabara.",
-        ja: "6日目と7日目も固定本編に含め、皇居と新宿、そしてスカイツリー、ソラマチ、秋葉原へ進みます。"
+        en: "Day 6 carries the Skytree, Solamachi, and Akihabara cluster, while Day 7 stays lighter around Tokyo Station, bags, and the airport run.",
+        ja: "6日目にスカイツリー、ソラマチ、秋葉原をまとめ、7日目は東京駅まわり、荷物、空港移動を軽めに組んでいます。"
       }
     ],
     dayLinks: [{ day: 5 }, { day: 6 }, { day: 7 }],
@@ -1396,8 +1404,8 @@ const routeExplorerViewDefinitions = [
     label: { en: "Tokyo finish", ja: "東京後半" },
     title: { en: "Tokyo main-route finish", ja: "東京で本編を締める" },
     summary: {
-      en: "The Tokyo close now keeps both the central/west day and the east-side day inside the main 7-day route.",
-      ja: "東京の締めは、中央西側の日と東側の日の両方を固定の7日間本編へ入れています。"
+      en: "The Tokyo close now pairs one fuller sightseeing day with a lighter airport-day wrap-up inside the fixed 7-day route.",
+      ja: "東京の締めは、観光メインの1日と空港前の軽い締め日を、固定の7日間本編の中で組み合わせています。"
     },
     badges: [
       { en: "Days 6-7", ja: "6日目-7日目" },
@@ -1405,12 +1413,12 @@ const routeExplorerViewDefinitions = [
     ],
     notes: [
       {
-        en: "Day 6 stays relaxed with the Imperial Palace and Shinjuku.",
-        ja: "6日目は皇居と新宿で、落ち着いた流れにしています。"
+        en: "Day 6 is the denser Tokyo day: Skytree, Solamachi, and Akihabara while energy is still available.",
+        ja: "6日目は体力があるうちに、スカイツリー、ソラマチ、秋葉原をまとめて回る日です。"
       },
       {
-        en: "Day 7 finishes with Tokyo Skytree, Solamachi, and Akihabara instead of leaving them as extras.",
-        ja: "7日目は東京スカイツリー、ソラマチ、秋葉原で締め、追加日程には残しません。"
+        en: "Day 7 stays intentionally light around Tokyo Station or Marunouchi so bags and the airport transfer stay low-stress.",
+        ja: "7日目は東京駅や丸の内まわりであえて軽くし、荷物と空港移動を慌てず進めます。"
       }
     ],
     dayLinks: [{ day: 6 }, { day: 7 }],

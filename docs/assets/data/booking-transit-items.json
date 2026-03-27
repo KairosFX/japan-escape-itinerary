@@ -129,7 +129,7 @@
     "filters": ["to-book"],
     "kind": "booking",
     "stayVisibility": {
-      "days": [5, 6, 7],
+      "days": [5, 6],
       "stayIds": ["tokyo-base-hotel"]
     },
     "tone": { "en": "Stay booking", "ja": "宿泊予約" },
@@ -139,12 +139,12 @@
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
     "title": { "en": "Tokyo hotel nights", "ja": "東京ホテル泊" },
     "summary": {
-      "en": "Tokyo is now part of the fixed main route from Day 5 to Day 7, so the hotel plan should support both the Shibuya arrival and the follow-up city days.",
-      "ja": "東京は5日目から7日目まで固定の本編に入ったため、渋谷到着とその後の都内日程の両方に合うホテル計画にします。"
+      "en": "Tokyo hotel nights now sit on Days 5 and 6, so the base should support the Shibuya arrival and the fuller sightseeing day before the flight-home buffer.",
+      "ja": "東京ホテル泊は5日目と6日目に置き、渋谷到着と帰国日前の観光メイン日を同じ拠点で回せるようにします。"
     },
     "details": {
-      "en": "Shibuya access still fits the first Tokyo evening best, while the same west-side base keeps Day 6 and Day 7 movement practical without switching districts mid-route.",
-      "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、同じ西側拠点のままなら、6日目と7日目の都内移動も地区を変えずに進めやすくなります。"
+      "en": "Shibuya access still fits the first Tokyo evening best, and keeping the same west-side base for Day 6 avoids wasting time on a mid-route hotel switch before the lighter airport day.",
+      "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、6日目も同じ西側拠点のままなら、帰国日前にホテル移動で時間を削られません。"
     },
     "links": [
       {
@@ -310,12 +310,12 @@
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
     "title": { "en": "Tokyo Skytree booking", "ja": "東京スカイツリーの予約" },
     "summary": {
-      "en": "Skytree is now part of the fixed Day 7 finish, so keep the official ticket page handy.",
-      "ja": "スカイツリーは固定の7日目に入ったため、公式チケットページをすぐ見られるようにしておきます。"
+      "en": "Skytree is now part of the fuller Day 6 Tokyo sightseeing block, so keep the official ticket page handy.",
+      "ja": "スカイツリーは6日目の観光メイン日に入ったため、公式チケットページをすぐ見られるようにしておきます。"
     },
     "details": {
-      "en": "Use the official Skytree ticket page if you want a timed booking instead of deciding on the spot.",
-      "ja": "現地判断ではなく時間指定で押さえたいなら、公式のチケットページを使います。"
+      "en": "Use the official Skytree ticket page if you want a timed booking instead of deciding on the spot. Day 6 is now the best slot to lock this in because Day 7 stays intentionally light.",
+      "ja": "現地判断ではなく時間指定で押さえたいなら、公式のチケットページを使います。7日目は軽く保つため、スカイツリーは6日目にまとめるのが合います。"
     },
     "links": [
       {
