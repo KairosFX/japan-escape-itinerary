@@ -43,7 +43,7 @@
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
     "title": { "en": "Optional Osaka Minami hotel", "ja": "任意の大阪ミナミホテル" },
     "summary": {
-      "en": "Use this only if Days 1 or 3 need a paid Osaka night. The Minami side is chosen for route fit, not just because it is in Osaka.",
+      "en": "Use this only if Day 1 or Day 3 needs a paid Osaka night. The Minami side is chosen for route fit, not just because it is in Osaka.",
       "ja": "1日目または3日目に有料の大阪泊が必要な時だけ使います。大阪という広い括りではなく、ミナミ側の動線で選んでいます。"
     },
     "details": {
@@ -92,44 +92,12 @@
     ]
   },
   {
-    "id": "hakone-stay",
+    "id": "fuji-area-stay",
     "group": "bookings",
     "filters": ["to-book"],
     "kind": "booking",
     "stayVisibility": {
       "days": [4],
-      "stayIds": ["hakone-practical-ryokan"]
-    },
-    "tone": { "en": "Stay booking", "ja": "宿泊予約" },
-    "defaultStatus": { "en": "Not booked", "ja": "未予約" },
-    "doneStatus": { "en": "Booked", "ja": "予約済み" },
-    "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
-    "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Day 4 Hakone loop-side ryokan", "ja": "4日目の箱根周遊向き旅館" },
-    "summary": {
-      "en": "The ryokan is chosen for the Motohakone / Kojiri side of the route, not just for being in Hakone.",
-      "ja": "この旅館は、箱根という広い括りではなく、元箱根・湖尻側の動線で選んでいます。"
-    },
-    "details": {
-      "en": "This side matches the Lake Ashi, ropeway, and Togendai end of the loop and also helps the Day 5 Gotemba-side transfer toward Kawaguchiko. The cheaper quote stays as the single best link because it anchors both pricing and live booking availability.",
-      "ja": "この側は芦ノ湖・ロープウェイ・桃源台寄りの周遊終盤に合いやすく、5日目の御殿場経由で河口湖へ抜ける流れにも向いています。価格基準と空室確認を兼ねられる、安い見積りリンクだけを残しています。"
-    },
-    "links": [
-      {
-        "href": "https://www.expedia.co.jp/Hakone-Hotels-YuYu-Onsen-Ryokan-Hakone.h104862373.Hotel-Information",
-        "label": { "en": "Best cheap link", "ja": "最安寄りの信頼リンク" },
-        "note": { "en": "Motohakone / Kojiri-side quote around JPY 16k total", "ja": "元箱根・湖尻側の見積りは合計約1.6万円" },
-        "kind": "primary"
-      }
-    ]
-  },
-  {
-    "id": "kawaguchiko-stay",
-    "group": "bookings",
-    "filters": ["to-book"],
-    "kind": "booking",
-    "stayVisibility": {
-      "days": [5, 6],
       "stayIds": ["kawaguchiko-base-hotel"]
     },
     "tone": { "en": "Stay booking", "ja": "宿泊予約" },
@@ -137,14 +105,14 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Days 5-6 Kawaguchiko station-lake hotel", "ja": "5日目と6日目の河口湖駅・湖畔動線ホテル" },
+    "title": { "en": "Day 4 Mt. Fuji area stay", "ja": "4日目の富士エリア宿泊" },
     "summary": {
-      "en": "The base is chosen for the station-to-lake corridor so arrival, sightseeing, and the Tokyo return all stay practical.",
-      "ja": "到着、観光、東京戻りの全部をまとめやすいよう、駅から湖畔の動線で拠点を選んでいます。"
+      "en": "The base is chosen for station-to-lake practicality so Day 4 arrival and Day 5 dawn checks stay easy to manage.",
+      "ja": "4日目の到着と5日目朝の富士チェックをまとめやすいよう、駅から湖側の動きで拠点を選んでいます。"
     },
     "details": {
-      "en": "This area works better than a remote Fuji resort because it keeps the Hakone arrival, lake walking, and Day 7 departure aligned with the actual route. The cheaper listing stays as the single best link because it is both the budget default and the most useful live booking page.",
-      "ja": "遠い富士リゾート立地よりも、このエリアの方が箱根からの到着、湖畔散策、7日目の東京戻りを実際の流れに合わせやすいです。予算の初期値にもなり、そのまま予約確認にも使いやすい安い掲載先だけを残しています。"
+      "en": "A Kawaguchiko-side base works better than a remote resort because it keeps the station handoff, lake arrival, quiet sunset, and the Day 5 Tokyo transfer aligned with the actual route.",
+      "ja": "遠いリゾート立地より、河口湖側の拠点の方が駅からの受け渡し、湖到着、静かな夕景、5日目の東京移動までを実際の流れに合わせやすいです。"
     },
     "links": [
       {
@@ -161,7 +129,7 @@
     "filters": ["to-book"],
     "kind": "booking",
     "stayVisibility": {
-      "days": [7, 8],
+      "days": [5, 6, 7],
       "stayIds": ["tokyo-base-hotel"]
     },
     "tone": { "en": "Stay booking", "ja": "宿泊予約" },
@@ -169,14 +137,14 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Shibuya-access Tokyo hotel nights", "ja": "渋谷アクセス重視の東京ホテル泊" },
+    "title": { "en": "Tokyo hotel nights", "ja": "東京ホテル泊" },
     "summary": {
-      "en": "Tokyo is kept on the Shibuya / west-side flow, with one night on Day 7 and a second only if Optional Day 8 is active.",
-      "ja": "東京は渋谷寄りの西側動線で組み、7日目の1泊を基本に、2泊目は追加8日目を有効にした時だけ入ります。"
+      "en": "Tokyo is now part of the fixed main route from Day 5 to Day 7, so the hotel plan should support both the Shibuya arrival and the follow-up city days.",
+      "ja": "東京は5日目から7日目まで固定の本編に入ったため、渋谷到着とその後の都内日程の両方に合うホテル計画にします。"
     },
     "details": {
-      "en": "Shibuya is the actual Day 7 focus, and this west-side area also stays cleaner for west-Tokyo movement if Day 8 is active. The cheaper quote stays as the single best link because it keeps pricing and live availability in one useful place.",
-      "ja": "7日目の主役は渋谷で、8日目を使うなら西東京方面への動きもこの西側立地の方が自然です。価格感と空室確認を一つで見やすい、安い見積りリンクだけを残しています。"
+      "en": "Shibuya access still fits the first Tokyo evening best, while the same west-side base keeps Day 6 and Day 7 movement practical without switching districts mid-route.",
+      "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、同じ西側拠点のままなら、6日目と7日目の都内移動も地区を変えずに進めやすくなります。"
     },
     "links": [
       {
@@ -188,8 +156,8 @@
     ]
   },
   {
-    "id": "shin-osaka-odawara",
-    "transitDetailId": "shin-osaka-odawara",
+    "id": "shin-osaka-fuji-gateway",
+    "transitDetailId": "shin-osaka-fuji-gateway",
     "group": "bookings",
     "filters": ["to-book"],
     "kind": "booking",
@@ -198,13 +166,13 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Shin-Osaka -> Odawara shinkansen", "ja": "新大阪 -> 小田原 新幹線" },
+    "title": { "en": "Shin-Osaka -> Mishima or Shin-Fuji shinkansen", "ja": "新大阪 -> 三島または新富士 新幹線" },
     "summary": {
-      "en": "Treat this as the fixed rail booking that anchors the Hakone transfer day.",
-      "ja": "箱根移動日の軸になる固定予約として扱います。"
+      "en": "Treat this as the fixed rail booking that anchors the Day 4 Fuji transfer.",
+      "ja": "4日目の富士移動日の軸になる固定予約として扱います。"
     },
     "details": {
-      "en": "Reserve on the official rail site once Day 4 is locked. This stays as the single booking link because it is the actual reserved-seat channel for the train you need.",
+      "en": "Reserve on the official rail site once Day 4 is fixed. This stays as the single booking link because it is the actual reserved-seat channel for the train you need.",
       "ja": "4日目が固まったら公式の予約サイトで押さえます。必要な列車をそのまま予約できる実運用の窓口なので、このリンクだけを残しています。"
     },
     "links": [
@@ -217,66 +185,8 @@
     ]
   },
   {
-    "id": "hakone-freepass",
-    "transitDetailId": "hakone-loop",
-    "group": "transit",
-    "filters": ["transit"],
-    "kind": "prep",
-    "tone": { "en": "Pass option", "ja": "パス候補" },
-    "defaultStatus": { "en": "Optional", "ja": "任意" },
-    "doneStatus": { "en": "Saved", "ja": "保存済み" },
-    "toggleDefault": { "en": "Save pass", "ja": "パスを保存する" },
-    "toggleDone": { "en": "Saved", "ja": "保存済み" },
-    "title": { "en": "Hakone Freepass", "ja": "箱根フリーパス" },
-    "summary": {
-      "en": "Keep the Odawara version handy as the default pass for the loop day.",
-      "ja": "このルートでは小田原版を基準にして保存しておきます。"
-    },
-    "details": {
-      "en": "The official pass page is the single best link here because it shows current pricing and coverage most clearly.",
-      "ja": "ここは現在料金と対象範囲を最も分かりやすく確認できる公式ページだけを残しています。"
-    },
-    "links": [
-      {
-        "href": "https://www.odakyu.jp/english/passes/hakone/",
-        "label": { "en": "Official pass page", "ja": "公式パスページ" },
-        "note": { "en": "Current price and coverage", "ja": "現在の料金と対象範囲" },
-        "kind": "primary"
-      }
-    ]
-  },
-  {
-    "id": "hakone-status",
-    "transitDetailId": "hakone-loop",
-    "group": "transit",
-    "filters": ["transit"],
-    "kind": "reference",
-    "tone": { "en": "Live updates", "ja": "運行確認" },
-    "defaultStatus": { "en": "Ready", "ja": "準備OK" },
-    "doneStatus": { "en": "Saved", "ja": "保存済み" },
-    "toggleDefault": { "en": "Save page", "ja": "ページを保存する" },
-    "toggleDone": { "en": "Saved", "ja": "保存済み" },
-    "title": { "en": "Hakone transport status page", "ja": "箱根の運行状況ページ" },
-    "summary": {
-      "en": "Use this for same-day checks on ropeway, cable car, and lake transport conditions.",
-      "ja": "ロープウェイ、ケーブルカー、湖の移動状況を当日確認するページです。"
-    },
-    "details": {
-      "en": "This is the operational page, not the fare page. Save this single official status page for same-day checks if weather or wind shifts the loop.",
-      "ja": "こちらは料金ではなく運行確認用です。天候や風で周遊状況が変わる日に備え、この公式運行ページだけを保存しておきます。"
-    },
-    "links": [
-      {
-        "href": "https://www.hakonenavi.jp/international/en/status_information",
-        "label": { "en": "Live status", "ja": "運行状況" },
-        "note": { "en": "Official same-day operations page", "ja": "公式の当日運行ページ" },
-        "kind": "primary"
-      }
-    ]
-  },
-  {
-    "id": "hakone-kawaguchiko",
-    "transitDetailId": "hakone-kawaguchiko",
+    "id": "fuji-area-access",
+    "transitDetailId": "fuji-gateway-kawaguchiko",
     "group": "transit",
     "filters": ["transit"],
     "kind": "reference",
@@ -285,20 +195,20 @@
     "doneStatus": { "en": "Saved", "ja": "保存済み" },
     "toggleDefault": { "en": "Save route", "ja": "経路を保存する" },
     "toggleDone": { "en": "Saved", "ja": "保存済み" },
-    "title": { "en": "Hakone -> Kawaguchiko via Gotemba", "ja": "箱根 -> 御殿場経由で河口湖" },
+    "title": { "en": "Mishima / Shin-Fuji -> Kawaguchiko access", "ja": "三島・新富士 -> 河口湖アクセス" },
     "summary": {
-      "en": "Keep the transfer chain ready so Day 5 stays light and weather-flexible.",
-      "ja": "5日目を軽く保つため、乗り継ぎの流れを保存しておきます。"
+      "en": "Keep the local handoff saved so Day 4 stays practical after the shinkansen arrival.",
+      "ja": "新幹線到着後の4日目を実用的に進めるため、現地アクセスを保存しておきます。"
     },
     "details": {
-      "en": "Use the official transport page as the single saved link to understand the transfer chain for this route.",
-      "ja": "このルートの乗り継ぎを把握するための保存リンクは、公式交通ページひとつに絞っています。"
+      "en": "Use one saved route reference for the gateway-to-lake handoff so you do not have to rebuild it on arrival.",
+      "ja": "入口駅から湖側への受け渡しは、到着後に組み直さなくて済むよう、保存リンクを一つにまとめておきます。"
     },
     "links": [
       {
-        "href": "https://www.hakonenavi.jp/international/en/transportation",
-        "label": { "en": "Official transfer guide", "ja": "公式移動ガイド" },
-        "note": { "en": "Core route reference", "ja": "基本ルート確認" },
+        "href": "https://www.google.com/maps/search/Kawaguchiko+Station",
+        "label": { "en": "Saved directions", "ja": "保存用ルート" },
+        "note": { "en": "Simple Kawaguchiko base reference", "ja": "河口湖拠点の簡易参照" },
         "kind": "primary"
       }
     ]
@@ -314,20 +224,20 @@
     "doneStatus": { "en": "Saved", "ja": "保存済み" },
     "toggleDefault": { "en": "Save route", "ja": "経路を保存する" },
     "toggleDone": { "en": "Saved", "ja": "保存済み" },
-    "title": { "en": "Kawaguchiko -> Tokyo / Shibuya", "ja": "河口湖 -> 東京・渋谷" },
+    "title": { "en": "Mt. Fuji area -> Tokyo / Shibuya", "ja": "富士エリア -> 東京・渋谷" },
     "summary": {
-      "en": "The budget now defaults to the cheaper direct bus, with Fuji Excursion kept as a rail fallback.",
-      "ja": "予算はより安い直通バスを初期値にし、富士回遊は鉄道代替として残しています。"
+      "en": "Save the Tokyo handoff you expect to use on Day 5 so the Shibuya evening stays easy to land.",
+      "ja": "5日目の東京入りを保存しておき、渋谷の夜へ入りやすくします。"
     },
     "details": {
-      "en": "Use the bus page for the cheapest direct move toward Shibuya/Tokyo. This stays as the single best link because it matches the cheaper default used in the budget.",
-      "ja": "渋谷・東京方面へ安く直通で戻るならバスページを使います。予算の初期値とも一致するため、このリンクだけを残しています。"
+      "en": "Use the bus page for the simplest one-step move toward Shibuya/Tokyo. It stays as the best single saved link because it matches the route handoff most directly.",
+      "ja": "渋谷・東京方面へ最も単純に戻るなら、直通バスページが使いやすいです。今回の受け渡しに最も直結するため、この一つを保存リンクとして残しています。"
     },
     "links": [
       {
         "href": "https://highway-buses.jp/course/shibuya.php",
         "label": { "en": "Direct bus booking", "ja": "直通バス予約" },
-        "note": { "en": "Cheapest practical default", "ja": "実用的で最安寄りの初期値" },
+        "note": { "en": "Simple Shibuya / Tokyo handoff", "ja": "渋谷・東京への簡潔な移動" },
         "kind": "primary"
       }
     ]
@@ -344,11 +254,11 @@
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
     "title": { "en": "Kaiyukan booking", "ja": "海遊館の予約" },
     "summary": {
-      "en": "The old link was weak. This now uses the current official ticket page.",
-      "ja": "以前のリンクは弱かったため、現在の公式チケットページへ差し替えました。"
+      "en": "Use the current official ticket page for Day 3.",
+      "ja": "3日目用に現在の公式チケットページを使います。"
     },
     "details": {
-      "en": "Use the official Kaiyukan ticket page directly. It is the clearest source for current price and web-ticket availability.",
+      "en": "The official Kaiyukan ticket page is the clearest source for current price and web-ticket availability.",
       "ja": "海遊館は公式チケットページをそのまま使うのが最も分かりやすいです。現在料金とWEBチケットの案内を一つで確認できます。"
     },
     "links": [
@@ -372,18 +282,46 @@
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
     "title": { "en": "Shibuya Sky booking", "ja": "渋谷スカイの予約" },
     "summary": {
-      "en": "Night slots cost more, so the budget now treats this as a timed evening ticket instead of one flat price.",
-      "ja": "夜の枠は高くなるため、予算でも一律価格ではなく時間帯付きの夕方以降チケットとして扱います。"
+      "en": "Treat this as the timed night ticket for the Day 5 Shibuya finish.",
+      "ja": "5日目の渋谷締めに合わせた、時間指定の夜チケットとして扱います。"
     },
     "details": {
-      "en": "Use the official booking page for the actual reservation. This stays as the single best link, while the budget notes already explain the daytime versus later-slot price difference.",
-      "ja": "実際の予約は公式ページで行います。昼と夕方以降の価格差は予算メモ側で説明できるため、ここは公式予約リンクひとつに絞っています。"
+      "en": "Use the official booking page for the actual reservation. Night slots matter more here than daytime slots because the route now lands in Shibuya in the evening.",
+      "ja": "実際の予約は公式ページで行います。今回のルートは夕方以降に渋谷へ入るため、昼より夜の時間帯の方が重要です。"
     },
     "links": [
       {
         "href": "https://www.shibuya-scramble-square.com/sky/ticket/",
         "label": { "en": "Official tickets", "ja": "公式チケット" },
         "note": { "en": "Actual timed-entry booking", "ja": "実際の時間指定予約" },
+        "kind": "primary"
+      }
+    ]
+  },
+  {
+    "id": "tokyo-skytree",
+    "group": "bookings",
+    "filters": ["to-book"],
+    "kind": "booking",
+    "tone": { "en": "Reserve ahead", "ja": "事前予約" },
+    "defaultStatus": { "en": "Not booked", "ja": "未予約" },
+    "doneStatus": { "en": "Booked", "ja": "予約済み" },
+    "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
+    "toggleDone": { "en": "Booked", "ja": "予約済み" },
+    "title": { "en": "Tokyo Skytree booking", "ja": "東京スカイツリーの予約" },
+    "summary": {
+      "en": "Skytree is now part of the fixed Day 7 finish, so keep the official ticket page handy.",
+      "ja": "スカイツリーは固定の7日目に入ったため、公式チケットページをすぐ見られるようにしておきます。"
+    },
+    "details": {
+      "en": "Use the official Skytree ticket page if you want a timed booking instead of deciding on the spot.",
+      "ja": "現地判断ではなく時間指定で押さえたいなら、公式のチケットページを使います。"
+    },
+    "links": [
+      {
+        "href": "https://www.tokyo-skytree.jp/en/ticket/individual/",
+        "label": { "en": "Official tickets", "ja": "公式チケット" },
+        "note": { "en": "Current ticket options", "ja": "現在のチケット案内" },
         "kind": "primary"
       }
     ]

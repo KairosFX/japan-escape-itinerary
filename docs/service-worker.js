@@ -1,4 +1,4 @@
-const OFFLINE_CACHE_VERSION = "2026-03-25-offline-v15";
+const OFFLINE_CACHE_VERSION = "2026-03-27-offline-v16";
 const OFFLINE_CACHE_NAME = `japan-escape-itinerary-${OFFLINE_CACHE_VERSION}`;
 const APP_SCOPE_URL = new URL("./", self.location);
 const APP_SCOPE_PATH = APP_SCOPE_URL.pathname;

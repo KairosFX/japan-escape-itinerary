@@ -3117,7 +3117,7 @@ html.has-modal-open body {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-template-areas:
     "documents luggage daily"
-    "documents hakone clothing";
+    "documents transfer clothing";
 }
 
 .essentials-group--packing .essentials-card[data-packing-section="documents-phone"] {
@@ -3132,8 +3132,8 @@ html.has-modal-open body {
   grid-area: daily;
 }
 
-.essentials-group--packing .essentials-card[data-packing-section="hakone-fuji-day-kit"] {
-  grid-area: hakone;
+.essentials-group--packing .essentials-card[data-packing-section="fuji-tokyo-transfer-kit"] {
+  grid-area: transfer;
 }
 
 .essentials-group--packing .essentials-card[data-packing-section="clothing"] {
@@ -5309,7 +5309,7 @@ html.has-modal-open body {
     grid-template-areas:
       "documents documents"
       "luggage daily"
-      "hakone clothing";
+      "transfer clothing";
   }
 
   .booking-group {
@@ -5435,7 +5435,7 @@ html.has-modal-open body {
     grid-template-areas:
       "documents documents"
       "luggage daily"
-      "hakone clothing";
+      "transfer clothing";
   }
 
   .budget-notes__summary,
@@ -6890,7 +6890,7 @@ html[data-theme="light"] body {
       "documents"
       "luggage"
       "daily"
-      "hakone"
+      "transfer"
       "clothing";
   }
 

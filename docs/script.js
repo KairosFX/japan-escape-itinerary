@@ -32,13 +32,6 @@ const transitDetailMetaNode = document.querySelector("[data-transit-detail-meta]
 const transitDetailSectionsNode = document.querySelector("[data-transit-detail-sections]");
 const transitDetailActionLink = document.querySelector("[data-transit-detail-action]");
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
-const optionalPrompt = document.querySelector("[data-optional-prompt]");
-const optionalPromptExpanded = document.querySelector("[data-optional-prompt-expanded]");
-const optionalPromptCompact = document.querySelector("[data-optional-prompt-compact]");
-const optionalPromptFeedback = document.querySelector("[data-optional-feedback]");
-const optionalUnlockButtons = document.querySelectorAll("[data-optional-unlock]");
-const optionalSkipButton = document.querySelector("[data-optional-skip]");
-const optionalSectionNodes = document.querySelectorAll("[data-optional-section]");
 const budgetNotesCard = document.querySelector("[data-budget-notes-card]");
 const budgetStatusNode = document.querySelector("[data-budget-status]");
 const budgetSummaryNode = document.querySelector("[data-budget-summary]");
@@ -68,9 +61,6 @@ const routeMapPreviewCanvas = document.querySelector("[data-route-map-preview-ca
 const routeMapPreviewStatusNode = document.querySelector("[data-route-map-preview-status]");
 const routeMapStopsNode = document.querySelector("[data-route-map-stops]");
 const routeMapExplorerNode = document.querySelector("[data-route-map-explorer]");
-const optionalProgressItems = Array.from(
-  document.querySelectorAll("[data-progress-item][data-progress-optional='true']")
-);
 const dayCardMap = new Map(dayCards.map((card) => [card.dataset.day, card]));
 const progressItemMap = new Map(progressItems.map((item) => [item.dataset.progressItem, item]));
 const root = document.documentElement;
@@ -86,7 +76,6 @@ const storageKey = "japan-trip-language";
 const themeStorageKey = "japan-trip-theme";
 const checklistStorageKey = "japan-trip-checklist-state";
 const completedHistoryStorageKey = "japan-trip-completed-history";
-const optionalDaysUnlockedStorageKey = "japan-trip-optional-days-unlocked";
 const activePanelStorageKey = "japan-trip-active-panel";
 const bookingTransitStorageKey = "japan-trip-bookings-transit-state";
 const packingStorageKey = "japan-trip-packing-state";
@@ -103,7 +92,7 @@ const bookingTransitItemsDataUrl = "./assets/data/booking-transit-items.json";
 const transitDetailsDataUrl = "./assets/data/transit-details.json";
 const offlineSnapshotUrl = "./japan-escape-itinerary-offline.html";
 const serviceWorkerUrl = "./service-worker.js";
-const offlineBundleVersion = "2026-03-25-offline-v15";
+const offlineBundleVersion = "2026-03-27-offline-v16";
 const routeMapLibraryScriptUrl = "./assets/vendor/maplibre/maplibre-gl.js";
 const routeMapLibraryStyleUrl = "./assets/vendor/maplibre/maplibre-gl.css";
 const routeMapOpenFreeMapStyleUrl = "https://tiles.openfreemap.org/styles/liberty";
@@ -126,9 +115,9 @@ const budgetDisplayExchangeRates = {
 };
 const budgetAssumptionCopy = {
   en:
-    "This estimate now follows the itinerary with reusable route-based areas: a private/local or no-cost Osaka option on Days 1 and 3, a Shijo / Karasuma Kyoto base on Day 2, a Motohakone / Kojiri-side Hakone ryokan on Day 4, a Kawaguchiko station-to-lake base on Days 5-6, and a Shibuya-access Tokyo hotel on Day 7 plus Day 8 only when the optional day is active.",
+    "The cost model now matches one fixed 7-day route: Osaka, Kyoto, Mt. Fuji area, and Tokyo. Route extras cover luggage forwarding, Fuji visibility pivots, and other small transfer-day add-ons.",
   ja:
-    "この見積りは、旅程に沿った再利用可能な動線ベースの宿泊エリアへ更新しました。1日目と3日目の大阪はローカル・プライベート滞在または宿泊費なし、2日目は四条烏丸の京都拠点、4日目は元箱根・湖尻側の箱根旅館、5日目と6日目は河口湖駅から湖畔の動線に合う拠点、7日目は渋谷アクセス重視の東京ホテルで、8日目の東京2泊目は追加日を有効にした場合だけ反映します。"
+    "費用モデルは、固定の7日間ルートである大阪、京都、富士エリア、東京に合わせて更新しました。ルート追加費用は、荷物配送、富士山の見え方に応じた動き直し、移動日の小さな追加費用を想定しています。"
 };
 const budgetCategoryDefinitions = [
   {
@@ -233,31 +222,17 @@ const budgetStayDefinitions = {
     },
     cost: { mode: "perGroup", amount: 13200, sourceCostId: "kyoto-midrange-hotel" }
   },
-  "hakone-practical-ryokan": {
-    id: "hakone-practical-ryokan",
-    type: "ryokan",
-    label: { en: "Hakone loop-side ryokan", ja: "箱根周遊向き旅館" },
-    bucket: "booked",
-    sourceGroup: "accommodation",
-    area: { en: "Motohakone / Kojiri side", ja: "元箱根・湖尻側" },
-    property: { en: "YuYu Hakone", ja: "YuYu Hakone" },
-    routeReason: {
-      en: "This side fits the Day 4 loop better because it is close to the Lake Ashi and ropeway end of the route, and it also makes the next morning's Gotemba-side transfer toward Kawaguchiko more practical than paying for a less relevant Hakone base.",
-      ja: "この側は4日目の周遊終盤に合いやすく、芦ノ湖やロープウェイ終点側へ寄せやすいのが利点です。さらに翌朝の御殿場経由で河口湖へ抜ける流れにも、別エリアの旅館より実用的です。"
-    },
-    cost: { mode: "perGroup", amount: 18000, sourceCostId: "hakone-practical-ryokan" }
-  },
   "kawaguchiko-base-hotel": {
     id: "kawaguchiko-base-hotel",
     type: "hotel",
-    label: { en: "Kawaguchiko station-lake hotel", ja: "河口湖駅・湖畔動線ホテル" },
+    label: { en: "Mt. Fuji area lake-access hotel", ja: "富士エリアの湖アクセスホテル" },
     bucket: "booked",
     sourceGroup: "accommodation",
     area: { en: "Kawaguchiko station -> lake corridor", ja: "河口湖駅から湖畔の動線" },
     property: { en: "HaoSTAY", ja: "HAOSTAY" },
     routeReason: {
-      en: "This base keeps the Day 5 arrival, Day 6 lake-area wandering, and Day 7 departure practical without paying for a remote resort location that fights the actual bus and station flow.",
-      ja: "この拠点なら、5日目の到着、6日目の湖周辺の動き、7日目の東京戻りをまとめやすく、実際のバス・駅動線と離れた遠いリゾート立地へ余計に払わずに済みます。"
+      en: "This base keeps the Day 4 arrival, the quiet lake-side start, and the Day 5 dawn Fuji check practical without paying for a remote resort location that fights the actual station and bus flow.",
+      ja: "この拠点なら、4日目の到着、静かな湖側スタート、5日目朝の富士チェックをまとめやすく、実際の駅・バス動線と離れた遠いリゾート立地へ余計に払わずに済みます。"
     },
     cost: { mode: "perGroup", amount: 15700, sourceCostId: "kawaguchiko-base-hotel" }
   },
@@ -270,8 +245,8 @@ const budgetStayDefinitions = {
     area: { en: "West Shibuya / Maruyamacho", ja: "渋谷西側・円山町" },
     property: { en: "EN HOTEL Shibuya", ja: "EN HOTEL Shibuya" },
     routeReason: {
-      en: "Shibuya is the actual focus on Day 7, and this west-side position also keeps west-Tokyo movement cleaner if Day 8 is active. It is a better fit than paying for a generic Tokyo stay in a less relevant district.",
-      ja: "7日目の主役が渋谷なので、この西側立地の方が実際の流れに合います。8日目を有効にした場合も西東京方面へ動きやすく、関係の薄いエリアの東京ホテルへ払うより自然です。"
+      en: "Shibuya is the Day 5 arrival focus, and the same west-side base keeps the following Tokyo days cleaner than shifting districts mid-route.",
+      ja: "渋谷は5日目の到着後の主役であり、この西側拠点のままなら、その後の東京日程も地区を変えずに進めやすくなります。"
     },
     cost: { mode: "perGroup", amount: 19820, sourceCostId: "tokyo-base-hotel" }
   },
@@ -317,8 +292,8 @@ const budgetSourceGroups = [
     id: "accommodation",
     title: { en: "Accommodation quotes", ja: "宿泊見積り" },
     summary: {
-      en: "The stay plan is route-based instead of city-generic: a private/local or Minami Osaka option on Days 1 and 3, Shijo / Karasuma for Kyoto East + Day 3 departures, Motohakone / Kojiri for the Hakone loop and Day 5 transfer, Kawaguchiko station-to-lake access on Days 5-6, and west-Shibuya access on Day 7 plus Day 8 only when unlocked.",
-      ja: "宿泊計画は、都市名だけでなく実際の動線ベースへ変更しました。1日目と3日目の大阪はローカル・プライベート滞在またはミナミ拠点、2日目は京都東側と3日目出発に合う四条烏丸、4日目は箱根周遊と5日目移動に合う元箱根・湖尻側、5日目と6日目は河口湖駅から湖畔の動線、東京は7日目と解放時だけ8日目の渋谷西側アクセス重視です。"
+      en: "The stay plan is route-based instead of city-generic: a private/local or Minami Osaka option on Days 1 and 3, Shijo / Karasuma for Kyoto East + Day 3 departures, one Kawaguchiko-side stay on Day 4, and west-Shibuya access for the Tokyo nights on Days 5-7.",
+      ja: "宿泊計画は、都市名だけでなく実際の動線ベースへ変更しました。1日目と3日目の大阪はローカル・プライベート滞在またはミナミ拠点、2日目は京都東側と3日目出発に合う四条烏丸、4日目は河口湖側の1泊、東京は5日目から7日目まで渋谷西側アクセス重視です。"
     },
     links: [
       {
@@ -330,11 +305,7 @@ const budgetSourceGroups = [
         url: "https://www.expedia.co.jp/en/Kyoto-Hotels-Hotel-Resol-Kyoto-Shijo-Muromachi.h23196129.Hotel-Information"
       },
       {
-        label: { en: "Hakone ryokan quote", ja: "箱根旅館見積り" },
-        url: "https://www.expedia.co.jp/Hakone-Hotels-YuYu-Onsen-Ryokan-Hakone.h104862373.Hotel-Information"
-      },
-      {
-        label: { en: "Kawaguchiko hotel quote", ja: "河口湖ホテル見積り" },
+        label: { en: "Mt. Fuji area hotel quote", ja: "富士エリアホテル見積り" },
         url: "https://www.expedia.co.jp/en/Fujikawaguchiko-Hotels-HaoSTAY.h42541370.Hotel-Information"
       },
       {
@@ -347,8 +318,8 @@ const budgetSourceGroups = [
     id: "room-logic",
     title: { en: "Stay logic", ja: "滞在ロジック" },
     summary: {
-      en: "The old model inflated totals by dropping in broad city hotels instead of following the route. The new model stores a reusable stay type plus a route-fit area per day, so private/local stays remain free and paid stays stay tied to the actual logistics.",
-      ja: "以前のモデルは、実際の動線ではなく大まかな都市ホテルを当て込んでしまい、合計を膨らませていました。新しいモデルは日ごとに再利用可能な滞在タイプと動線に合うエリアを持つため、ローカル・プライベート滞在は無料のまま、有料宿も実際の移動に結び付けて管理します。"
+      en: "The old model inflated totals by stretching the scenic middle section and the Tokyo finish. The new model stores a reusable stay type plus a route-fit area per day, so private/local stays remain free and paid stays stay tied to the actual logistics.",
+      ja: "以前のモデルは、中盤の景色区間と東京の締めを引き延ばして合計を膨らませていました。新しいモデルは日ごとに再利用可能な滞在タイプと動線に合うエリアを持つため、ローカル・プライベート滞在は無料のまま、有料宿も実際の移動に結び付けて管理します。"
     },
     links: []
   },
@@ -356,8 +327,8 @@ const budgetSourceGroups = [
     id: "core-transit",
     title: { en: "Core transit checks", ja: "主要移動の確認先" },
     summary: {
-      en: "Day 2 is now a one-way Osaka -> Kyoto move plus Kyoto local transit. Day 7 now defaults to the cheaper direct bus toward Shibuya/Tokyo, while Fuji Excursion stays as a useful rail fallback rather than the base assumption.",
-      ja: "2日目は大阪から京都への片道移動と京都市内交通で組み直しました。7日目は渋谷・東京方面への安い直通バスを初期値にし、富士回遊は便利な鉄道代替として残しています。"
+      en: "Day 4 now runs straight from Kansai into the Mt. Fuji area. Day 5 then hands off from the Fuji side into Tokyo, with direct bus or rail chosen by timing.",
+      ja: "4日目は関西からそのまま富士エリアへ入り、5日目は富士側から東京へ渡す流れに整理しました。東京入りは時刻に合わせて直通バスまたは鉄道を選びます。"
     },
     links: [
       {
@@ -369,10 +340,10 @@ const budgetSourceGroups = [
         url: "https://www2.city.kyoto.lg.jp/kotsu/webguide/en/tika/howtoride_tika_3_0.html"
       },
       {
-        label: { en: "Shin-Osaka -> Odawara fare", ja: "新大阪 -> 小田原運賃" },
-        url: "https://www.navitime.co.jp/en/transfer/searchlist?defaultCondition=0&dnvStationCode=00003742&dnvStationName=%E5%B0%8F%E7%94%B0%E5%8E%9F&orvStationCode=00004305&orvStationName=%E6%96%B0%E5%A4%A7%E9%98%AA"
+        label: { en: "Smart EX booking", ja: "Smart EX 予約" },
+        url: "https://smart-ex.jp/en/index.php"
       },
-      { label: { en: "Hakone Freepass", ja: "箱根フリーパス" }, url: "https://www.odakyu.jp/english/passes/hakone/" },
+      { label: { en: "Kawaguchiko base reference", ja: "河口湖拠点参照" }, url: "https://www.google.com/maps/search/Kawaguchiko+Station" },
       { label: { en: "Kawaguchiko -> Shibuya bus", ja: "河口湖 -> 渋谷バス" }, url: "https://highway-buses.jp/course/shibuya.php" },
       { label: { en: "Fuji Excursion fallback", ja: "富士回遊の代替確認" }, url: "https://e.fujikyu-railway.jp/fujikaiyuu/" }
     ]
@@ -408,7 +379,6 @@ const budgetSourceGroups = [
 const budgetDayDefinitions = [
   {
     day: 1,
-    optional: false,
     defaultStayId: "relative-stay",
     stayOptions: ["relative-stay", "osaka-compact-hotel", "no-accommodation"],
     title: { en: "Day 1 - Osaka", ja: "1日目・大阪" },
@@ -429,7 +399,6 @@ const budgetDayDefinitions = [
   },
   {
     day: 2,
-    optional: false,
     defaultStayId: "kyoto-midrange-hotel",
     stayOptions: ["kyoto-midrange-hotel", "relative-stay", "no-accommodation"],
     title: { en: "Day 2 - Kyoto East", ja: "2日目・京都東側" },
@@ -453,10 +422,9 @@ const budgetDayDefinitions = [
   },
   {
     day: 3,
-    optional: false,
     defaultStayId: "relative-stay",
     stayOptions: ["relative-stay", "osaka-compact-hotel", "no-accommodation"],
-    title: { en: "Day 3 - Kyoto -> Osaka", ja: "3日目・京都から大阪" },
+    title: { en: "Day 3 - Arashiyama -> Osaka", ja: "3日目・嵐山から大阪" },
     subtitle: { en: "Arashiyama in the morning, Osaka waterfront after", ja: "朝は嵐山、そのあと大阪ベイエリア" },
     items: [
       { label: { en: "Kyoto -> Arashiyama + Osaka rail", ja: "京都 -> 嵐山と大阪への鉄道移動" }, category: "intercityTransit", bucket: "required", sourceGroup: "core-transit", cost: { mode: "perPerson", amount: 980 } },
@@ -473,22 +441,17 @@ const budgetDayDefinitions = [
   },
   {
     day: 4,
-    optional: false,
-    defaultStayId: "hakone-practical-ryokan",
-    stayOptions: ["hakone-practical-ryokan", "relative-stay", "no-accommodation"],
-    title: { en: "Day 4 - Hakone Loop", ja: "4日目・箱根周遊" },
-    subtitle: { en: "Shinkansen into Hakone, then the loop and ryokan", ja: "新幹線で入り、箱根周遊のあと旅館へ" },
+    defaultStayId: "kawaguchiko-base-hotel",
+    stayOptions: ["kawaguchiko-base-hotel", "relative-stay", "no-accommodation"],
+    title: { en: "Day 4 - Kansai -> Mt. Fuji Area", ja: "4日目・関西から富士エリア" },
+    subtitle: { en: "One clean transfer into the lake-side Fuji base", ja: "湖側の富士拠点へ一気に入る移動日" },
     items: [
-      { label: { en: "Bullet train: Shin-Osaka -> Odawara", ja: "新幹線：新大阪 -> 小田原" }, category: "intercityTransit", bucket: "booked", sourceGroup: "core-transit", cost: { mode: "perPerson", amount: 12320 } },
-      { label: { en: "Hakone Freepass", ja: "箱根フリーパス" }, category: "localTransit", bucket: "required", sourceGroup: "hakone-fuji-transit", cost: { mode: "perPerson", amount: 6000 } },
-      { label: { en: "Gora / Sounzan", ja: "強羅 / 早雲山" }, category: "localTransit", bucket: "free", sourceGroup: "hakone-fuji-transit", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Ropeway", ja: "ロープウェイ" }, category: "localTransit", bucket: "free", sourceGroup: "hakone-fuji-transit", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Owakudani", ja: "大涌谷" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "hakone-fuji-transit", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Togendai", ja: "桃源台" }, category: "localTransit", bucket: "free", sourceGroup: "hakone-fuji-transit", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Lake Ashi cruise", ja: "芦ノ湖クルーズ" }, category: "localTransit", bucket: "free", sourceGroup: "hakone-fuji-transit", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Hakone Shrine / Moto-Hakone", ja: "箱根神社 / 元箱根" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "hakone-fuji-transit", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Shinkansen: Shin-Osaka -> Mishima or Shin-Fuji", ja: "新幹線：新大阪 -> 三島または新富士" }, category: "intercityTransit", bucket: "booked", sourceGroup: "core-transit", cost: { mode: "perPerson", amount: 12320 } },
+      { label: { en: "Local access to Kawaguchiko / Mt. Fuji area", ja: "河口湖・富士エリアへの現地アクセス" }, category: "localTransit", bucket: "required", sourceGroup: "core-transit", cost: { mode: "perPerson", amount: 2400, range: { lean: 1800, expected: 2400, high: 3200 } } },
+      { label: { en: "Lake arrival views", ja: "到着後の湖の景色" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Quiet sunset", ja: "静かな夕景" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
       {
-        label: { en: "Hakone transfer-day meals", ja: "箱根移動日の食事" },
+        label: { en: "Fuji transfer-day meals", ja: "富士移動日の食事" },
         category: "meals",
         bucket: "flexible",
         sourceGroup: "meals",
@@ -505,76 +468,15 @@ const budgetDayDefinitions = [
   },
   {
     day: 5,
-    optional: false,
-    defaultStayId: "kawaguchiko-base-hotel",
-    stayOptions: ["kawaguchiko-base-hotel", "relative-stay", "no-accommodation"],
-    title: { en: "Day 5 - Hakone -> Kawaguchiko", ja: "5日目・箱根 -> 河口湖" },
-    subtitle: { en: "Morning onsen, then the Gotemba-side transfer", ja: "朝の温泉のあと、御殿場側経由で河口湖へ" },
-    items: [
-      { label: { en: "Onsen morning", ja: "朝の温泉" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      {
-        label: { en: "Bus via Gotemba", ja: "御殿場経由のバス" },
-        category: "intercityTransit",
-        bucket: "required",
-        sourceGroup: "hakone-fuji-transit",
-        cost: { mode: "perPerson", amount: 1750, range: { lean: 1750, expected: 1750, high: 2600 } }
-      },
-      { label: { en: "Lake arrival views", ja: "到着後の湖畔の景色" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Quiet sunset", ja: "静かな夕景" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      {
-        label: { en: "Arrival dinner in Kawaguchiko", ja: "河口湖到着後の夕食" },
-        category: "meals",
-        bucket: "flexible",
-        sourceGroup: "meals",
-        cost: { mode: "perPerson", amount: 1500, range: { lean: 1200, expected: 1500, high: 2200 } }
-      }
-    ]
-  },
-  {
-    day: 6,
-    optional: false,
-    defaultStayId: "kawaguchiko-base-hotel",
-    stayOptions: ["kawaguchiko-base-hotel", "relative-stay", "no-accommodation"],
-    title: { en: "Day 6 - Fuji Area", ja: "6日目・富士エリア" },
-    subtitle: { en: "Weather-flex Fuji day", ja: "天気優先の富士日" },
-    items: [
-      { label: { en: "Fuji check at dawn", ja: "夜明けの富士チェック" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      {
-        label: { en: "Fuji-area local movement", ja: "富士エリア内の現地移動" },
-        category: "localTransit",
-        bucket: "required",
-        sourceGroup: "hakone-fuji-transit",
-        cost: { mode: "perPerson", amount: 1300, range: { lean: 900, expected: 1300, high: 1900 } }
-      },
-      { label: { en: "Chureito if clear", ja: "見えるなら忠霊塔" }, category: "localTransit", bucket: "free", sourceGroup: "hakone-fuji-transit", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Lake Kawaguchiko", ja: "河口湖" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Oshino Hakkai", ja: "忍野八海" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      {
-        label: { en: "Fuji-area day meals", ja: "富士エリア日の食事" },
-        category: "meals",
-        bucket: "flexible",
-        sourceGroup: "meals",
-        cost: { mode: "perPerson", amount: 1700, range: { lean: 1400, expected: 1700, high: 2500 } }
-      },
-      {
-        label: { en: "Weather pivot taxi / timing buffer", ja: "天候対応のタクシー / 時間調整バッファ" },
-        category: "optionalExtras",
-        bucket: "optional",
-        sourceGroup: "assumptions",
-        cost: { mode: "perPerson", amount: 1200, range: { lean: 800, expected: 1200, high: 2400 } }
-      }
-    ]
-  },
-  {
-    day: 7,
-    optional: false,
     defaultStayId: "tokyo-base-hotel",
     stayOptions: ["tokyo-base-hotel", "relative-stay", "no-accommodation"],
-    title: { en: "Day 7 - Tokyo / Shibuya", ja: "7日目・東京 / 渋谷" },
-    subtitle: { en: "Cheaper direct bus into Shibuya, then a focused evening there", ja: "安い直通バスで渋谷へ入り、夜の渋谷に集中する日" },
+    title: { en: "Day 5 - Mt. Fuji Area -> Tokyo / Shibuya", ja: "5日目・富士エリアから東京・渋谷" },
+    subtitle: { en: "Fuji first, then a Shibuya evening handoff", ja: "朝は富士優先、そのあと渋谷の夜へ渡す日" },
     items: [
+      { label: { en: "Fuji check at dawn", ja: "夜明けに富士山を確認" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Chureito if clear", ja: "晴れていれば忠霊塔" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
       {
-        label: { en: "Direct bus to Shibuya / Tokyo", ja: "渋谷・東京への直通バス" },
+        label: { en: "Transfer to Tokyo / Shibuya", ja: "東京・渋谷へ移動" },
         category: "intercityTransit",
         bucket: "booked",
         sourceGroup: "core-transit",
@@ -599,12 +501,36 @@ const budgetDayDefinitions = [
     ]
   },
   {
-    day: 8,
-    optional: true,
+    day: 6,
     defaultStayId: "tokyo-base-hotel",
     stayOptions: ["tokyo-base-hotel", "relative-stay", "no-accommodation"],
-    title: { en: "Optional Day 8 - Tokyo", ja: "追加8日目・東京" },
-    subtitle: { en: "Tokyo East day with Skytree and a second Tokyo night", ja: "スカイツリー中心の東京東側と2泊目の東京ホテル" },
+    title: { en: "Day 6 - Tokyo Central / West", ja: "6日目・東京中心・西側" },
+    subtitle: { en: "Relaxed Tokyo core day", ja: "少しゆるめの東京中心日" },
+    items: [
+      { label: { en: "Tokyo Imperial Palace", ja: "皇居" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Shinjuku", ja: "新宿" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      {
+        label: { en: "Tokyo city hops", ja: "東京市内の移動" },
+        category: "localTransit",
+        bucket: "required",
+        sourceGroup: "core-transit",
+        cost: { mode: "perPerson", amount: 330, range: { lean: 260, expected: 330, high: 460 } }
+      },
+      {
+        label: { en: "Tokyo central / west meals", ja: "東京中心・西側の日の食事" },
+        category: "meals",
+        bucket: "flexible",
+        sourceGroup: "meals",
+        cost: { mode: "perPerson", amount: 1700, range: { lean: 1400, expected: 1700, high: 2500 } }
+      }
+    ]
+  },
+  {
+    day: 7,
+    defaultStayId: "tokyo-base-hotel",
+    stayOptions: ["tokyo-base-hotel", "relative-stay", "no-accommodation"],
+    title: { en: "Day 7 - Tokyo East", ja: "7日目・東京東側" },
+    subtitle: { en: "Skytree, Solamachi, and Akihabara", ja: "スカイツリー、ソラマチ、秋葉原" },
     items: [
       { label: { en: "Tokyo subway day pass", ja: "東京サブウェイ1日券" }, category: "localTransit", bucket: "required", sourceGroup: "core-transit", cost: { mode: "perPerson", amount: 800, sourceCostId: "tokyo-subway-24h" } },
       {
@@ -615,123 +541,72 @@ const budgetDayDefinitions = [
         cost: { mode: "perPerson", amount: 2400, range: { lean: 2100, expected: 2400, high: 2700 } }
       },
       { label: { en: "Tokyo Solamachi", ja: "東京ソラマチ" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-      { label: { en: "Akihabara", ja: "秋葉原" }, category: "optionalExtras", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Akihabara", ja: "秋葉原" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
       {
-        label: { en: "Tokyo day meals", ja: "東京日の食事" },
+        label: { en: "Tokyo east-side meals", ja: "東京東側の日の食事" },
         category: "meals",
         bucket: "flexible",
         sourceGroup: "meals",
         cost: { mode: "perPerson", amount: 1900, range: { lean: 1500, expected: 1900, high: 2800 } }
       }
     ]
-  },
-  { day: 9, optional: true, title: { en: "Optional Day 9 - Tokyo", ja: "追加9日目・東京" }, subtitle: { en: "Final city day", ja: "最後の都内日" }, items: [
-    { label: { en: "Tokyo Imperial Palace", ja: "皇居" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-    { label: { en: "Shinjuku", ja: "新宿" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
-    {
-      label: { en: "Tokyo city hops", ja: "東京市内の移動" },
-      category: "localTransit",
-      bucket: "required",
-      sourceGroup: "core-transit",
-      cost: { mode: "perPerson", amount: 330, range: { lean: 260, expected: 330, high: 460 } }
-    },
-    {
-      label: { en: "Final Tokyo meals", ja: "最後の東京での食事" },
-      category: "meals",
-      bucket: "flexible",
-      sourceGroup: "meals",
-      cost: { mode: "perPerson", amount: 1500, range: { lean: 1200, expected: 1500, high: 2400 } }
-    }
-  ] }
-];
-const tripNotesLabels = {
-  optionalBadge: { en: "Optional extension", ja: "追加日程" },
-  lockedBadge: { en: "Locked for now", ja: "現在はロック中" },
-  lockedSummary: {
-    en: "Unlock Days 8 and 9 in the checklist after Day 7 if you want these extra Tokyo notes to open automatically.",
-    ja: "7日目のあとにチェックリストで8日目と9日目を解放すると、この追加の東京メモが自動で開きます。"
   }
-};
+];
 const tripNoteDefinitions = [
   {
     day: 1,
-    optional: false,
     title: { en: "Day 1 - Osaka", ja: "1日目・大阪" },
     summary: {
-      en: "Keep arrival day easy: settle into Osaka, walk Dotonbori and Shinsaibashi, eat around Minami, and let the first night be about getting your rhythm rather than crossing the city too hard.",
-      ja: "到着日は無理をせず、大阪へ入ってから道頓堀と心斎橋を歩き、ミナミで食事して、街を詰め込みすぎずに旅のリズムを作る日にします。"
+      en: "Keep arrival day easy around Minami: settle into Osaka, walk Dotonbori and Shinsaibashi, eat nearby, and let the first night be about finding your pace.",
+      ja: "到着日はミナミ周辺で無理をせず、大阪へ入ってから道頓堀と心斎橋を歩き、近くで食事して、旅のリズムを整える日にします。"
     }
   },
   {
     day: 2,
-    optional: false,
     title: { en: "Day 2 - Kyoto East", ja: "2日目・京都東側" },
     summary: {
-      en: "Treat Kyoto East as one clean walking day: Kiyomizu-dera, Ninenzaka, Yasaka Pagoda, Gion, and Nanzen-ji, then stay in Kyoto so the temple-heavy side stays calm and Day 3 starts cleaner.",
-      ja: "京都東側は、清水寺、二年坂、八坂の塔、祇園、南禅寺をひとつの流れで回る一日にします。そのまま京都に泊まることで、寺社中心の日を落ち着いて回れて、3日目の出発もきれいになります。"
+      en: "Keep Kyoto East as one clean walking day: Kiyomizu-dera, Ninenzaka, Yasaka Pagoda, Gion, and Nanzen-ji grouped on the same side so the route stays simple.",
+      ja: "京都東側は、清水寺、二年坂、八坂の塔、祇園、南禅寺を同じ側でまとめて回る一日にし、動線を素直に保ちます。"
     }
   },
   {
     day: 3,
-    optional: false,
     title: { en: "Day 3 - Arashiyama, then Osaka", ja: "3日目・嵐山のあと大阪" },
     summary: {
-      en: "Give Arashiyama its own space in the morning, then fold the day back into Osaka for Kaiyukan, Tempozan, or a lighter Osaka-side finish before returning to the aunt-house stay.",
-      ja: "朝は嵐山にしっかり時間を使い、そのあと大阪へ戻って海遊館や天保山、またはもう少し軽い大阪側の締め方にしてから叔母宅へ戻る流れにします。"
+      en: "Give Arashiyama its own morning instead of forcing it into Kyoto East, then return to Osaka for Kaiyukan, Tempozan, and one final Kansai night.",
+      ja: "嵐山は京都東側へ詰め込まず、朝だけで独立させ、そのあと大阪へ戻って海遊館、天保山、最後の関西の夜へつなげます。"
     }
   },
   {
     day: 4,
-    optional: false,
-    title: { en: "Day 4 - Shin-Osaka to Hakone", ja: "4日目・新大阪から箱根" },
+    title: { en: "Day 4 - Kansai to Mt. Fuji Area", ja: "4日目・関西から富士エリア" },
     summary: {
-      en: "This is the big transfer day: launch from Shin-Osaka, reach Odawara, then turn that arrival into one Hakone loop with ropeway, Owakudani, Lake Ashi, and the ryokan night placed to keep the next morning practical.",
-      ja: "この日は大きな移動日です。新大阪から出て小田原へ着き、そのままロープウェイ、大涌谷、芦ノ湖、旅館泊へつなげる箱根の一周ルートとして組み、翌朝の動きも実用的に保ちます。"
+      en: "Use one clean transfer day from Kansai into Kawaguchiko or the Mt. Fuji area: shinkansen first, local access second, then a quiet lake-side evening instead of another scenic detour.",
+      ja: "関西から河口湖や富士エリアへ入る4日目は、新幹線を先、現地アクセスを後にして、そのあとは寄り道を増やさず静かな湖側の夜へつなげます。"
     }
   },
   {
     day: 5,
-    optional: false,
-    title: { en: "Day 5 - Hakone to Kawaguchiko", ja: "5日目・箱根から河口湖" },
+    title: { en: "Day 5 - Mt. Fuji Area to Tokyo / Shibuya", ja: "5日目・富士エリアから東京・渋谷" },
     summary: {
-      en: "Keep the morning softer with the ryokan and onsen, then treat the move through Gotemba as the main job so Kawaguchiko becomes an arrival-views and sunset day instead of another crowded transfer stack.",
-      ja: "朝は旅館と温泉をゆっくり使い、そのあと御殿場経由の移動を主役にして、河口湖では到着後の景色や夕景を見る日に寄せます。箱根をさらに詰め込まない方が全体が整います。"
+      en: "Use Fuji visibility early, go to Chureito only if it is worth it, then hand the route forward into Tokyo so the day ends with a focused Shibuya evening.",
+      ja: "朝は富士山の見え方を先に使い、忠霊塔は条件が合う時だけにして、そのあと東京へ渡して渋谷の夜に集中する流れにします。"
     }
   },
   {
     day: 6,
-    optional: false,
-    title: { en: "Day 6 - Fuji weather flex", ja: "6日目・富士の天気優先日" },
+    title: { en: "Day 6 - Tokyo Central / West", ja: "6日目・東京中心・西側" },
     summary: {
-      en: "Use the clearest weather window first: Chureito if Fuji is visible, then Lake Kawaguchiko, then Oshino Hakkai, with the whole day acting as a flexible local loop rather than a rigid point-by-point checklist.",
-      ja: "一番見えそうな時間帯を先に使い、富士山が見えるなら最初に忠霊塔、そのあと河口湖、最後に忍野八海へ回します。固定の順番を守るより、天気に合わせた柔軟な現地周遊日にする方が実用的です。"
+      en: "Keep Tokyo central and west relaxed: Imperial Palace first, Shinjuku after, with enough slack to avoid turning the middle Tokyo day into a sprint.",
+      ja: "6日目の東京中心・西側は少しゆるめにし、皇居を先、新宿を後にして、真ん中の東京日を走り回る日にしないようにします。"
     }
   },
   {
     day: 7,
-    optional: false,
-    title: { en: "Day 7 - Tokyo / Shibuya", ja: "7日目・東京・渋谷" },
+    title: { en: "Day 7 - Tokyo East", ja: "7日目・東京東側" },
     summary: {
-      en: "Come back from Kawaguchiko and keep Tokyo deliberately narrow: Shibuya Crossing, a food walk, wandering the area, and Shibuya Sky at night so the arrival day still feels focused instead of spread across Tokyo.",
-      ja: "河口湖から東京へ戻ったあとは、渋谷スクランブル交差点、食べ歩き、周辺の街歩き、夜の渋谷スカイに絞って、到着日でも東京を広げすぎないようにします。"
-    }
-  },
-  {
-    day: 8,
-    optional: true,
-    title: { en: "Optional Day 8 - Tokyo East", ja: "追加8日目・東京東側" },
-    summary: {
-      en: "If you unlock the extra Tokyo day, use it for the east-side cluster: Tokyo Skytree, Solamachi, and Akihabara, with enough slack to slow down for shopping, food, or weather pivots instead of forcing another packed march.",
-      ja: "追加の東京日を解放するなら、東京スカイツリー、ソラマチ、秋葉原をまとめる東側の日として使います。買い物や食事、天候対応の余白も残して、詰め込みすぎない一日にするのが実用的です。"
-    }
-  },
-  {
-    day: 9,
-    optional: true,
-    title: { en: "Optional Day 9 - Final Tokyo buffer", ja: "追加9日目・東京の最終調整日" },
-    summary: {
-      en: "Keep the last extra day lighter: Imperial Palace-side time, Shinjuku or another final Tokyo area, and any departure prep, gift shopping, or cleanup tasks you do not want fighting the core route days.",
-      ja: "最後の追加日は少し軽めにし、皇居側の時間、新宿など最後に見たい東京エリア、そして出発準備やお土産、やり残しの整理に使うのが自然です。主要ルート日と競合させないための余白日として考えます。"
+      en: "Finish with the east-side Tokyo cluster of Skytree, Solamachi, and Akihabara so the old extra-city ideas are now part of the fixed route instead of a separate add-on.",
+      ja: "最後はスカイツリー、ソラマチ、秋葉原の東京東側のまとまりで締め、以前は追加扱いだった都内案を固定ルートの本編へ入れています。"
     }
   }
 ];
@@ -754,7 +629,7 @@ const fujiForecastSpotConfigs = [
   }
 ];
 const revealBlockSelector =
-  ".trip-stats, .progress-card, .content-section .section-heading, .essentials-grid, .day-grid, .notes-grid, .budget-panel, [data-optional-section], .route-map, .journey-close, .site-footer__lead, .site-footer__aside, .site-footer__credit";
+  ".trip-stats, .progress-card, .content-section .section-heading, .essentials-grid, .day-grid, .notes-grid, .budget-panel, .route-map, .journey-close, .site-footer__lead, .site-footer__aside, .site-footer__credit";
 const initializedSections = new Set();
 const sectionInitPromises = new Map();
 const sectionInitializers = {
@@ -899,8 +774,8 @@ const budgetNotesLabels = {
   },
   extrasLabel: { en: "Include optional prep purchases", ja: "任意の準備購入も含める" },
   extrasHint: {
-    en: "Adds luggage forwarding, adapter or power-bank refreshes, optional timed bookings, and small Hakone/Fuji top-ups. Hotels, meals, and day-by-day spend still stay out.",
-    ja: "荷物配送、変換プラグやモバイルバッテリーの買い足し、任意の時間指定予約、小さな箱根・富士向け追加購入を足します。ホテル代、食事代、毎日の出費は含めません。"
+    en: "Adds luggage forwarding, adapter or power-bank refreshes, optional timed bookings, and small Fuji/Tokyo transfer-day top-ups. Hotels, meals, and day-by-day spend still stay out.",
+    ja: "荷物配送、変換プラグやモバイルバッテリーの買い足し、任意の時間指定予約、富士と東京の移動日に向けた小さな追加購入を足します。ホテル代、食事代、毎日の出費は含めません。"
   },
   breakdownHeading: { en: "Essentials breakdown", ja: "準備ごとの内訳" },
   sourcesHeading: { en: "What counts here", ja: "この見積もりに含めるもの" },
@@ -974,11 +849,11 @@ const budgetSectionDefinitions = [
     }
   },
   {
-    id: "hakone-fuji-day-kit",
-    label: { en: "Hakone + Fuji Day Kit", ja: "箱根と富士の日用キット" },
+    id: "fuji-tokyo-transfer-kit",
+    label: { en: "Fuji + Tokyo Transfer Kit", ja: "富士と東京移動の日用キット" },
     meta: {
-      en: "Only true extra day-kit purchases are priced by default.",
-      ja: "本当に追加購入が必要な日用キットだけを費用化します。"
+      en: "Only true extra transfer-day kit purchases are priced by default.",
+      ja: "本当に追加購入が必要な移動日用キットだけを費用化します。"
     }
   }
 ];
@@ -1031,8 +906,8 @@ const routeExplorerPathDefinitions = [
     d: "M180 580 L238 448",
     title: { en: "Osaka -> Kyoto East", ja: "大阪 -> 京都東側" },
     summary: {
-      en: "The Day 2 hop into Kyoto is a clean city-to-city leg before the temple-heavy walking day.",
-      ja: "2日目の京都入りは、寺社中心で歩く一日に入る前の分かりやすい都市間移動です。"
+      en: "Day 2 moves cleanly from Osaka into the east-side Kyoto walking cluster.",
+      ja: "2日目は大阪から京都東側の徒歩中心エリアへ、分かりやすく移る区間です。"
     },
     badges: [
       { en: "Day 2", ja: "2日目" },
@@ -1040,12 +915,12 @@ const routeExplorerPathDefinitions = [
     ],
     notes: [
       {
-        en: "Treat this as the east-side temple setup, not a luggage transfer day.",
-        ja: "ここは荷物移動ではなく、東側寺社の日へ入るための移動として考えると分かりやすいです。"
+        en: "This segment is about reaching Kiyomizu-dera, Ninenzaka, Gion, and Nanzen-ji without turning it into a luggage day.",
+        ja: "この区間は、清水寺、二寧坂、祇園、南禅寺へ入りやすくする移動で、荷物中心の日にはしない前提です。"
       },
       {
-        en: "The return to Osaka is a separate leg, so the Kyoto stop stays easy to reason about.",
-        ja: "大阪へ戻る動きは別区間に分けているので、京都の日程だけを素直に見やすくしています。"
+        en: "Keeping the Osaka return separate makes the Kyoto East day easier to read.",
+        ja: "大阪へ戻る動きを別区間に分けることで、京都東側の日程を素直に見やすくしています。"
       }
     ],
     dayLinks: [{ day: 2 }],
@@ -1054,10 +929,10 @@ const routeExplorerPathDefinitions = [
   {
     id: "kyoto-osaka",
     d: "M238 448 L186 572",
-    title: { en: "Kyoto -> Osaka reset", ja: "京都 -> 大阪の戻り" },
+    title: { en: "Arashiyama -> Osaka", ja: "嵐山 -> 大阪" },
     summary: {
-      en: "This folds the Kyoto side back into Osaka before the aquarium-side finish and the Day 4 launch.",
-      ja: "京都から大阪へ戻して、海遊館側の締めと4日目の出発へつなぐ区間です。"
+      en: "Day 3 starts with Arashiyama, then resets back to Osaka for Kaiyukan, Tempozan, and the final Kansai night.",
+      ja: "3日目は嵐山から始め、そのあと大阪へ戻って海遊館、天保山、関西最後の夜へつなぎます。"
     },
     badges: [
       { en: "Day 3", ja: "3日目" },
@@ -1065,12 +940,12 @@ const routeExplorerPathDefinitions = [
     ],
     notes: [
       {
-        en: "It keeps Arashiyama and the Osaka-side evening in one practical loop.",
-        ja: "嵐山と大阪側の夕方を、実用的な一つの流れとしてつなげる役目です。"
+        en: "This keeps Arashiyama separate from Kyoto East while still closing the day in Osaka.",
+        ja: "嵐山を京都東側の日から分けつつ、その日の締めを大阪に戻して整えています。"
       },
       {
-        en: "Use this leg when you want the Osaka reset separated from the Kyoto temple day.",
-        ja: "京都の寺社日と分けて、大阪へ戻る動きだけを見たいときに使いやすい区間です。"
+        en: "Use this leg when you want the Osaka-side reset before the long move east.",
+        ja: "東へ大きく移る前に、大阪側へ戻る流れを見たいときの区間です。"
       }
     ],
     dayLinks: [{ day: 3 }],
@@ -1081,8 +956,8 @@ const routeExplorerPathDefinitions = [
     d: "M186 572 L202 548",
     title: { en: "Osaka city -> Shin-Osaka", ja: "大阪市内 -> 新大阪" },
     summary: {
-      en: "A short launch leg that turns the Osaka stay into the Day 4 long-distance departure.",
-      ja: "大阪滞在から4日目の長距離移動へ切り替える、短い出発区間です。"
+      en: "This short launch step turns the Osaka stay into the Day 4 eastbound transfer.",
+      ja: "この短い出発区間で、大阪滞在から4日目の東行き移動へ切り替えます。"
     },
     badges: [
       { en: "Day 4", ja: "4日目" },
@@ -1090,24 +965,24 @@ const routeExplorerPathDefinitions = [
     ],
     notes: [
       {
-        en: "This is mainly a handoff move, so it stays lighter than the actual bullet train segment.",
-        ja: "ここは本格的な長距離移動前の引き渡し区間なので、新幹線区間より軽く見ています。"
+        en: "It is mostly a handoff move before the long bullet-train segment.",
+        ja: "本格的な長距離新幹線区間へ入る前の引き継ぎ移動です。"
       },
       {
-        en: "Use it when you want the Day 4 departure flow without opening the full Kansai view.",
-        ja: "関西全体を開かずに、4日目の出発動線だけ見たいときに便利です。"
+        en: "Use it when you want the Day 4 departure flow without reopening the Osaka sightseeing context.",
+        ja: "大阪観光の文脈を開き直さずに、4日目の出発動線だけ見たいときに使えます。"
       }
     ],
     dayLinks: [{ day: 4 }],
     stopIds: ["osaka", "shin-osaka"]
   },
   {
-    id: "shin-osaka-odawara",
-    d: "M202 548 L844 336",
-    title: { en: "Shin-Osaka -> Odawara", ja: "新大阪 -> 小田原" },
+    id: "shin-osaka-fuji-gateway",
+    d: "M202 548 L878 292",
+    title: { en: "Shin-Osaka -> Mishima / Shin-Fuji", ja: "新大阪 -> 三島・新富士" },
     summary: {
-      en: "The longest rail segment in the trip, handled as the clean bullet-train handoff into Hakone.",
-      ja: "旅程で最長の鉄道区間で、箱根側へ入るための分かりやすい新幹線移動です。"
+      en: "This is the longest rail segment in the route and the clean handoff from Kansai into the Mt. Fuji side.",
+      ja: "この区間が旅程で最長の鉄道移動で、関西から富士側へ切り替える基幹の受け渡しです。"
     },
     badges: [
       { en: "Day 4", ja: "4日目" },
@@ -1116,111 +991,80 @@ const routeExplorerPathDefinitions = [
     notes: [
       {
         en: "Open the saved transit detail when you want the actual train choice and buffer notes.",
-        ja: "実際の列車選びや余裕の持たせ方を見たいときは、保存済み移動詳細を開くのが早いです。"
+        ja: "実際の列車選びや余裕時間を確認したいときは、保存済み移動詳細を開くのが早いです。"
       },
       {
-        en: "This leg is intentionally isolated from the Hakone local loop so the long move stays readable.",
-        ja: "長距離移動を読みやすくするため、この区間は箱根ローカル周遊とは分けてあります。"
+        en: "This leg stays separate from the local Fuji access so the main transfer remains readable.",
+        ja: "主要移動を読みやすく保つため、この区間は富士側のローカルアクセスとは分けています。"
       }
     ],
     dayLinks: [{ day: 4 }],
     transitActions: [
       {
-        id: "shin-osaka-odawara",
+        id: "shin-osaka-fuji-gateway",
         label: { en: "Shinkansen detail", ja: "新幹線詳細" }
       }
     ],
-    stopIds: ["shin-osaka", "odawara"]
+    stopIds: ["shin-osaka", "fuji-gateway"]
   },
   {
-    id: "odawara-hakone",
-    d: "M844 336 L824 350",
-    title: { en: "Odawara -> Hakone local sequence", ja: "小田原 -> 箱根ローカル" },
+    id: "fuji-gateway-kawaguchiko",
+    d: "M878 292 L938 238",
+    title: { en: "Mishima / Shin-Fuji -> Kawaguchiko", ja: "三島・新富士 -> 河口湖" },
     summary: {
-      en: "This is the local handoff from the long rail arrival into ropeway, bus, and lake-side flow.",
-      ja: "長距離鉄道の到着から、ロープウェイ、バス、湖畔側の流れへ切り替えるローカル区間です。"
+      en: "This is the local access leg into the lake base, trading the shinkansen arrival for the quieter Fuji-area night.",
+      ja: "この区間で新幹線到着から湖側の拠点へ移り、静かな富士エリアの夜へつなげます。"
     },
     badges: [
       { en: "Day 4", ja: "4日目" },
-      { en: "Local handoff", ja: "現地乗り継ぎ" }
+      { en: "Local access", ja: "現地アクセス" }
     ],
     notes: [
       {
-        en: "Use the Hakone local detail if you want the sequence through the loop rather than the geography only.",
-        ja: "地理だけでなく周遊の順番を見たいときは、箱根ローカル詳細を開くのが一番早いです。"
+        en: "Treat it as a practical station-to-lake handoff first, then enjoy the arrival views and sunset second.",
+        ja: "まずは駅から湖側へ入る実用的な移動として見て、そのあと到着景色や夕景を楽しむ流れです。"
       },
       {
-        en: "Keeping this segment separate makes the Hakone arrival feel calmer on the map.",
-        ja: "この区間を分けておくことで、箱根到着後の流れが地図上でも落ち着いて見えます。"
+        en: "The linked detail keeps Mishima-side and Shin-Fuji-side access options together.",
+        ja: "関連詳細には、三島側と新富士側のアクセス案をまとめています。"
       }
     ],
     dayLinks: [{ day: 4 }],
     transitActions: [
       {
-        id: "hakone-loop",
-        label: { en: "Hakone local detail", ja: "箱根ローカル詳細" }
+        id: "fuji-gateway-kawaguchiko",
+        label: { en: "Fuji access detail", ja: "富士アクセス詳細" }
       }
     ],
-    stopIds: ["odawara", "hakone"]
+    stopIds: ["fuji-gateway", "fuji"]
   },
   {
-    id: "hakone-fuji",
-    d: "M824 350 L924 242",
-    title: { en: "Hakone -> Kawaguchiko", ja: "箱根 -> 河口湖" },
+    id: "fuji-tokyo",
+    d: "M938 238 L1036 150",
+    title: { en: "Mt. Fuji area -> Tokyo / Shibuya", ja: "富士エリア -> 東京・渋谷" },
     summary: {
-      en: "This is the transfer-heavy handoff from the ryokan side into the Fuji base via the Gotemba direction.",
-      ja: "旅館側から御殿場方面を経て富士側の拠点へ渡す、移動比重の高い区間です。"
+      en: "Day 5 uses the early Fuji check first, then hands the route into Tokyo for a Shibuya evening.",
+      ja: "5日目は朝の富士チェックを先に行い、そのあと東京へ移って渋谷の夜へつなぎます。"
     },
     badges: [
       { en: "Day 5", ja: "5日目" },
-      { en: "Transfer-heavy", ja: "移動多め" }
+      { en: "Tokyo handoff", ja: "東京への受け渡し" }
     ],
     notes: [
       {
-        en: "Treat it as a practical transfer first and a view day second.",
-        ja: "この日は景色より先に、まず実用的な移動日として考えると整えやすいです。"
+        en: "Use this when you want the Tokyo transfer separate from the local Fuji weather decision.",
+        ja: "富士側の天気判断と切り分けて、東京への移動だけ見たいときに使います。"
       },
       {
-        en: "The transit detail keeps the Gotemba-side fallback options in one place.",
-        ja: "移動詳細には、御殿場側での代替ルートもまとめて入れています。"
+        en: "The linked transit detail keeps the direct train and highway-bus arrival options together.",
+        ja: "関連詳細には、直通列車と高速バスの到着案をまとめています。"
       }
     ],
     dayLinks: [{ day: 5 }],
     transitActions: [
       {
-        id: "hakone-kawaguchiko",
-        label: { en: "Hakone -> Kawaguchiko detail", ja: "箱根 -> 河口湖 詳細" }
-      }
-    ],
-    stopIds: ["hakone", "fuji"]
-  },
-  {
-    id: "fuji-tokyo",
-    d: "M924 242 L1036 150",
-    title: { en: "Kawaguchiko -> Tokyo / Shibuya", ja: "河口湖 -> 東京・渋谷" },
-    summary: {
-      en: "The final intercity leg exits the Fuji area and lands you in the Tokyo / Shibuya finish.",
-      ja: "富士エリアを離れて、東京・渋谷で締めるための最後の都市間移動です。"
-    },
-    badges: [
-      { en: "Day 7", ja: "7日目" },
-      { en: "Tokyo arrival", ja: "東京到着" }
-    ],
-    notes: [
-      {
-        en: "Use this segment when you want the Tokyo return leg without the Day 6 weather-flex context.",
-        ja: "6日目の天気優先行動と切り分けて、東京へ戻る区間だけ見たいときに向いています。"
-      },
-      {
-        en: "The linked transit detail keeps the bus and rail arrival options together.",
-        ja: "関連する移動詳細には、バスと鉄道の到着パターンをまとめています。"
-      }
-    ],
-    dayLinks: [{ day: 7 }],
-    transitActions: [
-      {
         id: "kawaguchiko-tokyo",
-        label: { en: "Tokyo return detail", ja: "東京戻り詳細" }
+        label: { en: "Tokyo arrival detail", ja: "東京到着詳細" }
       }
     ],
     stopIds: ["fuji", "tokyo"]
@@ -1234,8 +1078,8 @@ const routeExplorerStopDefinitions = [
     id: "osaka",
     title: { en: "Osaka", ja: "大阪" },
     summary: {
-      en: "Arrival base for Day 1 and the city reset after Arashiyama before the long move east.",
-      ja: "1日目の到着拠点であり、嵐山のあと東へ大きく動く前に戻る街の基点です。"
+      en: "Osaka handles the easy Minami arrival, the Day 3 return, and the final Kansai reset before moving east.",
+      ja: "大阪は、ミナミ中心の到着日、3日目の戻り先、そして東へ移る前の関西側の締めをまとめる拠点です。"
     },
     badges: [
       { en: "Days 1 + 3", ja: "1日目・3日目" },
@@ -1243,12 +1087,12 @@ const routeExplorerStopDefinitions = [
     ],
     notes: [
       {
-        en: "Use this stop for the easiest early-trip rhythm: arrival night first, then a clean return before Day 4.",
-        ja: "到着日の動きと、4日目の大移動前の戻り先として使うと前半の流れが整います。"
+        en: "This marker covers Dotonbori, Shinsaibashi, dinner in Minami, nightlife, and the final Osaka night after Kaiyukan.",
+        ja: "この地点は、道頓堀、心斎橋、ミナミでの夕食、夜歩き、そして海遊館後の大阪最後の夜までを含みます。"
       },
       {
-        en: "The marker covers both the Minami arrival night and the Osaka-side finish after Kyoto west.",
-        ja: "この地点は到着日のミナミと、京都西側のあとに大阪へ戻る流れの両方を表しています。"
+        en: "It also sets up the Day 4 launch without forcing Kyoto to carry the onward transfer logic.",
+        ja: "同時に4日目の出発も支えますが、その先の移動ロジックを京都側へ持たせない形にしています。"
       }
     ],
     dayLinks: [{ day: 1 }, { day: 3 }],
@@ -1262,24 +1106,24 @@ const routeExplorerStopDefinitions = [
     id: "kyoto",
     title: { en: "Kyoto", ja: "京都" },
     summary: {
-      en: "The Day 2 temple day sits cleanly on the east side before the Osaka return.",
-      ja: "2日目は東側中心の寺社日としてまとまり、そのあと大阪へ戻る流れです。"
+      en: "Kyoto covers the east-side temple day and the early Arashiyama branch before the Osaka return.",
+      ja: "京都は、東側の寺社日と、朝の嵐山から大阪へ戻る流れをまとめる地点です。"
     },
     badges: [
-      { en: "Day 2", ja: "2日目" },
-      { en: "East-side day", ja: "東側中心" }
+      { en: "Days 2 + 3", ja: "2日目・3日目" },
+      { en: "Temple + west split", ja: "東西を分ける日" }
     ],
     notes: [
       {
-        en: "This stop represents the full Kyoto day rather than a transfer hub.",
-        ja: "ここは乗り換え拠点というより、京都で丸一日動く日を表しています。"
+        en: "Day 2 stays focused on Kiyomizu-dera, Ninenzaka, Yasaka Pagoda, Gion, and Nanzen-ji.",
+        ja: "2日目は清水寺、二寧坂、八坂の塔、祇園、南禅寺に集中する構成です。"
       },
       {
-        en: "The route folds back to Osaka afterward instead of carrying luggage onward from Kyoto.",
-        ja: "ここから先へ荷物ごと進むのではなく、いったん大阪へ戻る前提です。"
+        en: "Arashiyama is separated into Day 3 so Kyoto East does not get overloaded.",
+        ja: "嵐山は3日目へ分け、京都東側の日程が重くなりすぎないようにしています。"
       }
     ],
-    dayLinks: [{ day: 2 }],
+    dayLinks: [{ day: 2 }, { day: 3 }],
     segmentIds: ["osaka-kyoto", "kyoto-osaka"],
     lngLat: [135.7681, 35.0116],
     labelPosition: "n",
@@ -1290,8 +1134,8 @@ const routeExplorerStopDefinitions = [
     id: "shin-osaka",
     title: { en: "Shin-Osaka", ja: "新大阪" },
     summary: {
-      en: "This is the clean launch point for the longest transfer day into Hakone.",
-      ja: "箱根へ向かう最長移動日の、いちばん分かりやすい出発拠点です。"
+      en: "This is the clean launch point for the main Kansai-to-Fuji transfer day.",
+      ja: "ここが、関西から富士側へ渡る主要移動日の分かりやすい出発点です。"
     },
     badges: [
       { en: "Day 4", ja: "4日目" },
@@ -1299,121 +1143,83 @@ const routeExplorerStopDefinitions = [
     ],
     notes: [
       {
-        en: "Use this stop when you want to focus on the big Kansai-to-Hakone handoff rather than the local Osaka details.",
-        ja: "大阪市内の細かい動きより、関西から箱根への大きな移動に集中したいときの起点です。"
+        en: "Use this stop when you want the long eastbound handoff rather than the Osaka city details.",
+        ja: "大阪市内の細かい動きではなく、東へ伸びる大きな移動に集中したいときの起点です。"
       },
       {
-        en: "It connects directly to the saved transit popup for the bullet train segment.",
-        ja: "ここからは新幹線区間の移動詳細ポップアップにそのままつなげられます。"
+        en: "It connects directly to the saved shinkansen detail for Mishima or Shin-Fuji.",
+        ja: "三島または新富士へ向かう新幹線詳細に、そのままつなげられます。"
       }
     ],
     dayLinks: [{ day: 4 }],
     transitActions: [
       {
-        id: "shin-osaka-odawara",
+        id: "shin-osaka-fuji-gateway",
         label: { en: "Shinkansen detail", ja: "新幹線詳細" }
       }
     ],
-    segmentIds: ["osaka-shin-osaka", "shin-osaka-odawara"],
+    segmentIds: ["osaka-shin-osaka", "shin-osaka-fuji-gateway"],
     lngLat: [135.5007, 34.7335],
     labelPosition: "ne",
     x: 16.8,
     y: 76.1
   },
   {
-    id: "odawara",
-    title: { en: "Odawara", ja: "小田原" },
+    id: "fuji-gateway",
+    title: { en: "Mishima / Shin-Fuji", ja: "三島・新富士" },
     summary: {
-      en: "Odawara is the gateway handoff from the long rail leg into the Hakone local sequence.",
-      ja: "小田原は長距離鉄道から箱根ローカル移動へ切り替える玄関口です。"
+      en: "This stop marks the rail-to-local gateway into the Kawaguchiko side of the route.",
+      ja: "この地点は、新幹線から河口湖側のローカルアクセスへ切り替わる入口です。"
     },
     badges: [
       { en: "Day 4", ja: "4日目" },
-      { en: "Hakone gateway", ja: "箱根の入口" }
+      { en: "Gateway stop", ja: "受け渡し地点" }
     ],
     notes: [
       {
-        en: "This stop is less about sightseeing and more about keeping the arrival handoff calm.",
-        ja: "ここは観光地というより、到着後の乗り継ぎを落ち着いて進めるための地点です。"
+        en: "It is less about sightseeing and more about keeping the transfer calm and readable.",
+        ja: "ここは観光よりも、乗り継ぎを落ち着いて進めるための地点として見ています。"
       },
       {
-        en: "Save the next Hakone leg before arrival so you do not need to rebuild it on the platform.",
-        ja: "ホームで組み直さなくて済むよう、箱根側の次の移動は先に保存しておくと安心です。"
+        en: "Keep the next bus or local rail option saved before arrival so the lake transfer stays simple.",
+        ja: "湖側への移動を簡単にするため、次のバスやローカル鉄道は到着前に控えておくと安心です。"
       }
     ],
     dayLinks: [{ day: 4 }],
     transitActions: [
       {
-        id: "hakone-loop",
-        label: { en: "Hakone local detail", ja: "箱根ローカル詳細" }
+        id: "fuji-gateway-kawaguchiko",
+        label: { en: "Fuji access detail", ja: "富士アクセス詳細" }
       }
     ],
-    segmentIds: ["shin-osaka-odawara", "odawara-hakone"],
-    lngLat: [139.1548, 35.2556],
+    segmentIds: ["shin-osaka-fuji-gateway", "fuji-gateway-kawaguchiko"],
+    lngLat: [138.9208, 35.1265],
     labelPosition: "nw",
-    x: 70.3,
-    y: 46.7
-  },
-  {
-    id: "hakone",
-    title: { en: "Hakone", ja: "箱根" },
-    summary: {
-      en: "Hakone spans the ryokan night and the next morning's handoff toward Kawaguchiko.",
-      ja: "箱根は旅館泊の夜と、翌朝に河口湖側へ渡す移動の両方にまたがる地点です。"
-    },
-    badges: [
-      { en: "Days 4 + 5", ja: "4日目・5日目" },
-      { en: "Ryokan + loop", ja: "旅館＋周遊" }
-    ],
-    notes: [
-      {
-        en: "Use this stop to focus on local sequencing first, then the Hakone-to-Fuji handoff second.",
-        ja: "まず箱根内の順番を整理し、そのあと富士側への引き渡しを考えると見やすくなります。"
-      },
-      {
-        en: "The area is compact on the preview, so the stop groups the local ropeway, rail, and bus decisions together.",
-        ja: "プレビュー上では狭い範囲なので、ロープウェイ、鉄道、バスの判断をまとめて表しています。"
-      }
-    ],
-    dayLinks: [{ day: 4 }, { day: 5 }],
-    transitActions: [
-      {
-        id: "hakone-loop",
-        label: { en: "Hakone local detail", ja: "箱根ローカル詳細" }
-      },
-      {
-        id: "hakone-kawaguchiko",
-        label: { en: "Hakone -> Kawaguchiko detail", ja: "箱根 -> 河口湖 詳細" }
-      }
-    ],
-    segmentIds: ["odawara-hakone", "hakone-fuji"],
-    lngLat: [139.0302, 35.2323],
-    labelPosition: "sw",
-    x: 68.7,
-    y: 48.6
+    x: 73.4,
+    y: 39.4
   },
   {
     id: "fuji",
-    title: { en: "Kawaguchiko / Fuji area", ja: "河口湖・富士エリア" },
+    title: { en: "Mt. Fuji area", ja: "富士エリア" },
     summary: {
-      en: "This single stop groups the Kawaguchiko base, Chureito side, and local Fuji viewpoints.",
-      ja: "この地点は河口湖拠点、忠霊塔側、富士周辺の展望地をまとめて表しています。"
+      en: "This single stop groups Kawaguchiko arrival, lake views, Chureito timing, and the quiet overnight handoff before Tokyo.",
+      ja: "この地点は、河口湖到着、湖の景色、忠霊塔のタイミング、そして東京へ渡る前の静かな宿泊をまとめています。"
     },
     badges: [
-      { en: "Days 5-7", ja: "5日目-7日目" },
-      { en: "Weather flex", ja: "天気優先" }
+      { en: "Days 4 + 5", ja: "4日目・5日目" },
+      { en: "Weather-aware", ja: "天気重視" }
     ],
     notes: [
       {
-        en: "Use the Day 6 focus when you want the local hops; use the Day 7 focus when you want the Tokyo exit leg.",
-        ja: "現地移動を見たいときは6日目の表示、東京への戻りを見たいときは7日目の表示が使いやすいです。"
+        en: "Day 4 is about arriving light, settling in, and using the evening quietly around the lake or onsen.",
+        ja: "4日目は荷物を軽く整えて到着し、湖や温泉まわりで静かに夜を使う構成です。"
       },
       {
-        en: "This stop intentionally stays broad so the route section does not turn into a dense local transit map.",
-        ja: "ルート欄が細かい現地交通図になりすぎないよう、この地点はあえて広めにまとめています。"
+        en: "Day 5 starts with the best Fuji visibility window, then hands off to Tokyo once the morning call is clear.",
+        ja: "5日目は富士が見えやすい朝を先に使い、その判断が済んだら東京へ渡します。"
       }
     ],
-    dayLinks: [{ day: 5 }, { day: 6 }, { day: 7 }],
+    dayLinks: [{ day: 4 }, { day: 5 }],
     transitActions: [
       {
         id: "fuji-local-hops",
@@ -1421,37 +1227,37 @@ const routeExplorerStopDefinitions = [
       },
       {
         id: "kawaguchiko-tokyo",
-        label: { en: "Tokyo return detail", ja: "東京戻り詳細" }
+        label: { en: "Tokyo arrival detail", ja: "東京到着詳細" }
       }
     ],
-    segmentIds: ["hakone-fuji", "fuji-tokyo"],
+    segmentIds: ["fuji-gateway-kawaguchiko", "fuji-tokyo"],
     lngLat: [138.7552, 35.5009],
     labelPosition: "se",
-    x: 77,
-    y: 33.6
+    x: 78.2,
+    y: 31.4
   },
   {
     id: "tokyo",
     title: { en: "Tokyo", ja: "東京" },
     summary: {
-      en: "Tokyo is the final city stage for Day 7 and the optional extra days once they are unlocked.",
-      ja: "東京は7日目の最終都市であり、解放後は追加日程の舞台にもなります。"
+      en: "Tokyo now absorbs the Shibuya arrival, the central/west day, and the east-side finish into one main route close.",
+      ja: "東京は、渋谷到着、中央西側の日、東側の締めを一つの本編ルート終盤へまとめています。"
     },
     badges: [
-      { en: "Day 7+", ja: "7日目以降" },
-      { en: "Shibuya finish", ja: "渋谷で締め" }
+      { en: "Days 5-7", ja: "5日目-7日目" },
+      { en: "Main-route finish", ja: "本編の締め" }
     ],
     notes: [
       {
-        en: "The preview keeps Tokyo broad on purpose. Use the checklist and transit popups for the detailed arrival steps.",
-        ja: "東京はあえて広くまとめています。到着後の細かい動きはチェックリストや移動詳細で確認する想定です。"
+        en: "Day 5 lands in Shibuya for the crossing, food walk, and Shibuya Sky.",
+        ja: "5日目は渋谷に入り、スクランブル交差点、食べ歩き、渋谷スカイへつなげます。"
       },
       {
-        en: "If Days 8 and 9 are unlocked, this same stop becomes the anchor for the extra Tokyo plans.",
-        ja: "8日目と9日目を解放すると、この地点が追加の東京プランの基点にもなります。"
+        en: "Days 6 and 7 stay inside the fixed route: Imperial Palace and Shinjuku first, then Skytree, Solamachi, and Akihabara.",
+        ja: "6日目と7日目も固定本編に含め、皇居と新宿、そしてスカイツリー、ソラマチ、秋葉原へ進みます。"
       }
     ],
-    dayLinks: [{ day: 7 }, { day: 8, optional: true }, { day: 9, optional: true }],
+    dayLinks: [{ day: 5 }, { day: 6 }, { day: 7 }],
     segmentIds: ["fuji-tokyo"],
     lngLat: [139.7017, 35.658],
     labelPosition: "ne",
@@ -1464,10 +1270,10 @@ const routeExplorerViewDefinitions = [
   {
     id: "overview",
     label: { en: "All path", ja: "全体" },
-    title: { en: "Full trip flow", ja: "旅全体の流れ" },
+    title: { en: "Full 7-day flow", ja: "7日間の全体ルート" },
     summary: {
-      en: "Use the same map surface to scan the Osaka-to-Tokyo flow, then focus a stop or route leg for day links and transfer detail.",
-      ja: "同じ地図面で大阪から東京までの流れを見渡し、地点や区間へ切り替えて関連日程や移動詳細まで追える全体表示です。"
+      en: "Use the same map surface to scan the fixed west-to-east route from Osaka and Kyoto through the Mt. Fuji area into Tokyo.",
+      ja: "同じ地図面で、大阪と京都から富士エリアを経て東京へ入る固定の西から東への流れを見渡せます。"
     },
     badges: [
       { en: "Days 1-7", ja: "1日目-7日目" },
@@ -1475,16 +1281,16 @@ const routeExplorerViewDefinitions = [
     ],
     notes: [
       {
-        en: "Major-stop chips keep the city and base context visible, while route-leg selection isolates the transfers that need extra attention.",
-        ja: "主要地点チップでは都市や拠点の流れを見渡せて、区間選択では注意したい移動だけを切り出せます。"
+        en: "Major-stop chips keep the city and base context visible, while route-leg selection isolates the transfer days that need extra attention.",
+        ja: "主要地点チップでは都市と拠点の流れを見渡せて、区間選択では注意したい移動日だけを切り出せます。"
       },
       {
-        en: "Hakone, Fuji, and Tokyo stay intentionally broad here so the map remains readable; related days and saved transit tools carry the practical detail.",
-        ja: "箱根、富士、東京はここではあえて広めにまとめ、地図の見やすさを保っています。実務的な細部は関連日程と保存済み移動詳細で補います。"
+        en: "Tokyo stays as the final cluster because the former extras are now part of the main route.",
+        ja: "以前の追加東京日程も本編へ入れたため、東京は最後のまとまりとして見せています。"
       }
     ],
     dayLinks: [{ day: 1 }, { day: 2 }, { day: 3 }, { day: 4 }, { day: 5 }, { day: 6 }, { day: 7 }],
-    stopIds: ["osaka", "kyoto", "shin-osaka", "odawara", "hakone", "fuji", "tokyo"],
+    stopIds: ["osaka", "kyoto", "shin-osaka", "fuji-gateway", "fuji", "tokyo"],
     segmentIds: routeExplorerPathDefinitions.map((path) => path.id)
   },
   {
@@ -1492,8 +1298,8 @@ const routeExplorerViewDefinitions = [
     label: { en: "Kansai start", ja: "関西前半" },
     title: { en: "Osaka + Kyoto front half", ja: "大阪・京都の前半" },
     summary: {
-      en: "This keeps Days 1 to 3 together before the route stretches into the transfer-heavy eastbound leg.",
-      ja: "東へ大きく動く前の1日目から3日目までを、関西側だけでまとめて見られる表示です。"
+      en: "This keeps Days 1 to 3 together before the route stretches into the Fuji transfer.",
+      ja: "富士側への移動へ伸びる前の1日目から3日目までを、関西側だけでまとめて見られます。"
     },
     badges: [
       { en: "Days 1-3", ja: "1日目-3日目" },
@@ -1501,12 +1307,12 @@ const routeExplorerViewDefinitions = [
     ],
     notes: [
       {
-        en: "Kyoto is shown as a full-day branch rather than a point where you carry luggage onward.",
-        ja: "京都は荷物ごと先へ進む地点ではなく、丸一日分の分岐として表しています。"
+        en: "Kyoto East and Arashiyama stay split so each day remains practical instead of overloaded.",
+        ja: "京都東側と嵐山を分け、各日が重くなりすぎず実用的に見える構成にしています。"
       },
       {
-        en: "Shin-Osaka remains visible because it becomes the clean launch point for Day 4.",
-        ja: "新大阪は4日目の出発点になるので、この表示でも残しています。"
+        en: "Osaka stays visible because the route deliberately returns there before heading east.",
+        ja: "東へ向かう前に大阪へ戻る構成なので、この表示でも大阪を残しています。"
       }
     ],
     dayLinks: [{ day: 1 }, { day: 2 }, { day: 3 }],
@@ -1516,10 +1322,10 @@ const routeExplorerViewDefinitions = [
   {
     id: "day4-transfer",
     label: { en: "Day 4 transfer", ja: "4日目移動" },
-    title: { en: "Shin-Osaka -> Odawara -> Hakone", ja: "新大阪 -> 小田原 -> 箱根" },
+    title: { en: "Kansai -> Mt. Fuji area", ja: "関西 -> 富士エリア" },
     summary: {
-      en: "This is the longest travel pivot: bullet train first, then the Hakone local sequence into the ryokan stay.",
-      ja: "ここが最長の移動日です。まず新幹線、そのあと箱根ローカルの流れで旅館泊へ入ります。"
+      en: "This is the clean eastbound pivot: shinkansen to Mishima or Shin-Fuji first, then local access into Kawaguchiko.",
+      ja: "ここが東行きのきれいな切り替えです。まず三島または新富士まで新幹線で進み、そのあと河口湖へ入ります。"
     },
     badges: [
       { en: "Day 4", ja: "4日目" },
@@ -1527,148 +1333,87 @@ const routeExplorerViewDefinitions = [
     ],
     notes: [
       {
-        en: "Use this view when you want the transfer handoff, not the Osaka/Kyoto sightseeing context.",
-        ja: "大阪や京都の観光ではなく、乗り継ぎの引き渡しに集中したいときの表示です。"
+        en: "Use this view when you want the transfer itself, not the Osaka or Kyoto sightseeing context.",
+        ja: "大阪や京都の観光ではなく、移動そのものに集中したいときの表示です。"
       },
       {
-        en: "The two saved transit popups cover the long rail leg and the Hakone-side local loop separately.",
-        ja: "保存済みの移動詳細は、長距離鉄道と箱根側ローカルを分けて見られるようにしています。"
+        en: "The saved transit popups keep the long rail leg and the Fuji-side access split into clean steps.",
+        ja: "保存済み移動詳細は、長距離鉄道と富士側アクセスを分けて見られるようにしています。"
       }
     ],
     dayLinks: [{ day: 4 }],
     transitActions: [
       {
-        id: "shin-osaka-odawara",
+        id: "shin-osaka-fuji-gateway",
         label: { en: "Shinkansen detail", ja: "新幹線詳細" }
       },
       {
-        id: "hakone-loop",
-        label: { en: "Hakone local detail", ja: "箱根ローカル詳細" }
+        id: "fuji-gateway-kawaguchiko",
+        label: { en: "Fuji access detail", ja: "富士アクセス詳細" }
       }
     ],
-    stopIds: ["shin-osaka", "odawara", "hakone"],
-    segmentIds: ["shin-osaka-odawara", "odawara-hakone"]
+    stopIds: ["shin-osaka", "fuji-gateway", "fuji"],
+    segmentIds: ["shin-osaka-fuji-gateway", "fuji-gateway-kawaguchiko"]
   },
   {
-    id: "day5-transfer",
+    id: "day5-handoff",
     label: { en: "Day 5 handoff", ja: "5日目移動" },
-    title: { en: "Hakone -> Kawaguchiko", ja: "箱根 -> 河口湖" },
+    title: { en: "Mt. Fuji area -> Tokyo / Shibuya", ja: "富士エリア -> 東京・渋谷" },
     summary: {
-      en: "This is the cross-over from the Hakone stay into the Fuji-side base through the Gotemba direction.",
-      ja: "ここは箱根滞在から、御殿場方面を経て富士側の拠点へ渡す区間です。"
+      en: "This view covers the dawn Fuji check, the Chureito decision if clear, and the final handoff into Shibuya.",
+      ja: "この表示では、朝の富士チェック、晴れていれば忠霊塔、そして渋谷への移動までをまとめて見られます。"
     },
     badges: [
       { en: "Day 5", ja: "5日目" },
-      { en: "Transfer heavy", ja: "移動多め" }
+      { en: "Fuji -> Tokyo", ja: "富士 -> 東京" }
     ],
     notes: [
       {
-        en: "Treat this as a practical move first and a sightseeing day second.",
-        ja: "この日は観光より先に、実用的な移動日として考えると整えやすいです。"
+        en: "Treat the Fuji morning as the weather call, then switch to the Tokyo arrival plan once the view window is done.",
+        ja: "富士の朝を天気判断の時間として使い、その見え方が固まったら東京到着プランへ切り替える流れです。"
       },
       {
-        en: "If timing shifts, the saved transit popup is the quickest way to recall the fallback shape.",
-        ja: "時刻がずれたときは、保存済み移動詳細を開くのが代替の形を思い出す最短です。"
+        en: "The related popups keep the local Fuji hops and the Tokyo arrival options close together.",
+        ja: "関連ポップアップでは、富士側の現地移動と東京到着案を近い場所で確認できます。"
       }
     ],
     dayLinks: [{ day: 5 }],
     transitActions: [
       {
-        id: "hakone-kawaguchiko",
-        label: { en: "Hakone -> Kawaguchiko detail", ja: "箱根 -> 河口湖 詳細" }
-      }
-    ],
-    stopIds: ["hakone", "fuji"],
-    segmentIds: ["hakone-fuji"]
-  },
-  {
-    id: "day6-local",
-    label: { en: "Day 6 local", ja: "6日目現地" },
-    title: { en: "Fuji-area local movement", ja: "富士エリアの現地移動" },
-    summary: {
-      en: "This focuses on the local Fuji-side hops between Kawaguchiko, viewpoints, and weather-flex stops.",
-      ja: "河口湖拠点、展望地、天候優先の立ち寄り先を行き来する現地移動に絞った表示です。"
-    },
-    badges: [
-      { en: "Day 6", ja: "6日目" },
-      { en: "Weather flex", ja: "天気優先" }
-    ],
-    notes: [
-      {
-        en: "The route preview keeps this as one area on purpose so the map stays readable.",
-        ja: "地図を読みやすく保つため、この区間はあえて一つのエリアとしてまとめています。"
-      },
-      {
-        en: "Use the transit popup for the practical hops between Kawaguchiko base, Chureito, and Oshino-side spots.",
-        ja: "河口湖拠点、忠霊塔、忍野側の移動は、実用的な現地移動ポップアップで確認する想定です。"
-      }
-    ],
-    dayLinks: [{ day: 6 }],
-    transitActions: [
-      {
         id: "fuji-local-hops",
         label: { en: "Fuji local detail", ja: "富士エリア詳細" }
-      }
-    ],
-    stopIds: ["fuji"],
-    segmentIds: []
-  },
-  {
-    id: "day7-arrival",
-    label: { en: "Day 7 arrival", ja: "7日目到着" },
-    title: { en: "Kawaguchiko -> Tokyo / Shibuya", ja: "河口湖 -> 東京・渋谷" },
-    summary: {
-      en: "This is the exit leg from the Fuji side into Tokyo, ending with the Shibuya-only finish.",
-      ja: "富士側から東京へ戻り、そのまま渋谷中心で締める区間を見やすくまとめた表示です。"
-    },
-    badges: [
-      { en: "Day 7", ja: "7日目" },
-      { en: "Arrival day", ja: "到着日" }
-    ],
-    notes: [
-      {
-        en: "Use this when you want the Tokyo return leg separate from the Day 6 local movement.",
-        ja: "6日目の現地移動と分けて、東京へ戻る区間だけを見たいときの表示です。"
       },
       {
-        en: "The related transit popup keeps the Tokyo-side arrival options in one place.",
-        ja: "関連する移動詳細には、東京側の到着パターンをまとめています。"
-      }
-    ],
-    dayLinks: [{ day: 7 }],
-    transitActions: [
-      {
         id: "kawaguchiko-tokyo",
-        label: { en: "Tokyo return detail", ja: "東京戻り詳細" }
+        label: { en: "Tokyo arrival detail", ja: "東京到着詳細" }
       }
     ],
     stopIds: ["fuji", "tokyo"],
     segmentIds: ["fuji-tokyo"]
   },
   {
-    id: "tokyo-extra",
-    optional: true,
-    label: { en: "Tokyo extra", ja: "東京追加" },
-    title: { en: "Optional Tokyo extra days", ja: "追加の東京日程" },
+    id: "tokyo-finish",
+    label: { en: "Tokyo finish", ja: "東京後半" },
+    title: { en: "Tokyo main-route finish", ja: "東京で本編を締める" },
     summary: {
-      en: "When Days 8 and 9 are unlocked, Tokyo becomes the anchor for the extra Skytree, Akihabara, palace, and Shinjuku plans.",
-      ja: "8日目と9日目を解放すると、東京がスカイツリー、秋葉原、皇居、新宿の追加プランの基点になります。"
+      en: "The Tokyo close now keeps both the central/west day and the east-side day inside the main 7-day route.",
+      ja: "東京の締めは、中央西側の日と東側の日の両方を固定の7日間本編へ入れています。"
     },
     badges: [
-      { en: "Days 8 + 9", ja: "8日目・9日目" },
-      { en: "Optional", ja: "追加" }
+      { en: "Days 6-7", ja: "6日目-7日目" },
+      { en: "Main route only", ja: "本編のみ" }
     ],
     notes: [
       {
-        en: "The main route does not extend farther on the map; the extra days stay inside the Tokyo area.",
-        ja: "メインルートがさらに伸びるわけではなく、追加日程は東京エリア内で完結します。"
+        en: "Day 6 stays relaxed with the Imperial Palace and Shinjuku.",
+        ja: "6日目は皇居と新宿で、落ち着いた流れにしています。"
       },
       {
-        en: "Use the Tokyo stop marker or the checklist jump buttons when you want to switch from the map to the day cards.",
-        ja: "地図から日程カードへ移りたいときは、東京の停留地か下の該当日ボタンが使えます。"
+        en: "Day 7 finishes with Tokyo Skytree, Solamachi, and Akihabara instead of leaving them as extras.",
+        ja: "7日目は東京スカイツリー、ソラマチ、秋葉原で締め、追加日程には残しません。"
       }
     ],
-    dayLinks: [{ day: 8, optional: true }, { day: 9, optional: true }],
+    dayLinks: [{ day: 6 }, { day: 7 }],
     stopIds: ["tokyo"],
     segmentIds: []
   }
@@ -1702,9 +1447,6 @@ let accessibleDay = 1;
 let currentProgressDay = 1;
 let sequenceNoticeTimer = 0;
 let lastTimelineFocusDay = null;
-let optionalDaysUnlocked = false;
-let optionalPromptIsCompact = false;
-let optionalPromptDeferred = false;
 let lastResetTrigger = null;
 const pendingClassRestarts = new WeakMap();
 let deferredGeometryWorkPending = true;
@@ -3163,7 +2905,7 @@ function getOrderedDayNumbers() {
 }
 
 function getTrackedDayNumbers() {
-  return getOrderedDayNumbers().filter((day) => optionalDaysUnlocked || day <= 7);
+  return getOrderedDayNumbers();
 }
 
 function readStoredDaySet(key) {
@@ -3183,27 +2925,6 @@ function storeDaySet(key, daySet) {
   try {
     const sortedDays = Array.from(daySet).sort((left, right) => Number(left) - Number(right));
     queueStorageValue(key, JSON.stringify(sortedDays));
-  } catch (error) {
-    // Ignore storage failures and keep the page usable.
-  }
-}
-
-function readStoredBoolean(key) {
-  try {
-    return window.localStorage.getItem(key) === "1";
-  } catch (error) {
-    return false;
-  }
-}
-
-function storeBoolean(key, value) {
-  try {
-    if (value) {
-      queueStorageValue(key, "1");
-      return;
-    }
-
-    queueStorageRemoval(key);
   } catch (error) {
     // Ignore storage failures and keep the page usable.
   }
@@ -3365,31 +3086,14 @@ function renderTripNotes() {
   }
 
   const notesMarkup = tripNoteDefinitions
-    .map((definition) => {
-      const isLocked = definition.optional && !areOptionalDaysUnlocked();
-      const badges = [
-        definition.optional
-          ? `<span class="note-card__pill note-card__pill--optional">${renderLocalizedContent(
-              tripNotesLabels.optionalBadge
-            )}</span>`
-          : "",
-        isLocked
-          ? `<span class="note-card__pill note-card__pill--locked">${renderLocalizedContent(
-              tripNotesLabels.lockedBadge
-            )}</span>`
-          : ""
-      ]
-        .filter(Boolean)
-        .join("");
-
-      return `
-        <article class="note-card note-card--trip card${isLocked ? " note-card--locked" : ""}" data-trip-note-day="${definition.day}">
-          ${badges ? `<div class="note-card__meta-row">${badges}</div>` : ""}
+    .map(
+      (definition) => `
+        <article class="note-card note-card--trip card" data-trip-note-day="${definition.day}">
           <h3>${renderLocalizedContent(definition.title)}</h3>
-          <p>${renderLocalizedContent(isLocked ? tripNotesLabels.lockedSummary : definition.summary)}</p>
+          <p>${renderLocalizedContent(definition.summary)}</p>
         </article>
-      `;
-    })
+      `
+    )
     .join("");
 
   tripNotesGridNode.innerHTML = notesMarkup;
@@ -3417,7 +3121,7 @@ function getBudgetSelectedStayDefinition(day) {
   }
 
   const definition = getBudgetDayDefinition(day);
-  if (!definition || (definition.optional && !areOptionalDaysUnlocked())) {
+  if (!definition) {
     return null;
   }
 
@@ -4154,7 +3858,7 @@ function getBudgetRangeCopy(range = [0, 0]) {
 }
 
 function getVisibleBudgetDayConfigs() {
-  return budgetDayConfigs.filter((config) => !config.optional || areOptionalDaysUnlocked());
+  return budgetDayConfigs;
 }
 
 function getBudgetResetEnabled() {
@@ -4707,7 +4411,7 @@ function syncBudgetDayUI(dayElement) {
     level: "high",
     includeExtras
   });
-  dayElement.hidden = Boolean(config.optional) && !areOptionalDaysUnlocked();
+  dayElement.hidden = false;
   dayElement.dataset.budgetLevelState = state.level;
 
   dayElement.querySelectorAll("[data-budget-level]").forEach((input) => {
@@ -4914,13 +4618,11 @@ function initializeBudgetNotes() {
 }
 
 const itineraryBudgetLabels = {
-  summaryTotalLocked: { en: "Days 1-7 range", ja: "1〜7日目の予算帯" },
-  summaryTotalUnlocked: { en: "Trip range", ja: "旅程の予算帯" },
+  summaryTotal: { en: "Trip range", ja: "旅程の予算帯" },
   summaryPerPerson: { en: "Per-person range", ja: "1人あたりの予算帯" },
   summaryAccommodationSplit: { en: "Stay split / person range", ja: "宿泊の1人分帯" },
   summaryBookedRequired: { en: "Booked + required range", ja: "予約前提 + 必須の帯" },
-  summaryOptionalLocked: { en: "Days 8-9 add-on range", ja: "8日目と9日目の追加帯" },
-  summaryOptionalUnlocked: { en: "Optional Days 8-9 range", ja: "追加の8日目と9日目の帯" },
+  summaryRouteExtras: { en: "Route extras range", ja: "ルート追加費用の帯" },
   itineraryBasis: { en: "Estimate basis", ja: "見積りの前提" },
   estimateUnavailable: { en: "Itinerary budget notes are unavailable right now.", ja: "現在は旅程予算のメモを表示できません。" },
   breakdownHeading: { en: "Category breakdown", ja: "カテゴリ別の内訳" },
@@ -4942,9 +4644,9 @@ const itineraryBudgetLabels = {
     en: "A higher but still realistic version: pricier route-fit stay bands, fuller sightseeing-day meals, and fallback transit or timed-ticket variation where relevant.",
     ja: "高めでも現実的な帯です。動線に合う上側の宿泊帯、少し厚めの観光日食費、必要時の代替移動や時間帯差を見込みます。"
   },
-  rangeLegendOptionalDays: {
-    en: "Days 8-9 stay outside the live total until unlocked, and optional route extras stay outside the base total until you enable them.",
-    ja: "8日目と9日目は解放するまで合計へ入らず、任意のルート追加費用も有効にするまで基本合計へ入りません。"
+  rangeLegendRouteExtras: {
+    en: "The route always stays at 7 days. Route extras only cover things like luggage handling, Fuji visibility pivots, and small transfer-day add-ons when you enable them.",
+    ja: "ルートは常に7日間固定です。ルート追加費用は、有効にしたときだけ荷物対応、富士山の見え方に応じた動き直し、移動日の小さな追加費用を含めます。"
   },
   rangeFixedNote: { en: "Mostly fixed across the range", ja: "この項目は帯の中でほぼ固定" },
   rangeAvailablePrefix: { en: "Available if enabled", ja: "有効時の帯" },
@@ -4996,8 +4698,8 @@ const itineraryBudgetLabels = {
     ja: "有料の部屋や旅館の総額を、旅行者全員ではなく一部だけで分ける時だけ指定人数を使います。"
   },
   extrasHint: {
-    en: "Adds route-specific extras like luggage handling, weather pivots, and other handoff-day add-ons. Optional Days 8-9 stay separate until unlocked.",
-    ja: "荷物対応、天候回避、受け渡し日に発生する追加費用などのルート固有コストを反映します。8日目と9日目は解放するまで別枠です。"
+    en: "Adds route-specific extras like luggage handling, Fuji visibility pivots, and other handoff-day add-ons.",
+    ja: "荷物対応、富士山の見え方に応じた動き直し、受け渡し日に発生する追加費用などのルート固有コストを反映します。"
   },
   dayViewerLabel: {
     en: "Day selector",
@@ -5006,10 +4708,6 @@ const itineraryBudgetLabels = {
   dayViewerHint: {
     en: "Switch one day at a time instead of scrolling a long full-trip budget list.",
     ja: "縦に長い予算一覧を追わず、1日ずつ切り替えて確認します。"
-  },
-  dayViewerBadgeOptional: {
-    en: "Optional",
-    ja: "追加"
   },
   totalMeta: {
     en: "Lean / expected / high trip total built from the real day-by-day model",
@@ -5028,16 +4726,16 @@ const itineraryBudgetLabels = {
     ja: "英語表示では同じ円ベースの計画をCADとUSDの旅行用換算で見せ、日本語表示は円のままです。"
   },
   bookedRequiredMeta: {
-    en: "The base route costs before optional extras and before Days 8-9 are unlocked",
-    ja: "任意追加費用と8日目・9日目を除いた基本ルート費用"
+    en: "The fixed 7-day route costs before optional route extras",
+    ja: "任意のルート追加費用を除いた固定7日間ルートの費用"
   },
   sharedMeta: { en: "Shared stays and group costs", ja: "共有の宿泊費と共通費" },
   variableMeta: { en: "Per-person variable spend", ja: "1人ごとの変動費" },
   spendLegend: { en: "Day notes", ja: "日別メモ" },
   optionalInactive: { en: "Not added yet", ja: "まだ未加算" },
   optionalInactiveMeta: {
-    en: "Unlock Days 8-9 in the checklist to add them into the live total.",
-    ja: "チェックリストで8日目と9日目を解放すると、合計へ反映されます。"
+    en: "Enable route extras to add luggage handling, Fuji weather pivots, and other small transfer-day costs into the live total.",
+    ja: "ルート追加費用を有効にすると、荷物対応、富士山の見え方に応じた動き直し、移動日の小さな追加費用を合計へ反映します。"
   },
   sourceUpdatedPrefix: { en: "Updated", ja: "更新日" }
 };
@@ -5203,11 +4901,11 @@ function updateStoredBudgetDayState(day, nextState) {
 }
 
 function getBudgetVisibleDayDefinitions() {
-  return budgetDayDefinitions.filter((definition) => !definition.optional || areOptionalDaysUnlocked());
+  return budgetDayDefinitions;
 }
 
-function getBudgetOptionalDayDefinitions() {
-  return budgetDayDefinitions.filter((definition) => definition.optional);
+function getBudgetExtraDayDefinitions() {
+  return [];
 }
 
 function calculateBudgetItemCost(item, travelers, includeExtras) {
@@ -5304,7 +5002,6 @@ function calculateBudgetEstimate() {
   const travelers = getBudgetTravelerCount();
   const includeExtras = shouldIncludeBudgetExtras();
   const visibleDays = getBudgetVisibleDayDefinitions();
-  const optionalDays = getBudgetOptionalDayDefinitions();
   const categoryTotals = Object.fromEntries(
     budgetCategoryDefinitions.map((definition) => [definition.id, 0])
   );
@@ -5332,9 +5029,6 @@ function calculateBudgetEstimate() {
   };
 
   const visibleDayEstimates = visibleDays.map((definition) => calculateDay(definition));
-  const optionalDayAddOnEstimates = optionalDays
-    .filter((definition) => !visibleDays.some((visible) => visible.day === definition.day))
-    .map((definition) => calculateDay(definition));
 
   visibleDayEstimates.forEach((dayEstimate) => {
     dayEstimate.itemEstimates.forEach((item) => {
@@ -5348,17 +5042,14 @@ function calculateBudgetEstimate() {
   });
 
   const total = visibleDayEstimates.reduce((sum, day) => sum + day.total, 0);
-  const optionalDaysAddOnTotal = optionalDayAddOnEstimates.reduce((sum, day) => sum + day.total, 0);
   const bookedAndFixedTotal = (bucketTotals.booked || 0) + (bucketTotals.required || 0);
 
   return {
     travelers,
     includeExtras,
     visibleDayEstimates,
-    optionalDayAddOnEstimates,
     total,
     perPerson: travelers ? total / travelers : 0,
-    optionalDaysAddOnTotal,
     bookedAndFixedTotal,
     bucketTotals,
     categoryTotals,
@@ -5369,16 +5060,10 @@ function calculateBudgetEstimate() {
 }
 
 function renderBudgetSummaryMarkup(estimate = calculateBudgetEstimate()) {
-  const optionalDaysUnlocked = areOptionalDaysUnlocked();
-  const optionalVisibleTotal = estimate.visibleDayEstimates
-    .filter((day) => day.optional)
-    .reduce((sum, day) => sum + day.total, 0);
   const summaryCards = [
     {
       className: "budget-summary-card budget-summary-card--estimate budget-summary-card--compact",
-      label: optionalDaysUnlocked
-        ? itineraryBudgetLabels.summaryTotalUnlocked
-        : itineraryBudgetLabels.summaryTotalLocked,
+      label: itineraryBudgetLabels.summaryTotal,
       value: formatBudgetCurrency(estimate.total),
       meta: itineraryBudgetLabels.totalMeta
     },
@@ -5387,8 +5072,8 @@ function renderBudgetSummaryMarkup(estimate = calculateBudgetEstimate()) {
       label: itineraryBudgetLabels.summaryPerPerson,
       value: formatBudgetCurrency(estimate.perPerson),
       meta: {
-        en: `${estimate.travelers} traveler${estimate.travelers === 1 ? "" : "s"} • Osaka, Hakone, and Tokyo use quoted 2-person rooms; Kawaguchiko uses the quoted 4-person tatami room`,
-        ja: `${estimate.travelers}人 ・ 大阪・箱根・東京は見積りの2人部屋、河口湖は見積りの4人用畳部屋で計算`
+        en: `${estimate.travelers} traveler${estimate.travelers === 1 ? "" : "s"} • stay quotes follow the fixed Osaka, Kyoto, Mt. Fuji area, and Tokyo route`,
+        ja: `${estimate.travelers}人 ・ 宿泊見積りは固定の大阪、京都、富士エリア、東京ルートに合わせて計算`
       }
     },
     {
@@ -5399,16 +5084,12 @@ function renderBudgetSummaryMarkup(estimate = calculateBudgetEstimate()) {
     },
     {
       className: "budget-summary-card budget-summary-card--optional budget-summary-card--compact",
-      label: optionalDaysUnlocked
-        ? itineraryBudgetLabels.summaryOptionalUnlocked
-        : itineraryBudgetLabels.summaryOptionalLocked,
-      value: formatBudgetCurrency(optionalDaysUnlocked ? optionalVisibleTotal : estimate.optionalDaysAddOnTotal),
-      meta: optionalDaysUnlocked
+      label: itineraryBudgetLabels.summaryRouteExtras,
+      value: formatBudgetCurrency(estimate.bucketTotals.optional || 0),
+      meta: estimate.includeExtras
         ? {
-            en: `${estimate.optionalDayAddOnEstimates.length || estimate.visibleDayEstimates.filter((day) => day.optional).length} optional day${
-              estimate.visibleDayEstimates.filter((day) => day.optional).length === 1 ? "" : "s"
-            } in the live total`,
-            ja: `追加日 ${estimate.visibleDayEstimates.filter((day) => day.optional).length}日 を合計へ反映`
+            en: "Route extras are currently included in the live total.",
+            ja: "ルート追加費用を現在の合計へ反映しています。"
           }
         : itineraryBudgetLabels.optionalInactiveMeta
     }
@@ -6929,11 +6610,6 @@ function initializeBudgetNotes() {
           en: `Show budget for Day ${dayEstimate.day}`,
           ja: `${dayEstimate.day}日目の予算を見る`
         };
-        const optionalBadge = dayEstimate.optional
-          ? `<span class="budget-day-selector__badge">${renderLocalizedContent(
-              itineraryBudgetLabels.dayViewerBadgeOptional
-            )}</span>`
-          : "";
 
         return `
           <button
@@ -6948,14 +6624,12 @@ function initializeBudgetNotes() {
             <span class="budget-day-selector__button-title">${renderLocalizedContent(
               getDaySelectorTitleCopy(dayEstimate)
             )}</span>
-            ${optionalBadge}
           </button>
         `;
       })
       .join("");
-  const visibleDays = () =>
-    budgetDayDefinitions.filter((definition) => !definition.optional || areOptionalDaysUnlocked());
-  const optionalDays = () => budgetDayDefinitions.filter((definition) => definition.optional);
+  const visibleDays = () => budgetDayDefinitions;
+  const extraDayDefinitions = () => [];
   const calculateItemCost = (item, travelers, withExtras) => {
     const cost = item.cost || { mode: "none", amount: 0 };
     const sourceCost = getSourceCostConfig(cost.sourceCostId);
@@ -7178,10 +6852,6 @@ function initializeBudgetNotes() {
       };
     };
     const visibleDayEstimates = activeDays.map((definition) => calculateDay(definition));
-    const optionalDayAddOnEstimates = optionalDays()
-      .filter((definition) => !activeDays.some((visible) => visible.day === definition.day))
-      .map((definition) => calculateDay(definition));
-
     visibleDayEstimates.forEach((dayEstimate) => {
       dayEstimate.itemEstimates.forEach((item) => {
         if (!item.itemCost.included) {
@@ -7249,17 +6919,6 @@ function initializeBudgetNotes() {
       (sum, day) => sumBudgetRanges(sum, day.totalRange),
       getZeroBudgetRange()
     );
-    const optionalDaysAddOnTotal = optionalDayAddOnEstimates.reduce((sum, day) => sum + day.total, 0);
-    const optionalDaysAddOnRange = optionalDayAddOnEstimates.reduce(
-      (sum, day) => sumBudgetRanges(sum, day.totalRange),
-      getZeroBudgetRange()
-    );
-    const optionalVisibleTotal = visibleDayEstimates
-      .filter((day) => day.optional)
-      .reduce((sum, day) => sum + day.total, 0);
-    const optionalVisibleRange = visibleDayEstimates
-      .filter((day) => day.optional)
-      .reduce((sum, day) => sumBudgetRanges(sum, day.totalRange), getZeroBudgetRange());
     const bookedAndFixedTotal = (bucketTotals.booked || 0) + (bucketTotals.required || 0);
     const bookedAndFixedTotalRange = sumBudgetRanges(
       bucketTotalsRange.booked,
@@ -7276,15 +6935,10 @@ function initializeBudgetNotes() {
       accommodationPerPersonRange,
       includeExtras: withExtras,
       visibleDayEstimates,
-      optionalDayAddOnEstimates,
       total,
       totalRange,
       perPerson: getBudgetRangeValue(perPersonRange, "expected"),
       perPersonRange,
-      optionalDaysAddOnTotal,
-      optionalDaysAddOnRange,
-      optionalVisibleTotal,
-      optionalVisibleRange,
       bookedAndFixedTotal,
       bookedAndFixedTotalRange,
       bucketTotals,
@@ -7296,18 +6950,11 @@ function initializeBudgetNotes() {
     };
   };
   const renderSummaryMarkup = (estimate = calculateEstimate()) => {
-    const optionalDaysUnlocked = areOptionalDaysUnlocked();
-    const optionalDayCount = estimate.visibleDayEstimates.filter((day) => day.optional).length;
-    const optionalDaysRange = optionalDaysUnlocked
-      ? estimate.optionalVisibleRange
-      : estimate.optionalDaysAddOnRange;
     const shareModeLabel = getShareModeLabel(estimate.accommodationShareMode);
     const summaryCards = [
       {
         className: "budget-summary-card budget-summary-card--estimate budget-summary-card--compact",
-        label: optionalDaysUnlocked
-          ? itineraryBudgetLabels.summaryTotalUnlocked
-          : itineraryBudgetLabels.summaryTotalLocked,
+        label: itineraryBudgetLabels.summaryTotal,
         range: estimate.totalRange,
         meta: itineraryBudgetLabels.totalMeta
       },
@@ -7339,26 +6986,13 @@ function initializeBudgetNotes() {
       },
       {
         className: "budget-summary-card budget-summary-card--optional budget-summary-card--compact",
-        label: optionalDaysUnlocked
-          ? itineraryBudgetLabels.summaryOptionalUnlocked
-          : itineraryBudgetLabels.summaryOptionalLocked,
-        range: optionalDaysRange,
-        meta: optionalDaysUnlocked
-          ? joinLocalizedSegments([
-              {
-                en: `${optionalDayCount} optional day${optionalDayCount === 1 ? "" : "s"} in the live total`,
-                ja: `追加日 ${optionalDayCount}日 を合計へ反映`
-              },
-              estimate.includeExtras
-                ? {
-                    en: "Route extras are currently included.",
-                    ja: "ルート追加費用を現在反映しています。"
-                  }
-                : {
-                    en: "Route extras still stay outside the base total until enabled.",
-                    ja: "ルート追加費用は有効にするまで基本合計へ入りません。"
-                  }
-            ])
+        label: itineraryBudgetLabels.summaryRouteExtras,
+        range: estimate.bucketAvailableRanges.optional || getZeroBudgetRange(),
+        meta: estimate.includeExtras
+          ? {
+              en: "Route extras are currently included.",
+              ja: "ルート追加費用を現在反映しています。"
+            }
           : itineraryBudgetLabels.optionalInactiveMeta
       }
     ];
@@ -7456,8 +7090,8 @@ function initializeBudgetNotes() {
         }
       },
       {
-        label: { en: "Optional days + extras", ja: "追加日と追加費用" },
-        body: itineraryBudgetLabels.rangeLegendOptionalDays
+        label: { en: "Route extras", ja: "ルート追加費用" },
+        body: itineraryBudgetLabels.rangeLegendRouteExtras
       },
       {
         label: { en: "Currency view", ja: "通貨表示" },
@@ -7687,12 +7321,8 @@ function initializeBudgetNotes() {
           itineraryBudgetLabels.statusReady
         )}</p>
         <p class="budget-status-card__summary">${renderLocalizedContent({
-          en: `${estimate.travelers} traveler${estimate.travelers === 1 ? "" : "s"} • ${
-            areOptionalDaysUnlocked() ? "Optional Days 8-9 included" : "Days 8-9 still separate"
-          }`,
-          ja: `${estimate.travelers}人 ・ ${
-            areOptionalDaysUnlocked() ? "追加の8日目と9日目を含む" : "8日目と9日目は別枠"
-          }`
+          en: `${estimate.travelers} traveler${estimate.travelers === 1 ? "" : "s"} • Fixed 7-day west-to-east route`,
+          ja: `${estimate.travelers}人 ・ 固定の7日間・西から東へのルート`
         })}</p>
         <p class="budget-status-card__meta">${renderLocalizedContent(
           itineraryBudgetLabels.statusMeta
@@ -7976,7 +7606,7 @@ function initializeBudgetNotes() {
   getBudgetDayState = getDayState;
   updateStoredBudgetDayState = updateDayState;
   getBudgetVisibleDayDefinitions = visibleDays;
-  getBudgetOptionalDayDefinitions = optionalDays;
+  getBudgetExtraDayDefinitions = extraDayDefinitions;
   calculateBudgetItemCost = calculateItemCost;
   getBudgetItemFormulaCopy = getItemFormulaCopy;
   calculateBudgetEstimate = calculateEstimate;
@@ -8203,10 +7833,6 @@ function getDayCompletionRatio(dayCard) {
 function isDayComplete(dayCard) {
   const inputs = getDayInputs(dayCard);
   return inputs.length > 0 && inputs.every((input) => Boolean(checklistState[input.id]));
-}
-
-function areOptionalDaysUnlocked() {
-  return optionalDaysUnlocked;
 }
 
 function restoreChecklistState(panel = getSectionPanel("checklist")) {
@@ -8442,11 +8068,7 @@ function getLocalizedText(content) {
 }
 
 function getRouteExplorerViewById(viewId) {
-  return (
-    routeExplorerViewDefinitions.find(
-      (view) => view.id === viewId && (!view.optional || optionalDaysUnlocked)
-    ) || null
-  );
+  return routeExplorerViewDefinitions.find((view) => view.id === viewId) || null;
 }
 
 function getRouteExplorerSegmentById(segmentId) {
@@ -8454,7 +8076,7 @@ function getRouteExplorerSegmentById(segmentId) {
 }
 
 function getVisibleRouteDayLinks(dayLinks = []) {
-  return dayLinks.filter((link) => !link.optional || optionalDaysUnlocked);
+  return dayLinks;
 }
 
 function createRouteMapState() {
@@ -8516,8 +8138,7 @@ function getRouteMapSelectionSignature(selectionState) {
     selectionState.type,
     selectionState.config.id,
     segmentIds,
-    stopIds,
-    optionalDaysUnlocked ? "optional" : "base"
+    stopIds
   ].join("|");
 }
 
@@ -10066,7 +9687,7 @@ function getCurrentProgressDay() {
 }
 
 function getProgressOverviewState() {
-  const totalDays = areOptionalDaysUnlocked() ? 9 : 7;
+  const totalDays = getTrackedDayNumbers().length || 7;
   const completedCount = completedDays.size;
   const activeDay = Math.min(Number(getCurrentProgressDay()) || 1, totalDays);
 
@@ -10103,66 +9724,7 @@ function updateProgressOverview() {
   });
 }
 
-function setOptionalPromptFeedback(isVisible) {
-  if (!optionalPromptFeedback) {
-    return;
-  }
-
-  if (!isVisible) {
-    optionalPromptFeedback.hidden = true;
-    optionalPromptFeedback.textContent = "";
-    optionalPrompt?.classList.remove("is-confirmed");
-    return;
-  }
-
-  optionalPromptFeedback.hidden = false;
-  optionalPromptFeedback.textContent =
-    root.lang === "ja" ? "追加日程を追加しました" : "Optional days added";
-  optionalPrompt?.classList.add("is-confirmed");
-}
-
-function setOptionalPromptButtonsDisabled(isDisabled) {
-  optionalUnlockButtons.forEach((button) => {
-    button.disabled = isDisabled;
-  });
-
-  if (optionalSkipButton) {
-    optionalSkipButton.disabled = isDisabled;
-  }
-}
-
 function syncOptionalDaysUI() {
-  const canOfferOptionalDays = completedHistoryDays.has("7");
-
-  optionalProgressItems.forEach((item) => {
-    item.hidden = !optionalDaysUnlocked;
-  });
-
-  optionalSectionNodes.forEach((node) => {
-    node.hidden = !optionalDaysUnlocked;
-  });
-
-  if (!optionalPrompt) {
-    return;
-  }
-
-  const showPrompt = canOfferOptionalDays && !optionalDaysUnlocked && !optionalPromptDeferred;
-  optionalPrompt.hidden = !showPrompt;
-
-  if (!showPrompt) {
-    optionalPromptIsCompact = false;
-    setOptionalPromptFeedback(false);
-    setOptionalPromptButtonsDisabled(false);
-  }
-
-  if (optionalPromptExpanded) {
-    optionalPromptExpanded.hidden = !showPrompt;
-  }
-
-  if (optionalPromptCompact) {
-    optionalPromptCompact.hidden = true;
-  }
-
   refreshTripNotesIfReady();
   refreshBudgetNotesIfReady();
   refreshBookingTransitIfReady();
@@ -10175,56 +9737,6 @@ function syncOptionalDaysUI() {
 function scheduleDayCardRowHeights() {
   // The equal-height day-card pass was removed. Keep the hook so older callers
   // do not trigger a full grid walk and inline-style write on every resize/update.
-}
-
-function unlockOptionalDays() {
-  optionalDaysUnlocked = true;
-  optionalPromptIsCompact = false;
-  optionalPromptDeferred = false;
-  storeBoolean(optionalDaysUnlockedStorageKey, true);
-  setOptionalPromptButtonsDisabled(false);
-  setOptionalPromptFeedback(false);
-  syncOptionalDaysUI();
-  refreshChecklistProgressState();
-  syncProgressTimeline();
-  refreshRouteMapsIfReady({ updateCamera: true });
-  animateUnlock(progressItemMap.get("8"));
-  animateUnlock(dayCardMap.get("8"));
-
-  optionalSectionNodes.forEach((node, index) => {
-    if (!node.classList.contains("reveal-block")) {
-      return;
-    }
-
-    node.classList.remove("is-visible");
-    node.style.setProperty("--reveal-delay", `${index * 70}ms`);
-  });
-
-  window.requestAnimationFrame(() => {
-    optionalSectionNodes.forEach((node) => {
-      if (!node.classList.contains("reveal-block")) {
-        return;
-      }
-
-      node.classList.add("is-visible");
-
-      if (revealObserver) {
-        revealObserver.observe(node);
-      }
-    });
-    lastTimelineFocusDay = null;
-  });
-}
-
-function confirmOptionalDaysUnlock() {
-  if (optionalDaysUnlocked) {
-    return;
-  }
-
-  optionalPromptDeferred = false;
-  setOptionalPromptButtonsDisabled(false);
-  setOptionalPromptFeedback(false);
-  unlockOptionalDays();
 }
 
 function syncModalOpenState() {
@@ -10296,16 +9808,12 @@ function resetTripProgress() {
   completedHistoryDays = new Set();
   unlockedDays = new Set();
   warningDays = new Set();
-  optionalDaysUnlocked = false;
-  optionalPromptDeferred = false;
-  optionalPromptIsCompact = false;
   accessibleDay = 1;
   currentProgressDay = 1;
   lastTimelineFocusDay = null;
 
   storeChecklistState();
   storeDaySet(completedHistoryStorageKey, completedHistoryDays);
-  storeBoolean(optionalDaysUnlockedStorageKey, false);
   resetBookingTransitState();
 
   window.clearTimeout(sequenceNoticeTimer);
@@ -10314,8 +9822,6 @@ function resetTripProgress() {
     sequenceNotice.classList.remove("is-visible");
   }
 
-  setOptionalPromptFeedback(false);
-  setOptionalPromptButtonsDisabled(false);
   refreshChecklistProgressState({ syncDayCards: initializedSections.has("checklist") });
   refreshRouteMapsIfReady({ updateCamera: true });
   syncProgressTimeline();
@@ -10423,7 +9929,7 @@ function refreshChecklistProgressState(options = {}) {
       const progressRatio = getDayCompletionRatio(card);
       const dayKey = card.dataset.day;
       const isComplete = rawCompleted.has(dayKey);
-      const isLocked = !nextUnlockedDays.has(dayKey);
+      const isUnavailable = !nextUnlockedDays.has(dayKey);
       const isWarning = nextWarningDays.has(dayKey);
       const isCurrent = dayKey === String(nextCurrentDay);
 
@@ -10432,10 +9938,10 @@ function refreshChecklistProgressState(options = {}) {
       card.classList.toggle("is-complete", isComplete);
       card.classList.toggle("is-warning-day", isWarning);
       card.classList.toggle("is-current-day", isCurrent && !isComplete);
-      card.classList.toggle("is-locked-day", isLocked);
-      card.setAttribute("aria-disabled", String(isLocked));
+      card.classList.toggle("is-locked-day", isUnavailable);
+      card.setAttribute("aria-disabled", String(isUnavailable));
       getDayInputs(card).forEach((input) => {
-        input.disabled = isLocked;
+        input.disabled = isUnavailable;
       });
     });
   }
@@ -10445,21 +9951,21 @@ function refreshChecklistProgressState(options = {}) {
     const day = Number(item.dataset.progressItem);
     const card = dayCardMap.get(dayKey);
     const progressRatio = card ? getDayCompletionRatio(card) : 0;
-    const isLocked = !nextUnlockedDays.has(dayKey);
+    const isUnavailable = !nextUnlockedDays.has(dayKey);
     const isComplete = rawCompleted.has(dayKey);
     const isWarning = nextWarningDays.has(dayKey);
-    const isActive = dayKey === String(nextCurrentDay) && !isLocked;
+    const isActive = dayKey === String(nextCurrentDay) && !isUnavailable;
     const ratioNode = item.querySelector(".progress-item__ratio");
     const noticeNode = item.querySelector(".progress-item__notice");
 
     item.style.setProperty("--timeline-progress", String(progressRatio));
-    item.classList.toggle("is-locked", isLocked);
-    item.classList.toggle("is-unlocked", !isLocked);
-    item.classList.toggle("is-complete", !isLocked && isComplete);
+    item.classList.toggle("is-locked", isUnavailable);
+    item.classList.toggle("is-unlocked", !isUnavailable);
+    item.classList.toggle("is-complete", !isUnavailable && isComplete);
     item.classList.toggle("is-warning", isWarning);
     item.classList.toggle("is-partial", progressRatio > 0 && progressRatio < 1 && !isWarning);
     item.classList.toggle("is-active", isActive);
-    item.setAttribute("aria-disabled", String(isLocked));
+    item.setAttribute("aria-disabled", String(isUnavailable));
     if (isActive) {
       item.setAttribute("aria-current", "step");
     } else {
@@ -10474,9 +9980,9 @@ function refreshChecklistProgressState(options = {}) {
       if (isWarning) {
         noticeNode.hidden = false;
         noticeNode.textContent = root.lang === "ja" ? "要確認" : "Needs attention";
-      } else if (isLocked) {
+      } else if (isUnavailable) {
         noticeNode.hidden = false;
-        noticeNode.textContent = root.lang === "ja" ? "未解放" : "Locked";
+        noticeNode.textContent = root.lang === "ja" ? "次の項目" : "Up next";
       } else {
         noticeNode.hidden = true;
         noticeNode.textContent = "";
@@ -10502,16 +10008,6 @@ function refreshChecklistProgressState(options = {}) {
 function celebrateCompletedDay(day) {
   animateCompletion(dayCardMap.get(String(day)));
   animateCompletion(progressItemMap.get(String(day)));
-
-  if (Number(day) === 7) {
-    animateUnlock(progressItemMap.get("8"));
-    animateUnlock(dayCardMap.get("8"));
-  }
-
-  if (Number(day) === 8) {
-    animateUnlock(progressItemMap.get("9"));
-    animateUnlock(dayCardMap.get("9"));
-  }
 }
 
 async function scrollToChecklistDay(day) {
@@ -10612,7 +10108,6 @@ function setLanguage(language) {
   refreshChecklistProgressState();
   syncProgressTimeline();
   refreshRouteMapsIfReady();
-  setOptionalPromptFeedback(false);
   scheduleDayCardRowHeights();
 }
 
@@ -10673,16 +10168,6 @@ function setActivePanel(panelId) {
   });
 
   if (hasMatch) {
-    if (
-      panelId === "checklist" &&
-      optionalPromptDeferred &&
-      completedHistoryDays.has("7") &&
-      !optionalDaysUnlocked
-    ) {
-      optionalPromptDeferred = false;
-      syncOptionalDaysUI();
-    }
-
     if (initializedSections.has(panelId)) {
       refreshRevealPanel(panelId);
     }
@@ -10710,7 +10195,7 @@ function setActiveProgressItem(day) {
     return;
   }
 
-  const maxVisibleDay = areOptionalDaysUnlocked() ? 9 : 7;
+  const maxVisibleDay = getTrackedDayNumbers().length || 7;
   const nextDay = Math.min(Number(day) || 1, maxVisibleDay);
 
   progressItems.forEach((item) => {
@@ -10821,7 +10306,6 @@ function bindTabNavigation() {
 async function bootApp() {
   syncReducedEffectsMode({ force: true });
   completedHistoryDays = readStoredDaySet(completedHistoryStorageKey);
-  optionalDaysUnlocked = readStoredBoolean(optionalDaysUnlockedStorageKey);
   checklistState = readStoredChecklistState();
   syncOptionalDaysUI();
   applyTheme(readStoredThemePreference() || getCurrentTheme(), { persist: false });
@@ -10925,22 +10409,6 @@ backToTopButtons.forEach((button) => {
     });
   });
 });
-
-optionalUnlockButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    confirmOptionalDaysUnlock();
-  });
-});
-
-if (optionalSkipButton) {
-  optionalSkipButton.addEventListener("click", () => {
-    optionalPromptDeferred = true;
-    optionalPromptIsCompact = false;
-    setOptionalPromptFeedback(false);
-    setOptionalPromptButtonsDisabled(false);
-    syncOptionalDaysUI();
-  });
-}
 
 if (resetProgressModal) {
   resetProgressModal.addEventListener("click", (event) => {

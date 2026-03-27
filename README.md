@@ -1,6 +1,6 @@
 # Japan Escape Itinerary
 
-A compact bilingual travel guide for a Japan trip across **Osaka, Kyoto, Hakone, the Mt. Fuji area, and Tokyo**.
+A compact bilingual travel guide for a fixed **7-day west-to-east route** across **Osaka, Kyoto, the Mt. Fuji area, and Tokyo**.
 
 Live site: https://kairosfx.github.io/japan-escape-itinerary/
 
@@ -10,54 +10,55 @@ Live site: https://kairosfx.github.io/japan-escape-itinerary/
 
 **Japan Escape Itinerary** is a brochure-style travel site built for quick reference on the go.
 
-The site organizes the trip into clear sections so the full route is easy to follow:
+Each section is separated, and the itinerary now follows a fixed 7-day west-to-east flow from Osaka and Kyoto through the Mt. Fuji area and into Tokyo.
 
 - **Checklist** for day-by-day planning
-- **Notes** for context and practical guidance
-- **Routes** for understanding the overall flow
-- **Essentials** for pre-trip preparation
+- **Notes** for route logic and pacing
+- **Routes** for the overall west-to-east flow
+- **Essentials** for transit, packing, and booking prep
 
-The itinerary is designed to stay compact, smooth, and memorable without overloading the schedule.
+The route stays compact, practical, and easy to follow without optional branches.
 
 ---
 
 ## Trip Summary
 
 - **Duration:** 7 days
-- **Optional extension:** up to 9 days
-- **Main stops:** Osaka, Kyoto, Hakone, Mt. Fuji area, Tokyo
-- **Transit highlight:** Shin-Osaka → Odawara by bullet train
-- **Style:** city atmosphere first, scenic stretch in the middle, simple Tokyo finish
+- **Core stops:** 4
+- **Main stops:** Osaka, Kyoto, Mt. Fuji area, Tokyo
+- **Transit highlight:** Shin-Osaka → Mishima or Shin-Fuji by shinkansen, then local access to Kawaguchiko
+- **Style:** city atmosphere first, Fuji in the middle, Tokyo finish
 
 ### Core Route
 
-Osaka → Kyoto → Osaka → Shin-Osaka → Odawara → Hakone → Mt. Fuji Area → Tokyo
+Osaka → Kyoto → Osaka → Mt. Fuji area → Tokyo
+
+Detailed transfer flow:
+Osaka → Kyoto → Osaka → Shin-Osaka → Mishima or Shin-Fuji → Kawaguchiko / Mt. Fuji area → Tokyo
 
 ---
 
 ## Features
 
 ### Bilingual interface
-The site presents content in **English and Japanese** for easier reference and language familiarity during the trip.
+The site presents content in **English and Japanese** for easier reference during the trip.
 
 ### Day-by-day checklist
-The itinerary is structured as a progress-based checklist covering:
+The itinerary is structured as a fixed checklist covering:
 
 - **Day 1:** Osaka
-- **Day 2:** Kyoto
-- **Day 3:** Osaka
-- **Day 4:** Hakone transit + overnight
-- **Day 5:** Transfer toward Mt. Fuji area
-- **Day 6:** Lake Kawaguchiko / Oshino Hakkai / optional Chureito
-- **Day 7:** Tokyo / Shibuya
-
-Optional extra days can be unlocked for more time in Tokyo.
+- **Day 2:** Kyoto East
+- **Day 3:** Arashiyama → Osaka
+- **Day 4:** Kansai → Mt. Fuji area
+- **Day 5:** Mt. Fuji area → Tokyo / Shibuya
+- **Day 6:** Tokyo Central / West
+- **Day 7:** Tokyo East
 
 ### Route notes
-Each stop includes short planning notes explaining why the route is arranged this way, with an emphasis on keeping the trip efficient and relaxed.
+Each stop includes short planning notes explaining why the route is arranged this way, with an emphasis on cleaner transfers and simple geographic clustering.
 
 ### Essentials guide
-The site includes a trimmed preparation checklist focused on the items that matter most for this route, including documents, transit setup, luggage strategy, clothing, and daily carry items.
+The site includes a trimmed preparation checklist focused on documents, transit setup, luggage strategy, clothing, and day kits for the Fuji-to-Tokyo handoff.
 
 ### Mobile-friendly travel reference
 The site is meant to work as a practical trip companion before departure and while moving between destinations.
@@ -69,66 +70,58 @@ The site is meant to work as a practical trip companion before departure and whi
 This itinerary is built around a few simple ideas:
 
 - Keep Osaka relaxed and atmosphere-focused
-- Use Kyoto as a strong cultural contrast
-- Put the longest transfer in the middle of the trip
-- Keep the Mt. Fuji section flexible for weather
-- Finish with a simple, high-impact Tokyo ending
+- Group Kyoto East into one clean walking day
+- Separate Arashiyama from the east-side temple day
+- Put the Kansai-to-Fuji transfer in one clear handoff
+- Use Fuji visibility early, then finish with a broader Tokyo run
 
-Instead of trying to see everything, the route prioritizes flow, scenery, and ease of movement.
+The route now stays fixed from west to east.
 
 ---
 
 ## Planned Stops
 
 ### Osaka
-Starting point for food, nightlife, and street atmosphere.
+Food, nightlife, and the arrival rhythm on Day 1, plus the final Kansai reset on Day 3.
 
 Highlights:
 - Dotonbori
-- Osaka nightlife
-- Osaka Aquarium Kaiyukan
-- Flexible city time
+- Shinsaibashi
+- Kaiyukan / Tempozan
+- Final Osaka night
 
 ### Kyoto
-A full-day contrast to Osaka focused on cultural and historic atmosphere.
+Split into one east-side temple day and one separate Arashiyama morning.
 
 Highlights:
+- Kiyomizu-dera
+- Ninenzaka
+- Yasaka Pagoda
+- Gion
+- Nanzen-ji
 - Arashiyama
-- Nanzen-ji Temple
-
-### Hakone
-The transition from city travel into a slower scenic section.
-
-Highlights:
-- Hakone sightseeing
-- Overnight stay
-- Mountain scenery
-- Onsen / ryokan atmosphere
 
 ### Mt. Fuji Area
-The most weather-sensitive and scenic section of the trip.
+The scenic middle handoff between Kansai and Tokyo.
 
 Highlights:
-- Lake Kawaguchiko
-- Oshino Hakkai
-- Arakurayama Sengen Park / Chureito Pagoda (optional)
+- Shinkansen to Mishima or Shin-Fuji
+- Kawaguchiko arrival
+- Quiet sunset
+- Dawn Fuji check
+- Chureito if clear
 
 ### Tokyo
-A simple, urban final stop centered around Shibuya.
+A three-day finish built directly into the main route.
 
 Highlights:
 - Shibuya Crossing
-- Shibuya sightseeing
-- Shibuya Sky at night
-
-### Optional Tokyo Extension
-If more days are added, the itinerary expands with:
-
+- Shibuya Sky
+- Tokyo Imperial Palace
+- Shinjuku
 - Tokyo Skytree
 - Tokyo Solamachi
 - Akihabara
-- Tokyo Imperial Palace
-- Shinjuku
 
 ---
 
@@ -139,10 +132,10 @@ The preparation guide is built around a few key areas:
 - Documents and phone readiness
 - Payment and transit setup
 - Booking important tickets in advance
-- Keeping transfer days light
-- Packing for walking, weather changes, and one ryokan stay
+- Keeping the Osaka → Mt. Fuji area → Tokyo stretch light
+- Packing for walking, weather shifts, and transfer days
 
-This makes the Osaka → Hakone → Fuji stretch easier and keeps the trip more flexible.
+This keeps the Fuji stay and Tokyo handoff easier to manage.
 
 ---
 
@@ -174,19 +167,5 @@ npm run build
 
 ---
 
-## Future Expansion
-
-Possible future improvements:
-
-- interactive maps
-- booking links
-- weather-aware Fuji day suggestions
-- packing toggles
-- transit detail popups
-- budget notes
-- downloadable offline version
-
----
-
 Built for a smooth Japan route:
-**7 Days • 4 Cities • 1 Journey**
+**7 Days • 4 Stops • 1 West-to-East Journey**

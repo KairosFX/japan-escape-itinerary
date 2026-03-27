@@ -1,61 +1,61 @@
 [
   {
-    "id": "shin-osaka-odawara",
+    "id": "shin-osaka-fuji-gateway",
     "tag": { "en": "Day 4 transfer", "ja": "4日目の移動" },
     "title": {
-      "en": "Shin-Osaka -> Odawara shinkansen handoff",
-      "ja": "新大阪 -> 小田原 新幹線ハンドオフ"
+      "en": "Shin-Osaka -> Mishima or Shin-Fuji shinkansen handoff",
+      "ja": "新大阪 -> 三島または新富士 新幹線ハンドオフ"
     },
     "summary": {
-      "en": "This is the fixed long-distance rail leg that gets you into Hakone cleanly before the local loop starts.",
-      "ja": "箱根のローカル移動に入る前に、一気に距離を詰められる固定の長距離区間です。"
+      "en": "This is the fixed long-distance rail leg that pushes the route straight from Kansai into the Mt. Fuji side.",
+      "ja": "関西からそのまま富士側へ入るための、固定の長距離新幹線区間です。"
     },
     "segment": {
-      "en": "Osaka city side -> Hakone gateway",
-      "ja": "大阪側 -> 箱根の入口"
+      "en": "Kansai side -> Fuji gateway station",
+      "ja": "関西側 -> 富士側の入口駅"
     },
     "from": { "en": "Shin-Osaka Station", "ja": "新大阪駅" },
-    "to": { "en": "Odawara Station", "ja": "小田原駅" },
+    "to": { "en": "Mishima or Shin-Fuji", "ja": "三島または新富士" },
     "transport": {
-      "en": "Tokaido Shinkansen; reserved seat is the cleanest default if you have luggage.",
-      "ja": "東海道新幹線。荷物がある日は指定席を基準にすると楽です。"
+      "en": "Tokaido Shinkansen; reserved seats are the cleanest default if you have luggage.",
+      "ja": "東海道新幹線。荷物がある日は指定席を基準にすると落ち着きます。"
     },
     "why": {
-      "en": "It anchors the Hakone transfer day, shortens the travel window, and leaves the local Hakone decisions for after arrival instead of during the long rail leg.",
-      "ja": "箱根移動日の軸になり、移動時間を短く保ちつつ、箱根内の判断を到着後に回せます。"
+      "en": "It keeps Day 4 as one clear eastbound move, shortens the long leg, and leaves the local Kawaguchiko access decisions for after the rail arrival.",
+      "ja": "4日目を一つの東向き移動として整理しやすく、長距離区間をまとめたうえで、河口湖側の細かい判断を到着後へ回せます。"
     },
     "practicalNotes": [
       {
-        "en": "Pick a departure that leaves comfortable buffer at Odawara instead of trying to cut the transfer too tightly.",
-        "ja": "小田原での乗り換えを詰めすぎず、少し余裕が出る便を基準にします。"
+        "en": "Pick a departure that leaves transfer margin instead of shaving the connection too tightly.",
+        "ja": "接続を詰めすぎず、少し余裕が残る便を基準にします。"
       },
       {
-        "en": "If you are carrying bigger luggage, decide your Hakone onward plan before boarding so platform time stays calm.",
-        "ja": "大きめの荷物があるなら、箱根側の次の動きは乗車前に決めておくとホームで慌てません。"
+        "en": "Decide whether Mishima or Shin-Fuji works better for your chosen local access before boarding.",
+        "ja": "乗車前に、選ぶ現地アクセスに対して三島と新富士のどちらが合うか決めておきます。"
       },
       {
-        "en": "Keep seats, train number, and any oversized-baggage note saved in one place on your phone.",
-        "ja": "座席、列車番号、特大荷物の注意点はスマホで一つにまとめて保存しておきます。"
+        "en": "Keep seats, train number, and luggage notes saved in one place on your phone.",
+        "ja": "座席、列車番号、荷物メモはスマホで一つにまとめて保存しておきます。"
       }
     ],
     "prepReminders": [
       {
-        "en": "Book once Day 4 is fixed rather than leaving the Osaka to Hakone handoff to the last minute.",
-        "ja": "4日目が固まったら予約し、大阪から箱根への移動を直前判断にしないようにします。"
+        "en": "Book once Day 4 is fixed rather than leaving the Kansai-to-Fuji handoff to the last minute.",
+        "ja": "4日目が固まったら予約し、関西から富士側への受け渡しを直前判断にしないようにします。"
       },
       {
-        "en": "Save the next local step from Odawara so you do not need to rebuild the route on arrival.",
-        "ja": "到着後に組み直さなくて済むよう、小田原から先の流れも保存しておきます。"
+        "en": "Save the next local step toward Kawaguchiko so the arrival platform decision stays simple.",
+        "ja": "河口湖へ向かう次の動きを保存しておき、到着後の判断を単純にします。"
       }
     ],
     "fallbackOptions": [
       {
-        "en": "If reserved seats disappear, keep a nearby departure option and a slightly later backup ready instead of chasing a perfect train.",
-        "ja": "指定席が取りづらい時は、理想の便を追いすぎず、近い便と少し遅い便の両方を候補にします。"
+        "en": "If your preferred departure disappears, keep a nearby train and one slightly later backup ready instead of chasing a perfect seat.",
+        "ja": "希望の便が埋まった時は、理想の一便だけを追わず、近い便と少し遅い便の両方を候補にします。"
       },
       {
-        "en": "If you need more transfer margin, shift the Hakone loop lighter and go straight to the ryokan earlier.",
-        "ja": "乗り換え余裕が必要なら、箱根周遊を軽めにして旅館へ早めに入る方向へ切り替えます。"
+        "en": "If the transfer window feels too tight, simplify the Day 4 arrival and protect the sunset part of the Fuji stay.",
+        "ja": "接続が窮屈に感じる時は、4日目の到着後を簡潔にして、富士側の夕景時間を守ります。"
       }
     ],
     "action": {
@@ -64,200 +64,62 @@
     }
   },
   {
-    "id": "hakone-loop",
-    "tag": { "en": "Day 4 local transit", "ja": "4日目の周遊移動" },
+    "id": "fuji-gateway-kawaguchiko",
+    "tag": { "en": "Day 4 local access", "ja": "4日目の現地アクセス" },
     "title": {
-      "en": "Hakone local transit sequence",
-      "ja": "箱根ローカル移動の流れ"
+      "en": "Fuji gateway station -> Kawaguchiko access",
+      "ja": "富士側の入口駅 -> 河口湖アクセス"
     },
     "summary": {
-      "en": "Treat the Hakone loop as modular: rail, cable car, ropeway, lake, and bus segments that you can trim if weather or operations change.",
-      "ja": "箱根周遊は、鉄道、ケーブルカー、ロープウェイ、湖、バスを天候や運行状況で入れ替えられる可変ルートとして扱います。"
+      "en": "Treat the final Day 4 handoff as a practical station-to-lake move, not another sightseeing detour.",
+      "ja": "4日目の最後は、観光の寄り道ではなく、駅から湖側へ入る実用的な移動として考えます。"
     },
     "segment": {
-      "en": "Odawara / Hakone-Yumoto -> Gora -> Sounzan -> Owakudani -> Togendai / Moto-Hakone",
-      "ja": "小田原・箱根湯本 -> 強羅 -> 早雲山 -> 大涌谷 -> 桃源台・元箱根"
+      "en": "Mishima or Shin-Fuji -> Kawaguchiko / Mt. Fuji area",
+      "ja": "三島または新富士 -> 河口湖・富士エリア"
     },
-    "from": { "en": "Odawara or Hakone-Yumoto", "ja": "小田原または箱根湯本" },
-    "to": {
-      "en": "Togendai, Moto-Hakone, or your ryokan depending on conditions",
-      "ja": "天候次第で桃源台、元箱根、または旅館"
-    },
-    "transport": {
-      "en": "Hakone Tozan rail/cable car, ropeway, cruise, and local bus depending on same-day operations.",
-      "ja": "当日の運行状況に応じて、箱根登山系、ロープウェイ、船、路線バスを使い分けます。"
-    },
-    "why": {
-      "en": "It preserves the scenic Hakone highlights without forcing every segment if wind, volcanic restrictions, or timing make the full loop awkward.",
-      "ja": "風や規制、時間の都合で全区間が厳しくても、見どころを残しながら柔軟に短縮できます。"
-    },
-    "practicalNotes": [
-      {
-        "en": "Think in checkpoints, not one rigid chain: Gora/Sounzan, Owakudani, lake side, shrine side, then ryokan.",
-        "ja": "一つの固定ルートではなく、強羅・早雲山、大涌谷、湖側、神社側、旅館という中継点で考えます。"
-      },
-      {
-        "en": "Check ropeway and lake status before committing; the best loop direction can change on the day.",
-        "ja": "ロープウェイと湖の運行は先に確認し、その日の最適な回り方を決めます。"
-      },
-      {
-        "en": "If the day starts late, cut one scenic segment instead of rushing every transfer.",
-        "ja": "出発が遅れたら、全区間を急ぐより景色区間を一つ減らす方が整います。"
-      }
-    ],
-    "prepReminders": [
-      {
-        "en": "Compare the Odawara Hakone Freepass against the exact segments you expect to use.",
-        "ja": "小田原版の箱根フリーパスは、実際に使う区間と見比べて判断します。"
-      },
-      {
-        "en": "Keep the official transport status page saved before Day 4.",
-        "ja": "4日目の前に、公式の運行状況ページを保存しておきます。"
-      },
-      {
-        "en": "Save your ryokan address and arrival plan offline in case the loop gets shortened.",
-        "ja": "周遊を短縮しても困らないよう、旅館の住所と到着経路をオフライン保存します。"
-      }
-    ],
-    "fallbackOptions": [
-      {
-        "en": "If the ropeway is limited, pivot to shrine, lakeside, and bus links instead of forcing the aerial segment.",
-        "ja": "ロープウェイが難しい時は、空中区間にこだわらず神社、湖畔、バス移動へ切り替えます。"
-      },
-      {
-        "en": "If visibility is poor, keep the transit simpler and prioritize the ryokan/onsen portion of the day.",
-        "ja": "景色が弱い日は移動を単純化し、旅館や温泉側を優先します。"
-      }
-    ],
-    "action": {
-      "href": "https://www.hakonenavi.jp/international/en/status_information",
-      "label": { "en": "Check Hakone status", "ja": "箱根の運行状況を見る" }
-    }
-  },
-  {
-    "id": "hakone-kawaguchiko",
-    "tag": { "en": "Day 5 transfer", "ja": "5日目の移動" },
-    "title": {
-      "en": "Hakone -> Kawaguchiko via Gotemba",
-      "ja": "箱根 -> 御殿場経由で河口湖"
-    },
-    "summary": {
-      "en": "Use this as the weather-flexible transfer day that keeps you on the mountain side instead of sending you all the way back through Tokyo first.",
-      "ja": "東京へ戻り切らず、山側をつないで富士エリアへ抜ける天候対応型の移動日として使います。"
-    },
-    "segment": {
-      "en": "Hakone area -> Gotemba area -> Kawaguchiko",
-      "ja": "箱根エリア -> 御殿場周辺 -> 河口湖"
-    },
-    "from": { "en": "Hakone / Lake Ashi side", "ja": "箱根・芦ノ湖側" },
+    "from": { "en": "Mishima or Shin-Fuji", "ja": "三島または新富士" },
     "to": { "en": "Kawaguchiko Station area", "ja": "河口湖駅周辺" },
     "transport": {
-      "en": "Bus-led transfer chain via Gotemba, with timing confirmed on the day.",
-      "ja": "御殿場経由のバス中心ルートを基準にし、当日の時刻で最終判断します。"
+      "en": "Local rail or bus access depending on the gateway you choose and the timing that day.",
+      "ja": "選ぶ入口駅と当日の時刻に合わせて、在来線またはバス系のアクセスを使い分けます。"
     },
     "why": {
-      "en": "It keeps Day 5 light, preserves Fuji flexibility, and avoids overcomplicating the move with unnecessary backtracking.",
-      "ja": "5日目を軽く保ち、富士方面の柔軟性を残しつつ、遠回りの戻り移動を避けられます。"
+      "en": "It keeps the route west-to-east without inserting another scenic loop, and it sets up the calm lake arrival the plan now wants.",
+      "ja": "景色優先の周遊を挟まずに西から東へ流せるうえ、今回の計画で重視する静かな湖到着にもつなげやすくなります。"
     },
     "practicalNotes": [
       {
-        "en": "Travel this day with the lightest bag setup you can manage.",
-        "ja": "この日はできるだけ軽い荷物構成で動きます。"
+        "en": "Travel this handoff with the lightest bag setup you can manage.",
+        "ja": "この受け渡し区間は、できるだけ軽い荷物構成で動きます。"
       },
       {
-        "en": "Treat departure times as day-of references, not something to memorize the night before.",
-        "ja": "出発時刻は前夜に暗記するより、当日参照できる状態にしておく方が実用的です。"
+        "en": "Save the final Kawaguchiko arrival point and lodging address so the last step stays simple.",
+        "ja": "河口湖側の到着地点と宿の住所を保存し、最後の一手を単純にします。"
       },
       {
-        "en": "Save the final Kawaguchiko arrival stop and lodging address so the last step stays simple.",
-        "ja": "最後の河口湖到着停留所と宿の住所を保存し、到着後の動きを単純にします。"
+        "en": "Protect sunset timing first; extra local wandering can wait until the next morning.",
+        "ja": "まず夕景の時間を守り、追加の現地移動は翌朝へ回します。"
       }
     ],
     "prepReminders": [
       {
-        "en": "Check whether the specific bus segments you want require advance reservation or just same-day boarding.",
-        "ja": "使う予定のバス区間が事前予約型か、当日乗車型かを先に確認します。"
+        "en": "Check your chosen gateway-to-Kawaguchiko path the night before, but confirm final times on the day.",
+        "ja": "前夜に入口駅から河口湖までの流れを確認し、最終時刻は当日に見直します。"
       },
       {
-        "en": "Keep a backup route through a larger rail hub saved in case the bus plan gets awkward.",
-        "ja": "バスが難しい時のために、大きい乗換駅を経由する代替ルートも保存しておきます。"
+        "en": "Keep one simpler fallback route saved in case the preferred handoff becomes awkward.",
+        "ja": "第一候補の接続が悪い時のために、より単純な代替ルートも一つ保存しておきます。"
       }
     ],
     "fallbackOptions": [
       {
-        "en": "If the Gotemba-side timing becomes awkward, switch to a rail-led route through a larger interchange rather than forcing the same chain.",
-        "ja": "御殿場側の接続が悪い時は、同じ連鎖に固執せず、大きな乗換駅経由の鉄道中心ルートへ切り替えます。"
+        "en": "If the connection stops fitting, cut the extra stop count and prioritize getting into the lake base cleanly.",
+        "ja": "接続が合わなくなったら途中を増やしすぎず、湖側の拠点へ素直に入ることを優先します。"
       },
       {
-        "en": "If weather looks poor, keep the arrival day simple and save the longer Fuji-area movement for Day 6.",
-        "ja": "天候が弱い時は、到着日は簡潔にして、長い富士エリア移動は6日目へ回します。"
-      }
-    ],
-    "action": {
-      "href": "https://www.hakonenavi.jp/international/en/transportation",
-      "label": { "en": "Open transfer guide", "ja": "移動ガイドを見る" }
-    }
-  },
-  {
-    "id": "fuji-local-hops",
-    "tag": { "en": "Day 6 local transit", "ja": "6日目のエリア移動" },
-    "title": {
-      "en": "Fuji-area movement between key stops",
-      "ja": "富士エリア主要スポット間の移動"
-    },
-    "summary": {
-      "en": "Build Day 6 around one clear-view decision first, then connect Chureito, Kawaguchiko, and Oshino in the lightest order instead of trying to force every stop at once.",
-      "ja": "6日目はまず見え方の判断を一つ置き、その後で忠霊塔、河口湖、忍野を軽い順番でつなぎます。"
-    },
-    "segment": {
-      "en": "Kawaguchiko base -> Chureito / lake side / Oshino Hakkai",
-      "ja": "河口湖拠点 -> 忠霊塔・湖畔・忍野八海"
-    },
-    "from": { "en": "Kawaguchiko Station area", "ja": "河口湖駅周辺" },
-    "to": {
-      "en": "Whichever view spot still makes sense after the morning weather check",
-      "ja": "朝の見え方確認後に最も合う展望スポット"
-    },
-    "transport": {
-      "en": "Local train/bus combinations, with short taxi use only as a time-saving fallback.",
-      "ja": "路線電車とバスの組み合わせを基本にし、必要なら短距離だけタクシーを代替に使います。"
-    },
-    "why": {
-      "en": "It keeps the Fuji day flexible. You can commit to Chureito only if the mountain is actually showing, then keep the lake and Oshino side modular.",
-      "ja": "富士の日を柔軟に保てます。実際に見えている時だけ忠霊塔へ寄り、その後は湖畔や忍野を可変にできます。"
-    },
-    "practicalNotes": [
-      {
-        "en": "Do the first Fuji visibility check before locking in the longest out-and-back segment.",
-        "ja": "最も往復負荷の大きい移動を決める前に、最初の見え方確認を入れます。"
-      },
-      {
-        "en": "Group stops by side of the lake rather than zig-zagging across the area.",
-        "ja": "エリアを行ったり来たりせず、湖の同じ側のスポットをまとめます。"
-      },
-      {
-        "en": "Save the last practical return option to your base before you start improvising extra stops.",
-        "ja": "追加スポットを入れる前に、拠点へ戻る最後の現実的な便を先に押さえます。"
-      }
-    ],
-    "prepReminders": [
-      {
-        "en": "Keep one lake-side option and one inland option ready so weather can choose the order for you.",
-        "ja": "湖側と内陸側を一つずつ候補にしておき、天候に順番を決めさせます。"
-      },
-      {
-        "en": "Save the key stop names in Japanese for buses and station staff checks.",
-        "ja": "バス確認や駅員さんへの確認用に、主要停留所名は日本語でも保存しておきます。"
-      }
-    ],
-    "fallbackOptions": [
-      {
-        "en": "If buses bunch up or visibility drops, trim one outer stop and stay closer to Kawaguchiko.",
-        "ja": "バスの間隔が悪い時や視界が落ちた時は、外側のスポットを一つ削って河口湖寄りに留まります。"
-      },
-      {
-        "en": "If Chureito no longer fits the weather window, pivot to lake views and flexible cafe or walking time instead of forcing the climb.",
-        "ja": "忠霊塔が天候窓に合わない時は、無理に登らず、湖畔の景色や柔軟な散策へ切り替えます。"
+        "en": "If weather looks weak, keep Day 4 as arrival plus onsen or hotel time and save viewpoint decisions for Day 5 dawn.",
+        "ja": "天候が弱い時は、4日目を到着と温泉またはホテル時間に寄せ、展望地の判断は5日目の朝へ回します。"
       }
     ],
     "action": {
@@ -266,62 +128,129 @@
     }
   },
   {
-    "id": "kawaguchiko-tokyo",
-    "tag": { "en": "Day 7 return", "ja": "7日目の東京戻り" },
+    "id": "fuji-local-hops",
+    "tag": { "en": "Day 5 local transit", "ja": "5日目の現地移動" },
     "title": {
-      "en": "Kawaguchiko -> Tokyo / Shibuya return",
-      "ja": "河口湖 -> 東京・渋谷 戻り"
+      "en": "Fuji-area dawn check and local movement",
+      "ja": "富士エリアの朝チェックと現地移動"
     },
     "summary": {
-      "en": "Use the cheaper direct bus as the default, and keep Fuji Excursion only as the cleaner rail fallback if you still want it.",
-      "ja": "より安い直通バスを初期値にし、富士回遊は必要な時だけ使う鉄道代替として持っておきます。"
+      "en": "Use the first clear weather window before committing to Chureito or any longer out-and-back movement.",
+      "ja": "忠霊塔や長い往復移動を決める前に、最初の見え方の良い時間帯を先に使います。"
     },
     "segment": {
-      "en": "Kawaguchiko -> Tokyo core -> Shibuya",
-      "ja": "河口湖 -> 東京中心部 -> 渋谷"
+      "en": "Kawaguchiko base -> Chureito / local Fuji viewpoints",
+      "ja": "河口湖拠点 -> 忠霊塔・富士周辺の展望地"
     },
     "from": { "en": "Kawaguchiko area", "ja": "河口湖エリア" },
-    "to": { "en": "Tokyo / Shibuya side", "ja": "東京・渋谷側" },
+    "to": {
+      "en": "Whichever viewpoint still makes sense after the dawn visibility check",
+      "ja": "朝の見え方確認後に最も合う展望地"
+    },
     "transport": {
-      "en": "Direct highway bus toward Shibuya/Tokyo first; Fuji Excursion or rail via Otsuki only if you prefer the train enough to pay more.",
-      "ja": "まずは渋谷・東京方面への直通高速バス。列車を使いたいなら、追加コストを受け入れて富士回遊や大月経由の鉄道へ切り替えます。"
+      "en": "Local train or bus combinations, with short taxi use only as a time-saving fallback.",
+      "ja": "路線電車とバスの組み合わせを基本にし、必要なら短距離だけタクシーを代替に使います。"
     },
     "why": {
-      "en": "The bus keeps the budget more believable, gets you closer to the Shibuya end of the day, and avoids overpaying for the return just because the direct train exists.",
-      "ja": "バスの方が予算の現実味を保ちやすく、その日の終点である渋谷にも寄せやすいため、直通列車があるだけで帰路を高くしすぎずに済みます。"
+      "en": "It protects the strongest Fuji view chance first, then leaves enough room to hand off into Tokyo the same day.",
+      "ja": "まず最も大事な富士の見え方を優先でき、そのうえで同日の東京移動へも余白を残せます。"
     },
     "practicalNotes": [
       {
-        "en": "Decide whether you are going straight to your Tokyo base or dropping bags first before heading to Shibuya.",
-        "ja": "東京到着後に宿へ直行するか、荷物を置いてから渋谷へ向かうかを先に決めます。"
+        "en": "Do the first visibility check before locking in the longest out-and-back segment.",
+        "ja": "最も往復負荷の大きい移動を決める前に、最初の見え方確認を入れます。"
       },
       {
-        "en": "Keep one arrival target in Tokyo saved so the final city transfer is only one more hop.",
-        "ja": "東京側の到着目標を一つ決めて保存し、最後の市内移動を一回に抑えます。"
+        "en": "If Fuji is weak, keep the morning compact and protect the Tokyo transfer timing instead.",
+        "ja": "富士山が弱い時は朝の行動を短くまとめ、代わりに東京移動の時間を守ります。"
       },
       {
-        "en": "Treat Fuji Excursion as the premium rail option, not the default price assumption for the whole day.",
-        "ja": "富士回遊は、その日の標準価格ではなく、あくまで上振れしやすい鉄道優先案として考えます。"
+        "en": "Save one last practical return to your base or departure point before adding extra stops.",
+        "ja": "追加の立ち寄りを増やす前に、拠点または出発地点へ戻る最後の現実的な便を押さえます。"
       }
     ],
     "prepReminders": [
       {
-        "en": "Save the direct bus page first because that is now the budgeting default.",
-        "ja": "まずは直通バスのページを保存します。これが現在の予算初期値です。"
+        "en": "Keep Chureito as a conditional stop, not a forced stop.",
+        "ja": "忠霊塔は必須固定ではなく、条件付きの立ち寄りとして考えます。"
       },
       {
-        "en": "Keep Fuji Excursion or Otsuki rail saved only as a backup if the bus timing stops fitting your day.",
-        "ja": "バス時刻が合わなくなった時だけ使えるよう、富士回遊や大月経由の鉄道も代替として保存しておきます。"
+        "en": "Save the key stop names in Japanese for station or bus checks.",
+        "ja": "駅員さんやバス確認用に、主要停留所名は日本語でも保存しておきます。"
       }
     ],
     "fallbackOptions": [
       {
-        "en": "If the direct bus timing stops fitting, switch to Fuji Excursion or rail via Otsuki instead of forcing the whole day around one departure.",
-        "ja": "直通バスの時刻が合わなくなったら、その便に旅程を合わせすぎず、富士回遊や大月経由の鉄道へ切り替えます。"
+        "en": "If visibility drops, trim the outer stop and stay closer to Kawaguchiko before heading east.",
+        "ja": "視界が落ちたら外側の立ち寄りを一つ削り、東へ動く前は河口湖寄りでまとめます。"
       },
       {
-        "en": "If Tokyo arrival is running late, cut the first Tokyo activity and protect the rest of the evening.",
-        "ja": "東京到着が遅れそうなら、最初の東京アクティビティを一つ減らして夜を守ります。"
+        "en": "If Chureito no longer fits the weather window, pivot to lake views and an earlier Tokyo departure instead of forcing the climb.",
+        "ja": "忠霊塔が天候窓に合わない時は、無理に登らず、湖畔の景色と少し早い東京移動へ切り替えます。"
+      }
+    ],
+    "action": {
+      "href": "https://www.google.com/maps/search/Arakurayama+Sengen+Park",
+      "label": { "en": "Open Chureito area map", "ja": "忠霊塔周辺地図を開く" }
+    }
+  },
+  {
+    "id": "kawaguchiko-tokyo",
+    "tag": { "en": "Day 5 return", "ja": "5日目の東京入り" },
+    "title": {
+      "en": "Mt. Fuji area -> Tokyo / Shibuya return",
+      "ja": "富士エリア -> 東京・渋谷 戻り"
+    },
+    "summary": {
+      "en": "Use the Tokyo handoff as the second half of Day 5, landing in Shibuya for a focused evening rather than spreading arrival across the city.",
+      "ja": "5日目後半は東京への受け渡しに充て、東京到着後は街を広げすぎず、渋谷の夜に集中します。"
+    },
+    "segment": {
+      "en": "Kawaguchiko / Mt. Fuji area -> Tokyo core -> Shibuya",
+      "ja": "河口湖・富士エリア -> 東京中心部 -> 渋谷"
+    },
+    "from": { "en": "Kawaguchiko / Mt. Fuji area", "ja": "河口湖・富士エリア" },
+    "to": { "en": "Tokyo / Shibuya side", "ja": "東京・渋谷側" },
+    "transport": {
+      "en": "Direct highway bus or rail depending on the timing that best fits your Shibuya evening.",
+      "ja": "渋谷の夜に合わせやすい時刻を優先して、直通高速バスまたは鉄道を選びます。"
+    },
+    "why": {
+      "en": "It keeps the west-to-east flow intact, gets you into Tokyo cleanly, and leaves Days 6 and 7 free for the broader city plan.",
+      "ja": "西から東への流れを崩さずに東京へ入れ、6日目と7日目を都内行動へ素直に使えます。"
+    },
+    "practicalNotes": [
+      {
+        "en": "Decide whether you are going straight to your Tokyo base or dropping bags first before Shibuya.",
+        "ja": "東京到着後に宿へ直行するか、荷物を置いてから渋谷へ向かうかを先に決めます。"
+      },
+      {
+        "en": "Keep one arrival target in Tokyo saved so the final city transfer is only one more hop.",
+        "ja": "東京側の到着目標を一つ決めて保存し、最後の市内移動を一回で済ませます。"
+      },
+      {
+        "en": "If the transfer starts running late, protect Shibuya food and Shibuya Sky before adding extra stops.",
+        "ja": "移動が遅れ始めたら、余計な立ち寄りを増やす前に、渋谷の食事と渋谷スカイを守ります。"
+      }
+    ],
+    "prepReminders": [
+      {
+        "en": "Save the direct bus page first if you want the simplest one-step handoff into Tokyo.",
+        "ja": "東京へ一段で入りたいなら、まず直通バスのページを保存しておきます。"
+      },
+      {
+        "en": "Keep one rail fallback saved in case the bus timing stops fitting your day.",
+        "ja": "バス時刻が合わなくなった時のために、鉄道代替も一つ保存しておきます。"
+      }
+    ],
+    "fallbackOptions": [
+      {
+        "en": "If the direct bus timing stops fitting, switch to rail instead of forcing the whole day around one departure.",
+        "ja": "直通バスの時刻が合わなくなったら、その便に旅程を合わせすぎず、鉄道へ切り替えます。"
+      },
+      {
+        "en": "If Tokyo arrival is running late, cut the first city stop and protect the rest of the evening.",
+        "ja": "東京到着が遅れそうなら、最初の都内立ち寄りを一つ削って夜の流れを守ります。"
       }
     ],
     "action": {

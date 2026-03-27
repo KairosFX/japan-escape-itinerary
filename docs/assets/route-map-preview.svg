@@ -27,8 +27,8 @@
     <line x1="1020" y1="92" x2="1020" y2="628"/>
   </g>
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M180 580 L238 448 L186 572 L202 548 L844 336 L824 350 L1036 150" stroke="#fff7f1" stroke-width="20" opacity="0.9"/>
-    <path d="M180 580 L238 448 L186 572 L202 548 L844 336 L824 350 L924 242 L1036 150" stroke="url(#route)" stroke-width="8"/>
+    <path d="M180 580 L238 448 L186 572 L202 548 L844 336 L924 242 L1036 150" stroke="#fff7f1" stroke-width="20" opacity="0.9"/>
+    <path d="M180 580 L238 448 L186 572 L202 548 L844 336 L924 242 L1036 150" stroke="url(#route)" stroke-width="8"/>
   </g>
   <g font-family="'Zen Kaku Gothic New','Segoe UI',sans-serif" fill="#2f2926">
     <text x="104" y="118" font-size="16" font-weight="700" letter-spacing="3">STATIC ROUTE PREVIEW</text>
@@ -54,12 +54,7 @@
     <g>
       <circle cx="844" cy="336" r="18" fill="rgba(155,60,51,0.14)"/>
       <circle cx="844" cy="336" r="8.5" fill="#a74539" stroke="#fff8f2" stroke-width="4"/>
-      <text x="864" y="356">Odawara</text>
-    </g>
-    <g>
-      <circle cx="824" cy="350" r="18" fill="rgba(155,60,51,0.14)"/>
-      <circle cx="824" cy="350" r="8.5" fill="#a74539" stroke="#fff8f2" stroke-width="4"/>
-      <text x="804" y="334" text-anchor="end">Hakone</text>
+      <text x="864" y="356">Mishima / Shin-Fuji</text>
     </g>
     <g>
       <circle cx="924" cy="242" r="18" fill="rgba(155,60,51,0.14)"/>
