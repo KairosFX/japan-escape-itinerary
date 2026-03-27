@@ -139,12 +139,12 @@
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
     "title": { "en": "Tokyo hotel nights", "ja": "東京ホテル泊" },
     "summary": {
-      "en": "Tokyo hotel nights now sit on Days 5 and 6, so the base should support the Shibuya arrival and the fuller sightseeing day before the flight-home buffer.",
-      "ja": "東京ホテル泊は5日目と6日目に置き、渋谷到着と帰国日前の観光メイン日を同じ拠点で回せるようにします。"
+      "en": "Tokyo hotel nights now sit on Days 5 and 6, so the base should support the Shibuya arrival, the fuller sightseeing day, and an easy Day 7 reset before the flight home.",
+      "ja": "東京ホテル泊は5日目と6日目に置き、渋谷到着、観光メイン日、そして帰国前の軽い7日目を同じ拠点で回せるようにします。"
     },
     "details": {
-      "en": "Shibuya access still fits the first Tokyo evening best, and keeping the same west-side base for Day 6 avoids wasting time on a mid-route hotel switch before the lighter airport day.",
-      "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、6日目も同じ西側拠点のままなら、帰国日前にホテル移動で時間を削られません。"
+      "en": "Shibuya access still fits the first Tokyo evening best, and keeping the same west-side base for Day 6 leaves Day 7 free for a lighter Imperial Palace/Shinjuku block instead of wasting time on a mid-route hotel switch before the airport.",
+      "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、6日目も同じ西側拠点のままなら、空港前にホテル移動で時間を削らず、7日目を皇居と新宿中心に軽く回せます。"
     },
     "links": [
       {

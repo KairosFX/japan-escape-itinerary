@@ -536,23 +536,17 @@ const budgetDayDefinitions = [
     day: 7,
     defaultStayId: "no-accommodation",
     stayOptions: ["no-accommodation", "tokyo-base-hotel", "relative-stay"],
-    title: { en: "Day 7 - Tokyo wrap-up + flight home", ja: "7日目・東京の軽い締めと帰国日" },
-    subtitle: { en: "Tokyo Station, bags, and airport buffer", ja: "東京駅まわり、荷物、空港の余白" },
+    title: { en: "Day 7 - Imperial Palace, Shinjuku + flight home", ja: "7日目・皇居と新宿、そして帰国日" },
+    subtitle: { en: "Imperial Palace, Shinjuku, and airport buffer", ja: "皇居、新宿、空港の余白" },
     items: [
-      { label: { en: "Tokyo Station / Marunouchi", ja: "東京駅・丸の内" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Tokyo Imperial Palace", ja: "皇居" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
+      { label: { en: "Shinjuku", ja: "新宿" }, category: "ticketsAdmissions", bucket: "free", sourceGroup: "assumptions", cost: { mode: "none", amount: 0 } },
       {
-        label: { en: "Breakfast + last-minute souvenir buffer", ja: "朝食と最後のおみやげバッファ" },
+        label: { en: "Coffee / light meal buffer", ja: "軽い食事とコーヒー休憩" },
         category: "meals",
         bucket: "flexible",
         sourceGroup: "meals",
         cost: { mode: "perPerson", amount: 1300, range: { lean: 900, expected: 1300, high: 2000 } }
-      },
-      {
-        label: { en: "Airport transfer reserve", ja: "空港移動の予備費" },
-        category: "intercityTransit",
-        bucket: "required",
-        sourceGroup: "core-transit",
-        cost: { mode: "perPerson", amount: 1600, range: { lean: 600, expected: 1600, high: 3400 } }
       },
       {
         label: { en: "Bag storage or handoff if needed", ja: "必要なら荷物預け・受け渡し" },
@@ -560,6 +554,13 @@ const budgetDayDefinitions = [
         bucket: "optional",
         sourceGroup: "assumptions",
         cost: { mode: "perPerson", amount: 800, range: { lean: 500, expected: 800, high: 1200 } }
+      },
+      {
+        label: { en: "Airport transfer reserve", ja: "空港移動の予備費" },
+        category: "intercityTransit",
+        bucket: "required",
+        sourceGroup: "core-transit",
+        cost: { mode: "perPerson", amount: 1600, range: { lean: 600, expected: 1600, high: 3400 } }
       }
     ]
   }
@@ -615,10 +616,10 @@ const tripNoteDefinitions = [
   },
   {
     day: 7,
-    title: { en: "Day 7 - Tokyo wrap-up + flight home", ja: "7日目・東京の軽い締めと帰国日" },
+    title: { en: "Day 7 - Imperial Palace, Shinjuku + flight home", ja: "7日目・皇居と新宿、そして帰国日" },
     summary: {
-      en: "Keep Day 7 deliberately light: breakfast, a short Tokyo Station or Marunouchi block, bag handling, and enough airport buffer to close the trip calmly.",
-      ja: "7日目はあえて軽くし、朝食、東京駅や丸の内の短い寄り道、荷物対応、空港までの余白を残して静かに締めます。"
+      en: "Keep Day 7 deliberately light: start at Tokyo Imperial Palace, move on to a short Shinjuku block, then handle bags and leave enough airport buffer to close the trip calmly.",
+      ja: "7日目はあえて軽くし、皇居を先に見てから新宿を短く回り、荷物対応と空港までの余白を残して静かに締めます。"
     }
   }
 ];
@@ -1252,8 +1253,8 @@ const routeExplorerStopDefinitions = [
     id: "tokyo",
     title: { en: "Tokyo", ja: "東京" },
     summary: {
-      en: "Tokyo now absorbs the Shibuya arrival, one fuller east-side sightseeing day, and a lighter departure-day wrap-up into the same main-route finish.",
-      ja: "東京は、渋谷到着、東側の観光本番日、そして軽い帰国日をまとめて、本編ルート終盤のひとまとまりにしています。"
+      en: "Tokyo now absorbs the Shibuya arrival, one fuller east-side sightseeing day, and a lighter Imperial Palace/Shinjuku departure-day wrap-up into the same main-route finish.",
+      ja: "東京は、渋谷到着、東側の観光本番日、そして皇居と新宿を軽く回る帰国日までをまとめて、本編ルート終盤のひとまとまりにしています。"
     },
     badges: [
       { en: "Days 5-7", ja: "5日目-7日目" },
@@ -1265,8 +1266,8 @@ const routeExplorerStopDefinitions = [
         ja: "5日目は渋谷に入り、スクランブル交差点、食べ歩き、渋谷スカイへつなげます。"
       },
       {
-        en: "Day 6 carries the Skytree, Solamachi, and Akihabara cluster, while Day 7 stays lighter around Tokyo Station, bags, and the airport run.",
-        ja: "6日目にスカイツリー、ソラマチ、秋葉原をまとめ、7日目は東京駅まわり、荷物、空港移動を軽めに組んでいます。"
+        en: "Day 6 carries the Skytree, Solamachi, and Akihabara cluster, while Day 7 stays lighter with Tokyo Imperial Palace, Shinjuku, bags, and the airport run.",
+        ja: "6日目にスカイツリー、ソラマチ、秋葉原をまとめ、7日目は皇居、新宿、荷物、空港移動を軽めに組んでいます。"
       }
     ],
     dayLinks: [{ day: 5 }, { day: 6 }, { day: 7 }],
@@ -1408,8 +1409,8 @@ const routeExplorerViewDefinitions = [
     label: { en: "Tokyo finish", ja: "東京後半" },
     title: { en: "Tokyo main-route finish", ja: "東京で本編を締める" },
     summary: {
-      en: "The Tokyo close now pairs one fuller sightseeing day with a lighter airport-day wrap-up inside the fixed 7-day route.",
-      ja: "東京の締めは、観光メインの1日と空港前の軽い締め日を、固定の7日間本編の中で組み合わせています。"
+      en: "The Tokyo close now pairs one fuller sightseeing day with a lighter Imperial Palace/Shinjuku departure-day wrap-up inside the fixed 7-day route.",
+      ja: "東京の締めは、観光メインの1日と、皇居と新宿を軽く回る帰国日を、固定の7日間本編の中で組み合わせています。"
     },
     badges: [
       { en: "Days 6-7", ja: "6日目-7日目" },
@@ -1421,8 +1422,8 @@ const routeExplorerViewDefinitions = [
         ja: "6日目は体力があるうちに、スカイツリー、ソラマチ、秋葉原をまとめて回る日です。"
       },
       {
-        en: "Day 7 stays intentionally light around Tokyo Station or Marunouchi so bags and the airport transfer stay low-stress.",
-        ja: "7日目は東京駅や丸の内まわりであえて軽くし、荷物と空港移動を慌てず進めます。"
+        en: "Day 7 stays intentionally light around Tokyo Imperial Palace and Shinjuku so bags and the airport transfer stay low-stress.",
+        ja: "7日目は皇居と新宿を軸にあえて軽くし、荷物と空港移動を慌てず進めます。"
       }
     ],
     dayLinks: [{ day: 6 }, { day: 7 }],

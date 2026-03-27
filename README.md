@@ -52,7 +52,7 @@ The itinerary is structured as a fixed checklist covering:
 - **Day 4:** Kansai → Mt. Fuji area
 - **Day 5:** Mt. Fuji area → Tokyo / Shibuya
 - **Day 6:** Tokyo Central / West
-- **Day 7:** Tokyo East
+- **Day 7:** Imperial Palace -> Shinjuku
 
 ### Route notes
 Each stop includes short planning notes explaining why the route is arranged this way, with an emphasis on cleaner transfers and simple geographic clustering.
