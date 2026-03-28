@@ -1,4 +1,4 @@
-const OFFLINE_CACHE_VERSION = "2026-03-27-offline-v21";
+const OFFLINE_CACHE_VERSION = "2026-03-28-offline-v22";
 const OFFLINE_CACHE_NAME = `japan-escape-itinerary-${OFFLINE_CACHE_VERSION}`;
 const APP_SCOPE_URL = new URL("./", self.location);
 const APP_SCOPE_PATH = APP_SCOPE_URL.pathname;
@@ -16,8 +16,6 @@ const APP_SHELL_PATHS = [
   "./assets/route-map-preview.svg",
   "./assets/vendor/maplibre/maplibre-gl.css",
   "./assets/vendor/maplibre/maplibre-gl.js",
-  "./assets/vendor/protomaps/basemaps.js",
-  "./assets/vendor/protomaps/pmtiles.js",
   "./assets/icons/apple-touch-icon.png",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png"
@@ -55,10 +53,6 @@ function isNetworkFirstAppAsset(url) {
 
 function isRangeRequest(request) {
   return request.headers.has("range");
-}
-
-function isPmtilesRequest(url) {
-  return url.pathname.endsWith(".pmtiles");
 }
 
 async function addAssetsToCache(cache, urls) {
@@ -176,7 +170,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (isRangeRequest(event.request) || isPmtilesRequest(requestUrl)) {
+  if (isRangeRequest(event.request)) {
     return;
   }
 

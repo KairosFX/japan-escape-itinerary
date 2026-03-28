@@ -2941,17 +2941,6 @@ html.has-modal-open body {
   transform: rotate(-45deg);
 }
 
-.packing-reset {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.48rem;
-  margin-top: 0.82rem;
-}
-
-.packing-reset .packing-section__action {
-  min-width: 0;
-}
-
 .packing-section__meta {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -3005,6 +2994,11 @@ html.has-modal-open body {
   justify-content: start;
   align-items: stretch;
   width: min(100%, 18rem);
+}
+
+.packing-section__actions--global {
+  justify-self: start;
+  margin-top: 0.34rem;
 }
 
 .packing-section__action {
@@ -5066,10 +5060,6 @@ html.has-modal-open body {
 
   .packing-section__action {
     min-width: 0;
-  }
-
-  .packing-reset {
-    grid-template-columns: 1fr;
   }
 
   .offline-tools__actions {

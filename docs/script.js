@@ -94,17 +94,10 @@ const budgetEstimateSourcesDataUrl = "./assets/data/budget-estimate-sources.json
 const transitDetailsDataUrl = "./assets/data/transit-details.json";
 const offlineSnapshotUrl = "./japan-escape-itinerary-offline.html";
 const serviceWorkerUrl = "./service-worker.js";
-const offlineBundleVersion = "2026-03-27-offline-v21";
+const offlineBundleVersion = "2026-03-28-offline-v22";
 const routeMapLibraryScriptUrl = "./assets/vendor/maplibre/maplibre-gl.js";
 const routeMapLibraryStyleUrl = "./assets/vendor/maplibre/maplibre-gl.css";
-const routeMapPmtilesScriptUrl = "./assets/vendor/protomaps/pmtiles.js";
-const routeMapBasemapsScriptUrl = "./assets/vendor/protomaps/basemaps.js";
-const routeMapPmtilesDataUrl = "./assets/data/japan-route-z7.pmtiles";
-const routeMapProtomapsGlyphsUrl =
-  "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf";
-const routeMapProtomapsSpriteBaseUrl = "https://protomaps.github.io/basemaps-assets/sprites/v4";
-const routeMapProtomapsAttribution =
-  '<a href="https://github.com/protomaps/basemaps">Protomaps</a> © <a href="https://osm.org/copyright">OpenStreetMap</a>';
+const routeMapStyleUrl = "https://tiles.openfreemap.org/styles/liberty";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
 const inlineDataSelectors = {
   bookingTransit: "[data-booking-transit-inline]",
@@ -124,9 +117,9 @@ const budgetDisplayExchangeRates = {
 };
 let budgetAssumptionCopy = {
   en:
-    "The cost model now matches one fixed 7-day route: Osaka, Kyoto, Mt. Fuji area, and Tokyo. Route extras cover luggage forwarding, Fuji visibility pivots, the Tokyo handoff, and a light airport-day buffer.",
+    "The cost model follows one fixed 7-day route: Osaka, Kyoto, Mt. Fuji area, and Tokyo. Extras cover luggage forwarding, Fuji weather pivots, the Tokyo transfer, and a light airport-day buffer.",
   ja:
-    "費用モデルは、固定の7日間ルートである大阪、京都、富士エリア、東京に合わせて更新しました。ルート追加費用は、荷物配送、富士山の見え方に応じた動き直し、東京への受け渡し、帰国日の小さな追加費用を想定しています。"
+    "費用モデルは、大阪、京都、富士エリア、東京を回る固定の7日間ルートに合わせています。追加費用には、荷物配送、富士山の天候による動き直し、東京への移動受け渡し、帰国日の小さな余裕分を含めています。"
 };
 const budgetCategoryDefinitions = [
   {
@@ -213,56 +206,56 @@ const tripNoteDefinitions = [
     day: 1,
     title: { en: "Day 1 - Osaka", ja: "1日目・大阪" },
     summary: {
-      en: "Keep arrival day easy around Minami: settle into Osaka, walk Dotonbori and Shinsaibashi, eat nearby, and let the first night be about finding your pace.",
-      ja: "到着日はミナミ周辺で無理をせず、大阪へ入ってから道頓堀と心斎橋を歩き、近くで食事して、旅のリズムを整える日にします。"
+      en: "Arrival day stays easy in Minami: settle in, walk Dotonbori and Shinsaibashi, eat nearby, and keep the first night light.",
+      ja: "到着日はミナミ周辺で無理をせず、道頓堀と心斎橋を歩いて近くで食事し、最初の夜は軽く整える日にします。"
     }
   },
   {
     day: 2,
     title: { en: "Day 2 - Kyoto East", ja: "2日目・京都東側" },
     summary: {
-      en: "Keep Kyoto East as one clean walking day: Kiyomizu-dera, Ninenzaka, Yasaka Pagoda, Gion, and Nanzen-ji grouped on the same side so the route stays simple.",
-      ja: "京都東側は、清水寺、二年坂、八坂の塔、祇園、南禅寺を同じ側でまとめて回る一日にし、動線を素直に保ちます。"
+      en: "Kyoto East stays as one walking day: Kiyomizu-dera, Ninenzaka, Yasaka Pagoda, Gion, and Nanzen-ji on the same side of the city.",
+      ja: "京都東側は、清水寺、二年坂、八坂の塔、祇園、南禅寺を同じ側でまとめて回る一日にします。"
     }
   },
   {
     day: 3,
     title: { en: "Day 3 - Arashiyama, then Osaka", ja: "3日目・嵐山のあと大阪" },
     summary: {
-      en: "Give Arashiyama its own morning instead of forcing it into Kyoto East, then return to Osaka for Kaiyukan, Tempozan, and one final Kansai night.",
-      ja: "嵐山は京都東側へ詰め込まず、朝だけで独立させ、そのあと大阪へ戻って海遊館、天保山、最後の関西の夜へつなげます。"
+      en: "Arashiyama gets its own morning, then the route returns to Osaka for Kaiyukan, Tempozan, and one last Kansai night.",
+      ja: "嵐山は朝だけで独立させ、そのあと大阪へ戻って海遊館、天保山、最後の関西の夜へつなげます。"
     }
   },
   {
     day: 4,
     title: { en: "Day 4 - Mt. Fuji Area", ja: "4日目・富士エリア" },
     summary: {
-      en: "Make Day 4 the full Fuji block: transfer via Mishima, keep Chureito / Shimoyoshida and Lake Kawaguchiko together, then settle into the Fuji-area stay without repeating the lake on Day 5.",
-      ja: "4日目を富士エリアのまとまりにし、三島経由で入り、忠霊塔・下吉田と河口湖を同じ日にまとめて、5日目に湖側を重ねないようにします。"
+      en: "Day 4 is the full Fuji block: transfer via Mishima, group Chureito and Kawaguchiko together, then settle into the Fuji-area stay.",
+      ja: "4日目は富士エリアの日にし、三島経由で入り、忠霊塔と河口湖をまとめて回ってから富士側の宿へ入ります。"
     }
   },
   {
     day: 5,
     title: { en: "Day 5 - Tokyo / Shibuya", ja: "5日目・東京・渋谷" },
     summary: {
-      en: "Start Tokyo cleanly on Day 5: leave the Fuji area as a departure point only, then land in Shibuya for hotel check-in, the crossing, food walk, and Shibuya Sky.",
-      ja: "5日目は東京をきれいに始め、富士エリアは出発地点だけにして、渋谷のチェックイン、交差点、食べ歩き、渋谷スカイへつなげます。"
+      en: "Day 5 starts Tokyo cleanly: leave Fuji, check in around Shibuya, then do the crossing, food walk, and Shibuya Sky.",
+      ja: "5日目は富士エリアを出て渋谷周辺へ入り、チェックイン後に交差点、食べ歩き、渋谷スカイへつなげます。"
     }
   },
   {
     day: 6,
     title: { en: "Day 6 - Tokyo East / Full Day", ja: "6日目・東京東側の観光メイン日" },
     summary: {
-      en: "Use Day 6 as the fuller Tokyo sightseeing block: Skytree first, then Solamachi and Akihabara, so the denser city day lands before the departure buffer.",
-      ja: "6日目は東京観光の本番日にし、スカイツリー、ソラマチ、秋葉原をまとめて回して、密度の高い都内日程を帰国日前に置きます。"
+      en: "Day 6 is the fuller Tokyo sightseeing day: Skytree first, then Solamachi and Akihabara.",
+      ja: "6日目は東京観光の本番日にし、スカイツリー、ソラマチ、秋葉原をまとめて回ります。"
     }
   },
   {
     day: 7,
     title: { en: "Day 7 - Imperial Palace, Shinjuku + flight home", ja: "7日目・皇居と新宿、そして帰国日" },
     summary: {
-      en: "Keep Day 7 deliberately light: start at Tokyo Imperial Palace, move on to a short Shinjuku block, then handle bags and leave enough airport buffer to close the trip calmly.",
-      ja: "7日目はあえて軽くし、皇居を先に見てから新宿を短く回り、荷物対応と空港までの余白を残して静かに締めます。"
+      en: "Day 7 stays light: Imperial Palace first, a short Shinjuku stop, then bags and airport buffer.",
+      ja: "7日目は軽めにし、皇居を見てから新宿を短く回り、荷物対応と空港までの余裕を残します。"
     }
   }
 ];
@@ -521,23 +514,23 @@ const routeMapLabels = {
   tools: { en: "Quick tools", ja: "クイック操作" },
   stops: { en: "Major stops", ja: "主要地点" },
   checklistAction: { en: "Open checklist", ja: "チェックリストを開く" },
-  sharedLoading: { en: "Loading Protomaps route...", ja: "Protomaps のルート地図を読み込み中..." },
+  sharedLoading: { en: "Loading route map...", ja: "ルート地図を読み込み中..." },
   sharedLoadingBody: {
     en: "The core stops and backup preview stay visible while the live map initializes.",
     ja: "ライブ地図の初期化中も、主要地点とバックアップのプレビューを見えるままにしています。"
   },
-  sharedFallbackTitle: { en: "Protomaps route unavailable", ja: "Protomaps のルート地図を表示できません" },
+  sharedFallbackTitle: { en: "Route map unavailable", ja: "ルート地図を表示できません" },
   sharedFallbackBody: {
-    en: "The live Protomaps view could not initialize here. The backup route preview stays visible; use Google Maps if you need door-to-door directions.",
-    ja: "Protomaps のライブ地図をここでは初期化できませんでした。バックアップのプレビューは表示したままにし、経路案内が必要な場合は Google マップを使ってください。"
+    en: "The live map could not initialize here. The backup route preview stays visible; use Google Maps if you need door-to-door directions.",
+    ja: "ライブ地図をここでは初期化できませんでした。バックアップのプレビューは表示したままにし、経路案内が必要な場合は Google マップを使ってください。"
   },
   sharedOfflineTitle: {
     en: "Interactive map unavailable offline",
     ja: "オフラインではインタラクティブ地図を使えません"
   },
   sharedOfflineBody: {
-    en: "The offline copy keeps the static route preview. Open the live site when you want the interactive Protomaps map.",
-    ja: "オフライン版では静的なルートプレビューを表示します。インタラクティブな Protomaps 地図が必要な場合はライブサイトを開いてください。"
+    en: "The offline copy keeps the static route preview. Open the live site when you want the interactive map.",
+    ja: "オフライン版では静的なルートプレビューを表示します。インタラクティブ地図が必要な場合はライブサイトを開いてください。"
   }
 };
 const routeExplorerDefaultSelectionId = "overview";
@@ -1167,7 +1160,6 @@ let budgetNotesInitialized = false;
 let routeMapInitialized = false;
 let routeMapLibraryPromise = null;
 let routeMapStylesheetPromise = null;
-let routeMapPmtilesProtocol = null;
 const routeMapState = createRouteMapState();
 let routeMapDisplayMode = "interactive";
 let routeMapActivePopup = null;
@@ -5680,23 +5672,8 @@ function getRouteMapDetailNode() {
   return routeMapExplorerNode?.querySelector("[data-route-map-detail]") || null;
 }
 
-function getRouteMapBaseLanguage() {
-  return root.lang === "ja" ? "ja" : "en";
-}
-
-function getRouteMapBaseFlavorName(theme = getCurrentTheme()) {
-  return theme === "dark" ? "dark" : "light";
-}
-
-function getRouteMapStyleSignature(
-  theme = getCurrentTheme(),
-  language = getRouteMapBaseLanguage()
-) {
-  return `${getRouteMapBaseFlavorName(theme)}|${language}`;
-}
-
-function resolveRouteMapAssetUrl(assetPath) {
-  return new URL(assetPath, window.location.href).toString();
+function getRouteMapStyleSignature() {
+  return routeMapStyleUrl;
 }
 
 function setRouteMapShellState(state = "ready") {
@@ -5864,19 +5841,6 @@ function loadRouteMapLibrary() {
     });
   };
 
-  const ensureRouteMapPmtilesProtocol = (maplibregl, pmtilesRuntime) => {
-    if (routeMapPmtilesProtocol) {
-      return;
-    }
-
-    if (!maplibregl?.addProtocol || !pmtilesRuntime?.Protocol) {
-      throw new Error("PMTiles protocol support is unavailable.");
-    }
-
-    routeMapPmtilesProtocol = new pmtilesRuntime.Protocol();
-    maplibregl.addProtocol("pmtiles", routeMapPmtilesProtocol.tile);
-  };
-
   if (routeMapLibraryPromise) {
     return routeMapLibraryPromise;
   }
@@ -5888,26 +5852,11 @@ function loadRouteMapLibrary() {
       "data-route-maplibre-script",
       "maplibregl",
       "MapLibre runtime"
-    ),
-    loadRouteMapScriptAsset(
-      routeMapPmtilesScriptUrl,
-      "data-route-map-pmtiles-script",
-      "pmtiles",
-      "PMTiles runtime"
-    ),
-    loadRouteMapScriptAsset(
-      routeMapBasemapsScriptUrl,
-      "data-route-map-basemaps-script",
-      "basemaps",
-      "Protomaps basemap runtime"
     )
   ])
-    .then(([, maplibregl, pmtilesRuntime, basemapsRuntime]) => {
-      ensureRouteMapPmtilesProtocol(maplibregl, pmtilesRuntime);
+    .then(([, maplibregl]) => {
       return {
-        maplibregl,
-        pmtiles: pmtilesRuntime,
-        basemaps: basemapsRuntime
+        maplibregl
       };
     })
     .catch((error) => {
@@ -6173,33 +6122,8 @@ function getRouteMapGeoJsonData() {
   return getRouteMapGeoJsonData.cache;
 }
 
-function getRouteMapPmtilesSourceUrl() {
-  return `pmtiles://${resolveRouteMapAssetUrl(routeMapPmtilesDataUrl)}`;
-}
-
 function buildRouteMapBaseStyle() {
-  const basemapRuntime = window.basemaps;
-  if (!basemapRuntime?.namedFlavor || !basemapRuntime?.layers) {
-    throw new Error("Protomaps basemap runtime is unavailable.");
-  }
-
-  const flavorName = getRouteMapBaseFlavorName();
-
-  return {
-    version: 8,
-    sources: {
-      protomaps: {
-        type: "vector",
-        attribution: routeMapProtomapsAttribution,
-        url: getRouteMapPmtilesSourceUrl()
-      }
-    },
-    layers: basemapRuntime.layers("protomaps", basemapRuntime.namedFlavor(flavorName), {
-      lang: getRouteMapBaseLanguage()
-    }),
-    glyphs: routeMapProtomapsGlyphsUrl,
-    sprite: `${routeMapProtomapsSpriteBaseUrl}/${flavorName}`
-  };
+  return routeMapStyleUrl;
 }
 
 function getRouteMapLayerInsertBeforeId(map) {

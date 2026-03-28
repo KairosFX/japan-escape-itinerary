@@ -6,7 +6,7 @@
   <title>Japan Trip | Travel Guide</title>
   <meta
     name="description"
-    content="Simple bilingual Japan trip website for GitHub Pages with overview, checklist, notes, budget, routes, essentials, and a live Protomaps route preview from Osaka to Tokyo.">
+    content="Simple bilingual Japan trip website for GitHub Pages with overview, checklist, notes, budget, routes, essentials, and an interactive route preview from Osaka to Tokyo.">
   <meta name="theme-color" content="#9b3c33">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%239b3c33'/%3E%3Cpath d='M20 18h24v6H34v22h-6V24H20z' fill='%23fffaf4'/%3E%3C/svg%3E">
   <link rel="manifest" href="./manifest.webmanifest">
@@ -931,9 +931,9 @@ html[data-theme="dark"] .progress-overview {
     display: none;
   }
 }</style>
-  <link rel="preload" href="./assets/app/style.95c25130fc.css" as="style">
-  <link rel="stylesheet" href="./assets/app/style.95c25130fc.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.95c25130fc.css"></noscript>
+  <link rel="preload" href="./assets/app/style.845a23d8b6.css" as="style">
+  <link rel="stylesheet" href="./assets/app/style.845a23d8b6.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.845a23d8b6.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -1079,8 +1079,8 @@ html[data-theme="dark"] .progress-overview {
             <span data-language="ja" hidden>移動中でもすぐ確認しやすい旅行ガイドです。</span>
           </h2>
           <p class="section-intro">
-            <span data-language="en">Each section is separated, and the itinerary now follows a fixed 7-day west-to-east flow from Osaka and Kyoto through the Mt. Fuji area and into Tokyo.</span>
-            <span data-language="ja" hidden>各セクションを分けて整理し、大阪と京都から富士エリアを経て東京へ進む、固定の7日間・西から東への流れで追いやすくしています。</span>
+            <span data-language="en">Each section is separated, and the itinerary follows one fixed 7-day west-to-east route from Osaka and Kyoto through the Mt. Fuji area to Tokyo.</span>
+            <span data-language="ja" hidden>各セクションを分けて整理し、大阪と京都から富士エリアを経て東京へ進む固定の7日間ルートを追いやすくしています。</span>
           </p>
         </div>
 
@@ -1697,8 +1697,8 @@ html[data-theme="dark"] .progress-overview {
           <span data-language="ja" hidden>最適化した旅程メモ</span>
         </h2>
         <p class="section-intro">
-          <span data-language="en">Trip Notes now stay focused on the day-by-day flow, while the full budget model lives in its own section for faster scanning.</span>
-          <span data-language="ja" hidden>Trip Notesは日ごとの流れに集中し、費用モデルは別セクションへ分けて、全体をより短く見渡しやすくしました。</span>
+          <span data-language="en">Day-by-day route notes stay here, while the full budget lives in its own section.</span>
+          <span data-language="ja" hidden>日ごとのルートメモはここにまとめ、費用モデルは別セクションに分けています。</span>
         </p>
       </div>
 
@@ -1710,8 +1710,8 @@ html[data-theme="dark"] .progress-overview {
               <span data-language="ja" hidden>Trip Notes</span>
             </h3>
             <p>
-              <span data-language="en">Short practical notes for what each day will feel like, where you will actually go, and why the route now stays fixed from Kansai through Fuji and into Tokyo.</span>
-              <span data-language="ja" hidden>各日がどんな流れになるか、実際にどこを回るか、そして関西から富士を挟んで東京へ進む固定ルートにした理由を、短く実用的にまとめています。</span>
+              <span data-language="en">Short practical notes for each day: where you go, how the day feels, and why the route stays fixed from Kansai through Fuji to Tokyo.</span>
+              <span data-language="ja" hidden>各日どこを回るか、どういう流れか、そして関西から富士を経て東京へ進む固定ルートにした理由を短く実用的にまとめています。</span>
             </p>
           </div>
           <div class="notes-grid" data-trip-notes-grid aria-live="polite"></div>
@@ -1730,8 +1730,8 @@ html[data-theme="dark"] .progress-overview {
           <span data-language="ja" hidden>旅程の予算</span>
         </h2>
         <p class="section-intro">
-          <span data-language="en">The cost model now lives in its own section: route-linked stay choices, day-level assumptions, and a shorter day browser instead of one long stacked list.</span>
-          <span data-language="ja" hidden>費用モデルは独立したセクションへ分け、ルート連動の滞在選択、日別前提、縦に長い一覧ではなく切り替え式の日別ビューで確認できるようにしました。</span>
+          <span data-language="en">Route-linked stay choices, day assumptions, and a day browser live here instead of one long budget stack.</span>
+          <span data-language="ja" hidden>ルート連動の滞在選択、日別前提、切り替え式の日別ビューを、縦に長い予算一覧の代わりにここへまとめています。</span>
         </p>
       </div>
 
@@ -1743,8 +1743,8 @@ html[data-theme="dark"] .progress-overview {
               <span data-language="ja" hidden>旅程の予算</span>
             </h3>
             <p class="budget-notes__intro">
-              <span data-language="en">A checklist-linked lean / expected / high budget range for this route: real stay bands, actual transit logic, ticket timing, and meal-pattern differences instead of one padded total.</span>
-              <span data-language="ja" hidden>このルート向けの、チェックリスト連動の控えめ・標準・高め予算帯です。ひとつの水増し合計ではなく、実際の宿泊帯、移動ロジック、チケット時間帯、食費パターン差で組み立てています。</span>
+              <span data-language="en">Lean / expected / high budget ranges for this route, built from stay bands, transit choices, tickets, and meal patterns.</span>
+              <span data-language="ja" hidden>このルート向けの控えめ・標準・高め予算帯を、宿泊帯、移動手段、チケット、食事パターンから組み立てています。</span>
             </p>
           </div>
           <button class="booking-item__cta booking-item__cta--secondary budget-notes__reset" type="button" data-budget-reset-all>
@@ -1844,8 +1844,8 @@ html[data-theme="dark"] .progress-overview {
                 data-aria-label-ja="任意の追加費用を含める"
                 aria-label="Include optional route extras">
               <span class="budget-setting__toggle-copy">
-                <span data-language="en">Include route add-ons tied to the Fuji stay, weather pivots, luggage handling, and the Tokyo handoff.</span>
-                <span data-language="ja" hidden>富士滞在、天候対応、荷物対応、東京への受け渡しに関わる追加費用も含めて計算します。</span>
+                <span data-language="en">Include route add-ons for the Fuji stay, weather pivots, luggage handling, and the Tokyo transfer.</span>
+                <span data-language="ja" hidden>富士滞在、天候対応、荷物対応、東京への移動受け渡しに関わる追加費用も含めて計算します。</span>
               </span>
             </span>
             <span class="budget-setting__hint">
@@ -1854,8 +1854,8 @@ html[data-theme="dark"] .progress-overview {
             </span>
             <div class="budget-setting__detail budget-setting__detail--extras">
               <p class="budget-setting__detail-copy">
-                <span data-language="en">Covers luggage forwarding, locker or bag handoff costs, weather fallback fares, and other small transfer-day add-ons only. The main hotel, meal, and base transit costs stay in the normal totals.</span>
-                <span data-language="ja" hidden>対象は、荷物配送やロッカー・荷物受け渡し費用、天候回避の追加運賃、移動日の小さな追加費用だけです。宿泊、食事、基本の移動費は通常の合計に残ります。</span>
+                <span data-language="en">Covers luggage forwarding, bag handoff costs, weather fallback fares, and other small transfer-day add-ons only.</span>
+                <span data-language="ja" hidden>対象は、荷物配送、荷物受け渡し費用、天候回避の追加運賃、移動日の小さな追加費用だけです。</span>
               </p>
             </div>
           </label>
@@ -1874,8 +1874,8 @@ html[data-theme="dark"] .progress-overview {
                 <span data-language="ja" hidden>日別予算ビュー</span>
               </p>
               <p class="budget-notes__day-browser-intro">
-                <span data-language="en">Switch days here instead of scrolling one long budget stack across the full fixed route.</span>
-                <span data-language="ja" hidden>縦に長い予算一覧を追わず、固定ルート全体をここで日ごとに切り替えて見られます。</span>
+                <span data-language="en">Switch days here instead of scrolling one long budget list.</span>
+                <span data-language="ja" hidden>縦に長い予算一覧を追わず、ここで日ごとに切り替えて見られます。</span>
               </p>
             </div>
           </div>
@@ -1896,8 +1896,8 @@ html[data-theme="dark"] .progress-overview {
           <span data-language="ja" hidden>ルート</span>
         </h2>
         <p class="section-intro">
-          <span data-language="en">A short route map with clear day links.</span>
-          <span data-language="ja" hidden>短いルート地図と見やすい日別リンクで確認できます。</span>
+          <span data-language="en">An interactive route map with clear day links.</span>
+          <span data-language="ja" hidden>インタラクティブなルート地図と見やすい日別リンクで確認できます。</span>
         </p>
       </div>
 
@@ -1905,12 +1905,12 @@ html[data-theme="dark"] .progress-overview {
         <div class="route-map__header">
           <div class="route-map__copy">
             <h3>
-              <span data-language="en">Protomaps Route Map</span>
-              <span data-language="ja" hidden>Protomaps ルート地図</span>
+              <span data-language="en">Interactive Route Map</span>
+              <span data-language="ja" hidden>インタラクティブ ルート地図</span>
             </h3>
             <p>
-              <span data-language="en">This map shows our trip across Japan at a glance.</span>
-              <span data-language="ja" hidden>この地図で、日本を横断する今回の旅をひと目で確認できます。</span>
+              <span data-language="en">This map shows the full trip at a glance.</span>
+              <span data-language="ja" hidden>この地図で、今回の旅全体をひと目で確認できます。</span>
             </p>
             <p class="route-map__meta">
               <span data-language="en">Main route: Osaka -&gt; Kyoto -&gt; Mt. Fuji area -&gt; Tokyo<br>Transfer points: Shin-Osaka and Mishima</span>
@@ -1971,13 +1971,13 @@ html[data-theme="dark"] .progress-overview {
                   class="route-map__map route-map__map--preview"
                   data-route-map-preview-canvas
                   role="img"
-                  data-aria-label-en="Protomaps itinerary map from Osaka to Tokyo"
-                  data-aria-label-ja="大阪から東京までの Protomaps 旅程地図"
-                  aria-label="Protomaps itinerary map from Osaka to Tokyo"></div>
+                  data-aria-label-en="Interactive itinerary map from Osaka to Tokyo"
+                  data-aria-label-ja="大阪から東京までのインタラクティブ旅程地図"
+                  aria-label="Interactive itinerary map from Osaka to Tokyo"></div>
                 <div class="route-map__status route-map__status--preview" data-route-map-preview-status>
                   <p class="route-map__status-title">
-                    <span data-language="en">Loading Protomaps route...</span>
-                    <span data-language="ja" hidden>Protomaps のルート地図を読み込み中...</span>
+                    <span data-language="en">Loading route map...</span>
+                    <span data-language="ja" hidden>ルート地図を読み込み中...</span>
                   </p>
                   <p class="route-map__status-copy">
                     <span data-language="en">The core stops and backup preview stay visible while the live map initializes.</span>
@@ -2005,19 +2005,9 @@ html[data-theme="dark"] .progress-overview {
           <span data-language="ja" hidden>準備ガイド</span>
         </h2>
         <p class="section-intro">
-          <span data-language="en">The trip-critical checklist, booking board, and route-day packing setup organized in the order you will actually use them.</span>
-          <span data-language="ja" hidden>旅前に本当に使う順番に合わせて、重要チェック、予約ボード、移動日向けの荷造りを整理した準備ガイドです。</span>
+          <span data-language="en">Checklist, booking board, and route-day packing tools in the order you will actually use them.</span>
+          <span data-language="ja" hidden>旅前に本当に使う順番に合わせて、チェック、予約、移動日向けの荷造りを整理した準備ガイドです。</span>
         </p>
-        <div class="packing-reset">
-          <button class="packing-section__action" type="button" data-packing-mark-all-global>
-            <span data-language="en">Mark all packed</span>
-            <span data-language="ja" hidden>すべて完了</span>
-          </button>
-          <button class="packing-section__action packing-section__action--reset" type="button" data-packing-reset-all>
-            <span data-language="en">Reset packing</span>
-            <span data-language="ja" hidden>荷造りをリセット</span>
-          </button>
-        </div>
       </div>
 
       <div class="essentials-layout">
@@ -2027,8 +2017,8 @@ html[data-theme="dark"] .progress-overview {
             <span data-language="ja" hidden>予約と移動</span>
           </h4>
           <p>
-            <span data-language="en">Lock in the pieces that can slow the trip down if left too late, with each card separating the cheaper price-check source from the official booking or status page.</span>
-            <span data-language="ja" hidden>後回しにすると旅程が崩れやすい部分だけ先に固め、各カードでは安い見積り確認先と公式の予約・運行ページを分けて見られるようにしています。</span>
+            <span data-language="en">Lock in the pieces that can slow the trip if left late. Each card separates price-check links from the official booking or status page.</span>
+            <span data-language="ja" hidden>後回しにすると旅程が崩れやすい部分を先に固め、各カードでは見積り確認先と公式の予約・運行ページを分けて見られるようにしています。</span>
           </p>
           <div class="booking-transit" data-booking-transit>
             <div
@@ -2080,9 +2070,19 @@ html[data-theme="dark"] .progress-overview {
               <span data-language="ja" hidden>書類、荷物、移動日の持ち物</span>
             </h3>
             <p class="essentials-group__intro">
-              <span data-language="en">Keep the travel basics with the luggage, day bag, and the Fuji-to-Tokyo transfer extras that matter once the bookings are already locked.</span>
-              <span data-language="ja" hidden>予約を固めた後に必要になる、渡航の基本、荷物、毎日バッグ、富士から東京へ渡す日に役立つ追加持ち物をひとまとめで見やすくしています。</span>
+              <span data-language="en">Keep the travel basics, main bags, and Fuji-to-Tokyo transfer extras together once bookings are set.</span>
+              <span data-language="ja" hidden>予約を固めた後に必要になる、渡航の基本、荷物、富士から東京へ渡す日に役立つ追加持ち物をひとまとめで見やすくしています。</span>
             </p>
+            <div class="packing-section__actions packing-section__actions--global">
+              <button class="packing-section__action" type="button" data-packing-mark-all-global>
+                <span data-language="en">Mark all packed</span>
+                <span data-language="ja" hidden>すべて完了</span>
+              </button>
+              <button class="packing-section__action packing-section__action--reset" type="button" data-packing-reset-all>
+                <span data-language="en">Reset packing</span>
+                <span data-language="ja" hidden>荷造りをリセット</span>
+              </button>
+            </div>
           </div>
           <div class="essentials-grid essentials-grid--packing">
 
@@ -2671,7 +2671,7 @@ html[data-theme="dark"] .progress-overview {
   <!-- build:inline-data:start -->
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
-  <script src="./assets/app/script.a2feec4ddb.js" defer></script>
+  <script src="./assets/app/script.4762d257cf.js" defer></script>
   <!-- build:inline-script:end -->
 </body>
 </html>
