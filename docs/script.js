@@ -512,8 +512,11 @@ const budgetSectionDefinitionMap = new Map(
 );
 const routeMapLabels = {
   days: { en: "Route days", ja: "日別ルート" },
+  daySlider: { en: "Route day slider", ja: "日別ルートスライダー" },
+  daySliderPrevious: { en: "Show earlier days", ja: "前の日を表示" },
+  daySliderNext: { en: "Show later days", ja: "次の日を表示" },
   tools: { en: "Quick tools", ja: "クイック操作" },
-  checklistAction: { en: "Open checklist", ja: "チェックリストを開く" },
+  checklistAction: { en: "Checklist", ja: "チェックリスト" },
   sharedLoading: { en: "Loading route map...", ja: "ルート地図を読み込み中..." },
   sharedLoadingBody: {
     en: "OpenFreeMap is loading.",
@@ -1115,6 +1118,8 @@ const routeMapState = createRouteMapState();
 let routeMapActivePopup = null;
 let activeRouteMapSelection = { type: "view", id: routeExplorerDefaultSelectionId };
 let routeMapUISyncFrame = 0;
+let routeMapDaySliderSyncFrame = 0;
+let routeMapDayRailScrollLeft = 0;
 let pendingRouteMapUISyncOptions = {
   updateCamera: false,
   animateCamera: false
@@ -5587,14 +5592,16 @@ function getRouteDayReference(day) {
     day: normalizedDay,
     title: definition?.title || fallbackTitle,
     displayTitle: {
-      en: (definition?.title?.en || fallbackTitle.en).replace(
-        new RegExp(`^Day\\s+${normalizedDay}\\s*[-:]\\s*`, "i"),
-        ""
-      ),
-      ja: (definition?.title?.ja || fallbackTitle.ja).replace(
-        new RegExp(`^${normalizedDay}日目[・\\-]\\s*`),
-        ""
-      )
+      en:
+        (definition?.title?.en || fallbackTitle.en).replace(
+          new RegExp(`^Day\\s+${normalizedDay}\\s*[-:]\\s*`, "i"),
+          ""
+        ) || fallbackTitle.en,
+      ja:
+        (definition?.title?.ja || fallbackTitle.ja).replace(
+          new RegExp(`^${normalizedDay}日目[・\\-]\\s*`),
+          ""
+        ) || fallbackTitle.ja
     },
     stops: Array.isArray(routeDayStopDefinitions[normalizedDay])
       ? routeDayStopDefinitions[normalizedDay]
@@ -5620,6 +5627,111 @@ function getRouteMapStopsNode() {
 
 function getRouteMapDetailNode() {
   return routeMapExplorerNode?.querySelector("[data-route-map-detail]") || null;
+}
+
+function getRouteMapDayRailNode() {
+  return routeMapStopsNode?.querySelector("[data-route-map-day-rail]") || null;
+}
+
+function getRouteMapDayControlNodes() {
+  return Array.from(routeMapStopsNode?.querySelectorAll("[data-route-map-day-shift]") || []);
+}
+
+function bindRouteMapDayRailEvents() {
+  const railNode = getRouteMapDayRailNode();
+  if (!railNode || railNode.dataset.routeMapDayRailBound === "true") {
+    return;
+  }
+
+  railNode.addEventListener(
+    "scroll",
+    () => {
+      routeMapDayRailScrollLeft = railNode.scrollLeft;
+      syncRouteMapDaySliderControls();
+    },
+    { passive: true }
+  );
+  railNode.dataset.routeMapDayRailBound = "true";
+}
+
+function syncRouteMapDaySliderControls() {
+  const railNode = getRouteMapDayRailNode();
+  const controlNodes = getRouteMapDayControlNodes();
+  if (!railNode || !controlNodes.length) {
+    return;
+  }
+
+  const maxScroll = Math.max(railNode.scrollWidth - railNode.clientWidth, 0);
+  const hasOverflow = maxScroll > 4;
+  routeMapDayRailScrollLeft = Math.min(routeMapDayRailScrollLeft, maxScroll);
+
+  controlNodes.forEach((controlNode) => {
+    const direction = Number(controlNode.dataset.routeMapDayShift);
+    controlNode.hidden = !hasOverflow;
+    if (!hasOverflow) {
+      controlNode.disabled = true;
+      return;
+    }
+
+    controlNode.disabled =
+      direction < 0
+        ? routeMapDayRailScrollLeft <= 4
+        : routeMapDayRailScrollLeft >= maxScroll - 4;
+  });
+}
+
+function syncRouteMapDaySliderUI() {
+  const railNode = getRouteMapDayRailNode();
+  if (!railNode) {
+    return;
+  }
+
+  bindRouteMapDayRailEvents();
+
+  const maxScroll = Math.max(railNode.scrollWidth - railNode.clientWidth, 0);
+  routeMapDayRailScrollLeft = Math.min(routeMapDayRailScrollLeft, maxScroll);
+  if (Math.abs(railNode.scrollLeft - routeMapDayRailScrollLeft) > 1) {
+    railNode.scrollLeft = routeMapDayRailScrollLeft;
+  }
+
+  syncRouteMapDaySliderControls();
+}
+
+function scheduleRouteMapDaySliderSync() {
+  if (routeMapDaySliderSyncFrame) {
+    return;
+  }
+
+  routeMapDaySliderSyncFrame = window.requestAnimationFrame(() => {
+    routeMapDaySliderSyncFrame = 0;
+    syncRouteMapDaySliderUI();
+  });
+}
+
+function slideRouteMapDayRail(direction = 1) {
+  const railNode = getRouteMapDayRailNode();
+  if (!railNode) {
+    return;
+  }
+
+  const firstCard = railNode.querySelector(".route-reference__day");
+  const styles = window.getComputedStyle(railNode);
+  const gap = Number.parseFloat(styles.columnGap || styles.gap || "0") || 0;
+  const step = firstCard
+    ? firstCard.getBoundingClientRect().width + gap
+    : Math.max(railNode.clientWidth * 0.82, 180);
+  const maxScroll = Math.max(railNode.scrollWidth - railNode.clientWidth, 0);
+  const nextScrollLeft = Math.max(
+    0,
+    Math.min(maxScroll, railNode.scrollLeft + step * direction)
+  );
+
+  routeMapDayRailScrollLeft = nextScrollLeft;
+  railNode.scrollTo({
+    left: nextScrollLeft,
+    behavior: reducedEffectsEnabled ? "auto" : "smooth"
+  });
+  window.requestAnimationFrame(syncRouteMapDaySliderControls);
 }
 
 function getRouteMapStyleSignature() {
@@ -6403,8 +6515,34 @@ function renderRouteMapStops(selectionState) {
     stopsNode,
     `
     <section class="route-map__day-browser">
+      <div class="route-map__day-toolbar">
+        <div
+          class="route-map__day-controls"
+          role="group"
+          aria-label="${escapeHtml(getLocalizedText(routeMapLabels.daySlider))}">
+          <button
+            class="route-map__day-nav"
+            type="button"
+            data-route-map-day-shift="-1"
+            data-aria-label-en="${escapeHtml(routeMapLabels.daySliderPrevious.en)}"
+            data-aria-label-ja="${escapeHtml(routeMapLabels.daySliderPrevious.ja)}"
+            aria-label="${escapeHtml(getLocalizedText(routeMapLabels.daySliderPrevious))}">
+            &larr;
+          </button>
+          <button
+            class="route-map__day-nav"
+            type="button"
+            data-route-map-day-shift="1"
+            data-aria-label-en="${escapeHtml(routeMapLabels.daySliderNext.en)}"
+            data-aria-label-ja="${escapeHtml(routeMapLabels.daySliderNext.ja)}"
+            aria-label="${escapeHtml(getLocalizedText(routeMapLabels.daySliderNext))}">
+            &rarr;
+          </button>
+        </div>
+      </div>
       <div
         class="route-map__day-rail"
+        data-route-map-day-rail
         role="list"
         aria-label="${escapeHtml(getLocalizedText(routeMapLabels.days))}">
         ${allDayLinks
@@ -6421,6 +6559,23 @@ function renderRouteMapStops(selectionState) {
   );
 }
 
+function getCompactRouteDayStops(routeDay) {
+  const uniqueStops = Array.from(
+    new Map(
+      (routeDay.stops || []).map((stop) => [`${stop.en || ""}|${stop.ja || ""}`, stop])
+    ).values()
+  );
+
+  if (uniqueStops.length <= 1) {
+    return null;
+  }
+
+  return {
+    en: uniqueStops.map((stop) => stop.en).filter(Boolean).join(" • "),
+    ja: uniqueStops.map((stop) => stop.ja).filter(Boolean).join("・")
+  };
+}
+
 function renderRouteMapDaySection(link, { isActive = false, isRelated = false } = {}) {
   const routeDay = getRouteDayReference(link.day);
   const dayStepLabel = {
@@ -6435,16 +6590,10 @@ function renderRouteMapDaySection(link, { isActive = false, isRelated = false } 
     en: `Jump to ${routeDay.title.en} checklist`,
     ja: `${routeDay.title.ja}のチェックリストへ移動`
   };
-  const stopsMarkup = routeDay.stops.length
+  const stopSummary = getCompactRouteDayStops(routeDay);
+  const stopSummaryMarkup = stopSummary
     ? `
-        <span class="route-reference__day-stops">
-          ${routeDay.stops
-            .map(
-              (stop) =>
-                `<span class="route-reference__day-stop">${renderLocalizedContent(stop)}</span>`
-            )
-            .join("")}
-        </span>
+        <span class="route-reference__day-meta">${renderLocalizedContent(stopSummary)}</span>
       `
     : "";
 
@@ -6460,7 +6609,7 @@ function renderRouteMapDaySection(link, { isActive = false, isRelated = false } 
         aria-label="${escapeHtml(getLocalizedText(selectAriaLabel))}">
         <span class="route-reference__day-step">${renderLocalizedContent(dayStepLabel)}</span>
         <span class="route-reference__day-title">${renderLocalizedContent(routeDay.displayTitle)}</span>
-        ${stopsMarkup}
+        ${stopSummaryMarkup}
       </button>
       <button
         class="packing-section__action route-reference__day-button route-reference__day-action"
@@ -6989,6 +7138,7 @@ function syncRouteMapUI(options = {}) {
 
   renderRouteMapStops(selectionState);
   renderRouteMapDetail(selectionState);
+  scheduleRouteMapDaySliderSync();
 
   syncRouteMapRuntime(selectionState, { updateCamera, animateCamera, resetOverview });
 }
@@ -7052,6 +7202,8 @@ function refreshRouteMapsIfReady(options = {}) {
 }
 
 function resizeRouteMapsIfReady() {
+  scheduleRouteMapDaySliderSync();
+
   if (!routeMapState.ready || !routeMapState.map) {
     return;
   }
@@ -7081,6 +7233,13 @@ function ensureRouteMapInitialized() {
 }
 
 function handleRouteMapClick(event) {
+  const dayRailShiftTrigger = event.target.closest("[data-route-map-day-shift]");
+  if (dayRailShiftTrigger) {
+    event.preventDefault();
+    slideRouteMapDayRail(Number(dayRailShiftTrigger.dataset.routeMapDayShift) || 1);
+    return;
+  }
+
   const dayViewTrigger = event.target.closest("[data-route-map-day-view]");
   if (dayViewTrigger) {
     event.preventDefault();
