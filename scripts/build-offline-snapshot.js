@@ -5,7 +5,6 @@ const repoRoot = path.resolve(__dirname, "..");
 const docsDir = path.join(repoRoot, "docs");
 const indexPath = path.join(docsDir, "index.html");
 const snapshotPath = path.join(docsDir, "japan-escape-itinerary-offline.html");
-const routePreviewPath = path.join(docsDir, "assets", "route-map-preview.svg");
 const cssPath = path.join(docsDir, "style.min.css");
 const jsPath = path.join(docsDir, "script.min.js");
 const bookingTransitDataPath = path.join(
@@ -54,8 +53,6 @@ function replaceBlock(documentHtml, startMarker, endMarker, nextBlock, label) {
 }
 
 let html = fs.readFileSync(indexPath, "utf8");
-const routePreviewSvg = fs.readFileSync(routePreviewPath, "utf8");
-const routePreviewDataUrl = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(routePreviewSvg)}`;
 const css = fs.readFileSync(cssPath, "utf8").trim();
 const bookingTransitData = fs
   .readFileSync(bookingTransitDataPath, "utf8")
@@ -83,7 +80,6 @@ html = replaceBlock(html, dataStartMarker, dataEndMarker, dataBlock, "Inline dat
 html = replaceBlock(html, scriptStartMarker, scriptEndMarker, scriptBlock, "Inline script");
 
 html = html.replace("<html lang=\"en\">", "<html lang=\"en\" data-offline-snapshot=\"true\">");
-html = html.replace('src="./assets/route-map-preview.svg"', `src="${routePreviewDataUrl}"`);
 html = stripHeadTag(html, /\s*<link rel="manifest" href="\.\/manifest\.webmanifest">\r?\n/g);
 html = stripHeadTag(
   html,
