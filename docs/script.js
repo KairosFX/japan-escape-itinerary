@@ -7,6 +7,7 @@ const siteHeader = document.querySelector(".site-header");
 const headerAccessoryGroups = Array.from(document.querySelectorAll(".language-switcher, .theme-switcher"));
 const mainContent = document.querySelector("#main-content");
 const siteFooter = document.querySelector(".site-footer");
+const siteIntro = document.querySelector("[data-site-intro]");
 const sequenceNotice = document.querySelector("[data-sequence-notice]");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
 const dayGrids = Array.from(document.querySelectorAll(".day-grid"));
@@ -85,6 +86,7 @@ const essentialsContentFallbackScriptUrl = "./essentials-content.min.js";
 const routeContentRuntimeGlobal = "__JAPAN_ROUTE_CONTENT__";
 const routeContentFallbackScriptUrl = "./route-content.min.js";
 const routeStyleFallbackUrl = "./route.min.css";
+const routeMapOriginUrl = "https://tiles.openfreemap.org";
 const routeMapStyleUrl = "https://tiles.openfreemap.org/styles/liberty";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
 const budgetDefaultTravelerCount = 2;
@@ -362,10 +364,10 @@ const routeMapLabels = {
   daySliderNext: { en: "Show later days", ja: "次の日を表示" },
   tools: { en: "Quick tools", ja: "クイック操作" },
   checklistAction: { en: "Checklist", ja: "チェックリスト" },
-  sharedLoading: { en: "Loading route map...", ja: "ルート地図を読み込み中..." },
+  sharedLoading: { en: "Preparing live route map...", ja: "ライブ ルート地図を準備中..." },
   sharedLoadingBody: {
-    en: "OpenFreeMap is loading.",
-    ja: "OpenFreeMap を読み込んでいます。"
+    en: "Warming OpenFreeMap tiles and route overlays.",
+    ja: "OpenFreeMap の地図タイルとルート表示を先に読み込んでいます。"
   },
   sharedFallbackTitle: { en: "Route map unavailable", ja: "ルート地図を表示できません" },
   sharedFallbackBody: {
@@ -527,6 +529,169 @@ function loadAppAssetManifest() {
   }
 
   return Promise.resolve(appAssetManifest || {});
+}
+
+function primeHeadLink(rel, href, attributes = {}) {
+  if (!href) {
+    return null;
+  }
+
+  const selector = `link[rel="${rel}"][href="${href}"]`;
+  const existingLink = document.head.querySelector(selector);
+  if (existingLink) {
+    return existingLink;
+  }
+
+  const link = document.createElement("link");
+  link.rel = rel;
+  link.href = href;
+
+  Object.entries(attributes).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === false || value === "") {
+      return;
+    }
+
+    if (value === true) {
+      link.setAttribute(key, "");
+      return;
+    }
+
+    link.setAttribute(key, value);
+  });
+
+  document.head.append(link);
+  return link;
+}
+
+function prewarmRouteStaticAssets() {
+  return loadAppAssetManifest().then((manifest) => {
+    primeHeadLink("dns-prefetch", `//${new URL(routeMapOriginUrl).host}`);
+    primeHeadLink("preconnect", routeMapOriginUrl, { crossorigin: "anonymous" });
+    primeHeadLink("preload", manifest.routeStylePath || routeStyleFallbackUrl, { as: "style" });
+    primeHeadLink("preload", manifest.routeContentPath || routeContentFallbackScriptUrl, { as: "script" });
+    primeHeadLink("preload", routeMapLibraryStyleUrl, { as: "style" });
+    primeHeadLink("preload", routeMapLibraryScriptUrl, { as: "script" });
+    return manifest;
+  });
+}
+
+function warmRouteMapStyleDocument() {
+  if (offlineSnapshotMode) {
+    return Promise.resolve(null);
+  }
+
+  if (routeMapStyleWarmupPromise) {
+    return routeMapStyleWarmupPromise;
+  }
+
+  routeMapStyleWarmupPromise = fetch(routeMapStyleUrl, {
+    mode: "cors",
+    credentials: "omit",
+    cache: "force-cache"
+  })
+    .then((response) => (response.ok ? response.text() : null))
+    .catch(() => null);
+
+  return routeMapStyleWarmupPromise;
+}
+
+function createRouteMapWarmupHost() {
+  if (routeMapWarmupHost?.isConnected) {
+    return routeMapWarmupHost;
+  }
+
+  const host = document.createElement("div");
+  host.setAttribute("aria-hidden", "true");
+  host.dataset.routeMapWarmup = "true";
+  Object.assign(host.style, {
+    position: "fixed",
+    left: "-200vw",
+    top: "-200vh",
+    width: "720px",
+    height: "420px",
+    opacity: "0",
+    pointerEvents: "none",
+    zIndex: "-1"
+  });
+  document.body.append(host);
+  routeMapWarmupHost = host;
+  return host;
+}
+
+function warmOffscreenRouteMap() {
+  if (offlineSnapshotMode) {
+    return Promise.resolve(null);
+  }
+
+  if (routeMapOffscreenWarmupPromise) {
+    return routeMapOffscreenWarmupPromise;
+  }
+
+  routeMapOffscreenWarmupPromise = Promise.all([
+    ensureRouteContentLoaded(),
+    loadRouteMapLibrary(),
+    warmRouteMapStyleDocument()
+  ])
+    .then(async ([, { maplibregl }]) => {
+      const warmupHost = createRouteMapWarmupHost();
+      const warmupMap = new maplibregl.Map({
+        container: warmupHost,
+        style: buildRouteMapBaseStyle(),
+        interactive: false,
+        attributionControl: false,
+        renderWorldCopies: false,
+        center: routeMapInitialView.center,
+        zoom: routeMapInitialView.zoom
+      });
+
+      try {
+        await waitForRouteMapLoad(warmupMap, 14000);
+      } catch (error) {
+        // Ignore warmup errors and let the visible map retry normally.
+      }
+
+      try {
+        warmupMap.remove();
+      } catch (error) {
+        // Ignore cleanup failures for the offscreen warmup map.
+      }
+
+      if (routeMapWarmupHost?.isConnected) {
+        routeMapWarmupHost.remove();
+      }
+      routeMapWarmupHost = null;
+      return null;
+    })
+    .catch(() => null)
+    .finally(() => {
+      routeMapOffscreenWarmupPromise = null;
+    });
+
+  return routeMapOffscreenWarmupPromise;
+}
+
+function warmRouteExperience() {
+  if (offlineSnapshotMode) {
+    return Promise.resolve(null);
+  }
+
+  if (routeExperienceWarmupPromise) {
+    return routeExperienceWarmupPromise;
+  }
+
+  routeMapRequested = true;
+  routeExperienceWarmupPromise = Promise.allSettled([
+    prewarmRouteStaticAssets(),
+    ensureRouteSectionStylesLoaded(),
+    ensureRouteContentLoaded(),
+    loadRouteMapLibrary(),
+    warmRouteMapStyleDocument(),
+    warmOffscreenRouteMap()
+  ]).finally(() => {
+    routeExperienceWarmupPromise = null;
+  });
+
+  return routeExperienceWarmupPromise;
 }
 
 function loadLazyAssetScript(url, dataAttribute, runtimeGlobal, runtimeLabel) {
@@ -775,7 +940,11 @@ function loadEssentialsContentData() {
 
 function ensureSectionAssetsReady(sectionName) {
   if (sectionName === "route") {
-    return ensureRouteSectionStylesLoaded();
+    return Promise.all([
+      ensureRouteSectionStylesLoaded(),
+      ensureRouteContentLoaded(),
+      prewarmRouteStaticAssets()
+    ]);
   }
 
   return Promise.resolve();
@@ -927,6 +1096,10 @@ let routeMapDayRailScrollLeft = 0;
 let routeMapDayRailStep = 0;
 let routeMapDayRailMaxScroll = 0;
 let routeMapRequested = false;
+let routeMapStyleWarmupPromise = null;
+let routeMapOffscreenWarmupPromise = null;
+let routeExperienceWarmupPromise = null;
+let routeMapWarmupHost = null;
 let pendingRouteMapUISyncOptions = {
   updateCamera: false,
   animateCamera: false,
@@ -2353,13 +2526,7 @@ function isLikelyLowerPowerDevice() {
 }
 
 function shouldReduceEffects() {
-  return (
-    aggressivePerformanceMode ||
-    reducedMotionQuery.matches ||
-    coarsePointerQuery.matches ||
-    compactViewportQuery.matches ||
-    isLikelyLowerPowerDevice()
-  );
+  return aggressivePerformanceMode || reducedMotionQuery.matches;
 }
 
 function syncReducedEffectsMode({ force = false } = {}) {
@@ -3500,7 +3667,22 @@ function ensureSectionInitialized(sectionName) {
 }
 
 function scheduleIdleSectionWarmup(initialSection) {
-  void initialSection;
+  const warm = () => {
+    if (initialSection !== "route") {
+      void warmRouteExperience();
+      return;
+    }
+
+    void ensureRouteSectionStylesLoaded();
+    void ensureRouteContentLoaded();
+  };
+
+  if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(warm, { timeout: 1200 });
+    return;
+  }
+
+  window.setTimeout(warm, 260);
 }
 
 function initOverviewSection() {
@@ -4082,33 +4264,35 @@ function getRouteMapPalette(theme = getCurrentTheme()) {
   if (theme === "dark") {
     return {
       background: "#0d141b",
-      glowOuter: "rgba(214, 128, 108, 0.18)",
-      glowInner: "rgba(244, 203, 191, 0.2)",
-      corridor: "rgba(101, 140, 167, 0.18)",
-      shadow: "rgba(6, 8, 12, 0.82)",
-      routeStart: "#e08773",
-      routeMid: "#ebb06b",
-      routeMidAlt: "#98b8c7",
-      routeEnd: "#7da4c7",
-      segmentActive: "#f6d1c7",
-      segmentMuted: "rgba(243, 233, 222, 0.16)",
+      glowOuter: "rgba(214, 128, 108, 0.16)",
+      glowInner: "rgba(244, 203, 191, 0.18)",
+      corridor: "rgba(101, 140, 167, 0.14)",
+      shadow: "rgba(6, 8, 12, 0.6)",
+      routeCasing: "rgba(24, 35, 45, 0.94)",
+      routeStart: "#da8470",
+      routeMid: "#e1ad67",
+      routeMidAlt: "#8fb1c4",
+      routeEnd: "#79a0c1",
+      segmentActive: "rgba(246, 225, 214, 0.84)",
+      segmentMuted: "rgba(243, 233, 222, 0.12)",
       segmentSelected: "#ffd8ce"
     };
   }
 
   return {
     background: "#f8f3eb",
-    glowOuter: "rgba(171, 74, 59, 0.09)",
-    glowInner: "rgba(184, 149, 100, 0.12)",
-    corridor: "rgba(117, 133, 148, 0.14)",
-    shadow: "rgba(255, 249, 244, 0.9)",
+    glowOuter: "rgba(171, 74, 59, 0.08)",
+    glowInner: "rgba(184, 149, 100, 0.1)",
+    corridor: "rgba(117, 133, 148, 0.1)",
+    shadow: "rgba(255, 249, 244, 0.72)",
+    routeCasing: "rgba(255, 252, 248, 0.96)",
     routeStart: "#ab4a3b",
     routeMid: "#c8844f",
     routeMidAlt: "#b59b59",
     routeEnd: "#64879b",
-    segmentActive: "#9b3c33",
-    segmentMuted: "rgba(98, 74, 68, 0.18)",
-    segmentSelected: "#bf5f4a"
+    segmentActive: "rgba(132, 54, 47, 0.9)",
+    segmentMuted: "rgba(98, 74, 68, 0.14)",
+    segmentSelected: "#c86755"
   };
 }
 
@@ -4439,7 +4623,7 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       paint: {
         "line-color": palette.corridor,
         "line-opacity": 1,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 14, 7.3, 34]
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 6.4, 7.3, 13.5]
       }
     },
     {
@@ -4452,8 +4636,22 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       },
       paint: {
         "line-color": palette.shadow,
-        "line-opacity": 0.9,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 7, 7.3, 14]
+        "line-opacity": 0.82,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 3.2, 7.3, 6]
+      }
+    },
+    {
+      id: "route-map-casing",
+      type: "line",
+      source: "route-map-full",
+      layout: {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      paint: {
+        "line-color": palette.routeCasing,
+        "line-opacity": 0.94,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 2.2, 7.3, 4]
       }
     },
     {
@@ -4466,7 +4664,7 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       },
       paint: {
         "line-gradient": getRouteMapGradientExpression(theme),
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 3.2, 7.3, 5.8]
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 1.4, 7.3, 2.8]
       }
     },
     {
@@ -4479,8 +4677,8 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       },
       paint: {
         "line-color": palette.segmentActive,
-        "line-opacity": 0.92,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 2.8, 7.3, 4.8]
+        "line-opacity": 0.8,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 1.26, 7.3, 2]
       }
     },
     {
@@ -4494,8 +4692,8 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       },
       paint: {
         "line-color": palette.segmentSelected,
-        "line-opacity": 1,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 4.4, 7.3, 6.6]
+        "line-opacity": 0.98,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 2.2, 7.3, 3.9]
       }
     },
     {
@@ -5081,6 +5279,7 @@ function applyRouteMapPaintTheme(map) {
     ["route-map-backdrop-inner", "circle-color", palette.glowInner],
     ["route-map-corridor", "line-color", palette.corridor],
     ["route-map-shadow", "line-color", palette.shadow],
+    ["route-map-casing", "line-color", palette.routeCasing],
     ["route-map-full-gradient", "line-gradient", getRouteMapGradientExpression()],
     ["route-map-segment-selected", "line-color", palette.segmentSelected]
   ];
@@ -5098,7 +5297,7 @@ function syncRouteMapSelectionLayers(map, selectionState) {
   const activeIds = Array.from(selectionState.segmentIds);
   const selectedId = selectionState.type === "segment" ? selectionState.config.id : "__none__";
   const palette = getRouteMapPalette();
-  const inactiveOpacity = activeIds.length ? 0.24 : 0.18;
+  const inactiveOpacity = activeIds.length ? 0.14 : 0.1;
   const selectionLayerKey = `${getCurrentTheme()}|${getRouteMapSelectionSignature(selectionState)}`;
 
   if (map.__routeMapSelectionLayerKey === selectionLayerKey) {
@@ -5110,7 +5309,7 @@ function syncRouteMapSelectionLayers(map, selectionState) {
       ? ["match", ["get", "id"], activeIds, palette.segmentActive, palette.segmentMuted]
       : palette.segmentMuted;
     const lineOpacity = activeIds.length
-      ? ["match", ["get", "id"], activeIds, 0.94, inactiveOpacity]
+      ? ["match", ["get", "id"], activeIds, 0.8, inactiveOpacity]
       : inactiveOpacity;
     const lineWidth = activeIds.length
       ? [
@@ -5118,11 +5317,11 @@ function syncRouteMapSelectionLayers(map, selectionState) {
           ["linear"],
           ["zoom"],
           4.3,
-          ["match", ["get", "id"], activeIds, 3.6, 2.4],
+          ["match", ["get", "id"], activeIds, 2, 1.26],
           7.3,
-          ["match", ["get", "id"], activeIds, 5.2, 3.8]
+          ["match", ["get", "id"], activeIds, 3.2, 2]
         ]
-      : ["interpolate", ["linear"], ["zoom"], 4.3, 2.4, 7.3, 3.8];
+      : ["interpolate", ["linear"], ["zoom"], 4.3, 1.26, 7.3, 2];
 
     setRouteMapPaintPropertyIfChanged(map, "route-map-segments-active", "line-color", lineColor);
     setRouteMapPaintPropertyIfChanged(map, "route-map-segments-active", "line-opacity", lineOpacity);
@@ -5449,7 +5648,7 @@ function refreshRouteMapsIfReady(options = {}) {
 
   if (!routeMapRequested && !routeMapState.ready) {
     clearRouteMapStatus(routeMapStatusNode);
-    setRouteMapShellState(routeMapState.failed ? "error" : "preview");
+    setRouteMapShellState(routeMapState.failed ? "error" : "loading");
     syncRouteMapUI({ resetOverview: true });
     return;
   }
@@ -5510,17 +5709,13 @@ function ensureRouteMapInitialized() {
     syncLocalizedNodes(routeMapExplorerNode);
   }
   routeMapInitialized = true;
+  if (!routeMapState.failed) {
+    setRouteMapShellState("loading");
+  }
   syncRouteMapUI({ resetOverview: true });
 }
 
 function handleRouteMapClick(event) {
-  const liveMapTrigger = event.target.closest("[data-route-map-open-live]");
-  if (liveMapTrigger) {
-    event.preventDefault();
-    void requestRouteMapLiveView();
-    return;
-  }
-
   const dayRailShiftTrigger = event.target.closest("[data-route-map-day-shift]");
   if (dayRailShiftTrigger) {
     event.preventDefault();
@@ -5601,6 +5796,7 @@ async function initRouteSection() {
 
   registerRevealBlocks(panel);
   ensureRouteMapInitialized();
+  void requestRouteMapLiveView();
   refreshRouteMapsIfReady({ updateCamera: true });
 }
 
@@ -6367,6 +6563,46 @@ function bindTabNavigation() {
   });
 }
 
+function waitForFrame() {
+  return new Promise((resolve) => {
+    window.requestAnimationFrame(() => resolve());
+  });
+}
+
+function waitForDuration(durationMs) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, durationMs);
+  });
+}
+
+async function playSiteIntro() {
+  if (!siteIntro) {
+    root.classList.remove("intro-pending", "intro-active", "intro-leaving");
+    return;
+  }
+
+  const holdDurationMs = reducedEffectsEnabled ? 240 : 1380;
+  const exitDurationMs = reducedEffectsEnabled ? 0 : 760;
+
+  siteIntro.hidden = false;
+  root.classList.add("intro-active");
+  root.classList.remove("intro-leaving");
+
+  await waitForFrame();
+  await waitForFrame();
+  await waitForDuration(holdDurationMs);
+
+  root.classList.add("intro-leaving");
+  root.classList.remove("intro-active");
+
+  if (exitDurationMs > 0) {
+    await waitForDuration(exitDurationMs);
+  }
+
+  root.classList.remove("intro-pending", "intro-active", "intro-leaving");
+  siteIntro.hidden = true;
+}
+
 async function bootApp() {
   syncReducedEffectsMode({ force: true });
   completedHistoryDays = readStoredDaySet(completedHistoryStorageKey);
@@ -6382,6 +6618,8 @@ async function bootApp() {
     updateLanguageButtons("en");
   }
 
+  const introPromise = playSiteIntro();
+  void warmRouteExperience();
   const siteFooter = document.querySelector(".site-footer");
   const initialPanelId = getInitialPanelId();
   if (initialPanelId === "overview") {
@@ -6416,6 +6654,8 @@ async function bootApp() {
       scheduleDayCardRowHeights();
     });
   }
+
+  await introPromise;
 }
 
 function scheduleAppBoot() {

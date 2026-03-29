@@ -8,6 +8,8 @@
     name="description"
     content="Simple bilingual Japan trip website for GitHub Pages with overview, checklist, notes, budget, routes, essentials, and a live route map from Osaka to Tokyo.">
   <meta name="theme-color" content="#9b3c33">
+  <link rel="dns-prefetch" href="//tiles.openfreemap.org">
+  <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%239b3c33'/%3E%3Cpath d='M20 18h24v6H34v22h-6V24H20z' fill='%23fffaf4'/%3E%3C/svg%3E">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
@@ -23,25 +25,24 @@
           ? storedTheme
           : "light";
       const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-      const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
-      const compactViewportQuery = window.matchMedia("(max-width: 920px)");
-      const deviceMemory = Number(navigator.deviceMemory || 0);
-      const hardwareConcurrency = Number(navigator.hardwareConcurrency || 0);
-      const shouldReduceEffects =
-        reducedMotionQuery.matches ||
-        coarsePointerQuery.matches ||
-        compactViewportQuery.matches ||
-        (deviceMemory > 0 && deviceMemory <= 4) ||
-        (hardwareConcurrency > 0 && hardwareConcurrency <= 4);
+      const shouldReduceEffects = reducedMotionQuery.matches;
 
       document.documentElement.dataset.theme = initialTheme;
       document.documentElement.style.colorScheme = initialTheme;
       document.documentElement.classList.toggle("reduce-effects", shouldReduceEffects);
       document.documentElement.classList.toggle("enhanced-effects", !shouldReduceEffects);
+      document.documentElement.classList.add("intro-pending");
+      window.setTimeout(() => {
+        document.documentElement.classList.remove("intro-pending", "intro-active", "intro-leaving");
+      }, 5000);
     } catch (error) {
       document.documentElement.dataset.theme = "light";
       document.documentElement.style.colorScheme = "light";
       document.documentElement.classList.add("reduce-effects");
+      document.documentElement.classList.add("intro-pending");
+      window.setTimeout(() => {
+        document.documentElement.classList.remove("intro-pending", "intro-active", "intro-leaving");
+      }, 5000);
     }
   </script>
   <!-- build:inline-style:start -->
@@ -617,10 +618,320 @@ html[data-theme="dark"] .progress-item {
   .progress-overview__buttons {
     grid-template-columns: 1fr;
   }
+}
+
+/* Premium cinematic pass */
+:root {
+  --bg: #f6efe4;
+  --text: #1f1815;
+  --muted: #6f6159;
+  --line: rgba(90, 66, 53, 0.14);
+  --accent: #a24739;
+  --accent-deep: #732920;
+  --section-gap: 2.9rem;
+  --section-content-gap: 1.48rem;
+  --measure: 46rem;
+}
+
+html,
+body {
+  background: #f6efe4;
+}
+
+body {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 14% 12%, rgba(170, 84, 68, 0.12), rgba(170, 84, 68, 0) 28%),
+    radial-gradient(circle at 84% 9%, rgba(196, 155, 95, 0.16), rgba(196, 155, 95, 0) 24%),
+    linear-gradient(180deg, rgba(250, 245, 238, 0.98) 0%, rgba(244, 236, 226, 0.98) 38%, rgba(236, 226, 212, 1) 100%);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 32rem;
+  height: 32rem;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(18px);
+  opacity: 0.5;
+  z-index: 0;
+}
+
+body::before {
+  top: -11rem;
+  right: -8rem;
+  background: radial-gradient(circle, rgba(214, 178, 113, 0.24), rgba(214, 178, 113, 0));
+}
+
+body::after {
+  left: -11rem;
+  bottom: -12rem;
+  background: radial-gradient(circle, rgba(151, 95, 80, 0.18), rgba(151, 95, 80, 0));
+}
+
+.site-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.site-atmosphere__orb,
+.site-atmosphere__grain {
+  position: absolute;
+}
+
+.site-atmosphere__orb {
+  border-radius: 50%;
+  filter: blur(12px);
+}
+
+.site-atmosphere__orb--north {
+  top: -8rem;
+  left: -6rem;
+  width: 24rem;
+  height: 24rem;
+  background: radial-gradient(circle, rgba(168, 88, 72, 0.18), rgba(168, 88, 72, 0));
+}
+
+.site-atmosphere__orb--sun {
+  top: 12%;
+  right: -7rem;
+  width: 30rem;
+  height: 30rem;
+  background: radial-gradient(circle, rgba(205, 170, 112, 0.18), rgba(205, 170, 112, 0));
+}
+
+.site-atmosphere__orb--ember {
+  right: 20%;
+  bottom: -10rem;
+  width: 26rem;
+  height: 26rem;
+  background: radial-gradient(circle, rgba(118, 141, 153, 0.16), rgba(118, 141, 153, 0));
+}
+
+.site-atmosphere__grain {
+  inset: 0;
+  opacity: 0.14;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(34, 23, 17, 0.12) 0.04rem, transparent 0.06rem),
+    radial-gradient(circle at 80% 30%, rgba(34, 23, 17, 0.09) 0.03rem, transparent 0.06rem);
+  background-size: 10rem 10rem, 13rem 13rem;
+  mix-blend-mode: multiply;
+}
+
+#main-content,
+.page-shell,
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+
+html.intro-pending body,
+html.intro-active body,
+html.intro-leaving body {
+  overflow: hidden;
+}
+
+.site-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 1.4rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 760ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 760ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.intro-pending .site-intro,
+html.intro-active .site-intro,
+html.intro-leaving .site-intro {
+  visibility: visible;
+}
+
+html.intro-pending .site-intro,
+html.intro-active .site-intro {
+  opacity: 1;
+}
+
+html.intro-leaving .site-intro {
+  opacity: 0;
+}
+
+.site-intro__veil,
+.site-intro__panorama,
+.site-intro__content {
+  position: absolute;
+  inset: 0;
+}
+
+.site-intro__veil {
+  background:
+    linear-gradient(180deg, rgba(10, 12, 16, 0.28), rgba(10, 12, 16, 0.08)),
+    linear-gradient(135deg, rgba(246, 239, 228, 0.96), rgba(230, 217, 201, 0.88));
+}
+
+.site-intro__mist,
+.site-intro__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(12px);
+}
+
+.site-intro__mist--north {
+  top: -4rem;
+  left: -4rem;
+  width: 28rem;
+  height: 16rem;
+  background: radial-gradient(circle, rgba(156, 82, 68, 0.22), rgba(156, 82, 68, 0));
+}
+
+.site-intro__mist--south {
+  right: -6rem;
+  bottom: -6rem;
+  width: 30rem;
+  height: 20rem;
+  background: radial-gradient(circle, rgba(201, 168, 108, 0.24), rgba(201, 168, 108, 0));
+}
+
+.site-intro__glow {
+  inset: 18% 26% auto;
+  height: 24rem;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0));
+}
+
+.site-intro__content {
+  inset: auto;
+  display: grid;
+  gap: 0.7rem;
+  width: min(100%, 44rem);
+  text-align: center;
+  align-content: center;
+  color: rgba(27, 20, 18, 0.96);
+}
+
+.site-intro__eyebrow,
+.site-intro__meta {
+  margin: 0;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: rgba(92, 60, 47, 0.82);
+}
+
+.site-intro__title {
+  display: grid;
+  gap: 0.22rem;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+}
+
+.site-intro__title span:last-child {
+  font-size: clamp(1.3rem, 3vw, 2.05rem);
+  letter-spacing: 0.08em;
+  color: rgba(115, 41, 32, 0.86);
+}
+
+.site-header {
+  padding-top: 0.34rem;
+  background:
+    linear-gradient(180deg, rgba(252, 248, 243, 0.88), rgba(248, 241, 233, 0.72)),
+    rgba(252, 248, 243, 0.48);
+  border-bottom-color: rgba(255, 255, 255, 0.58);
+  box-shadow: 0 22px 48px rgba(17, 12, 10, 0.09);
+}
+
+.header-inner {
+  width: min(calc(100% - 2.6rem), var(--content-width));
+  padding: 0.54rem 0 0.66rem;
+  gap: 0.74rem 1.1rem;
+}
+
+h1 {
+  font-size: clamp(2.25rem, 4vw, 3.9rem);
+}
+
+.hero-copy {
+  max-width: 50ch;
+  font-size: 1rem;
+  line-height: 1.68;
+}
+
+.page-shell {
+  width: min(calc(100% - 2.4rem), calc(var(--content-width) + 1.5rem));
+  gap: 3rem;
+  padding: 1.5rem 0 5rem;
+}
+
+.card {
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.54);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 250, 0.82), rgba(248, 240, 232, 0.72)),
+    rgba(255, 251, 247, 0.64);
+  box-shadow:
+    0 24px 48px rgba(55, 35, 22, 0.08),
+    0 44px 80px rgba(55, 35, 22, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.hero-panel {
+  min-block-size: clamp(21rem, 46vw, 28rem);
+  background:
+    linear-gradient(135deg, rgba(255, 252, 248, 0.56), rgba(243, 231, 220, 0.2)),
+    linear-gradient(180deg, rgba(255, 252, 247, 0.76), rgba(246, 236, 227, 0.66));
+}
+
+.hero-panel::before {
+  inset: 1.7rem auto auto 2rem;
+  width: 11rem;
+  height: 1.5rem;
+  opacity: 0.94;
+}
+
+.hero-panel::after {
+  right: -4rem;
+  bottom: -5rem;
+  width: 22rem;
+  height: 22rem;
+  background: radial-gradient(circle, rgba(164, 89, 75, 0.18), rgba(164, 89, 75, 0));
+}
+
+.hero-panel__body {
+  min-block-size: inherit;
+  align-content: end;
+  padding: clamp(2.5rem, 5vw, 4rem);
+}
+
+@media (max-width: 920px) {
+  .page-shell {
+    width: min(calc(100% - 1.4rem), calc(var(--content-width) + 0.6rem));
+    padding-top: 1rem;
+    gap: 2.4rem;
+  }
+
+  .header-inner {
+    width: min(calc(100% - 1.3rem), var(--content-width));
+  }
+
+  .site-intro__title {
+    font-size: clamp(2.2rem, 12vw, 3.6rem);
+  }
 }</style>
-  <link rel="preload" href="./assets/app/style.2f47ebae0b.css" as="style">
-  <link rel="stylesheet" href="./assets/app/style.2f47ebae0b.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.2f47ebae0b.css"></noscript>
+  <link rel="preload" href="./assets/app/style.ccbb04430a.css" as="style">
+  <link rel="stylesheet" href="./assets/app/style.ccbb04430a.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.ccbb04430a.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -628,6 +939,28 @@ html[data-theme="dark"] .progress-item {
     <span data-language="en">Skip to content</span>
     <span data-language="ja" hidden>本文へ移動</span>
   </a>
+  <div class="site-atmosphere" aria-hidden="true">
+    <span class="site-atmosphere__orb site-atmosphere__orb--north"></span>
+    <span class="site-atmosphere__orb site-atmosphere__orb--sun"></span>
+    <span class="site-atmosphere__orb site-atmosphere__orb--ember"></span>
+    <span class="site-atmosphere__grain"></span>
+  </div>
+  <div class="site-intro" data-site-intro aria-hidden="true">
+    <div class="site-intro__veil"></div>
+    <div class="site-intro__panorama">
+      <span class="site-intro__mist site-intro__mist--north"></span>
+      <span class="site-intro__mist site-intro__mist--south"></span>
+      <span class="site-intro__glow"></span>
+    </div>
+    <div class="site-intro__content">
+      <p class="site-intro__eyebrow">Japan Escape / 日本旅行</p>
+      <h2 class="site-intro__title">
+        <span>Osaka to Tokyo</span>
+        <span>静かな旅の案内</span>
+      </h2>
+      <p class="site-intro__meta">Kyoto • Fuji • Tokyo</p>
+    </div>
+  </div>
 
   <header class="site-header">
     <div class="header-inner">
@@ -1583,8 +1916,8 @@ html[data-theme="dark"] .progress-item {
           <span data-language="ja" hidden>ルート</span>
         </h2>
         <p class="section-intro">
-          <span data-language="en">Pick a route day first, then open the live map when you want synced city clicks.</span>
-          <span data-language="ja" hidden>まず日別ルートを選び、都市クリックで連動させたい時だけライブ地図を開けます。</span>
+          <span data-language="en">The live map is the default view here, with route days, city stops, and transit tools staying in sync around the same journey canvas.</span>
+          <span data-language="ja" hidden>ここではライブ地図を標準表示にし、日別ルート、都市ごとの停車地、移動ツールをひとつの旅程画面で連動させます。</span>
         </p>
       </div>
 
@@ -1592,12 +1925,12 @@ html[data-theme="dark"] .progress-item {
         <div class="route-map__header">
           <div class="route-map__copy">
             <h3>
-              <span data-language="en">Route Days</span>
-              <span data-language="ja" hidden>日別ルート</span>
+              <span data-language="en">Live Route Atlas</span>
+              <span data-language="ja" hidden>ライブ ルート アトラス</span>
             </h3>
             <p>
-              <span data-language="en">Route Days stays ready first. Open the live map only when you want the interactive path.</span>
-              <span data-language="ja" hidden>まずは日別ルートをすぐ見られる状態にし、必要な時だけライブ地図を開けるようにしています。</span>
+              <span data-language="en">OpenFreeMap stays warmed in the background so the itinerary line, selected day, and transit details can land as one continuous view.</span>
+              <span data-language="ja" hidden>OpenFreeMap を背景で先に温め、旅程ライン、選択中の日程、移動詳細がひと続きの画面としてすぐ開くようにしています。</span>
             </p>
           </div>
           <div class="route-map__header-actions">
@@ -1614,35 +1947,29 @@ html[data-theme="dark"] .progress-item {
         <div class="route-map__surface">
           <div class="route-map__stops route-map__stops--top" data-route-map-stops></div>
           <div class="route-map__main">
-            <div class="route-map__shell route-map__map-shell" data-route-map-shell data-map-state="preview">
-              <button
-                class="route-map__preview"
-                type="button"
-                data-route-map-open-live
-                data-aria-label-en="Open the live route map"
-                data-aria-label-ja="ライブのルート地図を開く"
-                aria-label="Open the live route map">
-                <span class="route-map__preview-media">
+            <div class="route-map__shell route-map__map-shell" data-route-map-shell data-map-state="loading">
+              <div class="route-map__loading-veil" data-route-map-loading>
+                <span class="route-map__loading-media" aria-hidden="true">
                   <img
                     class="route-map__preview-image"
                     src="./assets/route-map-preview.svg"
                     alt=""
                     width="960"
                     height="560"
-                    loading="lazy"
+                    loading="eager"
                     decoding="async">
                 </span>
-                <span class="route-map__preview-copy">
+                <span class="route-map__loading-copy">
                   <strong>
-                    <span data-language="en">Open live map</span>
-                    <span data-language="ja" hidden>ライブ地図を開く</span>
+                    <span data-language="en">Preparing the live route</span>
+                    <span data-language="ja" hidden>ライブ ルートを準備中</span>
                   </strong>
                   <span>
-                    <span data-language="en">Loads the interactive OpenFreeMap view only when you ask for it.</span>
-                    <span data-language="ja" hidden>必要な時だけ OpenFreeMap のインタラクティブ表示を読み込みます。</span>
+                    <span data-language="en">Warming OpenFreeMap from Kansai through Fuji to Tokyo so the full itinerary appears as the primary map.</span>
+                    <span data-language="ja" hidden>関西から富士、東京までの OpenFreeMap を先に温め、旅程全体を標準のライブ地図として表示します。</span>
                   </span>
                 </span>
-              </button>
+              </div>
               <div
                 class="route-map__map"
                 data-route-map-canvas
@@ -2344,10 +2671,10 @@ html[data-theme="dark"] .progress-item {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.2f47ebae0b.css","styleHash":"2f47ebae0b","routeStylePath":"./assets/app/routeStyle.aa7eb82632.css","routeStyleHash":"aa7eb82632","scriptPath":"./assets/app/script.62a6910c08.js","scriptHash":"62a6910c08","routeContentPath":"./assets/app/routeContent.64e84598a9.js","routeContentHash":"64e84598a9","budgetUiPath":"./assets/app/budgetUi.fd3bf31344.js","budgetUiHash":"fd3bf31344","budgetContentPath":"./assets/app/budgetContent.cb9a162d97.js","budgetContentHash":"cb9a162d97","essentialsContentPath":"./assets/app/essentialsContent.c27e1b1f54.js","essentialsContentHash":"c27e1b1f54","generatedAt":"2026-03-29T02:01:25.430Z","cacheVersion":"2f47ebae0b-aa7eb82632-62a6910c08-64e84598a9-fd3bf31344-cb9a162d97-c27e1b1f54"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.ccbb04430a.css","styleHash":"ccbb04430a","routeStylePath":"./assets/app/routeStyle.757317dc41.css","routeStyleHash":"757317dc41","scriptPath":"./assets/app/script.6a297cf847.js","scriptHash":"6a297cf847","routeContentPath":"./assets/app/routeContent.64e84598a9.js","routeContentHash":"64e84598a9","budgetUiPath":"./assets/app/budgetUi.fd3bf31344.js","budgetUiHash":"fd3bf31344","budgetContentPath":"./assets/app/budgetContent.cb9a162d97.js","budgetContentHash":"cb9a162d97","essentialsContentPath":"./assets/app/essentialsContent.c27e1b1f54.js","essentialsContentHash":"c27e1b1f54","generatedAt":"2026-03-29T12:28:53.629Z","cacheVersion":"ccbb04430a-757317dc41-6a297cf847-64e84598a9-fd3bf31344-cb9a162d97-c27e1b1f54"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
-  <script src="./assets/app/script.62a6910c08.js" defer></script>
+  <script src="./assets/app/script.6a297cf847.js" defer></script>
   <!-- build:inline-script:end -->
 </body>
 </html>

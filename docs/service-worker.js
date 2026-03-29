@@ -1,4 +1,4 @@
-const OFFLINE_CACHE_VERSION = "2026-03-28-2f47ebae0b-aa7eb82632-62a6910c08-64e84598a9-fd3bf31344-cb9a162d97-c27e1b1f54";
+const OFFLINE_CACHE_VERSION = "2026-03-28-ccbb04430a-757317dc41-6a297cf847-64e84598a9-fd3bf31344-cb9a162d97-c27e1b1f54";
 const OFFLINE_CACHE_NAME = `japan-escape-itinerary-${OFFLINE_CACHE_VERSION}`;
 const APP_SCOPE_URL = new URL("./", self.location);
 const APP_SCOPE_PATH = APP_SCOPE_URL.pathname;
@@ -11,9 +11,9 @@ const APP_SHELL_PATHS = [
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
   "./assets/route-map-preview.svg",
-  "./assets/app/style.2f47ebae0b.css",
-  "./assets/app/script.62a6910c08.js",
-  "./assets/app/routeStyle.aa7eb82632.css",
+  "./assets/app/style.ccbb04430a.css",
+  "./assets/app/script.6a297cf847.js",
+  "./assets/app/routeStyle.757317dc41.css",
   "./assets/app/routeContent.64e84598a9.js",
   "./assets/app/budgetUi.fd3bf31344.js",
   "./assets/app/budgetContent.cb9a162d97.js",
