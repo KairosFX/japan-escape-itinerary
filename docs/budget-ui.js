@@ -151,17 +151,9 @@ const itineraryBudgetLabels = {
     en: "Switch between the real default stay and any cheaper or free fallback you actually have.",
     ja: "実際の初期滞在と、実際に使える安い・無料の代替滞在を切り替えられます。"
   },
-  statusReady: {
-    en: "Checklist-linked lean / expected / high model ready.",
-    ja: "チェックリスト連動の控えめ・標準・高めモデルを表示中。"
-  },
   statusLoading: {
     en: "Loading itinerary cost model...",
     ja: "旅程の費用モデルを読み込んでいます..."
-  },
-  statusMeta: {
-    en: "Built from the current stay plan, route logic, ticket timing, and meal-pattern bands.",
-    ja: "現在の滞在計画、移動ロジック、チケット時間帯、食費パターン帯で組み立てています。"
   },
   travelersHint: {
     en: "Stay selectors now control each accommodation night directly, so private/local or no-cost Osaka nights stay free unless you switch them to a paid stay.",
@@ -209,7 +201,6 @@ const itineraryBudgetLabels = {
   },
   sharedMeta: { en: "Shared stays and group costs", ja: "共有の宿泊費と共通費" },
   variableMeta: { en: "Per-person variable spend", ja: "1人ごとの変動費" },
-  spendLegend: { en: "Day notes", ja: "日別メモ" },
   optionalInactive: { en: "Not added yet", ja: "まだ未加算" },
   optionalInactiveMeta: {
     en: "Enable route extras to add luggage handling, Fuji weather pivots, and other small transfer-day costs into the live total.",
@@ -1446,26 +1437,13 @@ const itineraryBudgetLabels = {
       </article>
     `;
   };
-  const syncStatus = (estimate = calculateEstimate()) => {
+  const syncStatus = () => {
     if (!budgetStatusNode) {
       return;
     }
 
-    budgetStatusNode.innerHTML = `
-      <article class="budget-status-card">
-        <p class="budget-status-card__eyebrow">${renderLocalizedContent(
-          itineraryBudgetLabels.statusReady
-        )}</p>
-        <p class="budget-status-card__summary">${renderLocalizedContent({
-          en: `${estimate.travelers} traveler${estimate.travelers === 1 ? "" : "s"} • Fixed 7-day west-to-east route`,
-          ja: `${estimate.travelers}人 ・ 固定の7日間・西から東へのルート`
-        })}</p>
-        <p class="budget-status-card__meta">${renderLocalizedContent(
-          itineraryBudgetLabels.statusMeta
-        )}</p>
-      </article>
-    `;
-    syncLocalizedNodes(budgetStatusNode);
+    budgetStatusNode.innerHTML = "";
+    budgetStatusNode.hidden = true;
   };
   const syncControls = () => {
     if (budgetTravelersInput && budgetTravelersInput.value !== String(getTravelerCount())) {
