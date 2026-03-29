@@ -51,8 +51,8 @@ const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
 const compactViewportQuery = window.matchMedia("(max-width: 920px)");
 const pageTitles = {
-  en: "Japan Trip | Travel Guide",
-  ja: "日本旅行 | 旅行ガイド"
+  en: "JAPAN ESCAPE",
+  ja: "JAPAN ESCAPE"
 };
 const storageKey = "japan-trip-language";
 const themeStorageKey = "japan-trip-theme";
@@ -141,8 +141,7 @@ const revealBlockSelector = [
   ".route-reference__day",
   ".journey-close",
   ".site-footer__lead",
-  ".site-footer__aside",
-  ".site-footer__credit"
+  ".site-footer__aside"
 ].join(", ");
 const initializedSections = new Set();
 const sectionInitPromises = new Map();

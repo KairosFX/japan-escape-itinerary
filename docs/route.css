@@ -1977,3 +1977,21 @@ html[data-theme="dark"] .route-map__map-shell .maplibregl-ctrl.maplibregl-ctrl-a
 html[data-theme="dark"] .route-reference__day-separator::before {
   background: rgba(224, 138, 117, 0.62);
 }
+
+@media (min-width: 921px) {
+  .route-reference__day-meta-line {
+    flex-wrap: nowrap;
+  }
+
+  .route-reference__day-stop-group {
+    display: inline-grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 0.3rem;
+    flex: none;
+  }
+
+  .route-reference__day-stop {
+    white-space: nowrap;
+  }
+}
