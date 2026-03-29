@@ -125,8 +125,25 @@ const fujiForecastSpotConfigs = [
     label: { en: "Arakurayama / Chureito", ja: "新倉山・忠霊塔" }
   }
 ];
-const revealBlockSelector =
-  ".trip-stats, .progress-card, .content-section .section-heading, .essentials-grid, .day-grid, .notes-grid, .budget-panel, .route-map, .journey-close, .site-footer__lead, .site-footer__aside, .site-footer__credit";
+const revealScrollDirectionThresholdPx = 6;
+const revealBlockSelector = [
+  ".trip-stats > *",
+  ".progress-card",
+  ".content-section .section-heading",
+  ".essentials-grid > *",
+  ".day-grid > *",
+  ".notes-grid > *",
+  ".budget-panel",
+  ".budget-day-card",
+  ".route-map",
+  ".route-map__day-browser",
+  ".route-reference",
+  ".route-reference__day",
+  ".journey-close",
+  ".site-footer__lead",
+  ".site-footer__aside",
+  ".site-footer__credit"
+].join(", ");
 const initializedSections = new Set();
 const sectionInitPromises = new Map();
 const sectionInitializers = {
@@ -364,6 +381,10 @@ const routeMapLabels = {
   daySliderNext: { en: "Show later days", ja: "次の日を表示" },
   tools: { en: "Quick tools", ja: "クイック操作" },
   checklistAction: { en: "Checklist", ja: "チェックリスト" },
+  interactiveSurfaceLabel: {
+    en: "Interactive route map. Focus the map, then use the arrow keys to pan.",
+    ja: "インタラクティブなルート地図です。地図をフォーカスすると、矢印キーで移動できます。"
+  },
   sharedLoading: { en: "Preparing live route map...", ja: "ライブ ルート地図を準備中..." },
   sharedLoadingBody: {
     en: "Warming OpenFreeMap tiles and route overlays.",
@@ -389,6 +410,8 @@ const routeMapInitialView = {
   zoom: 4.95
 };
 const routeMapOverviewMaxZoom = 6.15;
+const routeMapKeyboardPanStepPx = 120;
+const routeMapKeyboardPanDurationMs = 340;
 const routeMapBaseOptions = {
   attributionControl: false,
   renderWorldCopies: false,
@@ -970,15 +993,19 @@ syncHeaderAccessoryVisibility(headerIsCondensed);
 let lastScrollY = Math.max(window.scrollY, 0);
 let headerScrollIntentStartY = lastScrollY;
 let headerScrollIntentDirection = 0;
+let lastRevealScrollY = lastScrollY;
+let revealScrollDirection = 1;
 let scrollTicking = false;
 let resizeTicking = false;
 let revealObserver = null;
+const revealRestartFrames = new WeakMap();
 let completedDays = new Set();
 let completedHistoryDays = new Set();
 let unlockedDays = new Set();
 let warningDays = new Set();
 let accessibleDay = 1;
 let currentProgressDay = 1;
+let activeChecklistHoverItem = null;
 let sequenceNoticeTimer = 0;
 let lastTimelineFocusDay = null;
 let lastResetTrigger = null;
@@ -3604,6 +3631,106 @@ function markSectionHydrated(sectionName) {
   }
 }
 
+function collectRevealBlocks(scope = document) {
+  const blocks = [];
+  if (scope?.matches?.(revealBlockSelector)) {
+    blocks.push(scope);
+  }
+
+  if (scope?.querySelectorAll) {
+    blocks.push(...scope.querySelectorAll(revealBlockSelector));
+  }
+
+  return Array.from(new Set(blocks));
+}
+
+function updateRevealScrollDirection(scrollY = window.scrollY) {
+  const nextScrollY = Math.max(scrollY, 0);
+  const delta = nextScrollY - lastRevealScrollY;
+
+  if (Math.abs(delta) >= revealScrollDirectionThresholdPx) {
+    revealScrollDirection = delta > 0 ? 1 : -1;
+  }
+
+  lastRevealScrollY = nextScrollY;
+  return revealScrollDirection;
+}
+
+function getRevealDirectionName(direction = revealScrollDirection) {
+  return direction < 0 ? "down" : "up";
+}
+
+function cancelPendingRevealFrame(block) {
+  const frameId = revealRestartFrames.get(block);
+  if (!frameId) {
+    return;
+  }
+
+  window.cancelAnimationFrame(frameId);
+  revealRestartFrames.delete(block);
+}
+
+function hideRevealBlock(block, entry = null) {
+  if (!block) {
+    return;
+  }
+
+  cancelPendingRevealFrame(block);
+  block.classList.remove("is-visible");
+  block.dataset.revealState = "hidden";
+
+  if (!entry) {
+    block.dataset.revealDirection = getRevealDirectionName();
+    return;
+  }
+
+  if (entry.boundingClientRect.bottom <= 0) {
+    block.dataset.revealDirection = "down";
+    return;
+  }
+
+  if (entry.boundingClientRect.top >= window.innerHeight) {
+    block.dataset.revealDirection = "up";
+    return;
+  }
+
+  block.dataset.revealDirection = getRevealDirectionName();
+}
+
+function revealBlock(block, { direction = revealScrollDirection, immediate = false } = {}) {
+  if (!block) {
+    return;
+  }
+
+  cancelPendingRevealFrame(block);
+  block.dataset.revealDirection = getRevealDirectionName(direction);
+  block.dataset.revealState = "staging";
+  block.classList.remove("is-visible");
+
+  if (immediate || reducedEffectsEnabled) {
+    block.classList.add("is-visible");
+    block.dataset.revealState = "visible";
+    return;
+  }
+
+  const frameId = window.requestAnimationFrame(() => {
+    block.classList.add("is-visible");
+    block.dataset.revealState = "visible";
+    revealRestartFrames.delete(block);
+  });
+
+  revealRestartFrames.set(block, frameId);
+}
+
+function isRevealBlockInViewport(block) {
+  if (!block) {
+    return false;
+  }
+
+  const rect = block.getBoundingClientRect();
+  return rect.bottom >= 0 && rect.top <= window.innerHeight * 0.94;
+}
+
 function ensureRevealObserver() {
   if (reducedEffectsEnabled || revealObserver || !("IntersectionObserver" in window)) {
     return;
@@ -3611,15 +3738,21 @@ function ensureRevealObserver() {
 
   revealObserver = new window.IntersectionObserver(
     (entries) => {
+      updateRevealScrollDirection();
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
+          if (entry.target.dataset.revealState !== "visible") {
+            revealBlock(entry.target, { direction: revealScrollDirection });
+          }
+          return;
         }
+
+        hideRevealBlock(entry.target, entry);
       });
     },
     {
-      threshold: 0.16,
-      rootMargin: "0px 0px -10% 0px"
+      threshold: [0, 0.14, 0.32],
+      rootMargin: "0px 0px -8% 0px"
     }
   );
 }
@@ -3729,6 +3862,131 @@ function handleChecklistPanelClick(event) {
   }
 }
 
+function setActiveChecklistHover(nextItem) {
+  if (activeChecklistHoverItem && activeChecklistHoverItem !== nextItem) {
+    activeChecklistHoverItem.classList.remove("is-pointer-active");
+  }
+
+  activeChecklistHoverItem = nextItem || null;
+
+  if (activeChecklistHoverItem) {
+    activeChecklistHoverItem.classList.add("is-pointer-active");
+  }
+}
+
+function clearChecklistHover(panel = getSectionPanel("checklist")) {
+  if (activeChecklistHoverItem) {
+    activeChecklistHoverItem.classList.remove("is-pointer-active");
+    activeChecklistHoverItem = null;
+  }
+
+  if (!panel) {
+    return;
+  }
+
+  panel.querySelectorAll(".check-item.is-pointer-active").forEach((item) => {
+    item.classList.remove("is-pointer-active");
+  });
+}
+
+function updateChecklistPointerGlow(item, clientX, clientY) {
+  if (!item) {
+    return;
+  }
+
+  const rect = item.getBoundingClientRect();
+  item.style.setProperty("--check-pointer-x", `${clientX - rect.left}px`);
+  item.style.setProperty("--check-pointer-y", `${clientY - rect.top}px`);
+}
+
+function triggerChecklistInteractionFeedback(input) {
+  if (!input || aggressivePerformanceMode || reducedEffectsEnabled) {
+    return;
+  }
+
+  const checkItem = input.closest(".check-item");
+  const dayCard = input.closest(".day-card[data-day]");
+  if (!checkItem || !dayCard) {
+    return;
+  }
+
+  const inputRect = input.getBoundingClientRect();
+  const itemRect = checkItem.getBoundingClientRect();
+  const dayCardRect = dayCard.getBoundingClientRect();
+  const feedbackState = input.checked ? "checked" : "unchecked";
+
+  checkItem.style.setProperty(
+    "--check-feedback-x",
+    `${inputRect.left - itemRect.left + inputRect.width / 2}px`
+  );
+  checkItem.style.setProperty(
+    "--check-feedback-y",
+    `${inputRect.top - itemRect.top + inputRect.height / 2}px`
+  );
+  dayCard.style.setProperty(
+    "--day-feedback-x",
+    `${inputRect.left - dayCardRect.left + inputRect.width / 2}px`
+  );
+  dayCard.style.setProperty(
+    "--day-feedback-y",
+    `${inputRect.top - dayCardRect.top + inputRect.height / 2}px`
+  );
+
+  checkItem.dataset.feedbackState = feedbackState;
+  dayCard.dataset.feedbackState = feedbackState;
+  checkItem.classList.remove("is-feedback-active");
+  dayCard.classList.remove("is-check-feedback");
+
+  restartClassOnNextFrame(checkItem, "is-feedback-active");
+  restartClassOnNextFrame(dayCard, "is-check-feedback");
+
+  window.setTimeout(() => {
+    checkItem.classList.remove("is-feedback-active");
+    dayCard.classList.remove("is-check-feedback");
+  }, 820);
+}
+
+function handleChecklistPanelPointerMove(event) {
+  if (aggressivePerformanceMode || reducedEffectsEnabled || coarsePointerQuery.matches) {
+    return;
+  }
+
+  const nextItem = event.target.closest(".check-item");
+  if (!nextItem) {
+    clearChecklistHover(event.currentTarget);
+    return;
+  }
+
+  setActiveChecklistHover(nextItem);
+  updateChecklistPointerGlow(nextItem, event.clientX, event.clientY);
+}
+
+function handleChecklistPanelPointerLeave(event) {
+  clearChecklistHover(event.currentTarget);
+}
+
+function handleChecklistPanelFocusIn(event) {
+  const checkItem = event.target.closest(".check-item");
+  if (!checkItem) {
+    return;
+  }
+
+  setActiveChecklistHover(checkItem);
+}
+
+function handleChecklistPanelFocusOut(event) {
+  const panel = event.currentTarget;
+  window.requestAnimationFrame(() => {
+    const nextFocusedItem = panel?.querySelector(".check-item:focus-within") || null;
+    if (nextFocusedItem) {
+      setActiveChecklistHover(nextFocusedItem);
+      return;
+    }
+
+    clearChecklistHover(panel);
+  });
+}
+
 function handleChecklistPanelChange(event) {
   const input = event.target.closest('.day-card input[type="checkbox"]');
   if (!input) {
@@ -3747,6 +4005,7 @@ function handleChecklistPanelChange(event) {
     delete checklistState[input.id];
   }
 
+  triggerChecklistInteractionFeedback(input);
   storeChecklistState();
   refreshChecklistProgressState({ syncDayCards: true });
   syncProgressTimeline();
@@ -3778,6 +4037,10 @@ function initChecklistSection() {
   if (panel.dataset.checklistBound !== "true") {
     panel.addEventListener("click", handleChecklistPanelClick);
     panel.addEventListener("change", handleChecklistPanelChange);
+    panel.addEventListener("pointermove", handleChecklistPanelPointerMove);
+    panel.addEventListener("pointerleave", handleChecklistPanelPointerLeave);
+    panel.addEventListener("focusin", handleChecklistPanelFocusIn);
+    panel.addEventListener("focusout", handleChecklistPanelFocusOut);
     panel.dataset.checklistBound = "true";
   }
 
@@ -3895,15 +4158,155 @@ function getRouteMapDetailNode() {
 }
 
 function getRouteMapDayRailNode() {
-  return routeMapStopsNode?.querySelector("[data-route-map-day-rail]") || null;
+  return getRouteMapStopsNode()?.querySelector("[data-route-map-day-rail]") || null;
 }
 
 function getRouteMapDayControlNodes() {
-  return Array.from(routeMapStopsNode?.querySelectorAll("[data-route-map-day-shift]") || []);
+  return Array.from(getRouteMapStopsNode()?.querySelectorAll("[data-route-map-day-shift]") || []);
 }
 
 function getRouteMapDayCardNode(day) {
-  return routeMapStopsNode?.querySelector(`[data-route-map-day-card="${day}"]`) || null;
+  return getRouteMapStopsNode()?.querySelector(`[data-route-map-day-card="${day}"]`) || null;
+}
+
+function syncRouteMapFocusSurfaceState() {
+  const shellNode = getRouteMapShellNode();
+  if (!shellNode) {
+    return;
+  }
+
+  shellNode.classList.toggle("is-map-focused", shellNode.contains(document.activeElement));
+}
+
+function syncRouteMapInteractiveSurfaceAttributes() {
+  const canvasNode = getRouteMapCanvasNode();
+  if (!canvasNode) {
+    return;
+  }
+
+  const interactiveLabel = getLocalizedText(routeMapLabels.interactiveSurfaceLabel);
+  canvasNode.tabIndex = 0;
+  canvasNode.setAttribute("role", "region");
+  canvasNode.setAttribute("aria-label", interactiveLabel);
+  canvasNode.setAttribute("title", interactiveLabel);
+}
+
+function focusRouteMapCanvasSurface() {
+  const canvasNode = getRouteMapCanvasNode();
+  if (!canvasNode?.focus) {
+    return;
+  }
+
+  try {
+    canvasNode.focus({ preventScroll: true });
+  } catch {
+    canvasNode.focus();
+  }
+}
+
+function getRouteMapKeyboardPanOffset(key, { shiftKey = false } = {}) {
+  const step = shiftKey ? routeMapKeyboardPanStepPx * 1.55 : routeMapKeyboardPanStepPx;
+
+  switch (key) {
+    case "ArrowUp":
+      return [0, -step];
+    case "ArrowDown":
+      return [0, step];
+    case "ArrowLeft":
+      return [-step, 0];
+    case "ArrowRight":
+      return [step, 0];
+    default:
+      return null;
+  }
+}
+
+function handleRouteMapKeyboardControls(event) {
+  const map = routeMapState.map;
+  const shellNode = getRouteMapShellNode();
+  if (
+    !map ||
+    !routeMapState.ready ||
+    !shellNode?.contains(event.target) ||
+    event.altKey ||
+    event.ctrlKey ||
+    event.metaKey
+  ) {
+    return;
+  }
+
+  const panOffset = getRouteMapKeyboardPanOffset(event.key, event);
+  if (panOffset) {
+    event.preventDefault();
+    event.stopPropagation();
+    map.stop?.();
+    map.panBy(panOffset, {
+      duration: reducedEffectsEnabled ? 0 : routeMapKeyboardPanDurationMs,
+      easing: (value) => 1 - Math.pow(1 - value, 3)
+    });
+    return;
+  }
+
+  if (event.key === "Home") {
+    event.preventDefault();
+    event.stopPropagation();
+    fitRouteMapOverview(map);
+    return;
+  }
+
+  if (event.key === "+" || event.key === "=" || event.key === "Add") {
+    event.preventDefault();
+    event.stopPropagation();
+    map.easeTo({
+      zoom: Math.min(map.getZoom() + 0.6, map.getMaxZoom?.() ?? 22),
+      duration: reducedEffectsEnabled ? 0 : 280,
+      essential: true
+    });
+    return;
+  }
+
+  if (event.key === "-" || event.key === "_" || event.key === "Subtract") {
+    event.preventDefault();
+    event.stopPropagation();
+    map.easeTo({
+      zoom: Math.max(map.getZoom() - 0.6, map.getMinZoom?.() ?? 0),
+      duration: reducedEffectsEnabled ? 0 : 280,
+      essential: true
+    });
+  }
+}
+
+function bindRouteMapInteractiveSurface() {
+  const shellNode = getRouteMapShellNode();
+  const canvasNode = getRouteMapCanvasNode();
+  if (!shellNode || !canvasNode || shellNode.dataset.routeMapFocusBound === "true") {
+    syncRouteMapInteractiveSurfaceAttributes();
+    return;
+  }
+
+  syncRouteMapInteractiveSurfaceAttributes();
+  shellNode.addEventListener("keydown", handleRouteMapKeyboardControls, true);
+  shellNode.addEventListener("focusin", syncRouteMapFocusSurfaceState);
+  shellNode.addEventListener("focusout", () => {
+    window.requestAnimationFrame(syncRouteMapFocusSurfaceState);
+  });
+  shellNode.addEventListener(
+    "pointerdown",
+    (event) => {
+      if (
+        event.target.closest(
+          ".route-map__status, .maplibregl-ctrl, .maplibregl-popup, .route-map-marker"
+        )
+      ) {
+        return;
+      }
+
+      focusRouteMapCanvasSurface();
+    },
+    { passive: true }
+  );
+  shellNode.dataset.routeMapFocusBound = "true";
+  syncRouteMapFocusSurfaceState();
 }
 
 function updateRouteMapDayRailMetrics(railNode = getRouteMapDayRailNode()) {
@@ -4927,7 +5330,7 @@ function renderRouteMapStops(selectionState) {
     relatedDayIds.delete(activeDay);
   }
 
-  setLocalizedMarkupIfChanged(
+  const stopsDidChange = setLocalizedMarkupIfChanged(
     stopsNode,
     `
     <section class="route-map__day-browser">
@@ -4973,6 +5376,10 @@ function renderRouteMapStops(selectionState) {
     </section>
   `
   );
+
+  if (stopsDidChange) {
+    registerRevealBlocks(stopsNode);
+  }
 }
 
 function getCompactRouteDayStops(routeDay) {
@@ -5089,7 +5496,7 @@ function renderRouteMapDetail(selectionState) {
       `
     : "";
 
-  setLocalizedMarkupIfChanged(
+  const detailDidChange = setLocalizedMarkupIfChanged(
     detailNode,
     `
     <div class="route-reference__copy">
@@ -5100,6 +5507,10 @@ function renderRouteMapDetail(selectionState) {
     ${transitActionsMarkup}
   `
   );
+
+  if (detailDidChange) {
+    registerRevealBlocks(detailNode);
+  }
 }
 
 function clearRouteMapMarkers(markers = []) {
@@ -5233,7 +5644,7 @@ function setRouteMapInteractionState(map) {
 
   setHandlerEnabled("dragPan", true);
   setHandlerEnabled("doubleClickZoom", true);
-  setHandlerEnabled("keyboard", true);
+  setHandlerEnabled("keyboard", false);
   setHandlerEnabled("scrollZoom", !coarsePointerQuery.matches);
 
   if (map.touchZoomRotate) {
@@ -5254,6 +5665,8 @@ function setRouteMapInteractionState(map) {
   }
 
   map.getCanvas().style.cursor = "";
+  map.getCanvas().style.touchAction = "pan-x pan-y";
+  bindRouteMapInteractiveSurface();
 }
 
 function syncRouteMapMarkers(selectionState) {
@@ -5585,6 +5998,7 @@ function syncRouteMapUI(options = {}) {
   } = options;
   const selectionState = getRouteMapSelectionState();
 
+  syncRouteMapInteractiveSurfaceAttributes();
   renderRouteMapStops(selectionState);
   renderRouteMapDetail(selectionState);
   scheduleRouteMapDaySliderSync();
@@ -5628,6 +6042,8 @@ function refreshRouteMapsIfReady(options = {}) {
   if (!routeMapInitialized) {
     return;
   }
+
+  syncRouteMapInteractiveSurfaceAttributes();
   const routeMapStatusNode = getRouteMapStatusNode();
 
   const requiresStyleRefresh =
@@ -5712,6 +6128,7 @@ function ensureRouteMapInitialized() {
   if (!routeMapState.failed) {
     setRouteMapShellState("loading");
   }
+  bindRouteMapInteractiveSurface();
   syncRouteMapUI({ resetOverview: true });
 }
 
@@ -6480,7 +6897,7 @@ function syncProgressTimeline() {
 }
 
 function registerRevealBlocks(scope = document) {
-  const revealBlocks = Array.from(scope.querySelectorAll(revealBlockSelector));
+  const revealBlocks = collectRevealBlocks(scope);
 
   if (!revealBlocks.length) {
     return;
@@ -6492,12 +6909,26 @@ function registerRevealBlocks(scope = document) {
   });
 
   if (reducedEffectsEnabled || !("IntersectionObserver" in window)) {
-    revealBlocks.forEach((block) => block.classList.add("is-visible"));
+    revealBlocks.forEach((block) => {
+      block.classList.add("is-visible");
+      block.dataset.revealState = "visible";
+    });
     return;
   }
 
   ensureRevealObserver();
-  revealBlocks.forEach((block) => revealObserver.observe(block));
+  revealBlocks.forEach((block) => {
+    if (block.dataset.revealRegistered !== "true") {
+      block.dataset.revealRegistered = "true";
+      hideRevealBlock(block);
+    }
+
+    revealObserver.observe(block);
+
+    if (isRevealBlockInViewport(block)) {
+      revealBlock(block, { direction: revealScrollDirection });
+    }
+  });
 }
 
 function refreshRevealPanel(panelId) {
@@ -6510,22 +6941,28 @@ function refreshRevealPanel(panelId) {
     return;
   }
 
-  const panelBlocks = activePanel.querySelectorAll(".reveal-block");
+  const panelBlocks = Array.from(activePanel.querySelectorAll(".reveal-block"));
   if (reducedEffectsEnabled) {
-    panelBlocks.forEach((block) => block.classList.add("is-visible"));
+    panelBlocks.forEach((block) => {
+      block.classList.add("is-visible");
+      block.dataset.revealState = "visible";
+    });
     return;
   }
 
   panelBlocks.forEach((block, index) => {
-    block.classList.remove("is-visible");
     block.style.setProperty("--reveal-delay", `${Math.min(index, 6) * 70}ms`);
+    hideRevealBlock(block);
   });
 
   window.requestAnimationFrame(() => {
     panelBlocks.forEach((block) => {
-      block.classList.add("is-visible");
       if (revealObserver) {
         revealObserver.observe(block);
+      }
+
+      if (isRevealBlockInViewport(block)) {
+        revealBlock(block, { direction: revealScrollDirection });
       }
     });
   });
@@ -6828,6 +7265,7 @@ function syncHeaderState() {
 }
 
 function runScrollEffects() {
+  updateRevealScrollDirection();
   syncHeaderState();
   scrollTicking = false;
 }
