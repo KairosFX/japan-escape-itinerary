@@ -5456,14 +5456,46 @@ function getCompactRouteDayStops(routeDay) {
     ).values()
   );
 
-  if (uniqueStops.length <= 1) {
-    return null;
+  return uniqueStops.length > 1 ? uniqueStops : null;
+}
+
+function renderCompactRouteDayStops(stopSummary) {
+  if (!stopSummary?.length) {
+    return "";
   }
 
-  return {
-    en: uniqueStops.map((stop) => stop.en).filter(Boolean).join(" • "),
-    ja: uniqueStops.map((stop) => stop.ja).filter(Boolean).join("・")
+  const renderStopLine = (language) => {
+    const labels = stopSummary
+      .map((stop) => escapeHtml(stop?.[language] || ""))
+      .filter(Boolean);
+
+    if (!labels.length) {
+      return "";
+    }
+
+    return labels
+      .map((label, index) => {
+        const separatorMarkup =
+          index < labels.length - 1
+            ? '<span class="route-reference__day-separator" aria-hidden="true"></span>'
+            : "";
+
+        return `
+          <span class="route-reference__day-stop-group">
+            <span class="route-reference__day-stop">${label}</span>
+            ${separatorMarkup}
+          </span>
+        `;
+      })
+      .join("");
   };
+
+  return `
+    <span class="route-reference__day-meta">
+      <span class="route-reference__day-meta-line" data-language="en">${renderStopLine("en")}</span>
+      <span class="route-reference__day-meta-line" data-language="ja" hidden>${renderStopLine("ja")}</span>
+    </span>
+  `;
 }
 
 function renderRouteMapDaySection(link, { isActive = false, isRelated = false } = {}) {
@@ -5477,11 +5509,7 @@ function renderRouteMapDaySection(link, { isActive = false, isRelated = false } 
     ja: `${routeDay.title.ja}のルート詳細を表示`
   };
   const stopSummary = getCompactRouteDayStops(routeDay);
-  const stopSummaryMarkup = stopSummary
-    ? `
-        <span class="route-reference__day-meta">${renderLocalizedContent(stopSummary)}</span>
-      `
-    : "";
+  const stopSummaryMarkup = renderCompactRouteDayStops(stopSummary);
 
   return `
     <article

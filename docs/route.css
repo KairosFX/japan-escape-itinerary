@@ -1867,3 +1867,113 @@ html[data-theme="dark"] .route-map-marker__label::before {
 html[data-theme="dark"] .route-map__status {
   backdrop-filter: blur(10px) saturate(136%);
 }
+
+/* Published-site route polish overrides */
+.route-map__surface,
+.route-reference,
+.route-reference__day,
+.route-map__stops--top,
+.route-map__map-shell,
+.route-map__status,
+.route-map__day-nav,
+.route-reference__day-button,
+.route-reference__tool,
+.route-map__map-shell .maplibregl-ctrl.maplibregl-ctrl-attrib {
+  background-clip: padding-box;
+}
+
+.route-reference__day-meta {
+  display: block;
+  overflow: hidden;
+}
+
+.route-reference__day-meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.route-reference__day-stop-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.route-reference__day-stop {
+  min-width: 0;
+}
+
+.route-reference__day-separator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.56rem;
+  height: 0.56rem;
+  flex: none;
+}
+
+.route-reference__day-separator::before {
+  content: "";
+  width: 0.22rem;
+  height: 0.22rem;
+  border-radius: 50%;
+  background: rgba(111, 36, 31, 0.54);
+}
+
+html[data-theme="dark"] .route-map__surface,
+html[data-theme="dark"] .route-reference,
+html[data-theme="dark"] .route-map__stops--top,
+html[data-theme="dark"] .route-reference__day,
+html[data-theme="dark"] .route-map__map-shell,
+html[data-theme="dark"] .route-map__status,
+html[data-theme="dark"] .route-map__day-nav,
+html[data-theme="dark"] .route-reference__day-button,
+html[data-theme="dark"] .route-reference__tool,
+html[data-theme="dark"] .route-map__map-shell .maplibregl-ctrl.maplibregl-ctrl-attrib {
+  border-color: rgba(92, 104, 118, 0.34);
+  background-clip: padding-box;
+}
+
+html[data-theme="dark"] .route-map__surface,
+html[data-theme="dark"] .route-reference,
+html[data-theme="dark"] .route-map__stops--top {
+  box-shadow: 0 20px 40px rgba(2, 4, 8, 0.26);
+}
+
+html[data-theme="dark"] .route-reference__day {
+  box-shadow: 0 10px 20px rgba(2, 4, 8, 0.2);
+}
+
+html[data-theme="dark"] .route-reference__day.is-active {
+  box-shadow: 0 14px 28px rgba(2, 4, 8, 0.28);
+}
+
+html[data-theme="dark"] .route-map__map-shell {
+  box-shadow: 0 28px 54px rgba(2, 4, 8, 0.34);
+}
+
+html[data-theme="dark"] .route-map__map-shell.is-map-focused {
+  box-shadow:
+    0 0 0 2px rgba(224, 138, 117, 0.14),
+    0 34px 68px rgba(2, 4, 8, 0.34);
+}
+
+html[data-theme="dark"] .route-map__status {
+  background: rgba(15, 18, 24, 0.78);
+  box-shadow: 0 18px 34px rgba(2, 4, 8, 0.34);
+}
+
+html[data-theme="dark"] .route-map__day-nav,
+html[data-theme="dark"] .route-reference__day-button,
+html[data-theme="dark"] .route-reference__tool,
+html[data-theme="dark"] .route-map__map-shell .maplibregl-ctrl.maplibregl-ctrl-attrib {
+  box-shadow: 0 12px 24px rgba(2, 4, 8, 0.22);
+}
+
+html[data-theme="dark"] .route-reference__day-separator::before {
+  background: rgba(224, 138, 117, 0.62);
+}
