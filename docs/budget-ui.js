@@ -89,10 +89,10 @@ const budgetStayTypeDefinitions = [
   { id: "none", label: { en: "No paid accommodation", ja: "有料宿泊なし" } }
 ];
 const budgetStayOptionOrder = {
-  relative: 0,
-  hotel: 1,
-  ryokan: 1,
-  none: 2
+  none: 0,
+  relative: 1,
+  hotel: 2,
+  ryokan: 2
 };
 
 const itineraryBudgetLabels = {

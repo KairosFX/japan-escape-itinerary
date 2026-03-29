@@ -9,6 +9,7 @@ const mainContent = document.querySelector("#main-content");
 const siteFooter = document.querySelector(".site-footer");
 const siteIntro = document.querySelector("[data-site-intro]");
 const sequenceNotice = document.querySelector("[data-sequence-notice]");
+const checklistGateNotice = document.querySelector("[data-checklist-gate]");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
 const dayGrids = Array.from(document.querySelectorAll(".day-grid"));
 const progressItems = Array.from(document.querySelectorAll("[data-progress-item]"));
@@ -35,6 +36,7 @@ const transitDetailActionLink = document.querySelector("[data-transit-detail-act
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
 const tripNotesGridNode = document.querySelector("[data-trip-notes-grid]");
 const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-section]"));
+const checklistTab = sectionTabs.find((tab) => tab.dataset.panelTarget === "checklist") || null;
 const packingMarkAllButtons = Array.from(document.querySelectorAll("[data-packing-mark-all-global]"));
 const packingResetButtons = Array.from(document.querySelectorAll("[data-packing-reset-all]"));
 const offlineToolsCard = document.querySelector("[data-offline-tools]");
@@ -331,7 +333,7 @@ const budgetNotesLabels = {
 const budgetSectionDefinitions = [
   {
     id: "documents-phone",
-    label: { en: "Documents + Phone", ja: "書類とスマホ" },
+    label: { en: "Departure", ja: "出発準備" },
     meta: {
       en: "Arrival QR, eSIM reserve, and backup copies only.",
       ja: "入国QR、eSIM予備費、控えだけを対象にします。"
@@ -339,7 +341,7 @@ const budgetSectionDefinitions = [
   },
   {
     id: "bookings-transit",
-    label: { en: "Bookings + Transit", ja: "予約と移動" },
+    label: { en: "Pre-Trip Bookings", ja: "予約と移動" },
     meta: {
       en: "Only the Essentials-side bookings and transfer prep stay here.",
       ja: "Essentialsで事前に固める予約と移動準備だけをここへ残します。"
@@ -355,7 +357,7 @@ const budgetSectionDefinitions = [
   },
   {
     id: "luggage-strategy",
-    label: { en: "Luggage Strategy", ja: "荷物戦略" },
+    label: { en: "Luggage", ja: "荷物戦略" },
     meta: {
       en: "Only route-specific luggage handling stays priced here.",
       ja: "このルート特有の荷物対応だけを費用化します。"
@@ -363,7 +365,7 @@ const budgetSectionDefinitions = [
   },
   {
     id: "daily-carry",
-    label: { en: "Daily Carry", ja: "毎日持つもの" },
+    label: { en: "Daily", ja: "毎日持つもの" },
     meta: {
       en: "Daily items are mostly assumed already owned.",
       ja: "毎日持つ物は、ほとんどを既に持っている前提にします。"
@@ -371,7 +373,7 @@ const budgetSectionDefinitions = [
   },
   {
     id: "fuji-tokyo-transfer-kit",
-    label: { en: "Fuji + Tokyo Transfer Kit", ja: "富士と東京移動の日用キット" },
+    label: { en: "Transfer", ja: "富士と東京移動の日用キット" },
     meta: {
       en: "Only true extra transfer-day kit purchases are priced by default.",
       ja: "本当に追加購入が必要な移動日用キットだけを費用化します。"
@@ -2746,7 +2748,7 @@ function readStoredBookingTransitState() {
   try {
     const parsed = JSON.parse(window.localStorage.getItem(bookingTransitStorageKey) || "{}");
     const nextFilter =
-      parsed?.filter === "to-book" || parsed?.filter === "transit" || parsed?.filter === "done"
+      parsed?.filter === "transit" || parsed?.filter === "done"
         ? parsed.filter
         : "all";
 
@@ -3011,15 +3013,20 @@ function renderBookingTransitBoard() {
         .join("");
 
       return `
-        <section class="booking-group" data-booking-group-section="${group.id}">
-          <div class="booking-group__header">
-            <h5 class="booking-group__title">${renderLocalizedContent(group.title)}</h5>
-            <p class="booking-group__copy">${renderLocalizedContent(group.copy)}</p>
+        <details class="booking-group" data-booking-group-section="${group.id}">
+          <summary class="booking-group__summary">
+            <div class="booking-group__header">
+              <h5 class="booking-group__title">${renderLocalizedContent(group.title)}</h5>
+              <p class="booking-group__copy">${renderLocalizedContent(group.copy)}</p>
+            </div>
+            <span class="booking-group__caret" aria-hidden="true"></span>
+          </summary>
+          <div class="booking-group__content">
+            <div class="booking-group__list">
+              ${itemsMarkup}
+            </div>
           </div>
-          <div class="booking-group__list">
-            ${itemsMarkup}
-          </div>
-        </section>
+        </details>
       `;
     })
     .join("");
@@ -3124,7 +3131,7 @@ function updateBookingTransitUI() {
 }
 
 function setBookingTransitFilter(nextFilter) {
-  const allowedFilters = new Set(["all", "to-book", "transit", "done"]);
+  const allowedFilters = new Set(["all", "transit", "done"]);
   bookingTransitState.filter = allowedFilters.has(nextFilter) ? nextFilter : "all";
   storeBookingTransitState();
   updateBookingTransitUI();
@@ -3240,6 +3247,43 @@ function getAllPackingItems() {
   return packingSectionCards.flatMap((sectionElement) => getPackingItems(sectionElement));
 }
 
+function getPackingStateSnapshot() {
+  return packingInitialized ? packingState : readStoredPackingState();
+}
+
+function isChecklistAccessLocked() {
+  const itemIds = getAllPackingItems()
+    .map((itemElement) => itemElement.dataset.packingItem || "")
+    .filter(Boolean);
+
+  if (!itemIds.length) {
+    return false;
+  }
+
+  const stateSnapshot = getPackingStateSnapshot();
+  return !itemIds.every((itemId) => Boolean(stateSnapshot[itemId]));
+}
+
+function updateChecklistAccessState() {
+  const isLocked = isChecklistAccessLocked();
+  const checklistPanel = getSectionPanel("checklist");
+
+  if (checklistTab) {
+    checklistTab.classList.toggle("is-disabled", isLocked);
+    checklistTab.setAttribute("aria-disabled", String(isLocked));
+  }
+
+  if (checklistPanel) {
+    checklistPanel.dataset.essentialsLocked = String(isLocked);
+  }
+
+  if (checklistGateNotice) {
+    checklistGateNotice.hidden = !isLocked;
+  }
+
+  return isLocked;
+}
+
 function isPackingItemPacked(itemId) {
   return Boolean(packingState[itemId]);
 }
@@ -3311,6 +3355,8 @@ function syncPackingUI() {
   packingResetButtons.forEach((button) => {
     button.disabled = !hasPackedItems;
   });
+
+  updateChecklistAccessState();
 }
 
 function setPackingSectionState(sectionElement, packed) {
@@ -6430,16 +6476,12 @@ function animateUnlock(target) {
   }, 1200);
 }
 
-function showSequenceNotice(requiredDay) {
+function showToastNotice(message) {
   if (!sequenceNotice) {
     return;
   }
 
-  sequenceNotice.textContent =
-    root.lang === "ja"
-      ? `${requiredDay}日目を先に完了してから次の行程へ進めます。`
-      : `Complete Day ${requiredDay} first, then continue to the next part of the trip.`;
-
+  sequenceNotice.textContent = message;
   sequenceNotice.hidden = false;
   sequenceNotice.classList.remove("is-visible");
   if (reducedEffectsEnabled) {
@@ -6457,6 +6499,22 @@ function showSequenceNotice(requiredDay) {
       }
     }, 220);
   }, 2400);
+}
+
+function showSequenceNotice(requiredDay) {
+  showToastNotice(
+    root.lang === "ja"
+      ? `${requiredDay}日目を先に完了してから次の行程へ進めます。`
+      : `Complete Day ${requiredDay} first, then continue to the next part of the trip.`
+  );
+}
+
+function showChecklistLockNotice() {
+  showToastNotice(
+    root.lang === "ja"
+      ? "日別チェックリストを開くには、先にEssentialsの項目をすべて完了してください。"
+      : "Complete every Essentials item first to unlock the day-by-day checklist."
+  );
 }
 
 function getCurrentProgressDay() {
@@ -6650,10 +6708,15 @@ function resetTripProgress() {
   refreshChecklistProgressState({ syncDayCards: initializedSections.has("checklist") });
   refreshRouteMapsIfReady({ updateCamera: true });
   syncProgressTimeline();
-  setActivePanel("checklist");
+  setActivePanel(isChecklistAccessLocked() ? "essentials" : "checklist");
   setResetModalOpen(false);
 
   window.requestAnimationFrame(() => {
+    if (isChecklistAccessLocked()) {
+      scrollToPanelStart("essentials");
+      return;
+    }
+
     void scrollToChecklistDay(1);
   });
 }
@@ -6748,13 +6811,14 @@ function refreshChecklistProgressState(options = {}) {
     accessibleDay: nextAccessibleDay,
     currentDay: nextCurrentDay
   } = getJourneyState();
+  const checklistLocked = isChecklistAccessLocked();
 
   if (syncDayCards) {
     dayCards.forEach((card) => {
       const progressRatio = getDayCompletionRatio(card);
       const dayKey = card.dataset.day;
       const isComplete = rawCompleted.has(dayKey);
-      const isUnavailable = !nextUnlockedDays.has(dayKey);
+      const isUnavailable = checklistLocked || !nextUnlockedDays.has(dayKey);
       const isWarning = nextWarningDays.has(dayKey);
       const isCurrent = dayKey === String(nextCurrentDay);
 
@@ -6776,7 +6840,7 @@ function refreshChecklistProgressState(options = {}) {
     const day = Number(item.dataset.progressItem);
     const card = dayCardMap.get(dayKey);
     const progressRatio = card ? getDayCompletionRatio(card) : 0;
-    const isUnavailable = !nextUnlockedDays.has(dayKey);
+    const isUnavailable = checklistLocked || !nextUnlockedDays.has(dayKey);
     const isComplete = rawCompleted.has(dayKey);
     const isWarning = nextWarningDays.has(dayKey);
     const isActive = dayKey === String(nextCurrentDay) && !isUnavailable;
@@ -6822,6 +6886,7 @@ function refreshChecklistProgressState(options = {}) {
     completedHistoryDays = completedHistory;
   }
 
+  updateChecklistAccessState();
   syncOptionalDaysUI();
   completedDays = rawCompleted;
   unlockedDays = nextUnlockedDays;
@@ -6836,6 +6901,16 @@ function celebrateCompletedDay(day) {
 }
 
 async function scrollToChecklistDay(day) {
+  if (isChecklistAccessLocked()) {
+    showChecklistLockNotice();
+    lockHeaderState(420);
+    await ensureSectionAssetsReady("essentials");
+    setActivePanel("essentials");
+    await ensureSectionInitialized("essentials");
+    scrollToPanelStart("essentials");
+    return;
+  }
+
   const targetCard = dayCardMap.get(String(day));
   if (!targetCard) {
     return;
@@ -6933,6 +7008,7 @@ function setLanguage(language) {
   refreshBudgetNotesIfReady();
   refreshBookingTransitIfReady();
   refreshChecklistProgressState();
+  updateChecklistAccessState();
   syncProgressTimeline();
   refreshRouteMapsIfReady();
   scheduleDayCardRowHeights();
@@ -7125,8 +7201,10 @@ function getInitialPanelId() {
     contentPanels.find((panel) => panel.classList.contains("is-active"))?.dataset.panel ??
     contentPanels[0]?.dataset.panel ??
     "overview";
+  const nextPanelId =
+    contentPanels.length === 1 ? defaultPanelId : readStoredActivePanel() || defaultPanelId;
 
-  return contentPanels.length === 1 ? defaultPanelId : readStoredActivePanel() || defaultPanelId;
+  return nextPanelId === "checklist" && isChecklistAccessLocked() ? "essentials" : nextPanelId;
 }
 
 function bindTabNavigation() {
@@ -7138,6 +7216,16 @@ function bindTabNavigation() {
     tab.addEventListener("click", async () => {
       const panelId = tab.dataset.panelTarget;
       if (!panelId) {
+        return;
+      }
+
+      if (panelId === "checklist" && isChecklistAccessLocked()) {
+        showChecklistLockNotice();
+        await ensureSectionAssetsReady("essentials");
+        lockHeaderState(520);
+        setActivePanel("essentials");
+        await ensureSectionInitialized("essentials");
+        scrollToPanelStart("essentials");
         return;
       }
 
@@ -7196,6 +7284,7 @@ async function bootApp() {
   syncReducedEffectsMode({ force: true });
   completedHistoryDays = readStoredDaySet(completedHistoryStorageKey);
   checklistState = readStoredChecklistState();
+  updateChecklistAccessState();
   syncOptionalDaysUI();
   applyTheme(readStoredThemePreference() || getCurrentTheme(), { persist: false });
   const storedLanguage = readStoredLanguage();

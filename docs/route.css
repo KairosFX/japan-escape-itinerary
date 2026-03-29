@@ -2331,3 +2331,31 @@ html[data-theme="dark"] .route-map-marker__dot,
 html[data-theme="dark"] .route-reference__day-separator::before {
   background: rgba(164, 201, 171, 0.72);
 }
+
+/* Marker stability override */
+.route-map-marker {
+  transition: opacity 180ms ease;
+}
+
+.route-map-marker.is-active,
+.route-map-marker--interactive:hover,
+.route-map-marker--interactive:focus-visible {
+  transform: none;
+}
+
+.route-map-marker__pin,
+.route-map-marker__label {
+  transform: translateZ(0);
+  transform-origin: center center;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.route-map-marker.is-active .route-map-marker__pin,
+.route-map-marker--interactive:hover .route-map-marker__pin,
+.route-map-marker--interactive:focus-visible .route-map-marker__pin {
+  transform: scale(1.08);
+}

@@ -4,7 +4,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
       day: 1,
       title: { en: "Day 1 - Osaka", ja: "1日目・大阪" },
       summary: {
-        en: "Arrival day stays easy in Minami: settle in, walk Dotonbori and Shinsaibashi, eat nearby, and keep the first night light.",
+        en: "Land in Osaka and keep the first evening in Minami: Dotonbori for the canal-side neon, Shinsaibashi for the covered shopping streets, and an easy nearby dinner before turning in.",
         ja: "到着日はミナミ周辺で無理をせず、道頓堀と心斎橋を歩いて近くで食事し、最初の夜は軽く整える日にします。"
       }
     },
@@ -12,7 +12,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
       day: 2,
       title: { en: "Day 2 - Kyoto East", ja: "2日目・京都東側" },
       summary: {
-        en: "Kyoto East stays as one walking day: Kiyomizu-dera, Ninenzaka, Yasaka Pagoda, Gion, and Nanzen-ji on the same side of the city.",
+        en: "Keep Kyoto East as one walking sweep: Kiyomizu-dera for the hillside view, Ninenzaka and Yasaka Pagoda for the preserved lanes, Gion for the classic streets, and Nanzen-ji for a quieter temple finish.",
         ja: "京都東側は、清水寺、二年坂、八坂の塔、祇園、南禅寺を同じ側でまとめて回る一日にします。"
       }
     },
@@ -20,7 +20,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
       day: 3,
       title: { en: "Day 3 - Arashiyama, then Osaka", ja: "3日目・嵐山のあと大阪" },
       summary: {
-        en: "Arashiyama gets its own morning, then the route returns to Osaka for Kaiyukan, Tempozan, and one last Kansai night.",
+        en: "Start early in Arashiyama for the bamboo grove, river-edge views, and temple foothills, then shift back to Osaka where Kaiyukan and Tempozan make a cleaner waterfront finish than packing in more Kyoto stops.",
         ja: "嵐山は朝だけで独立させ、そのあと大阪へ戻って海遊館、天保山、最後の関西の夜へつなげます。"
       }
     },
@@ -28,7 +28,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
       day: 4,
       title: { en: "Day 4 - Mishima to Mt. Fuji area", ja: "4日目・三島から富士エリアへ" },
       summary: {
-        en: "Day 4 is the big transfer day: shinkansen to Mishima, then the handoff into the Fuji area for the sunset and overnight stay.",
+        en: "Use Mishima as the clean transfer gate, then keep the Fuji block practical: Chureito / Shimoyoshida for the classic pagoda-and-Fuji view when visibility is good, Lake Kawaguchiko for broader shoreline scenery, and an early lake-side check-in before dark.",
         ja: "4日目は大きな移動日で、新幹線で三島へ入り、そのあと富士エリアへ渡して夕景と宿泊へつなげます。"
       }
     },
@@ -36,7 +36,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
       day: 5,
       title: { en: "Day 5 - Tokyo / Shibuya", ja: "5日目・東京・渋谷" },
       summary: {
-        en: "Day 5 starts Tokyo cleanly: leave Fuji, check in around Shibuya, then do the crossing, food walk, and Shibuya Sky.",
+        en: "Return from Kawaguchiko straight into Shibuya, drop bags if needed, and keep the evening tightly local: Scramble Crossing, nearby food lanes, and Shibuya Sky once the city lights come on.",
         ja: "5日目は富士エリアを出て渋谷周辺へ入り、チェックイン後に交差点、食べ歩き、渋谷スカイへつなげます。"
       }
     },
@@ -44,7 +44,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
       day: 6,
       title: { en: "Day 6 - Tokyo East / Full Day", ja: "6日目・東京東側の観光メイン日" },
       summary: {
-        en: "Day 6 is the fuller Tokyo sightseeing day: Skytree first, then Solamachi and Akihabara.",
+        en: "Keep Tokyo East compact and rail-efficient: start with Skytree for the panorama, browse Solamachi underneath, and finish in Akihabara where arcades, anime shops, and electronics stay lively later into the evening.",
         ja: "6日目は東京観光の本番日にし、スカイツリー、ソラマチ、秋葉原をまとめて回ります。"
       }
     },
@@ -52,7 +52,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
       day: 7,
       title: { en: "Day 7 - Imperial Palace, Shinjuku + flight home", ja: "7日目・皇居と新宿、そして帰国日" },
       summary: {
-        en: "Day 7 stays light: Imperial Palace first, a short Shinjuku stop, then bags and airport buffer.",
+        en: "Keep the last day short and deliberate: Imperial Palace grounds for a calm morning walk, a brief Shinjuku stop for one final Tokyo pulse, then bag pickup or handoff and a direct airport transfer.",
         ja: "7日目は軽めにし、皇居を見てから新宿を短く回り、荷物対応と空港までの余裕を残します。"
       }
     }
@@ -529,7 +529,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
           ja: "5日目は渋谷に入り、スクランブル交差点、食べ歩き、渋谷スカイへつなげます。"
         },
         {
-          en: "Day 6 carries the Skytree, Solamachi, and Akihabara cluster, while Day 7 stays lighter with Tokyo Imperial Palace, Shinjuku, bags, and the airport run.",
+          en: "Day 6 carries the Skytree, Solamachi, and Akihabara cluster, while Day 7 keeps the Imperial Palace, a short Shinjuku stop, bag pickup or handoff, and the airport transfer tidy.",
           ja: "6日目にスカイツリー、ソラマチ、秋葉原をまとめ、7日目は皇居、新宿、荷物、空港移動を軽めに組んでいます。"
         }
       ],

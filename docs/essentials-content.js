@@ -982,7 +982,7 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "渋谷の夜に合わせやすい時刻を優先して、直通高速バスまたは鉄道を選びます。直通バスの目安は片道約2,200円です。"
       },
       "why": {
-        "en": "It keeps the west-to-east flow intact, gets you into Tokyo cleanly, and leaves Day 6 open for the fuller city day while Day 7 can stay lighter around the Imperial Palace, Shinjuku, and the airport run.",
+        "en": "It keeps the west-to-east flow intact, gets you into Tokyo cleanly, and leaves Day 6 open for the fuller city day while Day 7 can stay focused on the Imperial Palace, a short Shinjuku stop, bag pickup or handoff, and the airport transfer.",
         "ja": "西から東への流れを崩さずに東京へ入れ、6日目は都内観光の本番日に、7日目は皇居、新宿、空港移動を軽めに組みやすくなります。"
       },
       "practicalNotes": [

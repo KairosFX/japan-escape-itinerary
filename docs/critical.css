@@ -1289,3 +1289,64 @@ html[data-theme="dark"] .site-intro__title span:last-child {
     transform: translate3d(1.2rem, -0.4rem, 0) rotate(1.4deg);
   }
 }
+
+/* Focused itinerary refinements */
+.eyebrow::before {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 0;
+  background: currentColor;
+  box-shadow: none;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 3.5v17M16 3.5v17M6 6h12M6 11h12M6 16h12M8 3.5c-1.2 1.2-2 2.9-2 4.6M16 3.5c1.2 1.2 2 2.9 2 4.6' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 3.5v17M16 3.5v17M6 6h12M6 11h12M6 16h12M8 3.5c-1.2 1.2-2 2.9-2 4.6M16 3.5c1.2 1.2 2 2.9 2 4.6' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.section-tab.is-disabled,
+.section-tab[aria-disabled="true"] {
+  opacity: 0.48;
+  color: rgba(108, 95, 89, 0.9);
+  cursor: not-allowed;
+}
+
+.section-tab.is-disabled:hover,
+.section-tab.is-disabled:focus-visible,
+.section-tab[aria-disabled="true"]:hover,
+.section-tab[aria-disabled="true"]:focus-visible {
+  transform: none;
+  border-color: var(--line);
+  box-shadow: 0 12px 26px rgba(55, 35, 22, 0.055);
+}
+
+.checklist-gate {
+  margin: 0 0 1rem;
+  padding: 0.8rem 0.96rem;
+  border: 1px solid rgba(171, 74, 59, 0.14);
+  border-radius: calc(var(--radius-lg) - 2px);
+  background: linear-gradient(180deg, rgba(255, 250, 245, 0.92), rgba(250, 242, 235, 0.86));
+  color: var(--accent-deep);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.content-panel[data-panel="checklist"][data-essentials-locked="true"] .day-grid {
+  opacity: 0.34;
+  pointer-events: none;
+  filter: saturate(0.86);
+}
+
+html[data-theme="dark"] .section-tab.is-disabled,
+html[data-theme="dark"] .section-tab[aria-disabled="true"] {
+  color: rgba(207, 198, 193, 0.72);
+}
+
+html[data-theme="dark"] .checklist-gate {
+  border-color: rgba(210, 110, 92, 0.22);
+  background: linear-gradient(180deg, rgba(65, 42, 37, 0.92), rgba(47, 33, 30, 0.88));
+  color: rgba(249, 231, 225, 0.94);
+}

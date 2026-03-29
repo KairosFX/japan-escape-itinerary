@@ -1152,7 +1152,7 @@
         "ja": "7日目・皇居と新宿、そして帰国日"
       },
       "subtitle": {
-        "en": "Imperial Palace, Shinjuku, and airport buffer",
+        "en": "Imperial Palace, Shinjuku, bags, and airport transfer",
         "ja": "皇居、新宿、空港の余白"
       },
       "items": [
@@ -1184,25 +1184,7 @@
         },
         {
           "label": {
-            "en": "Coffee / light meal buffer",
-            "ja": "軽い食事とコーヒー休憩"
-          },
-          "category": "meals",
-          "bucket": "flexible",
-          "sourceGroup": "meals",
-          "cost": {
-            "mode": "perPerson",
-            "amount": 1300,
-            "range": {
-              "lean": 900,
-              "expected": 1300,
-              "high": 2000
-            }
-          }
-        },
-        {
-          "label": {
-            "en": "Bag storage or handoff if needed",
+            "en": "Bag pickup / handoff if needed",
             "ja": "必要なら荷物預け・受け渡し"
           },
           "category": "baggage",
@@ -1220,7 +1202,7 @@
         },
         {
           "label": {
-            "en": "Airport transfer reserve",
+            "en": "Airport transfer",
             "ja": "空港移動の予備費"
           },
           "category": "intercityTransit",

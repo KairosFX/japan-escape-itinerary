@@ -1336,10 +1336,71 @@ html[data-theme="dark"] .site-intro__title span:last-child {
   100% {
     transform: translate3d(1.2rem, -0.4rem, 0) rotate(1.4deg);
   }
+}
+
+/* Focused itinerary refinements */
+.eyebrow::before {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 0;
+  background: currentColor;
+  box-shadow: none;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 3.5v17M16 3.5v17M6 6h12M6 11h12M6 16h12M8 3.5c-1.2 1.2-2 2.9-2 4.6M16 3.5c1.2 1.2 2 2.9 2 4.6' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 3.5v17M16 3.5v17M6 6h12M6 11h12M6 16h12M8 3.5c-1.2 1.2-2 2.9-2 4.6M16 3.5c1.2 1.2 2 2.9 2 4.6' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.section-tab.is-disabled,
+.section-tab[aria-disabled="true"] {
+  opacity: 0.48;
+  color: rgba(108, 95, 89, 0.9);
+  cursor: not-allowed;
+}
+
+.section-tab.is-disabled:hover,
+.section-tab.is-disabled:focus-visible,
+.section-tab[aria-disabled="true"]:hover,
+.section-tab[aria-disabled="true"]:focus-visible {
+  transform: none;
+  border-color: var(--line);
+  box-shadow: 0 12px 26px rgba(55, 35, 22, 0.055);
+}
+
+.checklist-gate {
+  margin: 0 0 1rem;
+  padding: 0.8rem 0.96rem;
+  border: 1px solid rgba(171, 74, 59, 0.14);
+  border-radius: calc(var(--radius-lg) - 2px);
+  background: linear-gradient(180deg, rgba(255, 250, 245, 0.92), rgba(250, 242, 235, 0.86));
+  color: var(--accent-deep);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.content-panel[data-panel="checklist"][data-essentials-locked="true"] .day-grid {
+  opacity: 0.34;
+  pointer-events: none;
+  filter: saturate(0.86);
+}
+
+html[data-theme="dark"] .section-tab.is-disabled,
+html[data-theme="dark"] .section-tab[aria-disabled="true"] {
+  color: rgba(207, 198, 193, 0.72);
+}
+
+html[data-theme="dark"] .checklist-gate {
+  border-color: rgba(210, 110, 92, 0.22);
+  background: linear-gradient(180deg, rgba(65, 42, 37, 0.92), rgba(47, 33, 30, 0.88));
+  color: rgba(249, 231, 225, 0.94);
 }</style>
-  <link rel="preload" href="./assets/app/style.5278a33087.css" as="style">
-  <link rel="stylesheet" href="./assets/app/style.5278a33087.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.5278a33087.css"></noscript>
+  <link rel="preload" href="./assets/app/style.5531a1c902.css" as="style">
+  <link rel="stylesheet" href="./assets/app/style.5531a1c902.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.5531a1c902.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -1374,17 +1435,13 @@ html[data-theme="dark"] .site-intro__title span:last-child {
     <div class="header-inner">
       <div class="brand-block">
         <p class="eyebrow">
-          <span data-language="en">JAPAN ESCAPE</span>
-          <span data-language="ja" hidden>JAPAN ESCAPE</span>
+          <span data-language="en">TRIP GUIDE</span>
+          <span data-language="ja" hidden>TRIP GUIDE</span>
         </p>
         <h1>
           <span data-language="en">JAPAN ESCAPE</span>
           <span data-language="ja" hidden>JAPAN ESCAPE</span>
         </h1>
-        <p class="hero-copy">
-          <span data-language="en">A simple website for this trip, organized as overview, checklist, notes, budget, routes, and essentials.</span>
-          <span data-language="ja" hidden>このウェブサイトは、概要、チェックリスト、メモ、予算、ルート、準備の順で見やすく整理しています。</span>
-        </p>
       </div>
 
       <div class="header-actions">
@@ -1774,6 +1831,10 @@ html[data-theme="dark"] .site-intro__title span:last-child {
           <span data-language="ja" hidden>固定の7日間ルートの日別チェックリストです。</span>
         </p>
       </div>
+      <p class="checklist-gate" data-checklist-gate hidden>
+        <span data-language="en">Complete every Essentials item first to unlock the day-by-day checklist.</span>
+        <span data-language="ja" hidden>日別チェックリストを開くには、先にEssentialsの項目をすべて完了してください。</span>
+      </p>
 
       <div class="day-grid">
         <article class="day-card card" data-day="1">
@@ -2089,13 +2150,6 @@ html[data-theme="dark"] .site-intro__title span:last-child {
               </label>
             </li>
             <li>
-              <label class="check-item" for="day7-meal">
-                <input id="day7-meal" type="checkbox">
-                <span class="check-copy" data-language="en">Coffee stop</span>
-                <span class="check-copy" data-language="ja" hidden>コーヒー休憩</span>
-              </label>
-            </li>
-            <li>
               <label class="check-item" for="day7-bags">
                 <input id="day7-bags" type="checkbox">
                 <span class="check-copy" data-language="en">Bag pickup / handoff</span>
@@ -2395,11 +2449,11 @@ html[data-theme="dark"] .site-intro__title span:last-child {
       <div class="essentials-layout">
         <article class="essentials-card essentials-card--bookings card">
           <h4>
-            <span data-language="en">Bookings + Transit</span>
+            <span data-language="en">Pre-Trip Bookings</span>
             <span data-language="ja" hidden>予約と移動</span>
           </h4>
           <p>
-            <span data-language="en">Hotels, transit, and timed activities are grouped below with day and type labels so the essentials stay easy to scan.</span>
+            <span data-language="en">Hotels, transit, and timed activities are grouped below with day and type labels so the pre-trip essentials stay easy to scan.</span>
             <span data-language="ja" hidden>ホテル、移動、時間指定のアクティビティを、日付ラベルと種類ラベル付きでまとめ、準備項目を見渡しやすくしています。</span>
           </p>
           <div class="booking-transit" data-booking-transit>
@@ -2413,12 +2467,8 @@ html[data-theme="dark"] .site-intro__title span:last-child {
                 <span data-language="en">All</span>
                 <span data-language="ja" hidden>すべて</span>
               </button>
-              <button class="booking-transit__filter" type="button" data-booking-filter-button="to-book" aria-pressed="false">
-                <span data-language="en">To book</span>
-                <span data-language="ja" hidden>予約優先</span>
-              </button>
               <button class="booking-transit__filter" type="button" data-booking-filter-button="transit" aria-pressed="false">
-                <span data-language="en">Transit info</span>
+                <span data-language="en">Transit</span>
                 <span data-language="ja" hidden>移動情報</span>
               </button>
               <button class="booking-transit__filter" type="button" data-booking-filter-button="done" aria-pressed="false">
@@ -2444,15 +2494,15 @@ html[data-theme="dark"] .site-intro__title span:last-child {
         <section class="essentials-group essentials-group--packing" aria-labelledby="essentials-packing-title">
           <div class="essentials-group__header">
             <p class="essentials-group__eyebrow">
-              <span data-language="en">Main Carry + Setup</span>
+              <span data-language="en">Essentials</span>
               <span data-language="ja" hidden>持ち物と基本準備</span>
             </p>
             <h3 class="essentials-group__title" id="essentials-packing-title">
-              <span data-language="en">Documents, Bags, and Route-Day Kits</span>
+              <span data-language="en">Departure Essentials</span>
               <span data-language="ja" hidden>書類、荷物、移動日の持ち物</span>
             </h3>
             <p class="essentials-group__intro">
-              <span data-language="en">Keep the basics, main bags, and Fuji-to-Tokyo handoff items together.</span>
+              <span data-language="en">Keep departure checks, luggage planning, daily carry, and the Fuji-to-Tokyo handoff kit together.</span>
               <span data-language="ja" hidden>基本の持ち物、荷物、富士から東京へ移る日の持ち物をまとめています。</span>
             </p>
             <div class="packing-section__actions packing-section__actions--global">
@@ -2470,7 +2520,7 @@ html[data-theme="dark"] .site-intro__title span:last-child {
 
         <article class="essentials-card card packing-section packing-section--compact" data-packing-section="documents-phone">
           <h4>
-            <span data-language="en">Documents + Phone</span>
+            <span data-language="en">Departure</span>
             <span data-language="ja" hidden>書類とスマホ準備</span>
           </h4>
           <p>
@@ -2549,7 +2599,7 @@ html[data-theme="dark"] .site-intro__title span:last-child {
 
         <article class="essentials-card card packing-section" data-packing-section="luggage-strategy">
           <h4>
-            <span data-language="en">Luggage Strategy</span>
+            <span data-language="en">Luggage</span>
             <span data-language="ja" hidden>荷物戦略</span>
           </h4>
           <p>
@@ -2620,7 +2670,7 @@ html[data-theme="dark"] .site-intro__title span:last-child {
 
         <article class="essentials-card card packing-section" data-packing-section="daily-carry">
           <h4>
-            <span data-language="en">Daily Carry</span>
+            <span data-language="en">Daily</span>
             <span data-language="ja" hidden>毎日持つもの</span>
           </h4>
           <p>
@@ -2691,7 +2741,7 @@ html[data-theme="dark"] .site-intro__title span:last-child {
 
         <article class="essentials-card card packing-section" data-packing-section="fuji-tokyo-transfer-kit">
           <h4>
-            <span data-language="en">Fuji + Tokyo Transfer Kit</span>
+            <span data-language="en">Transfer</span>
             <span data-language="ja" hidden>富士と東京移動の日用キット</span>
           </h4>
           <p>
@@ -2918,10 +2968,6 @@ html[data-theme="dark"] .site-intro__title span:last-child {
           <span data-language="en">7 Days • 4 Stops • 1 West-to-East Journey</span>
           <span data-language="ja" hidden>7日間 • 4つの主要地 • 西から東への1本の旅</span>
         </p>
-        <p class="journey-close__reflection">
-          <span data-language="en">Day 7 stays intentionally light, with Tokyo Imperial Palace, a short Shinjuku block, bags, and the airport run closing the route calmly.</span>
-          <span data-language="ja" hidden>7日目はあえて軽くし、皇居、新宿の短い立ち寄り、荷物、空港移動で落ち着いて締められるようにしています。</span>
-        </p>
         <div class="journey-close__actions">
           <button class="journey-close__button" type="button" data-reset-progress-open>
             <span data-language="en">Reset trip</span>
@@ -3048,10 +3094,10 @@ html[data-theme="dark"] .site-intro__title span:last-child {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.5278a33087.css","styleHash":"5278a33087","routeStylePath":"./assets/app/routeStyle.2a1eba8703.css","routeStyleHash":"2a1eba8703","scriptPath":"./assets/app/script.87e859e6e3.js","scriptHash":"87e859e6e3","routeContentPath":"./assets/app/routeContent.b8315c49af.js","routeContentHash":"b8315c49af","budgetUiPath":"./assets/app/budgetUi.4cd5676b19.js","budgetUiHash":"4cd5676b19","budgetContentPath":"./assets/app/budgetContent.cb9a162d97.js","budgetContentHash":"cb9a162d97","essentialsContentPath":"./assets/app/essentialsContent.232f044cb0.js","essentialsContentHash":"232f044cb0","generatedAt":"2026-03-29T19:48:14.707Z","cacheVersion":"5278a33087-2a1eba8703-87e859e6e3-b8315c49af-4cd5676b19-cb9a162d97-232f044cb0"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.5531a1c902.css","styleHash":"5531a1c902","routeStylePath":"./assets/app/routeStyle.4b38f85510.css","routeStyleHash":"4b38f85510","scriptPath":"./assets/app/script.c208c78083.js","scriptHash":"c208c78083","routeContentPath":"./assets/app/routeContent.52819f9db9.js","routeContentHash":"52819f9db9","budgetUiPath":"./assets/app/budgetUi.e1dad88da7.js","budgetUiHash":"e1dad88da7","budgetContentPath":"./assets/app/budgetContent.822b44e78c.js","budgetContentHash":"822b44e78c","essentialsContentPath":"./assets/app/essentialsContent.e023f8c0d9.js","essentialsContentHash":"e023f8c0d9","generatedAt":"2026-03-29T22:05:41.496Z","cacheVersion":"5531a1c902-4b38f85510-c208c78083-52819f9db9-e1dad88da7-822b44e78c-e023f8c0d9"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
-  <script src="./assets/app/script.87e859e6e3.js" defer></script>
+  <script src="./assets/app/script.c208c78083.js" defer></script>
   <!-- build:inline-script:end -->
 </body>
 </html>
