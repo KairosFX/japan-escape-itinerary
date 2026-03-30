@@ -1661,74 +1661,79 @@ html[data-theme="dark"] .route-reference__day-button {
 
 .route-map-marker {
   overflow: visible;
+  --route-map-marker-label-shift: none;
 }
 
 .route-map-marker__label {
   overflow: visible;
+  transform: var(--route-map-marker-label-shift);
 }
 
 .route-map-marker__label::before {
   content: "";
   position: absolute;
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 0.14rem;
+  width: 0.46rem;
+  height: 0.46rem;
+  border-radius: 0.12rem;
   background: inherit;
   border-left: 1px solid rgba(171, 74, 59, 0.12);
   border-top: 1px solid rgba(171, 74, 59, 0.12);
+  box-shadow: 0 4px 10px rgba(12, 30, 19, 0.08);
 }
 
 .route-map-marker[data-label-position="n"] .route-map-marker__label {
-  bottom: calc(100% + 0.34rem);
+  left: 50%;
+  bottom: calc(100% + 0.22rem);
+  --route-map-marker-label-shift: translateX(-50%);
 }
 
 .route-map-marker[data-label-position="n"] .route-map-marker__label::before {
   left: 50%;
-  bottom: -0.2rem;
+  bottom: -0.16rem;
   transform: translateX(-50%) rotate(225deg);
 }
 
 .route-map-marker[data-label-position="ne"] .route-map-marker__label {
-  left: calc(100% + 0.28rem);
-  bottom: calc(100% - 0.18rem);
+  left: calc(100% + 0.16rem);
+  bottom: calc(100% - 0.08rem);
 }
 
 .route-map-marker[data-label-position="ne"] .route-map-marker__label::before {
-  left: -0.18rem;
-  bottom: 0.34rem;
+  left: -0.12rem;
+  bottom: 0.28rem;
   transform: rotate(315deg);
 }
 
 .route-map-marker[data-label-position="nw"] .route-map-marker__label {
-  right: calc(100% + 0.28rem);
-  bottom: calc(100% - 0.18rem);
+  right: calc(100% + 0.16rem);
+  bottom: calc(100% - 0.08rem);
 }
 
 .route-map-marker[data-label-position="nw"] .route-map-marker__label::before {
-  right: -0.18rem;
-  bottom: 0.34rem;
+  right: -0.12rem;
+  bottom: 0.28rem;
   transform: rotate(45deg);
 }
 
 .route-map-marker[data-label-position="se"] .route-map-marker__label {
-  left: calc(100% + 0.28rem);
-  top: calc(100% - 0.06rem);
+  left: calc(100% + 0.16rem);
+  top: calc(100% + 0.02rem);
 }
 
 .route-map-marker[data-label-position="se"] .route-map-marker__label::before {
-  left: -0.18rem;
-  top: 0.34rem;
+  left: -0.12rem;
+  top: 0.28rem;
   transform: rotate(225deg);
 }
 
 .route-map-marker[data-label-position="sw"] .route-map-marker__label {
-  right: calc(100% + 0.28rem);
-  top: calc(100% - 0.06rem);
+  right: calc(100% + 0.16rem);
+  top: calc(100% + 0.02rem);
 }
 
 .route-map-marker[data-label-position="sw"] .route-map-marker__label::before {
-  right: -0.18rem;
-  top: 0.34rem;
+  right: -0.12rem;
+  top: 0.28rem;
   transform: rotate(135deg);
 }
 
@@ -1758,8 +1763,9 @@ html[data-theme="dark"] .route-map__map-shell.is-map-focused .route-map__status 
 }
 
 html[data-theme="dark"] .route-map-marker__label::before {
-  border-left-color: rgba(255, 242, 228, 0.12);
-  border-top-color: rgba(255, 242, 228, 0.12);
+  border-left-color: rgba(128, 164, 137, 0.2);
+  border-top-color: rgba(128, 164, 137, 0.2);
+  box-shadow: 0 6px 12px rgba(2, 7, 4, 0.24);
 }
 
 /* Compact atlas comfort pass */
@@ -2334,7 +2340,9 @@ html[data-theme="dark"] .route-reference__day-separator::before {
 
 /* Marker stability override */
 .route-map-marker {
-  transition: opacity 180ms ease;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 
 .route-map-marker.is-active,
@@ -2354,10 +2362,16 @@ html[data-theme="dark"] .route-reference__day-separator::before {
     background-color 180ms ease;
 }
 
+.route-map-marker.is-active .route-map-marker__label,
+.route-map-marker--interactive:hover .route-map-marker__label,
+.route-map-marker--interactive:focus-visible .route-map-marker__label {
+  transform: var(--route-map-marker-label-shift);
+}
+
 .route-map-marker.is-active .route-map-marker__pin,
 .route-map-marker--interactive:hover .route-map-marker__pin,
 .route-map-marker--interactive:focus-visible .route-map-marker__pin {
-  transform: scale(1.08);
+  transform: scale(1.03);
 }
 
 /* Compact live atlas pass */
