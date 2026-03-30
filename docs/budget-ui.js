@@ -743,7 +743,6 @@ const itineraryBudgetLabels = {
           en: `Show budget for Day ${dayEstimate.day}`,
           ja: `${dayEstimate.day}日目の予算を見る`
         };
-        const compactDayLabel = String(dayEstimate.day).padStart(2, "0");
 
         return `
           <button
@@ -754,8 +753,10 @@ const itineraryBudgetLabels = {
             data-aria-label-en="${escapeHtml(ariaLabel.en)}"
             data-aria-label-ja="${escapeHtml(ariaLabel.ja)}"
             aria-label="${escapeHtml(getLocalizedText(ariaLabel))}">
-            <span class="budget-day-selector__button-day">${escapeHtml(compactDayLabel)}</span>
-            <span class="visually-hidden">${renderLocalizedContent(dayLabel)}</span>
+            <span class="budget-day-selector__button-day">${renderLocalizedContent(dayLabel)}</span>
+            <span class="budget-day-selector__button-title">${renderLocalizedContent(
+              getDaySelectorTitleCopy(dayEstimate)
+            )}</span>
           </button>
         `;
       })
@@ -1297,8 +1298,8 @@ const itineraryBudgetLabels = {
       <article class="budget-day-card" data-budget-day="${dayEstimate.day}">
         <div class="budget-day-card__header">
           <div class="budget-day-card__copy">
-            <h4>${escapeHtml(String(dayEstimate.day).padStart(2, "0"))}</h4>
-            <p class="visually-hidden">${renderLocalizedContent(dayEstimate.title)}</p>
+            <h4>${renderLocalizedContent(dayEstimate.title)}</h4>
+            <p>${renderLocalizedContent(dayEstimate.subtitle)}</p>
           </div>
           <div class="budget-day-card__totals">
             <p class="budget-day-card__total">${escapeHtml(formatCurrency(dayEstimate.total))}</p>
