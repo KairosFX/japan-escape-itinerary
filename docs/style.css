@@ -283,6 +283,18 @@ input:focus-visible {
   gap: 0.52rem;
 }
 
+.eyebrow__icon {
+  display: block;
+  width: 1rem;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  flex: none;
+  object-fit: contain;
+}
+
 .section-tag {
   display: inline-flex;
   align-items: center;
@@ -8935,6 +8947,14 @@ html[data-theme="dark"] .site-header.is-condensed {
 .eyebrow {
   gap: 0.48rem;
   align-items: center;
+}
+
+.eyebrow::before {
+  content: none;
+}
+
+.eyebrow__icon {
+  width: 1.02rem;
 }
 
 .brand-block h1 {
