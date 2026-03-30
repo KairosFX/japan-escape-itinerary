@@ -142,10 +142,10 @@ const itineraryBudgetLabels = {
   stayAreaLabel: { en: "Stay area", ja: "滞在エリア" },
   stayAnchorLabel: { en: "Anchor stay", ja: "基準の宿" },
   stayWhyLabel: { en: "Route fit", ja: "この場所を選ぶ理由" },
-  shareModeLabel: { en: "Split", ja: "宿泊費の配分" },
+  shareModeLabel: { en: "Accommodation type", ja: "宿泊タイプ" },
   shareCountLabel: { en: "People sharing stays", ja: "宿泊費を分ける人数" },
   shareModeAllTravelers: { en: "Shared", ja: "共有" },
-  shareModeNotShared: { en: "Not shared", ja: "分けない" },
+  shareModeNotShared: { en: "Non-shared", ja: "個別" },
   shareModeCustom: { en: "Custom share count", ja: "人数を指定して分ける" },
   stayHintFallback: {
     en: "Switch between the real default stay and any cheaper or free fallback you actually have.",
@@ -251,14 +251,14 @@ const itineraryBudgetLabels = {
 
     return clamp(parsed, budgetTravelerCountMin, budgetTravelerCountMax);
   };
-  const normalizeShareMode = (value, fallback = budgetAccommodationShareModeDefault) =>
-    budgetAccommodationShareModes.includes(value) ? value : fallback;
+  const normalizeShareMode = (value, fallback = budgetAccommodationShareModeDefault) => {
+    const normalizedValue = budgetAccommodationShareModes.includes(value) ? value : fallback;
+    return normalizedValue === "custom" ? "all-travelers" : normalizedValue;
+  };
   const getShareModeLabel = (shareMode) => {
     switch (normalizeShareMode(shareMode)) {
       case "not-shared":
         return itineraryBudgetLabels.shareModeNotShared;
-      case "custom":
-        return itineraryBudgetLabels.shareModeCustom;
       default:
         return itineraryBudgetLabels.shareModeAllTravelers;
     }
@@ -516,11 +516,10 @@ const itineraryBudgetLabels = {
       : stayDefinition.routeReason || null;
   };
   const normalizeDayEntry = (definition, entry) => {
-    const note = typeof entry?.note === "string" ? entry.note.slice(0, 280) : "";
     const defaultStayId = definition?.defaultStayId || null;
     const allowedStayIds = new Set(Array.isArray(definition?.stayOptions) ? definition.stayOptions : []);
     const stayId = allowedStayIds.has(entry?.stayId) ? entry.stayId : defaultStayId;
-    return { note, stayId };
+    return { note: "", stayId };
   };
   const getDefaultState = () => ({
     travelers: budgetDefaultTravelerCount,
@@ -542,10 +541,7 @@ const itineraryBudgetLabels = {
       }
 
       const normalizedEntry = normalizeDayEntry(definition, entry);
-      if (
-        normalizedEntry.note.trim() ||
-        (normalizedEntry.stayId && normalizedEntry.stayId !== definition.defaultStayId)
-      ) {
+      if (normalizedEntry.stayId && normalizedEntry.stayId !== definition.defaultStayId) {
         nextState[String(normalizedDay)] = normalizedEntry;
       }
 
@@ -604,7 +600,7 @@ const itineraryBudgetLabels = {
 
     return Object.entries(budgetNotesState.days || {}).some(([day, entry]) => {
       const defaultStayId = getDefaultStayId(day);
-      return String(entry?.note || "").trim() || (entry?.stayId && entry.stayId !== defaultStayId);
+      return entry?.stayId && entry.stayId !== defaultStayId;
     });
   };
   const storeState = () => {
@@ -676,7 +672,7 @@ const itineraryBudgetLabels = {
     const defaultStayId = getDefaultStayId(day);
 
     return {
-      note: typeof entry.note === "string" ? entry.note : "",
+      note: "",
       stayId: typeof entry.stayId === "string" ? entry.stayId : defaultStayId
     };
   };
@@ -684,7 +680,6 @@ const itineraryBudgetLabels = {
     hydrateState();
     const key = String(day);
     const definition = getDayDefinition(day);
-    const note = typeof nextState?.note === "string" ? nextState.note.slice(0, 280) : "";
     const defaultStayId = definition?.defaultStayId || null;
     const allowedStayIds = new Set(Array.isArray(definition?.stayOptions) ? definition.stayOptions : []);
     const stayId = allowedStayIds.has(nextState?.stayId) ? nextState.stayId : defaultStayId;
@@ -693,10 +688,10 @@ const itineraryBudgetLabels = {
       budgetNotesState.days = {};
     }
 
-    if (!note.trim() && (!stayId || stayId === defaultStayId)) {
+    if (!stayId || stayId === defaultStayId) {
       delete budgetNotesState.days[key];
     } else {
-      budgetNotesState.days[key] = { note, stayId };
+      budgetNotesState.days[key] = { note: "", stayId };
     }
 
     storeState();
@@ -1194,8 +1189,6 @@ const itineraryBudgetLabels = {
   const renderSourceMetaMarkup = () => "";
   const renderSourcesMarkup = () => "";
   const renderDayMarkup = (dayEstimate) => {
-    const noteAriaEn = `Budget note for ${dayEstimate.title.en}`;
-    const noteAriaJa = `${dayEstimate.title.ja}の予算メモ`;
     const stayOptions = Array.isArray(dayEstimate.stayOptions) ? dayEstimate.stayOptions : [];
     const selectedStayId = dayEstimate.stayDefinition?.id || "";
     const stayAreaCopy = getStayAreaCopy(dayEstimate.stayDefinition);
@@ -1360,26 +1353,6 @@ const itineraryBudgetLabels = {
             })
             .join("")}
         </ul>
-        <label class="budget-day-card__note-field">
-          <span class="budget-day-card__note-label">${renderLocalizedContent(
-            itineraryBudgetLabels.noteLabel
-          )}</span>
-          <textarea
-            class="budget-day-card__note-input"
-            rows="3"
-            maxlength="280"
-            data-budget-note-input="${dayEstimate.day}"
-            data-placeholder-en="${escapeHtml(itineraryBudgetLabels.notePlaceholder.en)}"
-            data-placeholder-ja="${escapeHtml(itineraryBudgetLabels.notePlaceholder.ja)}"
-            data-aria-label-en="${escapeHtml(noteAriaEn)}"
-            data-aria-label-ja="${escapeHtml(noteAriaJa)}"
-            aria-label="${escapeHtml(root.lang === "ja" ? noteAriaJa : noteAriaEn)}"
-            placeholder="${escapeHtml(
-              root.lang === "ja"
-                ? itineraryBudgetLabels.notePlaceholder.ja
-                : itineraryBudgetLabels.notePlaceholder.en
-            )}">${escapeHtml(dayEstimate.note || "")}</textarea>
-        </label>
       </article>
     `;
   };

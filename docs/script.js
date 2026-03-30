@@ -1,6 +1,7 @@
 const languageButtons = document.querySelectorAll("[data-set-language]");
 const themeButtons = document.querySelectorAll("[data-set-theme]");
 const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+const appleWebAppTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
 const sectionTabs = Array.from(document.querySelectorAll("[data-panel-target]"));
 const contentPanels = Array.from(document.querySelectorAll("[data-panel]"));
 const siteHeader = document.querySelector(".site-header");
@@ -54,7 +55,7 @@ const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
 const compactViewportQuery = window.matchMedia("(max-width: 920px)");
 const pageTitles = {
   en: "JAPAN ESCAPE",
-  ja: "JAPAN ESCAPE"
+  ja: "日本旅行"
 };
 const storageKey = "japan-trip-language";
 const themeStorageKey = "japan-trip-theme";
@@ -162,26 +163,17 @@ const bookingTransitGroupDefinitions = [
   {
     id: "accommodations",
     title: { en: "Hotels / Accommodations", ja: "ホテル・宿泊" },
-    copy: {
-      en: "Keep each route-fit hotel or stay decision together so day-linked accommodation changes are easy to scan.",
-      ja: "動線に合うホテルや宿泊判断をまとめ、日ごとの滞在先を見渡しやすくします。"
-    }
+    copy: { en: "", ja: "" }
   },
   {
     id: "transit",
     title: { en: "Transit", ja: "移動" },
-    copy: {
-      en: "Keep the fixed transfer legs and saved route references together so the moving days stay calmer.",
-      ja: "固定の移動予約と保存しておきたい経路メモをまとめ、移動日を落ち着いて進められるようにします。"
-    }
+    copy: { en: "", ja: "" }
   },
   {
     id: "activities",
     title: { en: "Activities", ja: "アクティビティ" },
-    copy: {
-      en: "Keep the timed attraction bookings together so the sightseeing days stay easy to plan.",
-      ja: "時間指定の観光予約をまとめ、観光日の組み立てを分かりやすくします。"
-    }
+    copy: { en: "", ja: "" }
   }
 ];
 const transitDetailLabels = {
@@ -2888,6 +2880,15 @@ function renderLocalizedContent(content) {
   return `<span data-language="en">${escapeHtml(content?.en ?? "")}</span><span data-language="ja" hidden>${escapeHtml(content?.ja ?? "")}</span>`;
 }
 
+function syncLocalizedDocumentTitle(language = root.lang) {
+  const normalizedLanguage = language === "ja" ? "ja" : "en";
+  const nextTitle = pageTitles[normalizedLanguage] || pageTitles.en;
+  document.title = nextTitle;
+  if (appleWebAppTitleMeta) {
+    appleWebAppTitleMeta.setAttribute("content", nextTitle);
+  }
+}
+
 function renderTripNotes() {
   if (!tripNotesGridNode) {
     return;
@@ -3085,6 +3086,10 @@ function renderBookingTransitBoard() {
 
   bookingTransitGroupsRoot.innerHTML = bookingTransitGroupDefinitions
     .map((group) => {
+      const groupCopyMarkup =
+        group.copy?.en || group.copy?.ja
+          ? `<p class="booking-group__copy">${renderLocalizedContent(group.copy)}</p>`
+          : "";
       const itemsMarkup = bookingTransitItems
         .filter((item) => item.group === group.id)
         .map((item) => renderBookingTransitItem(item))
@@ -3095,7 +3100,7 @@ function renderBookingTransitBoard() {
           <summary class="booking-group__summary">
             <div class="booking-group__header">
               <h5 class="booking-group__title">${renderLocalizedContent(group.title)}</h5>
-              <p class="booking-group__copy">${renderLocalizedContent(group.copy)}</p>
+              ${groupCopyMarkup}
             </div>
             <span class="booking-group__caret" aria-hidden="true"></span>
           </summary>
@@ -7120,6 +7125,18 @@ function scheduleProgressTimelineLayout({ defer = false } = {}) {
   timelineLayoutFrame = window.requestAnimationFrame(runLayout);
 }
 
+function remToPx(value) {
+  const numericValue = Number.parseFloat(String(value ?? ""));
+  if (!Number.isFinite(numericValue)) {
+    return 0;
+  }
+
+  const rootFontSize = Number.parseFloat(
+    window.getComputedStyle(document.documentElement).fontSize || "16"
+  );
+  return numericValue * (Number.isFinite(rootFontSize) ? rootFontSize : 16);
+}
+
 function updateTimelineSpine() {
   if (!progressTimeline) {
     return;
@@ -7138,10 +7155,12 @@ function updateTimelineSpine() {
     return;
   }
 
-  const rootFontSize = 16;
-  const nodeTop = timelineNodeTopRem * rootFontSize;
-  const nodeSize = timelineNodeSizeRem * rootFontSize;
-  const linkOverlap = timelineLinkOverlapPx;
+  const timelineStyles = window.getComputedStyle(progressTimeline);
+  const nodeTop = remToPx(timelineStyles.getPropertyValue("--timeline-node-top"));
+  const nodeSize = remToPx(timelineStyles.getPropertyValue("--timeline-node-size"));
+  const linkOverlap =
+    Number.parseFloat(timelineStyles.getPropertyValue("--timeline-link-overlap")) ||
+    timelineLinkOverlapPx;
   const fillStart = nodeTop + nodeSize - linkOverlap;
   const fillEnd = anchorItem.offsetTop + nodeTop + linkOverlap;
   const fillHeight = Math.max(fillEnd - fillStart, 0);
@@ -7324,7 +7343,7 @@ function setLanguage(language) {
   const sourceNodes = document.querySelectorAll("[data-src-en][data-src-ja]");
 
   root.lang = nextLanguage;
-  document.title = pageTitles[nextLanguage];
+  syncLocalizedDocumentTitle(nextLanguage);
 
   localizedNodes.forEach((node) => {
     node.hidden = node.dataset.language !== nextLanguage;
@@ -7655,7 +7674,7 @@ async function bootApp() {
     setLanguage("ja");
   } else {
     root.lang = "en";
-    document.title = pageTitles.en;
+    syncLocalizedDocumentTitle("en");
     updateLanguageButtons("en");
   }
 

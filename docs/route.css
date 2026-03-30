@@ -2359,3 +2359,147 @@ html[data-theme="dark"] .route-reference__day-separator::before {
 .route-map-marker--interactive:focus-visible .route-map-marker__pin {
   transform: scale(1.08);
 }
+
+/* Compact live atlas pass */
+.route-map {
+  gap: 0.82rem;
+  padding: 0.96rem 1rem;
+}
+
+.route-map__surface {
+  gap: 0.72rem;
+  padding: 0.82rem;
+}
+
+.route-map__main,
+.route-map__aside,
+.route-map__explorer {
+  gap: 0.72rem;
+}
+
+.route-reference {
+  gap: 0.58rem;
+  padding: 0.78rem 0.82rem 0.8rem;
+}
+
+.route-reference__copy {
+  gap: 0.32rem;
+}
+
+.route-reference__title {
+  font-size: 1.12rem;
+  line-height: 1.16;
+}
+
+.route-reference__summary {
+  font-size: 0.85rem;
+  line-height: 1.52;
+}
+
+.route-reference__pills {
+  gap: 0.34rem;
+}
+
+.route-reference__pill {
+  padding: 0.24rem 0.52rem;
+  font-size: 0.72rem;
+}
+
+.route-reference__group {
+  gap: 0.36rem;
+}
+
+.route-reference__group-actions {
+  gap: 0.34rem;
+}
+
+.route-map__day-nav {
+  width: 1.92rem;
+  min-height: 1.82rem;
+}
+
+.route-map__day-rail {
+  grid-auto-columns: minmax(10.1rem, 10.8rem);
+  gap: 0.46rem;
+  padding: 0.04rem 0.06rem 0.16rem;
+}
+
+.route-reference__day {
+  min-width: 10.1rem;
+  gap: 0.18rem;
+  padding: 0.22rem;
+}
+
+.route-reference__day-trigger {
+  gap: 0.16rem;
+  padding: 0.34rem 0.36rem 0.22rem;
+}
+
+.route-reference__day-title {
+  font-size: 0.82rem;
+  line-height: 1.2;
+}
+
+.route-reference__day-meta {
+  display: grid;
+  gap: 0.18rem;
+  overflow: visible;
+  font-size: 0.68rem;
+  line-height: 1.38;
+}
+
+.route-reference__day-meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.18rem 0.32rem;
+}
+
+.route-reference__day-stop-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.26rem;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.route-reference__day-stop {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.route-reference__day-separator {
+  width: 0.48rem;
+  height: 0.48rem;
+}
+
+@media (min-width: 921px) {
+  .route-map__main {
+    grid-template-columns: minmax(0, 1.62fr) minmax(18.25rem, 0.88fr);
+  }
+
+  .route-map__detail {
+    grid-template-rows: auto auto auto;
+    align-content: start;
+  }
+
+  .route-map__detail::after {
+    content: none;
+  }
+
+  .route-reference__day-meta-line {
+    flex-wrap: wrap;
+  }
+
+  .route-reference__day-stop-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+  }
+
+  .route-reference__day-stop {
+    white-space: normal;
+  }
+}

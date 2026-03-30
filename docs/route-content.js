@@ -18,7 +18,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
     },
     {
       day: 3,
-      title: { en: "Day 3 - Arashiyama, then Osaka", ja: "3日目・嵐山のあと大阪" },
+      title: { en: "Arashiyama", ja: "嵐山" },
       summary: {
         en: "Start early in Arashiyama for the bamboo grove, river-edge views, and temple foothills, then shift back to Osaka where Kaiyukan and Tempozan make a cleaner waterfront finish than packing in more Kyoto stops.",
         ja: "嵐山は朝だけで独立させ、そのあと大阪へ戻って海遊館、天保山、最後の関西の夜へつなげます。"
@@ -26,7 +26,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
     },
     {
       day: 4,
-      title: { en: "Day 4 - Mishima to Mt. Fuji area", ja: "4日目・三島から富士エリアへ" },
+      title: { en: "Mt. Fuji Area", ja: "富士エリア" },
       summary: {
         en: "Use Mishima as the clean transfer gate, then keep the Fuji block practical: Chureito / Shimoyoshida for the classic pagoda-and-Fuji view when visibility is good, Lake Kawaguchiko for broader shoreline scenery, and an early lake-side check-in before dark.",
         ja: "4日目は大きな移動日で、新幹線で三島へ入り、そのあと富士エリアへ渡して夕景と宿泊へつなげます。"
@@ -34,7 +34,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
     },
     {
       day: 5,
-      title: { en: "Day 5 - Tokyo / Shibuya", ja: "5日目・東京・渋谷" },
+      title: { en: "Shibuya", ja: "渋谷" },
       summary: {
         en: "Return from Kawaguchiko straight into Shibuya, drop bags if needed, and keep the evening tightly local: Scramble Crossing, nearby food lanes, and Shibuya Sky once the city lights come on.",
         ja: "5日目は富士エリアを出て渋谷周辺へ入り、チェックイン後に交差点、食べ歩き、渋谷スカイへつなげます。"
@@ -42,7 +42,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
     },
     {
       day: 6,
-      title: { en: "Day 6 - Tokyo East / Full Day", ja: "6日目・東京東側の観光メイン日" },
+      title: { en: "East Tokyo", ja: "東京東側" },
       summary: {
         en: "Keep Tokyo East compact and rail-efficient: start with Skytree for the panorama, browse Solamachi underneath, and finish in Akihabara where arcades, anime shops, and electronics stay lively later into the evening.",
         ja: "6日目は東京観光の本番日にし、スカイツリー、ソラマチ、秋葉原をまとめて回ります。"
@@ -50,7 +50,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
     },
     {
       day: 7,
-      title: { en: "Day 7 - Imperial Palace, Shinjuku + flight home", ja: "7日目・皇居と新宿、そして帰国日" },
+      title: { en: "Central Tokyo", ja: "東京中心部" },
       summary: {
         en: "Keep the last day short and deliberate: Imperial Palace grounds for a calm morning walk, a brief Shinjuku stop for one final Tokyo pulse, then bag pickup or handoff and a direct airport transfer.",
         ja: "7日目は軽めにし、皇居を見てから新宿を短く回り、荷物対応と空港までの余裕を残します。"

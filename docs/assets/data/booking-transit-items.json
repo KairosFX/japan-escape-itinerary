@@ -11,7 +11,7 @@
     "doneStatus": { "en": "Ready", "ja": "準備済み" },
     "toggleDefault": { "en": "Mark ready", "ja": "準備完了にする" },
     "toggleDone": { "en": "Ready", "ja": "準備済み" },
-    "title": { "en": "IC card setup", "ja": "ICカードの準備" },
+    "title": { "en": "IC Card", "ja": "ICカード" },
     "summary": {
       "en": "Choose mobile IC, ICOCA, or Suica before landing so local transit stays frictionless.",
       "ja": "到着前にモバイルIC、ICOCA、Suicaを決めておくと現地移動が楽です。"
@@ -79,7 +79,7 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Day 2 Kyoto East-access hotel", "ja": "2日目の京都東側アクセス向きホテル" },
+    "title": { "en": "Kyoto Hotel", "ja": "京都ホテル" },
     "summary": {
       "en": "This stay is picked for Shijo / Karasuma route fit, not just because it is in Kyoto.",
       "ja": "この宿は、京都という大枠ではなく、四条烏丸の動線適性で選んでいます。"
@@ -113,7 +113,7 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Day 4 Mt. Fuji area stay", "ja": "4日目の富士エリア宿泊" },
+    "title": { "en": "Mt. Fuji Onsen", "ja": "富士山温泉" },
     "summary": {
       "en": "The base is chosen for station-to-lake practicality so Mishima, Chureito / Shimoyoshida, and Lake Kawaguchiko can stay grouped on Day 4.",
       "ja": "三島、忠霊塔・下吉田、河口湖を4日目にまとめやすいよう、駅から湖側の動きで拠点を選んでいます。"
@@ -147,7 +147,7 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Tokyo hotel nights", "ja": "東京ホテル泊" },
+    "title": { "en": "Tokyo Hotel", "ja": "東京ホテル" },
     "summary": {
       "en": "Tokyo hotel nights now sit on Days 5 and 6, so the base should support the Shibuya arrival, the fuller sightseeing day, and an easy Day 7 reset before the flight home.",
       "ja": "東京ホテル泊は5日目と6日目に置き、渋谷到着、観光メイン日、そして帰国前の軽い7日目を同じ拠点で回せるようにします。"
@@ -178,7 +178,7 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Kyoto / Shin-Osaka -> Mishima shinkansen", "ja": "京都・新大阪 -> 三島 新幹線" },
+    "title": { "en": "Shinkansen to Mishima", "ja": "三島行き新幹線" },
     "summary": {
       "en": "Treat this as the fixed intercity booking that anchors the Day 4 Mishima handoff into Kawaguchiko.",
       "ja": "4日目の三島ハンドオフから河口湖へ入るための、固定の都市間予約として扱います。"
@@ -209,7 +209,7 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Mishima -> Kawaguchiko bus", "ja": "三島 -> 河口湖バス" },
+    "title": { "en": "Mishima to Kawaguchiko", "ja": "三島から河口湖" },
     "summary": {
       "en": "Treat this as the Day 4 local handoff booking if you want the cleanest Mishima-to-lake transfer.",
       "ja": "4日目を最も素直に三島から湖側へ渡したいなら、このローカル移動を予約対象として扱います。"
@@ -240,7 +240,7 @@
     "doneStatus": { "en": "Saved", "ja": "保存済み" },
     "toggleDefault": { "en": "Save route", "ja": "経路を保存する" },
     "toggleDone": { "en": "Saved", "ja": "保存済み" },
-    "title": { "en": "Mt. Fuji area -> Tokyo / Shibuya", "ja": "富士エリア -> 東京・渋谷" },
+    "title": { "en": "Mt. Fuji to Shibuya", "ja": "富士山から渋谷" },
     "summary": {
       "en": "Save the Tokyo handoff you expect to use on Day 5 so the Shibuya evening stays easy to land.",
       "ja": "5日目の東京入りを保存しておき、渋谷の夜へ入りやすくします。"
@@ -270,7 +270,7 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Kaiyukan booking", "ja": "海遊館の予約" },
+    "title": { "en": "Kaiyukan", "ja": "海遊館" },
     "summary": {
       "en": "Use the current official ticket page for Day 3.",
       "ja": "3日目用に現在の公式チケットページを使います。"
@@ -300,7 +300,7 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Shibuya Sky booking", "ja": "渋谷スカイの予約" },
+    "title": { "en": "Shibuya Sky", "ja": "渋谷スカイ" },
     "summary": {
       "en": "Treat this as the timed Day 5 skyline ticket if you are keeping SHIBUYA SKY in the route.",
       "ja": "SHIBUYA SKY をルートに残すなら、5日目の時間指定チケットとして扱います。"
@@ -330,7 +330,7 @@
     "doneStatus": { "en": "Booked", "ja": "予約済み" },
     "toggleDefault": { "en": "Mark booked", "ja": "予約済みにする" },
     "toggleDone": { "en": "Booked", "ja": "予約済み" },
-    "title": { "en": "Tokyo Skytree booking", "ja": "東京スカイツリーの予約" },
+    "title": { "en": "Tokyo Skytree", "ja": "東京スカイツリー" },
     "summary": {
       "en": "Skytree is now part of the fuller Day 6 Tokyo sightseeing block, so keep the official ticket page handy.",
       "ja": "スカイツリーは6日目の観光メイン日に入ったため、公式チケットページをすぐ見られるようにしておきます。"
