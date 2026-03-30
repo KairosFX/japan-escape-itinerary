@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#e7efe3">
   <link rel="dns-prefetch" href="//tiles.openfreemap.org">
   <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234e7a5d'/%3E%3Cpath d='M20 18h24v6H34v22h-6V24H20z' fill='%23fffaf4'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%234e7a5d'/%3E%3Cg fill='none' stroke='%23f7fbf4' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 15v34M42 15v34M18 21h8M18 31h8M18 41h8M38 24h8M38 34h8M38 44h8M22 15c-3 3-4 6-4 10M42 15c3 3 4 6 4 10'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1463,8 +1463,24 @@ body::after {
 }
 
 .eyebrow::before {
-  background: radial-gradient(circle at 45% 45%, #92c39f 0%, #4e7a5d 72%, #234936 100%);
-  box-shadow: 0 0 0 0.16rem rgba(78, 122, 93, 0.12);
+  width: 1rem;
+  height: 0.72rem;
+  border-radius: 0.2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 20'%3E%3Crect width='28' height='20' rx='3' fill='%23fffdf8'/%3E%3Ccircle cx='14' cy='10' r='5.4' fill='%23bc3d35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  box-shadow: 0 0 0 0.14rem rgba(78, 122, 93, 0.12);
+}
+
+.site-intro__content {
+  gap: 0;
+}
+
+.site-intro__title {
+  font-size: clamp(2.9rem, 7vw, 5.5rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 a:focus-visible,
@@ -1537,12 +1553,16 @@ html[data-theme="dark"] .site-header {
 }
 
 .hero-panel {
-  min-block-size: clamp(17rem, 34vw, 20rem);
+  min-block-size: clamp(12.75rem, 24vw, 15rem);
 }
 
 .hero-panel__body {
-  padding: clamp(1.55rem, 2.8vw, 2.3rem);
-  gap: 1.18rem;
+  padding: clamp(1.18rem, 2.2vw, 1.7rem);
+  gap: 0.82rem;
+}
+
+.hero-panel__copy {
+  gap: 0.58rem;
 }
 
 .progress-card {
@@ -1551,8 +1571,41 @@ html[data-theme="dark"] .site-header {
 
 .progress-overview {
   margin: 0 0 0.78rem;
-  padding: 0.74rem 0.82rem 0.78rem;
-  gap: 0.66rem;
+  padding: 0.68rem 0.78rem 0.72rem;
+  gap: 0.58rem;
+}
+
+.progress-overview__copy {
+  gap: 0.18rem;
+}
+
+.progress-overview__actions {
+  gap: 0.54rem;
+}
+
+.progress-overview__buttons {
+  gap: 0.44rem;
+}
+
+.progress-overview__jump,
+.progress-overview__reset {
+  padding: 0.48rem 0.78rem;
+}
+
+.progress-timeline::before,
+.progress-timeline::after {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.progress-item {
+  z-index: 1;
+}
+
+.progress-item::before,
+.progress-item::after {
+  z-index: 3;
+  pointer-events: none;
 }
 
 @media (max-width: 920px) {
@@ -1568,7 +1621,7 @@ html[data-theme="dark"] .site-header {
   }
 
   .hero-panel {
-    min-block-size: clamp(16rem, 44vw, 18.6rem);
+    min-block-size: clamp(12rem, 34vw, 14.2rem);
   }
 }
 
@@ -1606,18 +1659,18 @@ html[data-theme="dark"] .site-header {
   }
 
   .hero-panel {
-    min-block-size: clamp(15rem, 54vw, 17.2rem);
+    min-block-size: clamp(11.4rem, 48vw, 13.1rem);
   }
 
   .hero-panel__body {
-    padding: 1.3rem;
+    padding: 1.08rem;
   }
 }</style>
-  <link rel="preload" href="./assets/app/style.0c2b8aa163.css" as="style" fetchpriority="high">
+  <link rel="preload" href="./assets/app/style.c58c77512f.css" as="style" fetchpriority="high">
   <link rel="preload" href="./assets/app/script.feb70c6555.js" as="script" fetchpriority="high">
   <link rel="preload" href="./assets/background/bamboo-path-1697607635151.webp" as="image" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="./assets/app/style.0c2b8aa163.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.0c2b8aa163.css"></noscript>
+  <link rel="stylesheet" href="./assets/app/style.c58c77512f.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.c58c77512f.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -1639,20 +1692,7 @@ html[data-theme="dark"] .site-header {
       <span class="site-intro__glow"></span>
     </div>
     <div class="site-intro__content">
-      <p class="site-intro__eyebrow">
-        <span data-language="en">JAPAN ESCAPE / Japan Trip</span>
-        <span data-language="ja" hidden>日本旅行ガイド</span>
-      </p>
-      <h2 class="site-intro__title">
-        <span data-language="en">JAPAN ESCAPE</span>
-        <span data-language="ja" hidden>日本旅行</span>
-        <span data-language="en">Osaka to Tokyo</span>
-        <span data-language="ja" hidden>大阪から東京へ</span>
-      </h2>
-      <p class="site-intro__meta">
-        <span data-language="en">Kyoto • Fuji • Tokyo</span>
-        <span data-language="ja" hidden>京都 • 富士 • 東京</span>
-      </p>
+      <h2 class="site-intro__title">JAPAN ESCAPE</h2>
     </div>
   </div>
 
@@ -2500,8 +2540,8 @@ html[data-theme="dark"] .site-header {
         <div class="route-map__header">
           <div class="route-map__copy">
             <h3>
-              <span data-language="en">Live Route Atlas</span>
-              <span data-language="ja" hidden>ライブ ルート アトラス</span>
+              <span data-language="en">MAP</span>
+              <span data-language="ja" hidden>MAP</span>
             </h3>
           </div>
           <div class="route-map__header-actions">
@@ -3181,7 +3221,7 @@ html[data-theme="dark"] .site-header {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"siteBackgroundPath":"./assets/background/bamboo-path-1697607635151.webp","siteBackgroundHash":"14623e717a","stylePath":"./assets/app/style.0c2b8aa163.css","styleHash":"0c2b8aa163","routeStylePath":"./assets/app/routeStyle.d1b840e112.css","routeStyleHash":"d1b840e112","scriptPath":"./assets/app/script.feb70c6555.js","scriptHash":"feb70c6555","routeContentPath":"./assets/app/routeContent.5639907043.js","routeContentHash":"5639907043","budgetUiPath":"./assets/app/budgetUi.362cdb335c.js","budgetUiHash":"362cdb335c","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-30T03:29:17.919Z","cacheVersion":"0c2b8aa163-d1b840e112-feb70c6555-5639907043-362cdb335c-742acba799-4bea009362"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"siteBackgroundPath":"./assets/background/bamboo-path-1697607635151.webp","siteBackgroundHash":"14623e717a","stylePath":"./assets/app/style.c58c77512f.css","styleHash":"c58c77512f","routeStylePath":"./assets/app/routeStyle.d1b840e112.css","routeStyleHash":"d1b840e112","scriptPath":"./assets/app/script.feb70c6555.js","scriptHash":"feb70c6555","routeContentPath":"./assets/app/routeContent.5639907043.js","routeContentHash":"5639907043","budgetUiPath":"./assets/app/budgetUi.362cdb335c.js","budgetUiHash":"362cdb335c","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-30T18:27:41.641Z","cacheVersion":"c58c77512f-d1b840e112-feb70c6555-5639907043-362cdb335c-742acba799-4bea009362"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
   <script src="./assets/app/script.feb70c6555.js" defer></script>
