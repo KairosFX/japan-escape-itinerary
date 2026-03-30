@@ -8,8 +8,8 @@
     name="description"
     content="Simple bilingual Japan trip website for GitHub Pages with overview, checklist, notes, budget, routes, essentials, and a live route map from Osaka to Tokyo.">
   <meta name="theme-color" content="#e7efe3">
-  <link rel="dns-prefetch" href="//basemaps.cartocdn.com">
-  <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin>
+  <link rel="dns-prefetch" href="//tiles.openfreemap.org">
+  <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
   <link rel="icon" type="image/jpeg" href="./assets/icons/1yegabjjbjp01.jpg">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
@@ -1624,7 +1624,7 @@ html[data-theme="dark"] .site-header {
   }
 }</style>
   <link rel="preload" href="./assets/app/style.5f43bc4795.css" as="style" fetchpriority="high">
-  <link rel="preload" href="./assets/app/script.c9c4fcdb77.js" as="script" fetchpriority="high">
+  <link rel="preload" href="./assets/app/script.7135b1d3be.js" as="script" fetchpriority="high">
   <link rel="stylesheet" href="./assets/app/style.5f43bc4795.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="./assets/app/style.5f43bc4795.css"></noscript>
   <!-- build:inline-style:end -->
@@ -1640,18 +1640,6 @@ html[data-theme="dark"] .site-header {
     <span class="site-atmosphere__orb site-atmosphere__orb--ember"></span>
     <span class="site-atmosphere__grain"></span>
   </div>
-  <div class="site-intro" data-site-intro aria-hidden="true">
-    <div class="site-intro__veil"></div>
-    <div class="site-intro__panorama">
-      <span class="site-intro__mist site-intro__mist--north"></span>
-      <span class="site-intro__mist site-intro__mist--south"></span>
-      <span class="site-intro__glow"></span>
-    </div>
-    <div class="site-intro__content">
-      <h2 class="site-intro__title">JAPAN ESCAPE</h2>
-    </div>
-  </div>
-
   <header class="site-header">
     <div class="header-inner">
       <div class="brand-block">
@@ -1666,10 +1654,6 @@ html[data-theme="dark"] .site-header {
           <span data-language="en">TRIP GUIDE</span>
           <span data-language="ja" hidden>旅行ガイド</span>
         </p>
-        <h1>
-          <span data-language="en">JAPAN ESCAPE</span>
-          <span data-language="ja" hidden>日本旅行</span>
-        </h1>
       </div>
 
       <div class="header-actions">
@@ -1748,8 +1732,8 @@ html[data-theme="dark"] .site-header {
             aria-selected="false"
             aria-controls="route"
             data-panel-target="route">
-            <span data-language="en">Routes</span>
-            <span data-language="ja" hidden>ルート</span>
+            <span data-language="en">Map</span>
+            <span data-language="ja" hidden>地図</span>
           </button>
           <button
             class="section-tab"
@@ -1779,25 +1763,17 @@ html[data-theme="dark"] .site-header {
   <div class="sequence-notice-toast" data-sequence-notice hidden role="status" aria-live="polite"></div>
 
   <main class="page-shell" id="main-content">
-    <section class="content-section content-panel is-active" id="overview" data-panel="overview" role="tabpanel" aria-labelledby="overview-title" aria-hidden="false">
-      <section class="hero-panel card" aria-labelledby="overview-title">
-      <div class="hero-panel__body">
-        <div class="hero-panel__copy">
-          <p class="section-tag section-tag--overview">
-            <span data-language="en">Overview</span>
-            <span data-language="ja" hidden>概要</span>
-          </p>
-          <h2 id="overview-title">
-            <span data-language="en">A travel guide for quick reference on the go.</span>
-            <span data-language="ja" hidden>移動中でもすぐ確認しやすい旅行ガイドです。</span>
-          </h2>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="trip-meta" aria-label="Trip overview">
-      <div class="trip-stats" role="list" aria-label="Trip stats">
+    <section
+      class="content-section content-panel is-active"
+      id="overview"
+      data-panel="overview"
+      role="tabpanel"
+      aria-label="Overview"
+      data-aria-label-en="Overview"
+      data-aria-label-ja="概要"
+      aria-hidden="false">
+      <section class="trip-meta" aria-label="Trip overview">
+        <div class="trip-stats" role="list" aria-label="Trip stats">
         <article class="stat-card card" role="listitem">
           <p class="section-tag">
             <span data-language="en">Trip Overview</span>
@@ -2369,14 +2345,10 @@ html[data-theme="dark"] .site-header {
 
     <section class="content-section content-panel" id="notes" data-panel="notes" role="tabpanel" aria-labelledby="notes-title" aria-hidden="true" inert>
       <div class="section-heading">
-        <p class="section-tag section-tag--notes">
+        <p class="section-tag section-tag--notes" id="notes-title">
           <span data-language="en">Notes</span>
           <span data-language="ja" hidden>メモ</span>
         </p>
-        <h2 id="notes-title">
-          <span data-language="en">Route Notes</span>
-          <span data-language="ja" hidden>旅程メモ</span>
-        </h2>
       </div>
 
       <div class="notes-layout">
@@ -2388,23 +2360,15 @@ html[data-theme="dark"] .site-header {
 
     <section class="content-section content-panel" id="budget" data-panel="budget" role="tabpanel" aria-labelledby="budget-title" aria-hidden="true" inert>
       <div class="section-heading">
-        <p class="section-tag section-tag--budget">
+        <p class="section-tag section-tag--budget" id="budget-title">
           <span data-language="en">Budget</span>
           <span data-language="ja" hidden>予算</span>
         </p>
-        <h2 id="budget-title">
-          <span data-language="en">Itinerary Budget</span>
-          <span data-language="ja" hidden>旅程の予算</span>
-        </h2>
       </div>
 
       <article class="budget-panel card" data-budget-notes-card>
         <div class="budget-notes__heading">
           <div class="budget-notes__title-group">
-            <h3>
-              <span data-language="en">Itinerary Budget</span>
-              <span data-language="ja" hidden>旅程の予算</span>
-            </h3>
             <p class="budget-notes__intro">
               <span data-language="en">Lean / expected / high ranges built from stays, transit, tickets, and meals.</span>
               <span data-language="ja" hidden>宿泊、移動、チケット、食事から組み立てた控えめ・標準・高め予算帯です。</span>
@@ -2483,23 +2447,12 @@ html[data-theme="dark"] .site-header {
     </section>
 
     <section class="content-section content-panel" id="route" data-panel="route" role="tabpanel" aria-labelledby="route-title" aria-hidden="true" inert>
-      <div class="section-heading">
-        <p class="section-tag section-tag--route">
-          <span data-language="en">Routes</span>
-          <span data-language="ja" hidden>ルート</span>
-        </p>
-        <h2 id="route-title">
-          <span data-language="en">Routes</span>
-          <span data-language="ja" hidden>ルート</span>
-        </h2>
-      </div>
-
       <section class="route-map card" aria-labelledby="route-title">
         <div class="route-map__header">
           <div class="route-map__copy">
-            <h3>
+            <h3 id="route-title">
               <span data-language="en">Map</span>
-              <span data-language="ja" hidden>Map</span>
+              <span data-language="ja" hidden>地図</span>
             </h3>
           </div>
           <div class="route-map__header-actions">
@@ -2533,8 +2486,8 @@ html[data-theme="dark"] .site-header {
                     <span data-language="ja" hidden>ライブ ルートを準備中</span>
                   </strong>
                   <span>
-                    <span data-language="en">Loading CARTO Voyager and your Osaka to Tokyo route so the map opens in one stable, readable view.</span>
-                    <span data-language="ja" hidden>CARTO Voyager と大阪から東京までのルートを読み込み、安定して見やすい地図として表示します。</span>
+                    <span data-language="en">Loading OpenFreeMap Positron and your Osaka to Tokyo route for a light, stable, readable map view.</span>
+                    <span data-language="ja" hidden>OpenFreeMap Positron と大阪から東京までのルートを読み込み、軽くて見やすい地図として表示します。</span>
                   </span>
                 </span>
               </div>
@@ -2552,8 +2505,8 @@ html[data-theme="dark"] .site-header {
                   <span data-language="ja" hidden>ルート地図を読み込み中...</span>
                 </p>
                 <p class="route-map__status-copy">
-                  <span data-language="en">CARTO Voyager is loading.</span>
-                  <span data-language="ja" hidden>CARTO Voyager を読み込んでいます。</span>
+                  <span data-language="en">OpenFreeMap Positron is loading.</span>
+                  <span data-language="ja" hidden>OpenFreeMap Positron を読み込んでいます。</span>
                 </p>
               </div>
             </div>
@@ -2568,14 +2521,10 @@ html[data-theme="dark"] .site-header {
 
     <section class="content-section content-panel" id="essentials" data-panel="essentials" role="tabpanel" aria-labelledby="essentials-title" aria-hidden="true" inert>
       <div class="section-heading">
-        <p class="section-tag section-tag--essentials">
+        <p class="section-tag section-tag--essentials" id="essentials-title">
           <span data-language="en">Essentials</span>
           <span data-language="ja" hidden>準備</span>
         </p>
-        <h2 id="essentials-title">
-          <span data-language="en">Essentials</span>
-          <span data-language="ja" hidden>準備ガイド</span>
-        </h2>
         <p class="section-intro">
           <span data-language="en">Bookings, transit, and packing in trip order.</span>
           <span data-language="ja" hidden>予約、移動、荷造りを旅の順番でまとめています。</span>
@@ -2621,14 +2570,10 @@ html[data-theme="dark"] .site-header {
         </article>
         <section class="essentials-group essentials-group--packing" aria-labelledby="essentials-packing-title">
           <div class="essentials-group__header">
-            <p class="essentials-group__eyebrow">
+            <p class="essentials-group__eyebrow" id="essentials-packing-title">
               <span data-language="en">Essentials</span>
               <span data-language="ja" hidden>持ち物と基本準備</span>
             </p>
-            <h3 class="essentials-group__title" id="essentials-packing-title">
-              <span data-language="en">Departure Essentials</span>
-              <span data-language="ja" hidden>書類、荷物、移動日の持ち物</span>
-            </h3>
             <div class="packing-section__actions packing-section__actions--global">
               <button class="packing-section__action" type="button" data-packing-mark-all-global>
                 <span data-language="en">Mark all packed</span>
@@ -2989,17 +2934,9 @@ html[data-theme="dark"] .site-header {
 
         <section class="essentials-group essentials-group--offline" aria-labelledby="essentials-offline-title">
           <div class="essentials-group__header">
-            <p class="essentials-group__eyebrow">
+            <p class="essentials-group__eyebrow" id="essentials-offline-title">
               <span data-language="en">Offline Backup</span>
               <span data-language="ja" hidden>オフライン準備</span>
-            </p>
-            <h3 class="essentials-group__title" id="essentials-offline-title">
-              <span data-language="en">Offline + Install</span>
-              <span data-language="ja" hidden>オフライン利用</span>
-            </h3>
-            <p class="essentials-group__intro">
-              <span data-language="en">Keep the guide tools separate from the carry list so weak-signal backup is easy to find right before departure.</span>
-              <span data-language="ja" hidden>持ち物リストとは分けて、電波が弱い日向けのバックアップ手段を出発前にすぐ確認できるようにしています。</span>
             </p>
           </div>
           <article class="essentials-card essentials-card--offline card" data-offline-tools>
@@ -3179,10 +3116,10 @@ html[data-theme="dark"] .site-header {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.5f43bc4795.css","styleHash":"5f43bc4795","routeStylePath":"./assets/app/routeStyle.2fcaba1679.css","routeStyleHash":"2fcaba1679","scriptPath":"./assets/app/script.c9c4fcdb77.js","scriptHash":"c9c4fcdb77","routeContentPath":"./assets/app/routeContent.5639907043.js","routeContentHash":"5639907043","budgetUiPath":"./assets/app/budgetUi.0509dd4045.js","budgetUiHash":"0509dd4045","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-30T21:00:11.449Z","cacheVersion":"5f43bc4795-2fcaba1679-c9c4fcdb77-5639907043-0509dd4045-742acba799-4bea009362"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.5f43bc4795.css","styleHash":"5f43bc4795","routeStylePath":"./assets/app/routeStyle.2fcaba1679.css","routeStyleHash":"2fcaba1679","scriptPath":"./assets/app/script.7135b1d3be.js","scriptHash":"7135b1d3be","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.0509dd4045.js","budgetUiHash":"0509dd4045","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-30T21:25:58.097Z","cacheVersion":"5f43bc4795-2fcaba1679-7135b1d3be-c1930b9262-0509dd4045-742acba799-4bea009362"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
-  <script src="./assets/app/script.c9c4fcdb77.js" defer></script>
+  <script src="./assets/app/script.7135b1d3be.js" defer></script>
   <!-- build:inline-script:end -->
 </body>
 </html>

@@ -10,7 +10,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
     },
     {
       day: 2,
-      title: { en: "Day 2 - Kyoto East", ja: "2日目・京都東側" },
+      title: { en: "Day 2 - Kyoto", ja: "2日目・京都" },
       summary: {
         en: "Keep Kyoto East as one walking sweep: Kiyomizu-dera for the hillside view, Ninenzaka and Yasaka Pagoda for the preserved lanes, Gion for the classic streets, and Nanzen-ji for a quieter temple finish.",
         ja: "京都東側は、清水寺、二年坂、八坂の塔、祇園、南禅寺を同じ側でまとめて回る一日にします。"
@@ -26,7 +26,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
     },
     {
       day: 4,
-      title: { en: "Mt. Fuji Area", ja: "富士エリア" },
+      title: { en: "Mt. Fuji", ja: "富士山" },
       summary: {
         en: "Use Mishima as the clean transfer gate, then keep the Fuji block practical: Chureito / Shimoyoshida for the classic pagoda-and-Fuji view when visibility is good, Lake Kawaguchiko for broader shoreline scenery, and an early lake-side check-in before dark.",
         ja: "4日目は大きな移動日で、新幹線で三島へ入り、そのあと富士エリアへ渡して夕景と宿泊へつなげます。"
@@ -34,7 +34,7 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
     },
     {
       day: 5,
-      title: { en: "Shibuya", ja: "渋谷" },
+      title: { en: "West Tokyo", ja: "東京西側" },
       summary: {
         en: "Return from Kawaguchiko straight into Shibuya, drop bags if needed, and keep the evening tightly local: Scramble Crossing, nearby food lanes, and Shibuya Sky once the city lights come on.",
         ja: "5日目は富士エリアを出て渋谷周辺へ入り、チェックイン後に交差点、食べ歩き、渋谷スカイへつなげます。"

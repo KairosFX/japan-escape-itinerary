@@ -91,8 +91,8 @@ const essentialsContentFallbackScriptUrl = "./essentials-content.min.js";
 const routeContentRuntimeGlobal = "__JAPAN_ROUTE_CONTENT__";
 const routeContentFallbackScriptUrl = "./route-content.min.js";
 const routeStyleFallbackUrl = "./route.min.css";
-const routeMapOriginUrl = "https://basemaps.cartocdn.com";
-const routeMapStyleUrl = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
+const routeMapOriginUrl = "https://tiles.openfreemap.org";
+const routeMapStyleUrl = "https://tiles.openfreemap.org/styles/positron";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
 const budgetDefaultTravelerCount = 2;
 const budgetTravelerCountMin = 1;
@@ -391,8 +391,8 @@ const routeMapLabels = {
   },
   sharedLoading: { en: "Preparing live route map...", ja: "ライブ ルート地図を準備中..." },
   sharedLoadingBody: {
-    en: "Loading CARTO Voyager and the route overlays.",
-    ja: "CARTO Voyager とルート表示を読み込んでいます。"
+    en: "Loading OpenFreeMap Positron and the route overlays.",
+    ja: "OpenFreeMap Positron とルート表示を読み込んでいます。"
   },
   sharedFallbackTitle: { en: "Route map unavailable", ja: "ルート地図を表示できません" },
   sharedFallbackBody: {
@@ -6136,33 +6136,7 @@ function updateRouteMapMarkerElement(entry, selectionState) {
 }
 
 function installRouteMapMarkers(map) {
-  const registry = routeExplorerStopDefinitions
-    .map((stop) => {
-      const lngLat = getRouteStopLngLat(stop.id);
-      if (!lngLat) {
-        return null;
-      }
-
-      const entry = createRouteMapMarkerElement(stop);
-      const marker = new window.maplibregl.Marker({
-        element: entry.element,
-        anchor: "bottom"
-      })
-        .setLngLat(lngLat)
-        .addTo(map);
-
-      return {
-        ...entry,
-        marker
-      };
-    })
-    .filter(Boolean);
-
-  registry.forEach((entry) => {
-    updateRouteMapMarkerElement(entry, getRouteMapSelectionState());
-  });
-
-  return registry;
+  return [];
 }
 
 function setRouteMapInteractionState(map) {
@@ -6892,7 +6866,7 @@ function showChecklistLockNotice() {
   showToastNotice(
     root.lang === "ja"
       ? "チェックリストは確認できますが、Essentials をすべて packed にするまで操作はロックされています。"
-      : "The checklist is visible, but it stays locked until every Essentials item is packed."
+      : "The checklist remains locked until all Essentials items have been packed."
   );
 }
 
