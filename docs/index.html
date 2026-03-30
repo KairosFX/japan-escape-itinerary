@@ -1623,10 +1623,10 @@ html[data-theme="dark"] .site-header {
     padding: 1.08rem;
   }
 }</style>
-  <link rel="preload" href="./assets/app/style.835707ab3f.css" as="style" fetchpriority="high">
+  <link rel="preload" href="./assets/app/style.33bf9acaff.css" as="style" fetchpriority="high">
   <link rel="preload" href="./assets/app/script.7135b1d3be.js" as="script" fetchpriority="high">
-  <link rel="stylesheet" href="./assets/app/style.835707ab3f.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.835707ab3f.css"></noscript>
+  <link rel="stylesheet" href="./assets/app/style.33bf9acaff.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.33bf9acaff.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -1732,7 +1732,7 @@ html[data-theme="dark"] .site-header {
             aria-selected="false"
             aria-controls="route"
             data-panel-target="route">
-            <span data-language="en">Route Line</span>
+            <span data-language="en">ROUTE</span>
             <span data-language="ja" hidden>地図</span>
           </button>
           <button
@@ -2006,9 +2006,9 @@ html[data-theme="dark"] .site-header {
           <span data-language="en">Checklist</span>
           <span data-language="ja" hidden>チェックリスト</span>
         </p>
-        <h2 id="checklist-title">
-          <span data-language="en">7-Day Itinerary</span>
-          <span data-language="ja" hidden>7日間の旅程</span>
+        <h2 class="visually-hidden" id="checklist-title">
+          <span data-language="en">Checklist</span>
+          <span data-language="ja" hidden>チェックリスト</span>
         </h2>
       </div>
       <div class="day-grid">
@@ -2370,8 +2370,8 @@ html[data-theme="dark"] .site-header {
         <div class="budget-notes__heading">
           <div class="budget-notes__title-group">
             <p class="budget-notes__intro">
-              <span data-language="en">Lean / expected / high ranges built from stays, transit, tickets, and meals.</span>
-              <span data-language="ja" hidden>宿泊、移動、チケット、食事から組み立てた控えめ・標準・高め予算帯です。</span>
+              <span data-language="en">Adjust travellers and stay sharing, then review the day-by-day estimate.</span>
+              <span data-language="ja" hidden>旅行人数と宿泊の共有を調整してから、日ごとの見積りを確認できます。</span>
             </p>
           </div>
           <button class="booking-item__cta booking-item__cta--secondary budget-notes__reset" type="button" data-budget-reset-all>
@@ -2379,9 +2379,6 @@ html[data-theme="dark"] .site-header {
             <span data-language="ja" hidden>予算をリセット</span>
           </button>
         </div>
-
-        <div class="budget-notes__summary" data-budget-summary aria-live="polite"></div>
-
         <div class="budget-notes__status" data-budget-status hidden aria-live="polite"></div>
 
         <section
@@ -2424,9 +2421,6 @@ html[data-theme="dark"] .site-header {
             </select>
           </label>
         </section>
-
-        <div class="budget-notes__breakdown" data-budget-breakdown aria-live="polite"></div>
-
         <section class="budget-notes__day-browser" aria-labelledby="budget-day-browser-title">
           <div class="budget-notes__day-browser-head">
             <div class="budget-notes__day-browser-copy">
@@ -2451,7 +2445,7 @@ html[data-theme="dark"] .site-header {
         <div class="route-map__header">
           <div class="route-map__copy">
             <h3 id="route-title">
-              <span data-language="en">Route Line</span>
+              <span data-language="en">ROUTE</span>
               <span data-language="ja" hidden>地図</span>
             </h3>
           </div>
@@ -2620,8 +2614,8 @@ html[data-theme="dark"] .site-header {
                 <input class="packing-toggle__input" type="checkbox" data-packing-checkbox>
                 <span class="packing-toggle__indicator" aria-hidden="true"></span>
                 <span class="packing-toggle__copy">
-                  <span data-language="en">Flight, hotel, and timed-ticket confirmations saved offline.</span>
-                  <span data-language="ja" hidden>航空券、宿、時間指定チケットの確認をオフライン保存。</span>
+                  <span data-language="en">Flight, hotel, and timed-ticket confirmations saved.</span>
+                  <span data-language="ja" hidden>航空券、宿、時間指定チケットの確認を保存済み。</span>
                 </span>
               </label>
             </li>
@@ -2705,7 +2699,7 @@ html[data-theme="dark"] .site-header {
               <label class="packing-toggle">
                 <input class="packing-toggle__input" type="checkbox" data-packing-checkbox>
                 <span class="packing-toggle__indicator" aria-hidden="true"></span>
-                <span class="packing-toggle__copy"><span data-language="en">Fuji stay address, phone, and check-in window saved offline.</span><span data-language="ja" hidden>富士エリア宿の住所、電話番号、チェックイン時間をオフライン保存。</span></span>
+                <span class="packing-toggle__copy"><span data-language="en">Fuji stay address, phone, and check-in window saved.</span><span data-language="ja" hidden>富士エリア宿の住所、電話番号、チェックイン時間を保存済み。</span></span>
               </label>
             </li>
             <li class="packing-item" data-packing-item="luggage-oversized-seating-check">
@@ -2928,47 +2922,6 @@ html[data-theme="dark"] .site-header {
           </div>
         </section>
 
-        <section class="essentials-group essentials-group--offline" aria-labelledby="essentials-offline-title">
-          <div class="essentials-group__header">
-            <p class="essentials-group__eyebrow" id="essentials-offline-title">
-              <span data-language="en">Offline Backup</span>
-              <span data-language="ja" hidden>オフライン準備</span>
-            </p>
-          </div>
-          <article class="essentials-card essentials-card--offline card" data-offline-tools>
-            <h4>
-              <span data-language="en">Guide install + backup</span>
-              <span data-language="ja" hidden>ガイドの追加と保存</span>
-            </h4>
-            <p class="offline-tools__status" data-offline-status aria-live="polite">
-              <span data-language="en">Checking offline support on this device...</span>
-              <span data-language="ja" hidden>この端末でのオフライン利用を確認しています...</span>
-            </p>
-            <div class="offline-tools__actions">
-              <button
-                class="packing-section__action offline-tools__install"
-                type="button"
-                data-offline-install
-                hidden
-                disabled>
-                <span data-language="en">Install guide</span>
-                <span data-language="ja" hidden>ガイドを追加</span>
-              </button>
-              <a
-                class="packing-section__action offline-tools__download"
-                href="./japan-escape-itinerary-offline.html"
-                download="japan-escape-itinerary-offline.html"
-                data-offline-download>
-                <span data-language="en">Download offline version</span>
-                <span data-language="ja" hidden>オフライン版を保存</span>
-              </a>
-            </div>
-            <p class="offline-tools__meta" data-offline-meta>
-              <span data-language="en">The snapshot keeps checklist, packing, budget notes, route map, and transit details working locally.</span>
-              <span data-language="ja" hidden>保存版では、チェックリスト、荷造り、予算メモ、ルート地図、移動詳細をローカルで使えます。</span>
-            </p>
-          </article>
-        </section>
       </div>
     </section>
     </div>
@@ -3112,7 +3065,7 @@ html[data-theme="dark"] .site-header {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.835707ab3f.css","styleHash":"835707ab3f","routeStylePath":"./assets/app/routeStyle.627e96f99d.css","routeStyleHash":"627e96f99d","scriptPath":"./assets/app/script.7135b1d3be.js","scriptHash":"7135b1d3be","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.0509dd4045.js","budgetUiHash":"0509dd4045","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-30T21:45:41.177Z","cacheVersion":"835707ab3f-627e96f99d-7135b1d3be-c1930b9262-0509dd4045-742acba799-4bea009362"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.33bf9acaff.css","styleHash":"33bf9acaff","routeStylePath":"./assets/app/routeStyle.627e96f99d.css","routeStyleHash":"627e96f99d","scriptPath":"./assets/app/script.7135b1d3be.js","scriptHash":"7135b1d3be","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.0922094195.js","budgetUiHash":"0922094195","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-30T22:06:52.449Z","cacheVersion":"33bf9acaff-627e96f99d-7135b1d3be-c1930b9262-0922094195-742acba799-4bea009362"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
   <script src="./assets/app/script.7135b1d3be.js" defer></script>

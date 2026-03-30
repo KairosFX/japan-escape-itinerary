@@ -1986,14 +1986,12 @@ html.has-modal-open body {
 
 .budget-panel {
   display: grid;
-  grid-template-columns: minmax(0, 1.24fr) minmax(min(100%, 18.5rem), 0.96fr);
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "heading heading"
-    "summary controls"
-    "status controls"
-    "breakdown breakdown"
-    "source source"
-    "days days";
+    "heading"
+    "controls"
+    "status"
+    "days";
   gap: 0.96rem 1rem;
   min-width: 0;
   padding: var(--content-box-padding-block) var(--content-box-padding-inline);
@@ -8950,7 +8948,9 @@ html[data-theme="dark"] .site-header.is-condensed {
 }
 
 .brand-block .eyebrow {
+  font-size: clamp(0.9rem, 0.84rem + 0.18vw, 1rem);
   letter-spacing: 0.12em;
+  line-height: 1;
   text-transform: none;
 }
 

@@ -1333,8 +1333,6 @@ const itineraryBudgetLabels = {
                       )}</span>
                     </div>
                     <p class="budget-line-item__meta">
-                      <span>${renderLocalizedContent(getCategoryLabel(item.category))}</span>
-                      <span class="budget-line-item__dot" aria-hidden="true"></span>
                       <span>${renderLocalizedContent(getItemFormulaCopy(item.itemCost, item))}</span>
                     </p>
                   </div>
@@ -1401,7 +1399,7 @@ const itineraryBudgetLabels = {
     });
   };
   const syncUI = () => {
-    if (!budgetNotesCard || !budgetSummaryNode || !budgetBreakdownNode || !budgetDaysNode) {
+    if (!budgetNotesCard || !budgetDaysNode) {
       return;
     }
 
@@ -1411,8 +1409,12 @@ const itineraryBudgetLabels = {
       estimate.visibleDayEstimates.find((dayEstimate) => dayEstimate.day === activeDay) ||
       estimate.visibleDayEstimates[0] ||
       null;
-    budgetSummaryNode.innerHTML = renderSummaryMarkup(estimate);
-    budgetBreakdownNode.innerHTML = renderBreakdownMarkup(estimate);
+    if (budgetSummaryNode) {
+      budgetSummaryNode.innerHTML = renderSummaryMarkup(estimate);
+    }
+    if (budgetBreakdownNode) {
+      budgetBreakdownNode.innerHTML = renderBreakdownMarkup(estimate);
+    }
     if (budgetDaySelectorNode) {
       budgetDaySelectorNode.innerHTML = renderDaySelectorMarkup(
         estimate.visibleDayEstimates,
