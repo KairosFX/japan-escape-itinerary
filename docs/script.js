@@ -91,8 +91,8 @@ const essentialsContentFallbackScriptUrl = "./essentials-content.min.js";
 const routeContentRuntimeGlobal = "__JAPAN_ROUTE_CONTENT__";
 const routeContentFallbackScriptUrl = "./route-content.min.js";
 const routeStyleFallbackUrl = "./route.min.css";
-const routeMapOriginUrl = "https://tiles.openfreemap.org";
-const routeMapStyleUrl = "https://tiles.openfreemap.org/styles/positron";
+const routeMapOriginUrl = "https://basemaps.cartocdn.com";
+const routeMapStyleUrl = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
 const budgetDefaultTravelerCount = 2;
 const budgetTravelerCountMin = 1;
@@ -391,8 +391,8 @@ const routeMapLabels = {
   },
   sharedLoading: { en: "Preparing live route map...", ja: "ライブ ルート地図を準備中..." },
   sharedLoadingBody: {
-    en: "Warming OpenFreeMap tiles and route overlays.",
-    ja: "OpenFreeMap の地図タイルとルート表示を先に読み込んでいます。"
+    en: "Loading CARTO Voyager and the route overlays.",
+    ja: "CARTO Voyager とルート表示を読み込んでいます。"
   },
   sharedFallbackTitle: { en: "Route map unavailable", ja: "ルート地図を表示できません" },
   sharedFallbackBody: {
@@ -4822,6 +4822,20 @@ function setRouteMapFilterIfChanged(map, layerId, value) {
   cache.set(layerId, serializedValue);
 }
 
+function setRouteMapLayoutVisibilityIfChanged(map, layerId, visibility) {
+  if (!map?.getLayer(layerId)) {
+    return;
+  }
+
+  const cache = map.__routeMapLayoutVisibilityCache || (map.__routeMapLayoutVisibilityCache = new Map());
+  if (cache.get(layerId) === visibility) {
+    return;
+  }
+
+  map.setLayoutProperty(layerId, "visibility", visibility);
+  cache.set(layerId, visibility);
+}
+
 function loadRouteMapLibrary() {
   if (routeMapLibraryPromise) {
     return routeMapLibraryPromise;
@@ -4945,36 +4959,36 @@ function loadRouteMapLibrary() {
 function getRouteMapPalette(theme = getCurrentTheme()) {
   if (theme === "dark") {
     return {
-      background: "#0c1711",
-      glowOuter: "rgba(92, 138, 104, 0.2)",
-      glowInner: "rgba(197, 224, 201, 0.18)",
-      corridor: "rgba(110, 146, 122, 0.16)",
-      shadow: "rgba(4, 9, 6, 0.6)",
-      routeCasing: "rgba(18, 31, 22, 0.94)",
-      routeStart: "#8db196",
-      routeMid: "#b5cda8",
-      routeMidAlt: "#6f9475",
-      routeEnd: "#537261",
-      segmentActive: "rgba(231, 241, 232, 0.84)",
-      segmentMuted: "rgba(225, 238, 227, 0.12)",
-      segmentSelected: "#d8efdb"
+      background: "#141a21",
+      glowOuter: "rgba(215, 108, 84, 0.2)",
+      glowInner: "rgba(255, 209, 194, 0.18)",
+      corridor: "rgba(216, 111, 89, 0.18)",
+      shadow: "rgba(7, 11, 16, 0.56)",
+      routeCasing: "rgba(20, 26, 33, 0.96)",
+      routeStart: "#ffcfbb",
+      routeMid: "#f2ab83",
+      routeMidAlt: "#dc745d",
+      routeEnd: "#b14942",
+      segmentActive: "rgba(255, 233, 226, 0.92)",
+      segmentMuted: "rgba(255, 232, 228, 0.14)",
+      segmentSelected: "#fff2ea"
     };
   }
 
   return {
-    background: "#edf5ee",
-    glowOuter: "rgba(92, 138, 104, 0.12)",
-    glowInner: "rgba(205, 226, 208, 0.16)",
-    corridor: "rgba(109, 143, 118, 0.12)",
-    shadow: "rgba(245, 251, 245, 0.74)",
-    routeCasing: "rgba(250, 255, 250, 0.96)",
-    routeStart: "#345743",
-    routeMid: "#4f7a58",
-    routeMidAlt: "#719470",
-    routeEnd: "#93b19a",
-    segmentActive: "rgba(37, 74, 52, 0.9)",
-    segmentMuted: "rgba(64, 95, 70, 0.14)",
-    segmentSelected: "#4e7a5d"
+    background: "#f4f3ef",
+    glowOuter: "rgba(155, 60, 51, 0.14)",
+    glowInner: "rgba(250, 213, 197, 0.2)",
+    corridor: "rgba(176, 72, 57, 0.18)",
+    shadow: "rgba(79, 46, 39, 0.18)",
+    routeCasing: "rgba(255, 252, 248, 0.96)",
+    routeStart: "#872f27",
+    routeMid: "#b24e3c",
+    routeMidAlt: "#d17949",
+    routeEnd: "#8e5f2a",
+    segmentActive: "rgba(128, 41, 31, 0.92)",
+    segmentMuted: "rgba(116, 85, 74, 0.16)",
+    segmentSelected: "#9b3c33"
   };
 }
 
@@ -5484,6 +5498,30 @@ function buildRouteMapBaseStyle() {
   return routeMapStyleUrl;
 }
 
+function reduceRouteMapBaseClutter(map) {
+  const layers = map?.getStyle?.()?.layers;
+  if (!Array.isArray(layers)) {
+    return;
+  }
+
+  const hideMatchers = [/poi/i, /transit/i, /housenum/i, /aeroway/i, /building/i, /parking/i];
+  layers.forEach((layer) => {
+    if (layer?.type !== "symbol") {
+      return;
+    }
+
+    const id = String(layer.id || "");
+    const sourceLayer = String(layer["source-layer"] || "");
+    const shouldHide = hideMatchers.some(
+      (matcher) => matcher.test(id) || matcher.test(sourceLayer)
+    );
+
+    if (shouldHide) {
+      setRouteMapLayoutVisibilityIfChanged(map, layer.id, "none");
+    }
+  });
+}
+
 function getRouteMapLayerInsertBeforeId(map) {
   const layers = map?.getStyle?.()?.layers;
   if (!Array.isArray(layers)) {
@@ -5504,28 +5542,6 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
 
   return [
     {
-      id: "route-map-backdrop-outer",
-      type: "circle",
-      source: "route-map-backdrop",
-      paint: {
-        "circle-color": palette.glowOuter,
-        "circle-opacity": 1,
-        "circle-radius": ["get", "outerRadius"],
-        "circle-blur": 0.52
-      }
-    },
-    {
-      id: "route-map-backdrop-inner",
-      type: "circle",
-      source: "route-map-backdrop",
-      paint: {
-        "circle-color": palette.glowInner,
-        "circle-opacity": 1,
-        "circle-radius": ["get", "innerRadius"],
-        "circle-blur": 0.42
-      }
-    },
-    {
       id: "route-map-corridor",
       type: "line",
       source: "route-map-full",
@@ -5535,8 +5551,8 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       },
       paint: {
         "line-color": palette.corridor,
-        "line-opacity": 1,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 6.4, 7.3, 13.5]
+        "line-opacity": 0.92,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 7.2, 7.3, 15.6]
       }
     },
     {
@@ -5549,8 +5565,8 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       },
       paint: {
         "line-color": palette.shadow,
-        "line-opacity": 0.82,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 3.2, 7.3, 6]
+        "line-opacity": 0.86,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 4.6, 7.3, 9]
       }
     },
     {
@@ -5563,8 +5579,8 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       },
       paint: {
         "line-color": palette.routeCasing,
-        "line-opacity": 0.94,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 2.2, 7.3, 4]
+        "line-opacity": 0.98,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 2.8, 7.3, 5.2]
       }
     },
     {
@@ -5577,7 +5593,7 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       },
       paint: {
         "line-gradient": getRouteMapGradientExpression(theme),
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 1.4, 7.3, 2.8]
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 1.7, 7.3, 3.3]
       }
     },
     {
@@ -5590,8 +5606,8 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       },
       paint: {
         "line-color": palette.segmentActive,
-        "line-opacity": 0.8,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 1.26, 7.3, 2]
+        "line-opacity": 0.82,
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 1.4, 7.3, 2.4]
       }
     },
     {
@@ -5606,7 +5622,7 @@ function buildRouteMapOverlayLayers(theme = getCurrentTheme()) {
       paint: {
         "line-color": palette.segmentSelected,
         "line-opacity": 0.98,
-        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 2.2, 7.3, 3.9]
+        "line-width": ["interpolate", ["linear"], ["zoom"], 4.3, 2.4, 7.3, 4.2]
       }
     },
     {
@@ -5633,10 +5649,6 @@ function ensureRouteMapOverlayStyle(map) {
 
   const geoJsonData = getRouteMapGeoJsonData();
   const sourceDefinitions = {
-    "route-map-backdrop": {
-      type: "geojson",
-      data: geoJsonData.backdrop
-    },
     "route-map-full": {
       type: "geojson",
       data: geoJsonData.full,
@@ -6105,6 +6117,7 @@ function updateRouteMapMarkerElement(entry, selectionState) {
   entry.element.classList.toggle("is-active", isActive);
   entry.element.classList.toggle("is-related", isRelated);
   entry.element.classList.toggle("is-dimmed", isDimmed);
+  entry.element.classList.toggle("has-label", !isDimmed);
   entry.stateKey = markerStateKey;
 
   const ariaLabel = Number.isFinite(stop.primaryDay)
@@ -6216,8 +6229,6 @@ function applyRouteMapPaintTheme(map) {
 
   const palette = getRouteMapPalette();
   const themeSetters = [
-    ["route-map-backdrop-outer", "circle-color", palette.glowOuter],
-    ["route-map-backdrop-inner", "circle-color", palette.glowInner],
     ["route-map-corridor", "line-color", palette.corridor],
     ["route-map-shadow", "line-color", palette.shadow],
     ["route-map-casing", "line-color", palette.routeCasing],
@@ -6258,11 +6269,11 @@ function syncRouteMapSelectionLayers(map, selectionState) {
           ["linear"],
           ["zoom"],
           4.3,
-          ["match", ["get", "id"], activeIds, 2, 1.26],
+          ["match", ["get", "id"], activeIds, 2.2, 1.4],
           7.3,
-          ["match", ["get", "id"], activeIds, 3.2, 2]
+          ["match", ["get", "id"], activeIds, 3.4, 2.4]
         ]
-      : ["interpolate", ["linear"], ["zoom"], 4.3, 1.26, 7.3, 2];
+      : ["interpolate", ["linear"], ["zoom"], 4.3, 1.4, 7.3, 2.4];
 
     setRouteMapPaintPropertyIfChanged(map, "route-map-segments-active", "line-color", lineColor);
     setRouteMapPaintPropertyIfChanged(map, "route-map-segments-active", "line-opacity", lineOpacity);
@@ -6482,6 +6493,7 @@ function ensureRouteMapReady() {
     routeMapState.map.resize();
     await waitForRouteMapLoad(routeMapState.map);
 
+    reduceRouteMapBaseClutter(routeMapState.map);
     ensureRouteMapAttributionControl(routeMapState.map);
     ensureRouteMapOverlayStyle(routeMapState.map);
     bindRouteMapInteractiveEvents(routeMapState.map);

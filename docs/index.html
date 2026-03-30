@@ -8,8 +8,8 @@
     name="description"
     content="Simple bilingual Japan trip website for GitHub Pages with overview, checklist, notes, budget, routes, essentials, and a live route map from Osaka to Tokyo.">
   <meta name="theme-color" content="#e7efe3">
-  <link rel="dns-prefetch" href="//tiles.openfreemap.org">
-  <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+  <link rel="dns-prefetch" href="//basemaps.cartocdn.com">
+  <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%234e7a5d'/%3E%3Cg fill='none' stroke='%23f7fbf4' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 15v34M42 15v34M18 21h8M18 31h8M18 41h8M38 24h8M38 34h8M38 44h8M22 15c-3 3-4 6-4 10M42 15c3 3 4 6 4 10'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
@@ -1624,7 +1624,7 @@ html[data-theme="dark"] .site-header {
   }
 }</style>
   <link rel="preload" href="./assets/app/style.d35737eb28.css" as="style" fetchpriority="high">
-  <link rel="preload" href="./assets/app/script.ad0406c57c.js" as="script" fetchpriority="high">
+  <link rel="preload" href="./assets/app/script.69a1126054.js" as="script" fetchpriority="high">
   <link rel="stylesheet" href="./assets/app/style.d35737eb28.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="./assets/app/style.d35737eb28.css"></noscript>
   <!-- build:inline-style:end -->
@@ -2496,8 +2496,8 @@ html[data-theme="dark"] .site-header {
         <div class="route-map__header">
           <div class="route-map__copy">
             <h3>
-              <span data-language="en">MAP</span>
-              <span data-language="ja" hidden>MAP</span>
+              <span data-language="en">Map</span>
+              <span data-language="ja" hidden>Map</span>
             </h3>
           </div>
           <div class="route-map__header-actions">
@@ -2512,8 +2512,7 @@ html[data-theme="dark"] .site-header {
           </div>
         </div>
         <div class="route-map__surface">
-          <div class="route-map__stops route-map__stops--top" data-route-map-stops></div>
-          <div class="route-map__main">
+          <div class="route-map__map-panel">
             <div class="route-map__shell route-map__map-shell" data-route-map-shell data-map-state="loading">
               <div class="route-map__loading-veil" data-route-map-loading>
                 <span class="route-map__loading-media" aria-hidden="true">
@@ -2532,8 +2531,8 @@ html[data-theme="dark"] .site-header {
                     <span data-language="ja" hidden>ライブ ルートを準備中</span>
                   </strong>
                   <span>
-                    <span data-language="en">Warming OpenFreeMap from Kansai through Fuji to Tokyo so the full itinerary appears as the primary map.</span>
-                    <span data-language="ja" hidden>関西から富士、東京までの OpenFreeMap を先に温め、旅程全体を標準のライブ地図として表示します。</span>
+                    <span data-language="en">Loading CARTO Voyager and your Osaka to Tokyo route so the map opens in one stable, readable view.</span>
+                    <span data-language="ja" hidden>CARTO Voyager と大阪から東京までのルートを読み込み、安定して見やすい地図として表示します。</span>
                   </span>
                 </span>
               </div>
@@ -2551,14 +2550,15 @@ html[data-theme="dark"] .site-header {
                   <span data-language="ja" hidden>ルート地図を読み込み中...</span>
                 </p>
                 <p class="route-map__status-copy">
-                  <span data-language="en">OpenFreeMap is loading.</span>
-                  <span data-language="ja" hidden>OpenFreeMap を読み込んでいます。</span>
+                  <span data-language="en">CARTO Voyager is loading.</span>
+                  <span data-language="ja" hidden>CARTO Voyager を読み込んでいます。</span>
                 </p>
               </div>
             </div>
-            <aside class="route-map__aside">
-              <div class="route-map__explorer" data-route-map-explorer></div>
-            </aside>
+          </div>
+          <div class="route-map__detail-panel">
+            <div class="route-map__stops route-map__stops--top" data-route-map-stops></div>
+            <div class="route-map__explorer" data-route-map-explorer></div>
           </div>
         </div>
       </section>
@@ -3177,10 +3177,10 @@ html[data-theme="dark"] .site-header {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.d35737eb28.css","styleHash":"d35737eb28","routeStylePath":"./assets/app/routeStyle.3869b25c67.css","routeStyleHash":"3869b25c67","scriptPath":"./assets/app/script.ad0406c57c.js","scriptHash":"ad0406c57c","routeContentPath":"./assets/app/routeContent.5639907043.js","routeContentHash":"5639907043","budgetUiPath":"./assets/app/budgetUi.362cdb335c.js","budgetUiHash":"362cdb335c","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-30T20:00:09.964Z","cacheVersion":"d35737eb28-3869b25c67-ad0406c57c-5639907043-362cdb335c-742acba799-4bea009362"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"stylePath":"./assets/app/style.d35737eb28.css","styleHash":"d35737eb28","routeStylePath":"./assets/app/routeStyle.75b116de77.css","routeStyleHash":"75b116de77","scriptPath":"./assets/app/script.69a1126054.js","scriptHash":"69a1126054","routeContentPath":"./assets/app/routeContent.5639907043.js","routeContentHash":"5639907043","budgetUiPath":"./assets/app/budgetUi.362cdb335c.js","budgetUiHash":"362cdb335c","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-30T20:23:01.446Z","cacheVersion":"d35737eb28-75b116de77-69a1126054-5639907043-362cdb335c-742acba799-4bea009362"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
-  <script src="./assets/app/script.ad0406c57c.js" defer></script>
+  <script src="./assets/app/script.69a1126054.js" defer></script>
   <!-- build:inline-script:end -->
 </body>
 </html>
