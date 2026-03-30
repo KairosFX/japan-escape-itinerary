@@ -626,6 +626,7 @@
   padding: 0;
   border: 0;
   background: transparent;
+  transform-origin: center bottom;
   transition:
     opacity 160ms ease,
     transform 160ms ease;
@@ -694,7 +695,11 @@
   transform-origin: center;
 }
 
-.route-map-marker.has-label .route-map-marker__label {
+.route-map-marker.has-label .route-map-marker__label,
+.route-map-marker.is-active .route-map-marker__label,
+.route-map-marker.is-related .route-map-marker__label,
+.route-map-marker--interactive:hover .route-map-marker__label,
+.route-map-marker--interactive:focus-visible .route-map-marker__label {
   opacity: 1;
   transform: var(--route-map-marker-label-transform) scale(1);
 }
@@ -719,10 +724,6 @@
   --route-map-marker-label-transform: translate(calc(-100% - 0.64rem), 0.42rem);
 }
 
-.route-map-marker.is-related .route-map-marker__label {
-  opacity: 0.94;
-}
-
 .route-map-marker.is-dimmed {
   opacity: 0.58;
 }
@@ -738,6 +739,7 @@
 }
 
 .route-map-marker.is-active .route-map-marker__label,
+.route-map-marker.is-related .route-map-marker__label,
 .route-map-marker--interactive:hover .route-map-marker__label,
 .route-map-marker--interactive:focus-visible .route-map-marker__label {
   background: rgba(255, 250, 245, 0.98);

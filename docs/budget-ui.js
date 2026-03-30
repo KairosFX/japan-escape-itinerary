@@ -142,10 +142,10 @@ const itineraryBudgetLabels = {
   stayAreaLabel: { en: "Stay area", ja: "滞在エリア" },
   stayAnchorLabel: { en: "Anchor stay", ja: "基準の宿" },
   stayWhyLabel: { en: "Route fit", ja: "この場所を選ぶ理由" },
-  shareModeLabel: { en: "Accommodation type", ja: "宿泊タイプ" },
+  shareModeLabel: { en: "Accommodation sharing", ja: "宿泊の共有" },
   shareCountLabel: { en: "People sharing stays", ja: "宿泊費を分ける人数" },
-  shareModeAllTravelers: { en: "Shared", ja: "共有" },
-  shareModeNotShared: { en: "Non-shared", ja: "個別" },
+  shareModeAllTravelers: { en: "Shared accommodation", ja: "宿泊を共有" },
+  shareModeNotShared: { en: "Not shared", ja: "共有しない" },
   shareModeCustom: { en: "Custom share count", ja: "人数を指定して分ける" },
   stayHintFallback: {
     en: "Switch between the real default stay and any cheaper or free fallback you actually have.",

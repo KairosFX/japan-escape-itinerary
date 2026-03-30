@@ -6117,7 +6117,7 @@ function updateRouteMapMarkerElement(entry, selectionState) {
   entry.element.classList.toggle("is-active", isActive);
   entry.element.classList.toggle("is-related", isRelated);
   entry.element.classList.toggle("is-dimmed", isDimmed);
-  entry.element.classList.toggle("has-label", !isDimmed);
+  entry.element.classList.toggle("has-label", isActive || isRelated);
   entry.stateKey = markerStateKey;
 
   const ariaLabel = Number.isFinite(stop.primaryDay)
@@ -6136,7 +6136,33 @@ function updateRouteMapMarkerElement(entry, selectionState) {
 }
 
 function installRouteMapMarkers(map) {
-  return [];
+  const registry = routeExplorerStopDefinitions
+    .map((stop) => {
+      const lngLat = getRouteStopLngLat(stop.id);
+      if (!lngLat) {
+        return null;
+      }
+
+      const entry = createRouteMapMarkerElement(stop);
+      const marker = new window.maplibregl.Marker({
+        element: entry.element,
+        anchor: "bottom"
+      })
+        .setLngLat(lngLat)
+        .addTo(map);
+
+      return {
+        ...entry,
+        marker
+      };
+    })
+    .filter(Boolean);
+
+  registry.forEach((entry) => {
+    updateRouteMapMarkerElement(entry, getRouteMapSelectionState());
+  });
+
+  return registry;
 }
 
 function setRouteMapInteractionState(map) {
