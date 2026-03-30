@@ -45,6 +45,14 @@ const assetDefinitions = [
   }
 ];
 
+const staticAssetDefinitions = [
+  {
+    key: "pageBackdropImage",
+    fileName: "1yegabjjbjp01.jpg",
+    sourcePath: path.join(docsDir, "assets", "icons", "1yegabjjbjp01.jpg")
+  }
+];
+
 function createAssetHash(buffer) {
   return crypto.createHash("sha256").update(buffer).digest("hex").slice(0, 10);
 }
@@ -68,6 +76,17 @@ assetDefinitions.forEach(({ key, sourcePath, extension }) => {
 
   manifest[`${key}Path`] = toWebPath(fileName);
   manifest[`${key}Hash`] = assetHash;
+  retainedFiles.add(fileName);
+});
+
+staticAssetDefinitions.forEach(({ key, fileName, sourcePath }) => {
+  if (!fs.existsSync(sourcePath)) {
+    throw new Error(`Static asset source was not found: ${sourcePath}`);
+  }
+
+  const destinationPath = path.join(appAssetsDir, fileName);
+  fs.copyFileSync(sourcePath, destinationPath);
+  manifest[`${key}Path`] = toWebPath(fileName);
   retainedFiles.add(fileName);
 });
 

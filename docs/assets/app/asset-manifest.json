@@ -1,10 +1,10 @@
 {
-  "stylePath": "./assets/app/style.4b88937694.css",
-  "styleHash": "4b88937694",
+  "stylePath": "./assets/app/style.d16d3e7c77.css",
+  "styleHash": "d16d3e7c77",
   "routeStylePath": "./assets/app/routeStyle.2d8476cd59.css",
   "routeStyleHash": "2d8476cd59",
-  "scriptPath": "./assets/app/script.5e257ce2c9.js",
-  "scriptHash": "5e257ce2c9",
+  "scriptPath": "./assets/app/script.1598514e6c.js",
+  "scriptHash": "1598514e6c",
   "routeContentPath": "./assets/app/routeContent.c1930b9262.js",
   "routeContentHash": "c1930b9262",
   "budgetUiPath": "./assets/app/budgetUi.0922094195.js",
@@ -13,6 +13,7 @@
   "budgetContentHash": "742acba799",
   "essentialsContentPath": "./assets/app/essentialsContent.4bea009362.js",
   "essentialsContentHash": "4bea009362",
-  "generatedAt": "2026-03-30T22:22:10.313Z",
-  "cacheVersion": "4b88937694-2d8476cd59-5e257ce2c9-c1930b9262-0922094195-742acba799-4bea009362"
+  "pageBackdropImagePath": "./assets/app/1yegabjjbjp01.jpg",
+  "generatedAt": "2026-03-30T22:27:20.666Z",
+  "cacheVersion": "d16d3e7c77-2d8476cd59-1598514e6c-c1930b9262-0922094195-742acba799-4bea009362"
 }

@@ -622,6 +622,7 @@ function getWarmCacheAssetUrls(manifest) {
   return Array.from(
     new Set(
       [
+        manifest.pageBackdropImagePath,
         manifest.routeStylePath || routeStyleFallbackUrl,
         manifest.routeContentPath || routeContentFallbackScriptUrl,
         manifest.budgetUiPath || budgetUiFallbackScriptUrl,
