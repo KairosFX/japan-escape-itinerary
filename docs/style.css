@@ -9137,3 +9137,102 @@ html[data-theme="dark"] .site-header.is-condensed {
     width: 100%;
   }
 }
+
+:root {
+  --page-backdrop-image: url("./assets/icons/1yegabjjbjp01.jpg");
+  --page-backdrop-position: 50% 12%;
+}
+
+body {
+  background: #f2ede6;
+}
+
+body::before,
+body::after {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  filter: none;
+  pointer-events: none;
+}
+
+body::before {
+  z-index: -2;
+  opacity: 1;
+  background-image:
+    radial-gradient(circle at 50% 10%, rgba(255, 246, 236, 0.34), rgba(255, 246, 236, 0) 34%),
+    linear-gradient(180deg, rgba(244, 236, 225, 0.1), rgba(244, 236, 225, 0.24) 42%, rgba(235, 225, 214, 0.38) 100%),
+    var(--page-backdrop-image);
+  background-repeat: no-repeat;
+  background-size: 100% 100%, 100% 100%, cover;
+  background-position: center center, center center, var(--page-backdrop-position);
+  transform: scale(1.01);
+  transform-origin: center top;
+}
+
+body::after {
+  z-index: -1;
+  opacity: 1;
+  background:
+    linear-gradient(180deg, rgba(247, 241, 235, 0.14), rgba(247, 241, 235, 0.44) 24%, rgba(247, 241, 235, 0.68) 62%, rgba(243, 237, 229, 0.84) 100%),
+    linear-gradient(90deg, rgba(248, 243, 236, 0.24), rgba(248, 243, 236, 0.06) 22%, rgba(248, 243, 236, 0.06) 78%, rgba(248, 243, 236, 0.24));
+}
+
+.site-atmosphere::before {
+  opacity: 0.34;
+}
+
+.site-atmosphere::after {
+  opacity: 0.18;
+}
+
+.site-atmosphere__orb {
+  opacity: 0.12;
+}
+
+.site-atmosphere__grain {
+  opacity: 0.08;
+}
+
+html[data-theme="dark"] body::before {
+  background-image:
+    radial-gradient(circle at 50% 8%, rgba(228, 242, 230, 0.14), rgba(228, 242, 230, 0) 30%),
+    linear-gradient(180deg, rgba(7, 15, 10, 0.26), rgba(7, 15, 10, 0.46) 44%, rgba(7, 15, 10, 0.62) 100%),
+    var(--page-backdrop-image);
+}
+
+html[data-theme="dark"] body::after {
+  background:
+    linear-gradient(180deg, rgba(9, 16, 12, 0.22), rgba(9, 16, 12, 0.48) 28%, rgba(9, 16, 12, 0.72) 68%, rgba(9, 16, 12, 0.86) 100%),
+    linear-gradient(90deg, rgba(9, 16, 12, 0.42), rgba(9, 16, 12, 0.18) 20%, rgba(9, 16, 12, 0.18) 80%, rgba(9, 16, 12, 0.42));
+}
+
+html[data-theme="dark"] .site-atmosphere::before {
+  opacity: 0.28;
+}
+
+html[data-theme="dark"] .site-atmosphere::after {
+  opacity: 0.14;
+}
+
+html[data-theme="dark"] .site-atmosphere__orb {
+  opacity: 0.1;
+}
+
+html[data-theme="dark"] .site-atmosphere__grain {
+  opacity: 0.07;
+}
+
+@media (max-width: 960px) {
+  :root {
+    --page-backdrop-position: 50% 10%;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --page-backdrop-position: 50% 8%;
+  }
+}
