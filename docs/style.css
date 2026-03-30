@@ -1203,6 +1203,16 @@ h3 {
   gap: 0.5rem;
 }
 
+.content-panel__label {
+  margin: 0;
+  color: var(--green);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
 .section-heading--compact {
   margin-top: 0.2rem;
 }

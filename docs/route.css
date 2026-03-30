@@ -131,7 +131,8 @@
   z-index: 2;
   overflow: hidden;
   display: grid;
-  align-content: end;
+  align-content: center;
+  justify-items: start;
   padding: 1rem;
   background:
     linear-gradient(180deg, rgba(247, 250, 247, 0.22), rgba(236, 242, 236, 0.76)),
@@ -139,21 +140,6 @@
   transition:
     opacity 240ms ease,
     transform 320ms ease;
-}
-
-.route-map__loading-media {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-
-.route-map__preview-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.94;
-  filter: saturate(0.96) contrast(1.02);
 }
 
 .route-map__loading-copy {

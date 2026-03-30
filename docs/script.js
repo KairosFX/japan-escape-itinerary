@@ -82,7 +82,6 @@ const appAssetConfigRuntimeGlobal = "__JAPAN_APP_ASSETS__";
 const budgetUiRuntimeGlobal = "__JAPAN_BUDGET_UI__";
 const budgetContentRuntimeGlobal = "__JAPAN_BUDGET_CONTENT__";
 const essentialsContentRuntimeGlobal = "__JAPAN_ESSENTIALS_CONTENT__";
-const routeMapPreviewImageUrl = "./assets/route-map-preview.svg";
 const routeMapLibraryScriptUrl = "./assets/vendor/maplibre/maplibre-gl.js";
 const routeMapLibraryStyleUrl = "./assets/vendor/maplibre/maplibre-gl.css";
 const budgetUiFallbackScriptUrl = "./budget-ui.min.js";
@@ -418,7 +417,6 @@ const routeMapKeyboardPanStepPx = 120;
 const routeMapKeyboardPanDurationMs = 340;
 const scrollMotionEconomyVelocityThreshold = 0.95;
 const scrollMotionClassHoldMs = 180;
-const dayCardRowTopTolerancePx = 14;
 const routeMapBaseOptions = {
   attributionControl: false,
   renderWorldCopies: false,
@@ -624,7 +622,6 @@ function getWarmCacheAssetUrls(manifest) {
   return Array.from(
     new Set(
       [
-        routeMapPreviewImageUrl,
         manifest.routeStylePath || routeStyleFallbackUrl,
         manifest.routeContentPath || routeContentFallbackScriptUrl,
         manifest.budgetUiPath || budgetUiFallbackScriptUrl,
@@ -6943,35 +6940,34 @@ function scheduleDayCardRowHeights() {
       !checklistPanel ||
       checklistPanel.hidden ||
       !checklistGrid ||
-      compactViewportQuery.matches ||
       checklistCards.length < 2
     ) {
       return;
     }
 
-    const rowGroups = [];
-    checklistCards.forEach((card) => {
-      const cardTop = Math.round(card.getBoundingClientRect().top);
-      let rowGroup = rowGroups.find((row) => Math.abs(row.top - cardTop) <= dayCardRowTopTolerancePx);
+    const groupedCards = [
+      checklistCards.filter((card) => {
+        const day = Number.parseInt(card.dataset.day || "", 10);
+        return day >= 1 && day <= 4;
+      }),
+      checklistCards.filter((card) => {
+        const day = Number.parseInt(card.dataset.day || "", 10);
+        return day >= 5 && day <= 7;
+      })
+    ];
 
-      if (!rowGroup) {
-        rowGroup = { top: cardTop, cards: [] };
-        rowGroups.push(rowGroup);
-      }
-
-      rowGroup.cards.push(card);
-    });
-
-    rowGroups.forEach((rowGroup) => {
-      const maxHeight = rowGroup.cards.reduce(
+    groupedCards
+      .filter((group) => group.length > 1)
+      .forEach((group) => {
+        const maxHeight = group.reduce(
         (currentMax, card) => Math.max(currentMax, card.getBoundingClientRect().height),
         0
       );
 
-      rowGroup.cards.forEach((card) => {
-        card.style.minHeight = `${Math.round(maxHeight)}px`;
+        group.forEach((card) => {
+          card.style.minHeight = `${Math.round(maxHeight)}px`;
+        });
       });
-    });
   });
 }
 
