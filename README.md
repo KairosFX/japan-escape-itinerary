@@ -4,21 +4,6 @@ Live site: https://kairosfx.github.io/japan-escape-itinerary/
 
 ---
 
-## Overview
-
-**Japan Escape Itinerary** is a brochure-style travel site built for quick reference on the go.
-
-Each section is separated, and the itinerary now follows a fixed 7-day west-to-east flow from Osaka and Kyoto through the Mt. Fuji area and into Tokyo.
-
-- **Checklist** for day-by-day planning
-- **Notes** for route logic and pacing
-- **Routes** for the overall west-to-east flow
-- **Essentials** for transit, packing, and booking prep
-
-The route stays compact, practical, and easy to follow without optional branches.
-
----
-
 ## Features
 
 ### Bilingual interface
