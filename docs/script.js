@@ -98,6 +98,7 @@ const budgetTravelerCountMax = 24;
 const budgetSharedRoomOccupancy = 2;
 const budgetAccommodationShareModeDefault = "all-travelers";
 const budgetAccommodationShareModes = ["not-shared", "all-travelers", "custom"];
+const serviceWorkerWarmMessageType = "CACHE_URLS";
 let budgetSourceUpdatedAt = "2026-03-27";
 let budgetAssumptionCopy = {
   en:
@@ -610,6 +611,93 @@ function primeHeadLink(rel, href, attributes = {}) {
 
   document.head.append(link);
   return link;
+}
+
+function shouldWarmDeferredAssets() {
+  if (offlineSnapshotMode) {
+    return false;
+  }
+
+  const saveDataEnabled = Boolean(navigator.connection?.saveData);
+  const effectiveType = String(navigator.connection?.effectiveType || "").toLowerCase();
+  return !saveDataEnabled && effectiveType !== "slow-2g" && effectiveType !== "2g";
+}
+
+function getDeferredExperiencePrefetchAssets(manifest) {
+  const entries = [
+    { href: manifest.budgetUiPath || budgetUiFallbackScriptUrl, as: "script" },
+    { href: manifest.budgetContentPath || budgetContentFallbackScriptUrl, as: "script" },
+    { href: manifest.essentialsContentPath || essentialsContentFallbackScriptUrl, as: "script" }
+  ];
+  const seenHrefs = new Set();
+  return entries.filter((entry) => {
+    if (!entry.href || seenHrefs.has(entry.href)) {
+      return false;
+    }
+
+    seenHrefs.add(entry.href);
+    return true;
+  });
+}
+
+function getWarmCacheAssetUrls(manifest) {
+  return Array.from(
+    new Set(
+      [
+        manifest.routeStylePath || routeStyleFallbackUrl,
+        manifest.routeContentPath || routeContentFallbackScriptUrl,
+        manifest.budgetUiPath || budgetUiFallbackScriptUrl,
+        manifest.budgetContentPath || budgetContentFallbackScriptUrl,
+        manifest.essentialsContentPath || essentialsContentFallbackScriptUrl
+      ].filter(Boolean)
+    )
+  );
+}
+
+function warmCachedAppAssets(urls) {
+  if (
+    !Array.isArray(urls) ||
+    !urls.length ||
+    offlineSnapshotMode ||
+    !("serviceWorker" in navigator) ||
+    !window.isSecureContext
+  ) {
+    return Promise.resolve([]);
+  }
+
+  return navigator.serviceWorker.ready
+    .then((registration) => {
+      offlineRegistration = registration;
+      const target =
+        registration.active ||
+        navigator.serviceWorker.controller ||
+        registration.waiting ||
+        registration.installing;
+
+      if (target?.postMessage) {
+        target.postMessage({
+          type: serviceWorkerWarmMessageType,
+          urls
+        });
+      }
+
+      return urls;
+    })
+    .catch(() => urls);
+}
+
+function warmDeferredExperienceAssets() {
+  if (!shouldWarmDeferredAssets()) {
+    return Promise.resolve([]);
+  }
+
+  return loadAppAssetManifest().then((manifest) => {
+    getDeferredExperiencePrefetchAssets(manifest).forEach(({ href, as }) => {
+      primeHeadLink("prefetch", href, { as });
+    });
+
+    return warmCachedAppAssets(getWarmCacheAssetUrls(manifest));
+  });
 }
 
 function prewarmRouteStaticAssets() {
@@ -1784,7 +1872,7 @@ function bootOfflineExperience() {
   });
 
   navigator.serviceWorker
-    .register(serviceWorkerUrl)
+    .register(serviceWorkerUrl, { updateViaCache: "none" })
     .then((registration) => {
       offlineRegistration = registration;
       offlineRegistrationError = false;
@@ -3916,11 +4004,12 @@ function scheduleIdleSectionWarmup(initialSection) {
   const warm = () => {
     if (initialSection !== "route") {
       void warmRouteExperience();
-      return;
+    } else {
+      void ensureRouteSectionStylesLoaded();
+      void ensureRouteContentLoaded();
     }
 
-    void ensureRouteSectionStylesLoaded();
-    void ensureRouteContentLoaded();
+    void warmDeferredExperienceAssets();
   };
 
   if (typeof window.requestIdleCallback === "function") {
@@ -7952,6 +8041,7 @@ async function bootApp() {
     updateLanguageButtons("en");
   }
 
+  bootOfflineExperience();
   const introPromise = playSiteIntro();
   void warmRouteExperience();
   const siteFooter = document.querySelector(".site-footer");
