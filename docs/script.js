@@ -54,7 +54,7 @@ const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
 const compactViewportQuery = window.matchMedia("(max-width: 920px)");
 const pageTitles = {
-  en: "JAPAN ESCAPE",
+  en: "Japan Escape",
   ja: "日本旅行"
 };
 const storageKey = "japan-trip-language";
