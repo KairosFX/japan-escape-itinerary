@@ -8203,11 +8203,16 @@ input:focus-visible {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
 }
 
-.budget-notes__controls,
 .budget-notes__status,
 .budget-notes__sources-block,
 .budget-source-meta-card {
   display: none !important;
+}
+
+.budget-notes__controls {
+  display: grid !important;
+  scroll-margin-top: calc(var(--header-reserved-height) + 0.9rem);
+  overflow: visible;
 }
 
 .budget-notes__day-browser {

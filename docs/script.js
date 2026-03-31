@@ -7303,7 +7303,7 @@ function scrollToPanelStart(panelId) {
     return;
   }
 
-  const anchor = panel.querySelector(".section-heading") || panel;
+  const anchor = panel.querySelector("[data-panel-scroll-anchor]") || panel.querySelector(".section-heading") || panel;
   window.requestAnimationFrame(() => {
     window.requestAnimationFrame(() => {
       lockHeaderState(760);
