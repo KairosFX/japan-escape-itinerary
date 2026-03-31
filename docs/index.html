@@ -2245,6 +2245,33 @@ html.intro-leaving .site-intro__content {
   max-width: none;
 }
 
+.budget-setting--stepper {
+  display: grid;
+  grid-template-rows: auto minmax(1.5rem, auto) auto;
+  align-content: start;
+}
+
+.budget-setting--stepper .budget-stepper {
+  min-height: 2.66rem;
+}
+
+.budget-setting__hint--placeholder {
+  display: block;
+  min-height: 1.5rem;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .budget-setting--stepper {
+    grid-template-rows: auto auto auto;
+  }
+
+  .budget-setting__hint--placeholder {
+    min-height: 0;
+  }
+}
+
 html[data-theme="dark"] .site-intro {
   background:
     radial-gradient(circle at 18% 16%, rgba(119, 162, 126, 0.16), rgba(119, 162, 126, 0) 28%),
@@ -2336,10 +2363,10 @@ html.reduce-effects .site-intro__content {
   transform: none !important;
   filter: none !important;
 }</style>
-  <link rel="preload" href="./assets/app/style.f5dd2744f8.css" as="style" fetchpriority="high">
+  <link rel="preload" href="./assets/app/style.d2d59529b4.css" as="style" fetchpriority="high">
   <link rel="preload" href="./assets/app/script.02bd6709b4.js" as="script" fetchpriority="high">
-  <link rel="stylesheet" href="./assets/app/style.f5dd2744f8.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.f5dd2744f8.css"></noscript>
+  <link rel="stylesheet" href="./assets/app/style.d2d59529b4.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.d2d59529b4.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -2363,10 +2390,6 @@ html.reduce-effects .site-intro__content {
         <span data-language="en">Japan Escape</span>
         <span data-language="ja" hidden>Japan Escape</span>
       </h1>
-      <p class="site-intro__meta">
-        <span data-language="en">Seven Days • Osaka to Tokyo</span>
-        <span data-language="ja" hidden>7日間・大阪から東京へ</span>
-      </p>
     </div>
   </div>
   <div class="site-atmosphere" aria-hidden="true">
@@ -2386,8 +2409,8 @@ html.reduce-effects .site-intro__content {
             width="28"
             height="19"
             decoding="async">
-          <span data-language="en">Trip Guide</span>
-          <span data-language="ja" hidden>旅行ガイド</span>
+          <span data-language="en">Japan Escape</span>
+          <span data-language="ja" hidden>Japan Escape</span>
         </p>
       </div>
 
@@ -2629,8 +2652,8 @@ html.reduce-effects .site-intro__content {
                   <span data-language="ja" hidden>2日目</span>
                 </span>
                 <strong class="progress-item__place">
-                  <span data-language="en">Kyoto East</span>
-                  <span data-language="ja" hidden>京都東側</span>
+                  <span data-language="en">Kyoto</span>
+                  <span data-language="ja" hidden>京都</span>
                 </strong>
               </div>
               <span class="progress-item__meter" aria-hidden="true"><span class="progress-item__meter-fill"></span></span>
@@ -2648,8 +2671,8 @@ html.reduce-effects .site-intro__content {
                   <span data-language="ja" hidden>3日目</span>
                 </span>
                 <strong class="progress-item__place">
-                  <span data-language="en">Arashiyama -&gt; Osaka</span>
-                  <span data-language="ja" hidden>嵐山 -&gt; 大阪</span>
+                  <span data-language="en">Arashiyama</span>
+                  <span data-language="ja" hidden>嵐山</span>
                 </strong>
               </div>
               <span class="progress-item__meter" aria-hidden="true"><span class="progress-item__meter-fill"></span></span>
@@ -2667,8 +2690,8 @@ html.reduce-effects .site-intro__content {
                   <span data-language="ja" hidden>4日目</span>
                 </span>
                 <strong class="progress-item__place">
-                  <span data-language="en">Mt. Fuji Area</span>
-                  <span data-language="ja" hidden>富士エリア</span>
+                  <span data-language="en">Mt. Fuji</span>
+                  <span data-language="ja" hidden>富士山</span>
                 </strong>
               </div>
               <span class="progress-item__meter" aria-hidden="true"><span class="progress-item__meter-fill"></span></span>
@@ -2686,8 +2709,8 @@ html.reduce-effects .site-intro__content {
                   <span data-language="ja" hidden>5日目</span>
                 </span>
                 <strong class="progress-item__place">
-                  <span data-language="en">Tokyo / Shibuya</span>
-                  <span data-language="ja" hidden>東京・渋谷</span>
+                  <span data-language="en">West Tokyo</span>
+                  <span data-language="ja" hidden>東京西側</span>
                 </strong>
               </div>
               <span class="progress-item__meter" aria-hidden="true"><span class="progress-item__meter-fill"></span></span>
@@ -2705,8 +2728,8 @@ html.reduce-effects .site-intro__content {
                   <span data-language="ja" hidden>6日目</span>
                 </span>
                 <strong class="progress-item__place">
-                  <span data-language="en">Tokyo East / Full Day</span>
-                  <span data-language="ja" hidden>東京東側・観光メイン</span>
+                  <span data-language="en">East Tokyo</span>
+                  <span data-language="ja" hidden>東京東側</span>
                 </strong>
               </div>
               <span class="progress-item__meter" aria-hidden="true"><span class="progress-item__meter-fill"></span></span>
@@ -2724,8 +2747,8 @@ html.reduce-effects .site-intro__content {
                   <span data-language="ja" hidden>7日目</span>
                 </span>
                 <strong class="progress-item__place">
-                  <span data-language="en">Tokyo Light Wrap-Up</span>
-                  <span data-language="ja" hidden>東京の軽い締め</span>
+                  <span data-language="en">Central Tokyo</span>
+                  <span data-language="ja" hidden>東京中心部</span>
                 </strong>
               </div>
               <span class="progress-item__meter" aria-hidden="true"><span class="progress-item__meter-fill"></span></span>
@@ -2868,8 +2891,8 @@ html.reduce-effects .site-intro__content {
             <li>
               <label class="check-item" for="day3-kaiyukan">
                 <input id="day3-kaiyukan" type="checkbox">
-                <span class="check-copy" data-language="en">Kaiyukan / Tempozan</span>
-                <span class="check-copy" data-language="ja" hidden>海遊館 / 天保山</span>
+                <span class="check-copy" data-language="en">Kaiyukan</span>
+                <span class="check-copy" data-language="ja" hidden>海遊館</span>
               </label>
             </li>
           </ul>
@@ -2903,8 +2926,8 @@ html.reduce-effects .site-intro__content {
                 <li class="checklist-list__item checklist-list__item--with-detail">
                   <label class="check-item" for="day4-fuji-access">
                     <input id="day4-fuji-access" type="checkbox">
-                    <span class="check-copy" data-language="en">Transfer into Mt. Fuji area</span>
-                    <span class="check-copy" data-language="ja" hidden>富士エリアへ乗り継ぎ</span>
+                    <span class="check-copy" data-language="en">Transfer into Mt. Fuji</span>
+                    <span class="check-copy" data-language="ja" hidden>富士山エリアへ移動</span>
                   </label>
                   <button class="transit-trigger transit-trigger--checklist" type="button" data-transit-detail-trigger="fuji-gateway-kawaguchiko" aria-haspopup="dialog" aria-controls="transit-detail-modal">
                     <span data-language="en">Transit details</span>
@@ -2914,8 +2937,8 @@ html.reduce-effects .site-intro__content {
                 <li>
                   <label class="check-item" for="day4-lake-arrival">
                     <input id="day4-lake-arrival" type="checkbox">
-                    <span class="check-copy" data-language="en">Chureito / Shimoyoshida</span>
-                    <span class="check-copy" data-language="ja" hidden>忠霊塔・下吉田</span>
+                    <span class="check-copy" data-language="en">Onsen check-in</span>
+                    <span class="check-copy" data-language="ja" hidden>温泉チェックイン</span>
                   </label>
                 </li>
                 <li>
@@ -2964,8 +2987,8 @@ html.reduce-effects .site-intro__content {
             <li class="checklist-list__item checklist-list__item--with-detail">
               <label class="check-item" for="day5-tokyo-transfer">
                 <input id="day5-tokyo-transfer" type="checkbox">
-                <span class="check-copy" data-language="en">Transfer to Tokyo / Shibuya</span>
-                <span class="check-copy" data-language="ja" hidden>東京・渋谷へ移動</span>
+                <span class="check-copy" data-language="en">Transfer to Shibuya</span>
+                <span class="check-copy" data-language="ja" hidden>渋谷へ移動</span>
               </label>
               <button class="transit-trigger transit-trigger--checklist" type="button" data-transit-detail-trigger="kawaguchiko-tokyo" aria-haspopup="dialog" aria-controls="transit-detail-modal">
                 <span data-language="en">Transit details</span>
@@ -2975,8 +2998,8 @@ html.reduce-effects .site-intro__content {
             <li>
               <label class="check-item" for="day5-fuji-check">
                 <input id="day5-fuji-check" type="checkbox">
-                <span class="check-copy" data-language="en">Tokyo hotel check-in</span>
-                <span class="check-copy" data-language="ja" hidden>東京ホテルのチェックイン</span>
+                <span class="check-copy" data-language="en">Hotel check-in</span>
+                <span class="check-copy" data-language="ja" hidden>ホテルチェックイン</span>
               </label>
             </li>
             <li>
@@ -2989,8 +3012,8 @@ html.reduce-effects .site-intro__content {
             <li>
               <label class="check-item" for="day5-lake-wrap">
                 <input id="day5-lake-wrap" type="checkbox">
-                <span class="check-copy" data-language="en">Shibuya food walk</span>
-                <span class="check-copy" data-language="ja" hidden>渋谷で食べ歩き</span>
+                <span class="check-copy" data-language="en">Shibuya Food Walk</span>
+                <span class="check-copy" data-language="ja" hidden>渋谷フードウォーク</span>
               </label>
             </li>
             <li>
@@ -3068,15 +3091,15 @@ html.reduce-effects .site-intro__content {
             <li>
               <label class="check-item" for="day7-bags">
                 <input id="day7-bags" type="checkbox">
-                <span class="check-copy" data-language="en">Bag pickup / handoff</span>
-                <span class="check-copy" data-language="ja" hidden>荷物の回収・受け渡し</span>
+                <span class="check-copy" data-language="en">Bag Pickup</span>
+                <span class="check-copy" data-language="ja" hidden>荷物の回収</span>
               </label>
             </li>
             <li>
               <label class="check-item" for="day7-airport">
                 <input id="day7-airport" type="checkbox">
-                <span class="check-copy" data-language="en">Airport transfer</span>
-                <span class="check-copy" data-language="ja" hidden>空港へ移動</span>
+                <span class="check-copy" data-language="en">Flight Home</span>
+                <span class="check-copy" data-language="ja" hidden>帰国便</span>
               </label>
             </li>
           </ul>
@@ -3140,6 +3163,7 @@ html.reduce-effects .site-intro__content {
                 <span data-language="en">Travellers</span>
                 <span data-language="ja" hidden>旅行人数</span>
               </span>
+              <span class="budget-setting__hint budget-setting__hint--placeholder" aria-hidden="true"></span>
               <div class="budget-stepper" data-budget-stepper="travelers">
                 <button
                   class="budget-stepper__button"
@@ -3738,8 +3762,8 @@ html.reduce-effects .site-intro__content {
           <span data-language="ja" hidden>旅のまとめ</span>
         </h2>
         <p class="journey-close__snapshot">
-          <span data-language="en">7 Days • 4 Stops • 1 West-to-East Journey</span>
-          <span data-language="ja" hidden>7日間 • 4つの主要地 • 西から東への1本の旅</span>
+          <span data-language="en">7 Days • 4 Stops • West-to-East Journey</span>
+          <span data-language="ja" hidden>7日間 • 4つの主要地 • 西から東への旅</span>
         </p>
         <div class="journey-close__actions">
           <button class="journey-close__button" type="button" data-reset-progress-open>
@@ -3866,7 +3890,7 @@ html.reduce-effects .site-intro__content {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"pageBackdropImagePath":"./assets/app/1yegabjjbjp01.1e878db773.jpg","pageBackdropImageCssPath":"./1yegabjjbjp01.1e878db773.jpg","pageBackdropImageHash":"1e878db773","stylePath":"./assets/app/style.f5dd2744f8.css","styleHash":"f5dd2744f8","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.02bd6709b4.js","scriptHash":"02bd6709b4","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.3cdc35c055.js","budgetUiHash":"3cdc35c055","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-31T18:00:11.755Z","cacheVersion":"f5dd2744f8-2d8476cd59-02bd6709b4-c1930b9262-3cdc35c055-742acba799-4bea009362-1e878db773"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"pageBackdropImagePath":"./assets/app/1yegabjjbjp01.1e878db773.jpg","pageBackdropImageCssPath":"./1yegabjjbjp01.1e878db773.jpg","pageBackdropImageHash":"1e878db773","stylePath":"./assets/app/style.d2d59529b4.css","styleHash":"d2d59529b4","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.02bd6709b4.js","scriptHash":"02bd6709b4","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.3cdc35c055.js","budgetUiHash":"3cdc35c055","budgetContentPath":"./assets/app/budgetContent.af081bb5d7.js","budgetContentHash":"af081bb5d7","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-31T19:10:06.425Z","cacheVersion":"d2d59529b4-2d8476cd59-02bd6709b4-c1930b9262-3cdc35c055-af081bb5d7-4bea009362-1e878db773"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
   <script src="./assets/app/script.02bd6709b4.js" defer></script>

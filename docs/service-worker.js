@@ -1,4 +1,4 @@
-const OFFLINE_CACHE_VERSION = "f5dd2744f8-2d8476cd59-02bd6709b4-c1930b9262-3cdc35c055-742acba799-4bea009362-1e878db773";
+const OFFLINE_CACHE_VERSION = "d2d59529b4-2d8476cd59-02bd6709b4-c1930b9262-3cdc35c055-af081bb5d7-4bea009362-1e878db773";
 const CACHE_PREFIX = "japan-escape-itinerary-";
 const APP_SHELL_CACHE_NAME = `${CACHE_PREFIX}shell-${OFFLINE_CACHE_VERSION}`;
 const RUNTIME_CACHE_NAME = `${CACHE_PREFIX}runtime-${OFFLINE_CACHE_VERSION}`;
@@ -12,12 +12,12 @@ const APP_SHELL_PATHS = [
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
   "./assets/app/1yegabjjbjp01.1e878db773.jpg",
-  "./assets/app/style.f5dd2744f8.css",
+  "./assets/app/style.d2d59529b4.css",
   "./assets/app/script.02bd6709b4.js",
   "./assets/app/routeStyle.2d8476cd59.css",
   "./assets/app/routeContent.c1930b9262.js",
   "./assets/app/budgetUi.3cdc35c055.js",
-  "./assets/app/budgetContent.742acba799.js",
+  "./assets/app/budgetContent.af081bb5d7.js",
   "./assets/app/essentialsContent.4bea009362.js"
 ];
 const NETWORK_FIRST_PATHS = [

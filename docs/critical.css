@@ -2197,6 +2197,33 @@ html.intro-leaving .site-intro__content {
   max-width: none;
 }
 
+.budget-setting--stepper {
+  display: grid;
+  grid-template-rows: auto minmax(1.5rem, auto) auto;
+  align-content: start;
+}
+
+.budget-setting--stepper .budget-stepper {
+  min-height: 2.66rem;
+}
+
+.budget-setting__hint--placeholder {
+  display: block;
+  min-height: 1.5rem;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .budget-setting--stepper {
+    grid-template-rows: auto auto auto;
+  }
+
+  .budget-setting__hint--placeholder {
+    min-height: 0;
+  }
+}
+
 html[data-theme="dark"] .site-intro {
   background:
     radial-gradient(circle at 18% 16%, rgba(119, 162, 126, 0.16), rgba(119, 162, 126, 0) 28%),

@@ -607,8 +607,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "no-accommodation"
       ],
       "title": {
-        "en": "Day 2 - Kyoto East",
-        "ja": "2日目・京都東側"
+        "en": "Day 2 - Kyoto",
+        "ja": "2日目・京都"
       },
       "subtitle": {
         "en": "Kyoto hotel night after the east-side temple cluster",
@@ -811,8 +811,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "no-accommodation"
       ],
       "title": {
-        "en": "Mt. Fuji Area",
-        "ja": "富士エリア"
+        "en": "Mt. Fuji",
+        "ja": "富士山"
       },
       "subtitle": {
         "en": "Mishima, Chureito / Shimoyoshida, and Lake Kawaguchiko",
@@ -941,8 +941,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "no-accommodation"
       ],
       "title": {
-        "en": "Shibuya",
-        "ja": "渋谷"
+        "en": "West Tokyo",
+        "ja": "東京西側"
       },
       "subtitle": {
         "en": "Tokyo arrival, Shibuya walk, and skyline night",
