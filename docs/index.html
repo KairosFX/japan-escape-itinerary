@@ -2009,11 +2009,337 @@ html[data-theme="dark"] .budget-notes__settings-panel {
   .budget-notes__controls {
     grid-template-columns: 1fr;
   }
+}
+
+/* Final intro sequence + room split polish */
+.skip-link,
+.site-atmosphere,
+.site-header,
+#main-content,
+.modal-backdrop,
+.site-footer {
+  transition:
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.intro-pending .skip-link,
+html.intro-pending .site-atmosphere,
+html.intro-pending .site-header,
+html.intro-pending #main-content,
+html.intro-pending .modal-backdrop,
+html.intro-pending .site-footer,
+html.intro-active .skip-link,
+html.intro-active .site-atmosphere,
+html.intro-active .site-header,
+html.intro-active #main-content,
+html.intro-active .modal-backdrop,
+html.intro-active .site-footer {
+  opacity: 0;
+  filter: blur(18px);
+  transform: translateY(0.85rem);
+  pointer-events: none;
+}
+
+.site-intro {
+  isolation: isolate;
+  padding: clamp(1rem, 3vw, 2rem);
+  background:
+    radial-gradient(circle at 18% 16%, rgba(116, 161, 123, 0.24), rgba(116, 161, 123, 0) 28%),
+    radial-gradient(circle at 82% 14%, rgba(234, 245, 232, 0.14), rgba(234, 245, 232, 0) 24%),
+    linear-gradient(180deg, rgba(3, 12, 8, 0.86), rgba(7, 20, 13, 0.98));
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.015);
+  transition:
+    opacity 680ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 680ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 680ms;
+}
+
+html.intro-pending .site-intro,
+html.intro-active .site-intro,
+html.intro-leaving .site-intro {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+html.intro-pending .site-intro,
+html.intro-active .site-intro {
+  opacity: 1;
+  transform: scale(1);
+}
+
+html.intro-leaving .site-intro {
+  opacity: 0;
+  transform: scale(1.01);
+}
+
+.site-intro::before,
+.site-intro::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.site-intro::before {
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(244, 251, 244, 0.06), rgba(244, 251, 244, 0) 28%),
+    radial-gradient(circle at 50% 50%, rgba(244, 251, 244, 0.08), rgba(244, 251, 244, 0) 48%);
+  opacity: 0.78;
+}
+
+.site-intro::after {
+  inset: -12% 10%;
+  background:
+    linear-gradient(
+      115deg,
+      rgba(236, 248, 237, 0),
+      rgba(236, 248, 237, 0.18),
+      rgba(236, 248, 237, 0)
+    );
+  opacity: 0;
+  transform: translateX(-40%) skewX(-18deg);
+}
+
+html.intro-active .site-intro::after {
+  animation: siteIntroSweep 1500ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+.site-intro__veil {
+  background:
+    linear-gradient(180deg, rgba(4, 13, 8, 0.16), rgba(4, 13, 8, 0.54)),
+    linear-gradient(135deg, rgba(11, 34, 22, 0.18), rgba(4, 13, 8, 0.04));
+  backdrop-filter: blur(4px);
+}
+
+.site-intro__panorama {
+  transform: scale(1.12) translate3d(0, 1rem, 0);
+  opacity: 0.18;
+  filter: saturate(0.88) brightness(0.82);
+  transition:
+    transform 1400ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.intro-active .site-intro__panorama,
+html.intro-leaving .site-intro__panorama {
+  transform: scale(1.02) translate3d(0, 0, 0);
+  opacity: 1;
+  filter: saturate(1.02) brightness(1);
+}
+
+html.intro-leaving .site-intro__panorama {
+  opacity: 0.86;
+  transform: scale(1.01);
+}
+
+.site-intro__content {
+  inset: auto auto clamp(1.2rem, 4vw, 2.4rem) clamp(1.2rem, 4vw, 2.4rem);
+  width: min(40rem, calc(100% - 2.4rem));
+  padding: clamp(1.2rem, 2.6vw, 1.95rem);
+  gap: 0.62rem;
+  min-height: auto;
+  border: 1px solid rgba(220, 236, 223, 0.18);
+  border-radius: clamp(1.1rem, 3vw, 1.6rem);
+  background:
+    linear-gradient(180deg, rgba(7, 20, 13, 0.18), rgba(7, 20, 13, 0.34)),
+    linear-gradient(135deg, rgba(241, 250, 242, 0.12), rgba(241, 250, 242, 0.04));
+  box-shadow:
+    0 30px 70px rgba(1, 6, 3, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(20px) saturate(135%);
+  opacity: 0;
+  transform: translate3d(0, 1.8rem, 0);
+  transition:
+    opacity 780ms cubic-bezier(0.22, 1, 0.36, 1) 80ms,
+    transform 980ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 240ms ease;
+}
+
+.site-intro__content::before {
+  content: "";
+  display: block;
+  width: 4.5rem;
+  height: 1px;
+  margin: 0 0 0.15rem;
+  background:
+    linear-gradient(90deg, rgba(220, 236, 223, 0), rgba(220, 236, 223, 0.92), rgba(220, 236, 223, 0.1));
+  opacity: 0;
+  transform: scaleX(0.18);
+  transform-origin: left center;
+  transition:
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 760ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+}
+
+html.intro-active .site-intro__content {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+html.intro-active .site-intro__content::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+html.intro-leaving .site-intro__content {
+  opacity: 0;
+  transform: translate3d(0, -0.85rem, 0);
+}
+
+.site-intro__eyebrow,
+.site-intro__meta {
+  margin: 0;
+  color: rgba(220, 234, 223, 0.82);
+  text-shadow: 0 1px 20px rgba(1, 6, 3, 0.32);
+}
+
+.site-intro__eyebrow {
+  font-weight: 700;
+  letter-spacing: 0.28em;
+}
+
+.site-intro__title {
+  font-size: clamp(3.1rem, 8vw, 6rem);
+  line-height: 0.9;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f4faf5;
+  text-shadow:
+    0 22px 48px rgba(1, 6, 3, 0.34),
+    0 2px 14px rgba(1, 6, 3, 0.28);
+}
+
+.site-intro__meta {
+  max-width: 23rem;
+  font-size: 0.76rem;
+  line-height: 1.6;
+  letter-spacing: 0.2em;
+}
+
+.brand-block {
+  transform: none;
+}
+
+.brand-block .eyebrow {
+  align-items: center;
+  line-height: 1.08;
+  padding-block: 0.08rem 0.18rem;
+}
+
+.site-header.is-condensed .brand-block .eyebrow {
+  line-height: 1.08;
+  padding-block: 0.06rem 0.14rem;
+}
+
+.eyebrow__icon {
+  flex: none;
+  align-self: center;
+}
+
+.budget-setting--stepper .budget-setting__hint {
+  max-width: none;
+}
+
+html[data-theme="dark"] .site-intro {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(119, 162, 126, 0.16), rgba(119, 162, 126, 0) 28%),
+    radial-gradient(circle at 82% 14%, rgba(228, 240, 229, 0.08), rgba(228, 240, 229, 0) 24%),
+    linear-gradient(180deg, rgba(2, 9, 6, 0.92), rgba(6, 16, 11, 0.99));
+}
+
+html[data-theme="dark"] .site-intro__veil {
+  background:
+    linear-gradient(180deg, rgba(3, 10, 7, 0.18), rgba(3, 10, 7, 0.62)),
+    linear-gradient(135deg, rgba(7, 20, 14, 0.22), rgba(3, 10, 7, 0.06));
+}
+
+html[data-theme="dark"] .site-intro__content {
+  border-color: rgba(196, 221, 202, 0.16);
+  background:
+    linear-gradient(180deg, rgba(8, 20, 13, 0.38), rgba(8, 20, 13, 0.54)),
+    linear-gradient(135deg, rgba(228, 239, 230, 0.08), rgba(228, 239, 230, 0.02));
+  box-shadow:
+    0 30px 72px rgba(1, 4, 2, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .site-intro__eyebrow,
+html[data-theme="dark"] .site-intro__meta {
+  color: rgba(223, 236, 225, 0.74);
+}
+
+html[data-theme="dark"] .site-intro__title {
+  color: #f1f7f1;
+}
+
+@keyframes siteIntroSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-40%) skewX(-18deg);
+  }
+
+  30% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(44%) skewX(-18deg);
+  }
+}
+
+@media (max-width: 720px) {
+  .site-intro__content {
+    inset: auto 1rem 1.2rem 1rem;
+    width: auto;
+    padding: 1.15rem 1rem 1.2rem;
+  }
+
+  .site-intro__title {
+    font-size: clamp(2.6rem, 13.5vw, 4.3rem);
+  }
+
+  .site-intro__meta {
+    max-width: 18rem;
+  }
+
+  .brand-block .eyebrow {
+    padding-block: 0.06rem 0.16rem;
+    line-height: 1.09;
+  }
+}
+
+html.reduce-effects .skip-link,
+html.reduce-effects .site-atmosphere,
+html.reduce-effects .site-header,
+html.reduce-effects #main-content,
+html.reduce-effects .modal-backdrop,
+html.reduce-effects .site-footer,
+html.reduce-effects .site-intro,
+html.reduce-effects .site-intro__panorama,
+html.reduce-effects .site-intro__content,
+html.reduce-effects .site-intro__content::before {
+  transition-duration: 180ms !important;
+}
+
+html.reduce-effects .site-intro::after {
+  animation: none !important;
+}
+
+html.reduce-effects .site-intro__panorama,
+html.reduce-effects .site-intro__content {
+  transform: none !important;
+  filter: none !important;
 }</style>
-  <link rel="preload" href="./assets/app/style.b0f9f8be42.css" as="style" fetchpriority="high">
-  <link rel="preload" href="./assets/app/script.8c2e71b05f.js" as="script" fetchpriority="high">
-  <link rel="stylesheet" href="./assets/app/style.b0f9f8be42.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.b0f9f8be42.css"></noscript>
+  <link rel="preload" href="./assets/app/style.f5dd2744f8.css" as="style" fetchpriority="high">
+  <link rel="preload" href="./assets/app/script.02bd6709b4.js" as="script" fetchpriority="high">
+  <link rel="stylesheet" href="./assets/app/style.f5dd2744f8.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.f5dd2744f8.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -2799,8 +3125,8 @@ html[data-theme="dark"] .budget-notes__settings-panel {
               <span data-language="ja" hidden>最初に旅の見積りを調整</span>
             </h3>
             <p class="budget-notes__settings-intro">
-              <span data-language="en">Set travellers and accommodation sharing here. The live trip total and day-by-day estimate update below.</span>
-              <span data-language="ja" hidden>ここで旅行人数と宿泊の共有方法を調整すると、合計と日別見積りが下で更新されます。</span>
+              <span data-language="en">Adjust travellers and how many people share each room. The live trip total and day-by-day estimate update below.</span>
+              <span data-language="ja" hidden>旅行人数と1室あたりの人数を調整すると、合計と日別見積りが下で更新されます。</span>
             </p>
           </div>
 
@@ -2850,20 +3176,49 @@ html[data-theme="dark"] .budget-notes__settings-panel {
               </div>
             </label>
 
-            <label class="budget-setting budget-setting--mode">
+            <label class="budget-setting budget-setting--stepper">
               <span class="budget-setting__label">
-                <span data-language="en">Accommodation sharing</span>
-                <span data-language="ja" hidden>宿泊の共有</span>
+                <span data-language="en">Travellers per room</span>
+                <span data-language="ja" hidden>1室あたりの人数</span>
               </span>
-              <select
-                class="budget-setting__input budget-setting__input--full budget-setting__mode"
-                data-budget-share-mode
-                aria-label="Accommodation sharing"
-                data-aria-label-en="Accommodation sharing"
-                data-aria-label-ja="宿泊の共有">
-                <option value="all-travelers">Shared accommodation</option>
-                <option value="not-shared">Not shared</option>
-              </select>
+              <span class="budget-setting__hint">
+                <span data-language="en">Controls how many travellers split each hotel or ryokan room quote.</span>
+                <span data-language="ja" hidden>ホテルや旅館の1室見積りを何人で分けるかを設定します。</span>
+              </span>
+              <div class="budget-stepper" data-budget-stepper="travelers-per-room">
+                <button
+                  class="budget-stepper__button"
+                  type="button"
+                  data-budget-step-target="travelers-per-room"
+                  data-budget-step-delta="-1"
+                  aria-label="Decrease travellers per room"
+                  data-aria-label-en="Decrease travellers per room"
+                  data-aria-label-ja="1室あたりの人数を減らす">
+                  <span aria-hidden="true">−</span>
+                </button>
+                <input
+                  class="budget-setting__input budget-stepper__input"
+                  type="number"
+                  min="1"
+                  max="24"
+                  step="1"
+                  value="2"
+                  inputmode="numeric"
+                  data-budget-travelers-per-room
+                  aria-label="Travellers per room"
+                  data-aria-label-en="Travellers per room"
+                  data-aria-label-ja="1室あたりの人数">
+                <button
+                  class="budget-stepper__button"
+                  type="button"
+                  data-budget-step-target="travelers-per-room"
+                  data-budget-step-delta="1"
+                  aria-label="Increase travellers per room"
+                  data-aria-label-en="Increase travellers per room"
+                  data-aria-label-ja="1室あたりの人数を増やす">
+                  <span aria-hidden="true">+</span>
+                </button>
+              </div>
             </label>
           </section>
 
@@ -3511,10 +3866,10 @@ html[data-theme="dark"] .budget-notes__settings-panel {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"pageBackdropImagePath":"./assets/app/1yegabjjbjp01.1e878db773.jpg","pageBackdropImageCssPath":"./1yegabjjbjp01.1e878db773.jpg","pageBackdropImageHash":"1e878db773","stylePath":"./assets/app/style.b0f9f8be42.css","styleHash":"b0f9f8be42","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.8c2e71b05f.js","scriptHash":"8c2e71b05f","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.74853b8e0a.js","budgetUiHash":"74853b8e0a","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-31T03:00:35.930Z","cacheVersion":"b0f9f8be42-2d8476cd59-8c2e71b05f-c1930b9262-74853b8e0a-742acba799-4bea009362-1e878db773"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"pageBackdropImagePath":"./assets/app/1yegabjjbjp01.1e878db773.jpg","pageBackdropImageCssPath":"./1yegabjjbjp01.1e878db773.jpg","pageBackdropImageHash":"1e878db773","stylePath":"./assets/app/style.f5dd2744f8.css","styleHash":"f5dd2744f8","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.02bd6709b4.js","scriptHash":"02bd6709b4","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.3cdc35c055.js","budgetUiHash":"3cdc35c055","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-31T18:00:11.755Z","cacheVersion":"f5dd2744f8-2d8476cd59-02bd6709b4-c1930b9262-3cdc35c055-742acba799-4bea009362-1e878db773"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
-  <script src="./assets/app/script.8c2e71b05f.js" defer></script>
+  <script src="./assets/app/script.02bd6709b4.js" defer></script>
   <!-- build:inline-script:end -->
 </body>
 </html>

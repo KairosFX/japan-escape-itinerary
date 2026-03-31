@@ -96,8 +96,7 @@ const budgetDefaultTravelerCount = 2;
 const budgetTravelerCountMin = 1;
 const budgetTravelerCountMax = 24;
 const budgetSharedRoomOccupancy = 2;
-const budgetAccommodationShareModeDefault = "all-travelers";
-const budgetAccommodationShareModes = ["not-shared", "all-travelers"];
+const budgetTravelersPerRoomDefault = budgetSharedRoomOccupancy;
 const serviceWorkerWarmMessageType = "CACHE_URLS";
 let budgetSourceUpdatedAt = "2026-03-27";
 let budgetAssumptionCopy = {
@@ -1129,8 +1128,7 @@ let packingInitialized = false;
 function getDefaultBudgetNotesState() {
   return {
     travelers: budgetDefaultTravelerCount,
-    accommodationShareMode: budgetAccommodationShareModeDefault,
-    accommodationShareCount: budgetDefaultTravelerCount,
+    travelersPerRoom: Math.min(budgetDefaultTravelerCount, budgetTravelersPerRoomDefault),
     includeExtras: false,
     days: {}
   };
@@ -1148,10 +1146,7 @@ function readStoredBudgetNotesState() {
     }
 
     const travelers = Number.parseInt(String(parsed.travelers ?? ""), 10);
-    const accommodationShareCount = Number.parseInt(
-      String(parsed.accommodationShareCount ?? ""),
-      10
-    );
+    const travelersPerRoom = Number.parseInt(String(parsed.travelersPerRoom ?? ""), 10);
     const days =
       parsed.days && typeof parsed.days === "object" && !Array.isArray(parsed.days)
         ? Object.entries(parsed.days).reduce((nextState, [day, entry]) => {
@@ -1167,18 +1162,20 @@ function readStoredBudgetNotesState() {
           }, {})
         : {};
 
+    const resolvedTravelers =
+      Number.isFinite(travelers) && travelers >= budgetTravelerCountMin
+        ? Math.min(travelers, budgetTravelerCountMax)
+        : fallbackState.travelers;
+    const resolvedTravelersPerRoom =
+      Number.isFinite(travelersPerRoom) && travelersPerRoom > 0
+        ? Math.min(travelersPerRoom, resolvedTravelers)
+        : parsed.accommodationShareMode === "not-shared"
+          ? 1
+          : Math.min(resolvedTravelers, budgetTravelersPerRoomDefault);
+
     return {
-      travelers:
-        Number.isFinite(travelers) && travelers >= budgetTravelerCountMin
-          ? Math.min(travelers, budgetTravelerCountMax)
-          : fallbackState.travelers,
-      accommodationShareMode: budgetAccommodationShareModes.includes(parsed.accommodationShareMode)
-        ? parsed.accommodationShareMode
-        : fallbackState.accommodationShareMode,
-      accommodationShareCount:
-        Number.isFinite(accommodationShareCount) && accommodationShareCount > 0
-          ? Math.min(accommodationShareCount, budgetTravelerCountMax)
-          : fallbackState.accommodationShareCount,
+      travelers: resolvedTravelers,
+      travelersPerRoom: resolvedTravelersPerRoom,
       includeExtras: parsed.includeExtras === true,
       days
     };
@@ -7604,15 +7601,17 @@ async function playSiteIntro() {
     return;
   }
 
-  const holdDurationMs = reducedEffectsEnabled ? 160 : 920;
-  const exitDurationMs = reducedEffectsEnabled ? 0 : 420;
+  const holdDurationMs = reducedEffectsEnabled ? 180 : 1120;
+  const exitDurationMs = reducedEffectsEnabled ? 120 : 620;
 
   siteIntro.hidden = false;
-  root.classList.add("intro-active");
+  siteIntro.setAttribute("aria-hidden", "false");
   root.classList.remove("intro-leaving");
 
   await waitForFrame();
   await waitForFrame();
+  root.classList.remove("intro-pending");
+  root.classList.add("intro-active");
   await waitForDuration(holdDurationMs);
 
   root.classList.add("intro-leaving");
@@ -7624,6 +7623,7 @@ async function playSiteIntro() {
 
   root.classList.remove("intro-pending", "intro-active", "intro-leaving");
   siteIntro.hidden = true;
+  siteIntro.setAttribute("aria-hidden", "true");
 }
 
 async function bootApp() {
