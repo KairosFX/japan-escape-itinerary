@@ -65,19 +65,6 @@ fs.mkdirSync(appAssetsDir, { recursive: true });
 const manifest = {};
 const retainedFiles = new Set([path.basename(manifestPath)]);
 
-assetDefinitions.forEach(({ key, sourcePath, extension }) => {
-  const assetBuffer = fs.readFileSync(sourcePath);
-  const assetHash = createAssetHash(assetBuffer);
-  const fileName = `${key}.${assetHash}${extension}`;
-  const destinationPath = path.join(appAssetsDir, fileName);
-
-  fs.writeFileSync(destinationPath, assetBuffer);
-
-  manifest[`${key}Path`] = toWebPath(fileName);
-  manifest[`${key}Hash`] = assetHash;
-  retainedFiles.add(fileName);
-});
-
 staticAssetDefinitions.forEach(({ key, sourcePath }) => {
   if (!fs.existsSync(sourcePath)) {
     throw new Error(`Static asset source was not found: ${sourcePath}`);
@@ -96,6 +83,30 @@ staticAssetDefinitions.forEach(({ key, sourcePath }) => {
   }
 
   fs.writeFileSync(destinationPath, assetBuffer);
+  manifest[`${key}Path`] = toWebPath(fileName);
+  manifest[`${key}CssPath`] = `./${fileName}`;
+  manifest[`${key}Hash`] = assetHash;
+  retainedFiles.add(fileName);
+});
+
+assetDefinitions.forEach(({ key, sourcePath, extension }) => {
+  let assetBuffer = fs.readFileSync(sourcePath);
+
+  if (key === "style" && manifest.pageBackdropImageCssPath) {
+    const cssSource = assetBuffer.toString("utf8");
+    const rewrittenCss = cssSource.replace(
+      /\.\/assets\/icons\/1yegabjjbjp01\.jpg/g,
+      manifest.pageBackdropImageCssPath
+    );
+    assetBuffer = Buffer.from(rewrittenCss, "utf8");
+  }
+
+  const assetHash = createAssetHash(assetBuffer);
+  const fileName = `${key}.${assetHash}${extension}`;
+  const destinationPath = path.join(appAssetsDir, fileName);
+
+  fs.writeFileSync(destinationPath, assetBuffer);
+
   manifest[`${key}Path`] = toWebPath(fileName);
   manifest[`${key}Hash`] = assetHash;
   retainedFiles.add(fileName);
