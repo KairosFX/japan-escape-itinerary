@@ -9593,8 +9593,14 @@ html[data-theme="dark"] #checklist .day-card.is-warning-day::after {
   }
 }
 
+.budget-setting--mode {
+  gap: 0.5rem;
+}
+
 .budget-setting__mode {
-  display: none;
+  display: block;
+  width: 100%;
+  cursor: pointer;
 }
 
 .budget-setting--stepper {

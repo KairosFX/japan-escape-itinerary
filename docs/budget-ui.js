@@ -253,13 +253,14 @@ const itineraryBudgetLabels = {
     return clamp(parsed, budgetTravelerCountMin, budgetTravelerCountMax);
   };
   const normalizeShareMode = (value, fallback = budgetAccommodationShareModeDefault) => {
-    const normalizedValue = budgetAccommodationShareModes.includes(value) ? value : fallback;
-    return normalizedValue === "custom" ? "all-travelers" : normalizedValue;
+    return budgetAccommodationShareModes.includes(value) ? value : fallback;
   };
   const getShareModeLabel = (shareMode) => {
     switch (normalizeShareMode(shareMode)) {
       case "not-shared":
         return itineraryBudgetLabels.shareModeNotShared;
+      case "custom":
+        return itineraryBudgetLabels.shareModeCustom;
       default:
         return itineraryBudgetLabels.shareModeAllTravelers;
     }
@@ -648,27 +649,41 @@ const itineraryBudgetLabels = {
       budgetAccommodationShareModeDefault
     );
   };
-  const deriveAccommodationShareMode = (shareCount, travelers = getTravelerCount()) => {
+  const getDefaultCustomShareCount = (travelers = getTravelerCount()) => {
     const normalizedTravelers = normalizeTravelerCount(travelers, budgetDefaultTravelerCount);
-    const normalizedShareCount = normalizeShareCount(shareCount, normalizedTravelers);
-    if (normalizedShareCount <= 1) {
-      return "not-shared";
+    if (normalizedTravelers <= 1) {
+      return 1;
+    }
+    return clamp(2, 1, normalizedTravelers);
+  };
+  const setAccommodationShareMode = (shareMode, travelers = getTravelerCount()) => {
+    const normalizedTravelers = normalizeTravelerCount(travelers, budgetDefaultTravelerCount);
+    const normalizedMode = normalizeShareMode(shareMode, budgetAccommodationShareModeDefault);
+    budgetNotesState.accommodationShareMode = normalizedMode;
+
+    if (normalizedMode === "all-travelers") {
+      budgetNotesState.accommodationShareCount = normalizedTravelers;
+      return;
     }
 
-    if (normalizedShareCount >= normalizedTravelers) {
-      return "all-travelers";
+    if (normalizedMode === "not-shared") {
+      budgetNotesState.accommodationShareCount = 1;
+      return;
     }
 
-    return "custom";
+    const currentCustomShareCount = normalizeShareCount(
+      budgetNotesState.accommodationShareCount,
+      normalizedTravelers
+    );
+    budgetNotesState.accommodationShareCount =
+      currentCustomShareCount > 1 && currentCustomShareCount < normalizedTravelers
+        ? currentCustomShareCount
+        : getDefaultCustomShareCount(normalizedTravelers);
   };
   const setAccommodationShareFromCount = (shareCount, travelers = getTravelerCount()) => {
     const normalizedTravelers = normalizeTravelerCount(travelers, budgetDefaultTravelerCount);
-    const normalizedShareCount = normalizeShareCount(shareCount, normalizedTravelers);
-    budgetNotesState.accommodationShareCount = normalizedShareCount;
-    budgetNotesState.accommodationShareMode = deriveAccommodationShareMode(
-      normalizedShareCount,
-      normalizedTravelers
-    );
+    budgetNotesState.accommodationShareCount = normalizeShareCount(shareCount, normalizedTravelers);
+    budgetNotesState.accommodationShareMode = "custom";
   };
   const syncAccommodationShareForTravelers = (travelers) => {
     const normalizedTravelers = normalizeTravelerCount(travelers, budgetDefaultTravelerCount);
@@ -686,7 +701,10 @@ const itineraryBudgetLabels = {
       return;
     }
 
-    setAccommodationShareFromCount(budgetNotesState.accommodationShareCount, normalizedTravelers);
+    budgetNotesState.accommodationShareCount = normalizeShareCount(
+      budgetNotesState.accommodationShareCount,
+      normalizedTravelers
+    );
   };
   const getAccommodationShareCount = (travelers = getTravelerCount()) => {
     const normalizedTravelers = normalizeTravelerCount(travelers, budgetDefaultTravelerCount);
@@ -1416,6 +1434,11 @@ const itineraryBudgetLabels = {
       if (budgetAccommodationShareModeInput.value !== getAccommodationShareMode()) {
         budgetAccommodationShareModeInput.value = getAccommodationShareMode();
       }
+      budgetAccommodationShareModeInput.hidden = false;
+      budgetAccommodationShareModeInput.removeAttribute("aria-hidden");
+      if (budgetAccommodationShareModeInput.tabIndex < 0) {
+        budgetAccommodationShareModeInput.tabIndex = 0;
+      }
     }
 
     if (budgetAccommodationShareCountInput) {
@@ -1429,6 +1452,7 @@ const itineraryBudgetLabels = {
 
     if (budgetAccommodationShareCountField) {
       budgetAccommodationShareCountField.hidden = false;
+      budgetAccommodationShareCountField.dataset.shareMode = getAccommodationShareMode();
     }
 
     if (budgetIncludeExtrasInput) {
@@ -1499,10 +1523,18 @@ const itineraryBudgetLabels = {
   const commitSettings = () => {
     const nextTravelers = normalizeTravelerCount(budgetTravelersInput?.value, budgetDefaultTravelerCount);
     budgetNotesState.travelers = nextTravelers;
-    setAccommodationShareFromCount(
-      budgetAccommodationShareCountInput?.value ?? budgetNotesState.accommodationShareCount,
-      nextTravelers
+    const nextShareMode = normalizeShareMode(
+      budgetAccommodationShareModeInput?.value,
+      getAccommodationShareMode()
     );
+    if (nextShareMode === "custom") {
+      setAccommodationShareFromCount(
+        budgetAccommodationShareCountInput?.value ?? budgetNotesState.accommodationShareCount,
+        nextTravelers
+      );
+    } else {
+      setAccommodationShareMode(nextShareMode, nextTravelers);
+    }
     budgetNotesState.includeExtras = false;
     storeState();
     syncUI();
@@ -1562,12 +1594,8 @@ const itineraryBudgetLabels = {
       budgetAccommodationShareModeInput.dataset.itineraryBudgetBound !== "true"
     ) {
       budgetAccommodationShareModeInput.addEventListener("change", () => {
-        budgetNotesState.accommodationShareMode = normalizeShareMode(
+        setAccommodationShareMode(
           budgetAccommodationShareModeInput.value,
-          budgetAccommodationShareModeDefault
-        );
-        budgetNotesState.accommodationShareCount = normalizeShareCount(
-          budgetAccommodationShareCountInput?.value ?? budgetNotesState.accommodationShareCount,
           getTravelerCount()
         );
         storeState();

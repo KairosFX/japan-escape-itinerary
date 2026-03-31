@@ -1814,10 +1814,10 @@ html[data-theme="dark"] .section-tab[aria-selected="true"] {
     font-size: 0.72rem;
   }
 }</style>
-  <link rel="preload" href="./assets/app/style.c89f55276e.css" as="style" fetchpriority="high">
+  <link rel="preload" href="./assets/app/style.aaa409b023.css" as="style" fetchpriority="high">
   <link rel="preload" href="./assets/app/script.5a59a050e1.js" as="script" fetchpriority="high">
-  <link rel="stylesheet" href="./assets/app/style.c89f55276e.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.c89f55276e.css"></noscript>
+  <link rel="stylesheet" href="./assets/app/style.aaa409b023.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.aaa409b023.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -2612,6 +2612,23 @@ html[data-theme="dark"] .section-tab[aria-selected="true"] {
             </div>
           </label>
 
+          <label class="budget-setting budget-setting--mode">
+            <span class="budget-setting__label">
+              <span data-language="en">Accommodation sharing</span>
+              <span data-language="ja" hidden>宿泊の共有</span>
+            </span>
+            <select
+              class="budget-setting__input budget-setting__input--full budget-setting__mode"
+              data-budget-share-mode
+              aria-label="Accommodation sharing"
+              data-aria-label-en="Accommodation sharing"
+              data-aria-label-ja="宿泊の共有">
+              <option value="all-travelers">Shared accommodation</option>
+              <option value="not-shared">Not shared</option>
+              <option value="custom">Custom share count</option>
+            </select>
+          </label>
+
           <label class="budget-setting budget-setting--stepper budget-setting--share" data-budget-share-count-field>
             <span class="budget-setting__label">
               <span data-language="en">People per room</span>
@@ -2651,16 +2668,6 @@ html[data-theme="dark"] .section-tab[aria-selected="true"] {
                 <span aria-hidden="true">+</span>
               </button>
             </div>
-            <select
-              class="budget-setting__mode"
-              data-budget-share-mode
-              hidden
-              tabindex="-1"
-              aria-hidden="true">
-              <option value="all-travelers">Shared accommodation</option>
-              <option value="not-shared">Not shared</option>
-              <option value="custom">Custom share count</option>
-            </select>
           </label>
         </section>
         <section class="budget-notes__day-browser" aria-labelledby="budget-day-browser-title">
@@ -3305,7 +3312,7 @@ html[data-theme="dark"] .section-tab[aria-selected="true"] {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"pageBackdropImagePath":"./assets/app/1yegabjjbjp01.1e878db773.jpg","pageBackdropImageCssPath":"./1yegabjjbjp01.1e878db773.jpg","pageBackdropImageHash":"1e878db773","stylePath":"./assets/app/style.c89f55276e.css","styleHash":"c89f55276e","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.5a59a050e1.js","scriptHash":"5a59a050e1","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.17c321f035.js","budgetUiHash":"17c321f035","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-31T01:31:06.299Z","cacheVersion":"c89f55276e-2d8476cd59-5a59a050e1-c1930b9262-17c321f035-742acba799-4bea009362-1e878db773"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"pageBackdropImagePath":"./assets/app/1yegabjjbjp01.1e878db773.jpg","pageBackdropImageCssPath":"./1yegabjjbjp01.1e878db773.jpg","pageBackdropImageHash":"1e878db773","stylePath":"./assets/app/style.aaa409b023.css","styleHash":"aaa409b023","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.5a59a050e1.js","scriptHash":"5a59a050e1","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.ca36fc3505.js","budgetUiHash":"ca36fc3505","budgetContentPath":"./assets/app/budgetContent.742acba799.js","budgetContentHash":"742acba799","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-31T02:05:06.799Z","cacheVersion":"aaa409b023-2d8476cd59-5a59a050e1-c1930b9262-ca36fc3505-742acba799-4bea009362-1e878db773"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
   <script src="./assets/app/script.5a59a050e1.js" defer></script>
