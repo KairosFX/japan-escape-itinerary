@@ -9129,6 +9129,21 @@ body::after {
   content: none;
 }
 
+.site-atmosphere {
+  z-index: 0;
+}
+
+#main-content,
+.page-shell,
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.site-header {
+  z-index: 12;
+}
+
 .site-atmosphere::before {
   opacity: 0.34;
 }
