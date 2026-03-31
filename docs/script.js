@@ -4958,35 +4958,35 @@ function getRouteMapPalette(theme = getCurrentTheme()) {
   if (theme === "dark") {
     return {
       background: "#141a21",
-      glowOuter: "rgba(215, 108, 84, 0.2)",
-      glowInner: "rgba(255, 209, 194, 0.18)",
-      corridor: "rgba(216, 111, 89, 0.18)",
-      shadow: "rgba(7, 11, 16, 0.56)",
-      routeCasing: "rgba(20, 26, 33, 0.96)",
-      routeStart: "#ffcfbb",
-      routeMid: "#f2ab83",
-      routeMidAlt: "#dc745d",
-      routeEnd: "#b14942",
-      segmentActive: "rgba(255, 233, 226, 0.92)",
-      segmentMuted: "rgba(255, 232, 228, 0.14)",
-      segmentSelected: "#fff2ea"
+      glowOuter: "rgba(149, 195, 160, 0.22)",
+      glowInner: "rgba(214, 236, 220, 0.18)",
+      corridor: "rgba(149, 195, 160, 0.2)",
+      shadow: "rgba(8, 18, 12, 0.58)",
+      routeCasing: "rgba(14, 22, 17, 0.96)",
+      routeStart: "#e4f1e7",
+      routeMid: "#a6cfb0",
+      routeMidAlt: "#6f9c7b",
+      routeEnd: "#3f7b54",
+      segmentActive: "rgba(228, 241, 231, 0.94)",
+      segmentMuted: "rgba(213, 229, 217, 0.14)",
+      segmentSelected: "#f4fbf5"
     };
   }
 
   return {
     background: "#f4f3ef",
-    glowOuter: "rgba(155, 60, 51, 0.14)",
-    glowInner: "rgba(250, 213, 197, 0.2)",
-    corridor: "rgba(176, 72, 57, 0.18)",
-    shadow: "rgba(79, 46, 39, 0.18)",
-    routeCasing: "rgba(255, 252, 248, 0.96)",
-    routeStart: "#872f27",
-    routeMid: "#b24e3c",
-    routeMidAlt: "#d17949",
-    routeEnd: "#8e5f2a",
-    segmentActive: "rgba(128, 41, 31, 0.92)",
-    segmentMuted: "rgba(116, 85, 74, 0.16)",
-    segmentSelected: "#9b3c33"
+    glowOuter: "rgba(63, 123, 84, 0.16)",
+    glowInner: "rgba(205, 227, 211, 0.24)",
+    corridor: "rgba(63, 123, 84, 0.18)",
+    shadow: "rgba(33, 79, 53, 0.16)",
+    routeCasing: "rgba(252, 255, 252, 0.96)",
+    routeStart: "#214f35",
+    routeMid: "#3f7b54",
+    routeMidAlt: "#6f9c7b",
+    routeEnd: "#9bc1a3",
+    segmentActive: "rgba(33, 79, 53, 0.92)",
+    segmentMuted: "rgba(73, 96, 80, 0.16)",
+    segmentSelected: "#3f7b54"
   };
 }
 
