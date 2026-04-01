@@ -9123,10 +9123,9 @@ body {
 body::before,
 body::after {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
-  width: 100%;
-  min-height: 100%;
+  min-height: 100svh;
   border-radius: 0;
   filter: none;
   pointer-events: none;
@@ -9156,6 +9155,9 @@ body::after {
 }
 
 .site-atmosphere {
+  position: fixed;
+  inset: 0;
+  min-height: 100svh;
   z-index: 2;
 }
 

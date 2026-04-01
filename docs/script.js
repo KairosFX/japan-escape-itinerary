@@ -1079,8 +1079,9 @@ const headerTopRevealThreshold = 36;
 const headerCondenseScrollThreshold = 150;
 const headerScrollDeltaTolerance = 4;
 const headerScrollIntentThreshold = 24;
-let headerIsCondensed = Boolean(siteHeader?.classList.contains("is-condensed"));
-syncHeaderAccessoryVisibility(headerIsCondensed);
+let headerIsCondensed = false;
+siteHeader?.classList.remove("is-condensed");
+syncHeaderAccessoryVisibility(false);
 let lastScrollY = Math.max(window.scrollY, 0);
 let headerScrollIntentStartY = lastScrollY;
 let headerScrollIntentDirection = 0;
@@ -3618,12 +3619,7 @@ function applyReservedHeaderHeight(nextHeight, forceReset = false) {
   }
 
   currentHeaderHeight = measuredHeight;
-
-  if (forceReset) {
-    reservedHeaderHeight = measuredHeight;
-  } else {
-    reservedHeaderHeight = Math.max(reservedHeaderHeight, measuredHeight);
-  }
+  reservedHeaderHeight = measuredHeight;
 
   root.style.setProperty("--header-reserved-height", `${reservedHeaderHeight}px`);
 }
@@ -3689,7 +3685,7 @@ function getHeaderScrollOffset(extra = 20) {
   const measuredHeaderHeight = Math.ceil(
     currentHeaderHeight || reservedHeaderHeight || headerReservedHeightFallbackPx
   );
-  const baseOffset = headerIsCondensed ? measuredHeaderHeight : reservedHeaderHeight;
+  const baseOffset = reservedHeaderHeight;
   return Math.max(baseOffset + extra, measuredHeaderHeight + extra);
 }
 
@@ -3706,14 +3702,17 @@ function syncHeaderAccessoryVisibility(isCondensed) {
 }
 
 function setHeaderCondensed(nextState) {
-  if (!siteHeader || headerIsCondensed === nextState) {
+  if (!siteHeader) {
     return false;
   }
 
-  headerIsCondensed = nextState;
-  siteHeader.classList.toggle("is-condensed", nextState);
-  syncHeaderAccessoryVisibility(nextState);
-  return true;
+  const didChange =
+    headerIsCondensed || siteHeader.classList.contains("is-condensed") || Boolean(nextState);
+
+  headerIsCondensed = false;
+  siteHeader.classList.remove("is-condensed");
+  syncHeaderAccessoryVisibility(false);
+  return didChange;
 }
 
 function getRemainingScrollDistance(scrollY = window.scrollY) {
@@ -7801,55 +7800,9 @@ function syncHeaderState() {
     return;
   }
 
-  if (window.performance.now() < headerLockUntil) {
-    resetHeaderScrollTracking(currentScrollY);
-    return;
-  }
-
-  const delta = currentScrollY - lastScrollY;
-  if (Math.abs(delta) <= headerScrollDeltaTolerance) {
-    lastScrollY = currentScrollY;
-    return;
-  }
-
-  if (currentScrollY <= headerTopRevealThreshold) {
-    setHeaderCondensed(false);
-    resetHeaderScrollTracking(currentScrollY);
-    return;
-  }
-
-  const nextDirection = delta > 0 ? 1 : -1;
-  if (headerScrollIntentDirection !== nextDirection) {
-    headerScrollIntentDirection = nextDirection;
-    headerScrollIntentStartY = currentScrollY;
-    lastScrollY = currentScrollY;
-    return;
-  }
-
-  const intentDistance = Math.abs(currentScrollY - headerScrollIntentStartY);
-  const shouldTreatBottomScrollAsIntent =
-    nextDirection > 0 &&
-    currentScrollY > headerCondenseScrollThreshold &&
-    getRemainingScrollDistance(currentScrollY) <= headerScrollIntentThreshold;
-
-  if (intentDistance < headerScrollIntentThreshold && !shouldTreatBottomScrollAsIntent) {
-    lastScrollY = currentScrollY;
-    return;
-  }
-
-  if (nextDirection > 0 && currentScrollY > headerCondenseScrollThreshold) {
-    setHeaderCondensed(true);
-    resetHeaderScrollTracking(currentScrollY);
-    return;
-  }
-
-  if (nextDirection < 0) {
-    setHeaderCondensed(false);
-    resetHeaderScrollTracking(currentScrollY);
-    return;
-  }
-
-  lastScrollY = currentScrollY;
+  headerLockUntil = 0;
+  setHeaderCondensed(false);
+  resetHeaderScrollTracking(currentScrollY);
 }
 
 function runScrollEffects() {
@@ -7888,7 +7841,7 @@ if (siteHeader) {
   if ("ResizeObserver" in window) {
     const headerObserver = new window.ResizeObserver((entries) => {
       const nextHeight = getResizeObserverBlockSize(entries[0]);
-      applyReservedHeaderHeight(nextHeight, !headerIsCondensed);
+      applyReservedHeaderHeight(nextHeight, true);
     });
 
     headerObserver.observe(siteHeader);
@@ -7904,20 +7857,16 @@ if (siteHeader) {
     resizeTicking = true;
     window.requestAnimationFrame(() => {
       resizeTicking = false;
-    syncReducedEffectsMode();
-    const wasCondensed = headerIsCondensed;
-    setHeaderCondensed(false);
-    if (!("ResizeObserver" in window)) {
-      scheduleReservedHeaderHeightSync({ forceReset: true });
-    }
-    if (wasCondensed && window.scrollY > 150) {
-      setHeaderCondensed(true);
-    }
-    updateMaxScrollableY();
-    syncProgressTimeline();
-    scheduleDayCardRowHeights();
-    resizeRouteMapsIfReady();
-    lockHeaderState(220);
+      syncReducedEffectsMode();
+      setHeaderCondensed(false);
+      if (!("ResizeObserver" in window)) {
+        scheduleReservedHeaderHeightSync({ forceReset: true });
+      }
+      updateMaxScrollableY();
+      syncProgressTimeline();
+      scheduleDayCardRowHeights();
+      resizeRouteMapsIfReady();
+      lockHeaderState(220);
     });
   });
 }
