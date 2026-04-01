@@ -1,7 +1,7 @@
 [
   {
     "id": "shin-osaka-fuji-gateway",
-    "tag": { "en": "Day 4 transfer", "ja": "4日目の移動" },
+    "tag": { "en": "Day 3 transfer", "ja": "3日目の移動" },
     "title": {
       "en": "Kyoto / Shin-Osaka -> Mishima shinkansen handoff",
       "ja": "京都・新大阪 -> 三島 新幹線ハンドオフ"
@@ -21,8 +21,8 @@
       "ja": "東海道新幹線。Hikari の時刻や荷物を置きやすい席を押さえたいなら指定席基準で考えます。京都 -> 三島は自由席で約10,780円、指定席で約11,310円が目安です。"
     },
     "why": {
-      "en": "It keeps Day 4 as one clear eastbound move, shortens the long leg, and leaves the local Kawaguchiko access decisions for after the rail arrival.",
-      "ja": "4日目を一つの東向き移動として整理しやすく、長距離区間をまとめたうえで、河口湖側の細かい判断を到着後へ回せます。"
+      "en": "It keeps Day 3 as one clear eastbound move, shortens the long leg, and leaves the local Kawaguchiko access decisions for after the rail arrival.",
+      "ja": "3日目を一つの東向き移動として整理しやすく、長距離区間をまとめたうえで、河口湖側の細かい判断を到着後へ回せます。"
     },
     "practicalNotes": [
       {
@@ -40,8 +40,8 @@
     ],
     "prepReminders": [
       {
-        "en": "Book once Day 4 is fixed rather than leaving the Kansai-to-Fuji handoff to the last minute.",
-        "ja": "4日目が固まったら予約し、関西から富士側への受け渡しを直前判断にしないようにします。"
+        "en": "Book once Day 3 is fixed rather than leaving the Kansai-to-Fuji handoff to the last minute.",
+        "ja": "3日目が固まったら予約し、関西から富士側への受け渡しを直前判断にしないようにします。"
       },
       {
         "en": "Save the next local step toward Kawaguchiko so the arrival platform decision stays simple.",
@@ -54,8 +54,8 @@
         "ja": "希望の便が埋まった時は、理想の一便だけを追わず、近い便と少し遅い便の両方を候補にします。"
       },
       {
-        "en": "If the transfer window feels too tight, simplify the Day 4 arrival and protect the sunset part of the Fuji stay.",
-        "ja": "接続が窮屈に感じる時は、4日目の到着後を簡潔にして、富士側の夕景時間を守ります。"
+        "en": "If the transfer window feels too tight, simplify the Day 3 arrival and protect the calm Kawaguchiko check-in.",
+        "ja": "接続が窮屈に感じる時は、3日目の到着後を簡潔にして、河口湖での落ち着いたチェックインを優先します。"
       }
     ],
     "action": {
@@ -65,14 +65,14 @@
   },
   {
     "id": "fuji-gateway-kawaguchiko",
-    "tag": { "en": "Day 4 local access", "ja": "4日目の現地アクセス" },
+    "tag": { "en": "Day 3 arrival", "ja": "3日目の到着" },
     "title": {
       "en": "Mishima -> Kawaguchiko highway-bus handoff",
       "ja": "三島 -> 河口湖 高速バスハンドオフ"
     },
     "summary": {
-      "en": "Treat the final Day 4 handoff as a practical station-to-lake move, not another sightseeing detour.",
-      "ja": "4日目の最後は、観光の寄り道ではなく、駅から湖側へ入る実用的な移動として考えます。"
+      "en": "Treat the Day 3 handoff as a practical station-to-lake move, not another sightseeing detour.",
+      "ja": "3日目の最後は、観光の寄り道ではなく、駅から湖側へ入る実用的な移動として考えます。"
     },
     "segment": {
       "en": "Mishima Station -> Kawaguchiko Station area",
@@ -118,8 +118,8 @@
         "ja": "接続が合わなくなったら途中を増やしすぎず、湖側の拠点へ素直に入ることを優先します。"
       },
       {
-        "en": "If weather looks weak, keep Day 4 to the lake base and hotel or onsen time instead of forcing every Fuji stop.",
-        "ja": "天候が弱い時は、全立ち寄りを無理に詰めず、4日目を湖側の拠点とホテル・温泉時間中心にします。"
+        "en": "If weather looks weak, keep Day 3 to the lake base and onsen check-in instead of forcing extra Fuji stops on arrival.",
+        "ja": "天候が弱い時は、到着日に無理をせず、3日目は湖側の拠点と温泉チェックイン中心にします。"
       }
     ],
     "action": {
@@ -135,8 +135,8 @@
       "ja": "富士エリアの現地立ち寄り"
     },
     "summary": {
-      "en": "Keep Chureito / Shimoyoshida and Lake Kawaguchiko on the same Fuji-area day instead of splitting them across Day 4 and Day 5.",
-      "ja": "忠霊塔・下吉田と河口湖は、4日目と5日目に分けず、同じ富士エリア日にまとめます。"
+      "en": "Use Day 4 as the full Fuji-area sightseeing day: Chureito first, then Lake Kawaguchiko.",
+      "ja": "4日目は富士エリアの観光日にまとめ、先に忠霊塔、そのあと河口湖へ向かいます。"
     },
     "segment": {
       "en": "Mt. Fuji area base -> Chureito / Lake Kawaguchiko",
@@ -157,8 +157,8 @@
     },
     "practicalNotes": [
       {
-        "en": "Handle the Mishima-to-lake arrival first, then add one compact Fuji-area loop.",
-        "ja": "まず三島から湖側への到着を済ませ、そのあと短めの富士エリア周遊を足します。"
+        "en": "Start with Chureito in the cleaner morning window, then settle into Lake Kawaguchiko after.",
+        "ja": "朝の見え方が整いやすい時間帯に忠霊塔へ先に入り、そのあと河口湖へ落ち着いて移ります。"
       },
       {
         "en": "Keep Chureito conditional if visibility is weak or the local timing tightens.",

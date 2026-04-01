@@ -2157,13 +2157,15 @@ html.intro-leaving .site-intro__content {
 
 .site-intro__title {
   font-size: clamp(3.1rem, 8vw, 6rem);
-  line-height: 0.9;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: 0.025em;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  text-transform: none;
   color: #f4faf5;
-  text-shadow:
-    0 22px 48px rgba(1, 6, 3, 0.34),
-    0 2px 14px rgba(1, 6, 3, 0.28);
+  text-shadow: 0 10px 24px rgba(1, 6, 3, 0.18);
 }
 
 .site-intro__meta {
@@ -2194,7 +2196,9 @@ html.intro-leaving .site-intro__content {
 }
 
 .budget-setting--stepper .budget-setting__hint {
+  display: block;
   max-width: none;
+  min-height: 1.5rem;
 }
 
 .budget-setting--stepper {
@@ -2207,19 +2211,12 @@ html.intro-leaving .site-intro__content {
   min-height: 2.66rem;
 }
 
-.budget-setting__hint--placeholder {
-  display: block;
-  min-height: 1.5rem;
-  visibility: hidden;
-  pointer-events: none;
-}
-
 @media (max-width: 720px) {
   .budget-setting--stepper {
     grid-template-rows: auto auto auto;
   }
 
-  .budget-setting__hint--placeholder {
+  .budget-setting--stepper .budget-setting__hint {
     min-height: 0;
   }
 }

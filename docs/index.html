@@ -2205,13 +2205,15 @@ html.intro-leaving .site-intro__content {
 
 .site-intro__title {
   font-size: clamp(3.1rem, 8vw, 6rem);
-  line-height: 0.9;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: 0.025em;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  text-transform: none;
   color: #f4faf5;
-  text-shadow:
-    0 22px 48px rgba(1, 6, 3, 0.34),
-    0 2px 14px rgba(1, 6, 3, 0.28);
+  text-shadow: 0 10px 24px rgba(1, 6, 3, 0.18);
 }
 
 .site-intro__meta {
@@ -2242,7 +2244,9 @@ html.intro-leaving .site-intro__content {
 }
 
 .budget-setting--stepper .budget-setting__hint {
+  display: block;
   max-width: none;
+  min-height: 1.5rem;
 }
 
 .budget-setting--stepper {
@@ -2255,19 +2259,12 @@ html.intro-leaving .site-intro__content {
   min-height: 2.66rem;
 }
 
-.budget-setting__hint--placeholder {
-  display: block;
-  min-height: 1.5rem;
-  visibility: hidden;
-  pointer-events: none;
-}
-
 @media (max-width: 720px) {
   .budget-setting--stepper {
     grid-template-rows: auto auto auto;
   }
 
-  .budget-setting__hint--placeholder {
+  .budget-setting--stepper .budget-setting__hint {
     min-height: 0;
   }
 }
@@ -2363,10 +2360,10 @@ html.reduce-effects .site-intro__content {
   transform: none !important;
   filter: none !important;
 }</style>
-  <link rel="preload" href="./assets/app/style.d2d59529b4.css" as="style" fetchpriority="high">
+  <link rel="preload" href="./assets/app/style.9083356651.css" as="style" fetchpriority="high">
   <link rel="preload" href="./assets/app/script.02bd6709b4.js" as="script" fetchpriority="high">
-  <link rel="stylesheet" href="./assets/app/style.d2d59529b4.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.d2d59529b4.css"></noscript>
+  <link rel="stylesheet" href="./assets/app/style.9083356651.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.9083356651.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -2671,8 +2668,8 @@ html.reduce-effects .site-intro__content {
                   <span data-language="ja" hidden>3日目</span>
                 </span>
                 <strong class="progress-item__place">
-                  <span data-language="en">Arashiyama</span>
-                  <span data-language="ja" hidden>嵐山</span>
+                  <span data-language="en">Transfer -&gt; Kawaguchiko</span>
+                  <span data-language="ja" hidden>移動 -&gt; 河口湖</span>
                 </strong>
               </div>
               <span class="progress-item__meter" aria-hidden="true"><span class="progress-item__meter-fill"></span></span>
@@ -2690,8 +2687,8 @@ html.reduce-effects .site-intro__content {
                   <span data-language="ja" hidden>4日目</span>
                 </span>
                 <strong class="progress-item__place">
-                  <span data-language="en">Mt. Fuji</span>
-                  <span data-language="ja" hidden>富士山</span>
+                  <span data-language="en">Five Lakes / Mt. Fuji</span>
+                  <span data-language="ja" hidden>富士五湖・富士山</span>
                 </strong>
               </div>
               <span class="progress-item__meter" aria-hidden="true"><span class="progress-item__meter-fill"></span></span>
@@ -2869,30 +2866,38 @@ html.reduce-effects .site-intro__content {
               <span data-language="ja" hidden>3日目</span>
             </p>
             <p class="day-region">
-              <span data-language="en">Arashiyama</span>
-              <span data-language="ja" hidden>嵐山</span>
+              <span data-language="en">Kawaguchiko Arrival</span>
+              <span data-language="ja" hidden>河口湖到着</span>
             </p>
           </div>
           <ul class="checklist-list">
-            <li>
-              <label class="check-item" for="day3-castle">
-                <input id="day3-castle" type="checkbox">
-                <span class="check-copy" data-language="en">Arashiyama</span>
-                <span class="check-copy" data-language="ja" hidden>嵐山</span>
+            <li class="checklist-list__item checklist-list__item--with-detail">
+              <label class="check-item" for="day3-train">
+                <input id="day3-train" type="checkbox">
+                <span class="check-copy" data-language="en">Shinkansen toward Mishima</span>
+                <span class="check-copy" data-language="ja" hidden>三島方面への新幹線</span>
               </label>
+              <button class="transit-trigger transit-trigger--checklist" type="button" data-transit-detail-trigger="shin-osaka-fuji-gateway" aria-haspopup="dialog" aria-controls="transit-detail-modal">
+                <span data-language="en">Transit details</span>
+                <span data-language="ja" hidden>移動詳細</span>
+              </button>
+            </li>
+            <li class="checklist-list__item checklist-list__item--with-detail">
+              <label class="check-item" for="day3-kawaguchiko-transfer">
+                <input id="day3-kawaguchiko-transfer" type="checkbox">
+                <span class="check-copy" data-language="en">Transfer into Kawaguchiko</span>
+                <span class="check-copy" data-language="ja" hidden>河口湖へ移動</span>
+              </label>
+              <button class="transit-trigger transit-trigger--checklist" type="button" data-transit-detail-trigger="fuji-gateway-kawaguchiko" aria-haspopup="dialog" aria-controls="transit-detail-modal">
+                <span data-language="en">Transit details</span>
+                <span data-language="ja" hidden>移動詳細</span>
+              </button>
             </li>
             <li>
-              <label class="check-item" for="day3-return">
-                <input id="day3-return" type="checkbox">
-                <span class="check-copy" data-language="en">Transfer to Osaka</span>
-                <span class="check-copy" data-language="ja" hidden>大阪へ移動</span>
-              </label>
-            </li>
-            <li>
-              <label class="check-item" for="day3-kaiyukan">
-                <input id="day3-kaiyukan" type="checkbox">
-                <span class="check-copy" data-language="en">Kaiyukan</span>
-                <span class="check-copy" data-language="ja" hidden>海遊館</span>
+              <label class="check-item" for="day3-onsen-checkin">
+                <input id="day3-onsen-checkin" type="checkbox">
+                <span class="check-copy" data-language="en">Onsen hotel check-in</span>
+                <span class="check-copy" data-language="ja" hidden>温泉ホテルのチェックイン</span>
               </label>
             </li>
           </ul>
@@ -2905,54 +2910,25 @@ html.reduce-effects .site-intro__content {
               <span data-language="ja" hidden>4日目</span>
             </p>
             <p class="day-region">
-              <span data-language="en">Mt. Fuji</span>
-              <span data-language="ja" hidden>富士山</span>
+              <span data-language="en">Five Lakes / Mt. Fuji</span>
+              <span data-language="ja" hidden>富士五湖・富士山</span>
             </p>
           </div>
           <div class="day-card__body day-card__body--with-aside">
             <div class="day-card__main">
               <ul class="checklist-list">
-                <li class="checklist-list__item checklist-list__item--with-detail">
-                  <label class="check-item" for="day4-train">
-                    <input id="day4-train" type="checkbox">
-                    <span class="check-copy" data-language="en">Shinkansen toward Mishima</span>
-                    <span class="check-copy" data-language="ja" hidden>三島方面への新幹線</span>
-                  </label>
-                  <button class="transit-trigger transit-trigger--checklist" type="button" data-transit-detail-trigger="shin-osaka-fuji-gateway" aria-haspopup="dialog" aria-controls="transit-detail-modal">
-                    <span data-language="en">Transit details</span>
-                    <span data-language="ja" hidden>移動詳細</span>
-                  </button>
-                </li>
-                <li class="checklist-list__item checklist-list__item--with-detail">
-                  <label class="check-item" for="day4-fuji-access">
-                    <input id="day4-fuji-access" type="checkbox">
-                    <span class="check-copy" data-language="en">Transfer into Mt. Fuji</span>
-                    <span class="check-copy" data-language="ja" hidden>富士山エリアへ移動</span>
-                  </label>
-                  <button class="transit-trigger transit-trigger--checklist" type="button" data-transit-detail-trigger="fuji-gateway-kawaguchiko" aria-haspopup="dialog" aria-controls="transit-detail-modal">
-                    <span data-language="en">Transit details</span>
-                    <span data-language="ja" hidden>移動詳細</span>
-                  </button>
-                </li>
                 <li>
-                  <label class="check-item" for="day4-lake-arrival">
-                    <input id="day4-lake-arrival" type="checkbox">
-                    <span class="check-copy" data-language="en">Onsen check-in</span>
-                    <span class="check-copy" data-language="ja" hidden>温泉チェックイン</span>
+                  <label class="check-item" for="day4-chureito">
+                    <input id="day4-chureito" type="checkbox">
+                    <span class="check-copy" data-language="en">Lake Chureito</span>
+                    <span class="check-copy" data-language="ja" hidden>忠霊塔</span>
                   </label>
                 </li>
                 <li>
-                  <label class="check-item" for="day4-sunset">
-                    <input id="day4-sunset" type="checkbox">
+                  <label class="check-item" for="day4-kawaguchiko">
+                    <input id="day4-kawaguchiko" type="checkbox">
                     <span class="check-copy" data-language="en">Lake Kawaguchiko</span>
                     <span class="check-copy" data-language="ja" hidden>河口湖</span>
-                  </label>
-                </li>
-                <li>
-                  <label class="check-item" for="day4-onsen-night">
-                    <input id="day4-onsen-night" type="checkbox">
-                    <span class="check-copy" data-language="en">Hotel / onsen check-in</span>
-                    <span class="check-copy" data-language="ja" hidden>ホテル・温泉チェックイン</span>
                   </label>
                 </li>
               </ul>
@@ -3163,7 +3139,10 @@ html.reduce-effects .site-intro__content {
                 <span data-language="en">Travellers</span>
                 <span data-language="ja" hidden>旅行人数</span>
               </span>
-              <span class="budget-setting__hint budget-setting__hint--placeholder" aria-hidden="true"></span>
+              <span class="budget-setting__hint">
+                <span data-language="en">Sets the total number of travellers included in this estimate.</span>
+                <span data-language="ja" hidden>この見積りに含める旅行人数を設定します。</span>
+              </span>
               <div class="budget-stepper" data-budget-stepper="travelers">
                 <button
                   class="budget-stepper__button"
@@ -3890,7 +3869,7 @@ html.reduce-effects .site-intro__content {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"pageBackdropImagePath":"./assets/app/1yegabjjbjp01.1e878db773.jpg","pageBackdropImageCssPath":"./1yegabjjbjp01.1e878db773.jpg","pageBackdropImageHash":"1e878db773","stylePath":"./assets/app/style.d2d59529b4.css","styleHash":"d2d59529b4","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.02bd6709b4.js","scriptHash":"02bd6709b4","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.3cdc35c055.js","budgetUiHash":"3cdc35c055","budgetContentPath":"./assets/app/budgetContent.af081bb5d7.js","budgetContentHash":"af081bb5d7","essentialsContentPath":"./assets/app/essentialsContent.4bea009362.js","essentialsContentHash":"4bea009362","generatedAt":"2026-03-31T19:10:06.425Z","cacheVersion":"d2d59529b4-2d8476cd59-02bd6709b4-c1930b9262-3cdc35c055-af081bb5d7-4bea009362-1e878db773"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"pageBackdropImagePath":"./assets/app/1yegabjjbjp01.1e878db773.jpg","pageBackdropImageCssPath":"./1yegabjjbjp01.1e878db773.jpg","pageBackdropImageHash":"1e878db773","stylePath":"./assets/app/style.9083356651.css","styleHash":"9083356651","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.02bd6709b4.js","scriptHash":"02bd6709b4","routeContentPath":"./assets/app/routeContent.c1930b9262.js","routeContentHash":"c1930b9262","budgetUiPath":"./assets/app/budgetUi.3cdc35c055.js","budgetUiHash":"3cdc35c055","budgetContentPath":"./assets/app/budgetContent.af081bb5d7.js","budgetContentHash":"af081bb5d7","essentialsContentPath":"./assets/app/essentialsContent.4a9a06f02f.js","essentialsContentHash":"4a9a06f02f","generatedAt":"2026-04-01T00:40:55.935Z","cacheVersion":"9083356651-2d8476cd59-02bd6709b4-c1930b9262-3cdc35c055-af081bb5d7-4a9a06f02f-1e878db773"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
   <script src="./assets/app/script.02bd6709b4.js" defer></script>
