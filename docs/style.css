@@ -9121,13 +9121,30 @@ body {
 
 body::before,
 body::after {
-  content: "";
+  content: none;
+}
+
+.site-backdrop {
   position: absolute;
   inset: 0;
+  width: 100%;
+  min-height: 100%;
+  z-index: 0;
   pointer-events: none;
 }
 
-body::before {
+.site-backdrop__image,
+.site-backdrop__wash {
+  position: sticky;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  pointer-events: none;
+}
+
+.site-backdrop__image {
   z-index: 0;
   background-image:
     radial-gradient(circle at 50% 10%, rgba(255, 246, 236, 0.34), rgba(255, 246, 236, 0) 34%),
@@ -9139,10 +9156,12 @@ body::before {
     center center,
     center center,
     var(--page-backdrop-position);
+  transform: translateZ(0);
 }
 
-body::after {
+.site-backdrop__wash {
   z-index: 1;
+  margin-top: -100svh;
   background:
     linear-gradient(180deg, rgba(247, 241, 235, 0.14), rgba(247, 241, 235, 0.44) 24%, rgba(247, 241, 235, 0.68) 62%, rgba(243, 237, 229, 0.84) 100%),
     linear-gradient(90deg, rgba(248, 243, 236, 0.24), rgba(248, 243, 236, 0.06) 22%, rgba(248, 243, 236, 0.06) 78%, rgba(248, 243, 236, 0.24));
@@ -9186,7 +9205,7 @@ body::after {
   opacity: 0.08;
 }
 
-html[data-theme="dark"] body::before {
+html[data-theme="dark"] .site-backdrop__image {
   background-image:
     radial-gradient(circle at 50% 8%, rgba(228, 242, 230, 0.16), rgba(228, 242, 230, 0) 30%),
     linear-gradient(180deg, rgba(7, 15, 10, 0.22), rgba(7, 15, 10, 0.38) 44%, rgba(7, 15, 10, 0.54) 100%),
@@ -9199,7 +9218,7 @@ html[data-theme="dark"] body::before {
     var(--page-backdrop-position);
 }
 
-html[data-theme="dark"] body::after {
+html[data-theme="dark"] .site-backdrop__wash {
   background:
     linear-gradient(180deg, rgba(9, 16, 12, 0.42), rgba(9, 16, 12, 0.6) 28%, rgba(9, 16, 12, 0.78) 68%, rgba(9, 16, 12, 0.9) 100%),
     linear-gradient(90deg, rgba(9, 16, 12, 0.28), rgba(9, 16, 12, 0.12) 20%, rgba(9, 16, 12, 0.12) 80%, rgba(9, 16, 12, 0.28));
