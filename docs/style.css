@@ -9130,11 +9130,10 @@ body::after {
 }
 
 .site-backdrop {
-  position: fixed;
+  position: absolute;
   inset: 0;
   width: 100%;
-  height: 100vh;
-  height: 100svh;
+  min-height: 100%;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
@@ -9160,7 +9159,7 @@ body::after {
 
 .site-backdrop::after {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 1;
   opacity: 1;
