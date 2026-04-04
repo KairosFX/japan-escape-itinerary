@@ -4772,6 +4772,7 @@ function handleChecklistPanelChange(event) {
   }
 
   triggerChecklistInteractionFeedback(input);
+  playSectionOpenSound();
   storeChecklistState();
   refreshChecklistProgressState({ syncDayCards: true });
   syncProgressTimeline();
