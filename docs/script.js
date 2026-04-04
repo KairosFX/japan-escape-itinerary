@@ -89,7 +89,6 @@ const essentialsContentFallbackScriptUrl = "./essentials-content.min.js";
 const routeContentRuntimeGlobal = "__JAPAN_ROUTE_CONTENT__";
 const routeContentFallbackScriptUrl = "./route-content.min.js";
 const routeStyleFallbackUrl = "./route.min.css";
-const welcomeIntroAudioFallbackUrl = "./assets/audio/welcome-intro.mp3";
 const sectionOpenAudioFallbackUrl = "./assets/audio/opening.mp3";
 const backgroundLoopAudioFallbackUrl = "./assets/audio/page-background-loop.mp3";
 const transitionAudioFallbackUrl = "./assets/audio/transition.mp3";
@@ -104,16 +103,10 @@ const budgetTravelersPerRoomDefault = budgetSharedRoomOccupancy;
 const serviceWorkerWarmMessageType = "CACHE_URLS";
 const audioAmbientVolume = 0.085;
 const audioAmbientDuckVolume = 0.05;
-const audioIntroVolume = 0.58;
 const audioSectionOpenVolume = 0.24;
 const audioTransitionVolume = 0.28;
-const audioIntroFallbackDurationMs = 15000;
-const audioIntroFadeWindowMs = 220;
 const audioSectionOpenCooldownMs = 96;
 const audioTransitionCooldownMs = 320;
-const introHoldFloorMs = 1120;
-const introExitFloorMs = 620;
-const introGestureResumeLeadMs = 120;
 const scrollAnimationMinDurationMs = 280;
 const scrollAnimationMaxDurationMs = 720;
 const scrollAnimationDistanceFactor = 0.22;
@@ -506,8 +499,6 @@ let budgetContentPromise = null;
 let essentialsContentPromise = null;
 let siteAudioNodes = null;
 let ambientAudioResumeTimer = 0;
-let introAudioFadeFrame = 0;
-let introAudioStopTimer = 0;
 let activeWindowScrollAnimation = null;
 const siteAudioState = {
   ambientWanted: true,
@@ -515,10 +506,7 @@ const siteAudioState = {
   userGestureSeen: false,
   gestureBindingReady: false,
   lastSectionOpenAt: 0,
-  lastTransitionAt: 0,
-  introSequenceStartedAt: 0,
-  introSequenceDurationMs: 0,
-  introAudioPendingStart: false
+  lastTransitionAt: 0
 };
 
 function buildRouteExplorerViewDefinitions(viewDefinitions = []) {
@@ -676,7 +664,6 @@ function getResolvedAppAssetManifest() {
 
 function getAudioAssetConfig(manifest = getResolvedAppAssetManifest()) {
   return {
-    welcomeIntroPath: manifest.welcomeIntroAudioPath || welcomeIntroAudioFallbackUrl,
     sectionOpenPath: manifest.sectionOpenAudioPath || sectionOpenAudioFallbackUrl,
     backgroundLoopPath: manifest.backgroundLoopAudioPath || backgroundLoopAudioFallbackUrl,
     transitionPath: manifest.transitionAudioPath || transitionAudioFallbackUrl
@@ -715,10 +702,6 @@ function ensureSiteAudioNodes() {
 
   const audioAssets = getAudioAssetConfig();
   siteAudioNodes = {
-    intro: createManagedAudioNode(audioAssets.welcomeIntroPath, {
-      preload: "auto",
-      volume: audioIntroVolume
-    }),
     sectionOpen: createManagedAudioNode(audioAssets.sectionOpenPath, {
       preload: "auto",
       volume: audioSectionOpenVolume
@@ -759,43 +742,13 @@ function pauseManagedAudio(node, { resetTime = false } = {}) {
   }
 }
 
-function clearIntroAudioSequenceState() {
-  siteAudioState.introSequenceStartedAt = 0;
-  siteAudioState.introSequenceDurationMs = 0;
-  siteAudioState.introAudioPendingStart = false;
-}
-
-function getActiveIntroSequenceElapsedMs() {
-  if (!siteAudioState.introSequenceStartedAt) {
-    return 0;
-  }
-
-  return Math.max(performance.now() - siteAudioState.introSequenceStartedAt, 0);
-}
-
-function getActiveIntroSequenceRemainingMs() {
-  if (!siteAudioState.introSequenceStartedAt || siteAudioState.introSequenceDurationMs <= 0) {
-    return 0;
-  }
-
-  return Math.max(siteAudioState.introSequenceDurationMs - getActiveIntroSequenceElapsedMs(), 0);
-}
-
-function getWelcomeIntroDurationMs() {
-  const intro = ensureSiteAudioNodes().intro;
-  const durationSeconds = intro?.duration;
-  return Number.isFinite(durationSeconds) && durationSeconds > 0
-    ? Math.round(durationSeconds * 1000)
-    : audioIntroFallbackDurationMs;
-}
-
 function primeCriticalAudioAssets() {
   if (offlineSnapshotMode) {
     return;
   }
 
-  const { welcomeIntroPath, sectionOpenPath, transitionPath } = getAudioAssetConfig();
-  [welcomeIntroPath, sectionOpenPath, transitionPath]
+  const { sectionOpenPath, transitionPath } = getAudioAssetConfig();
+  [sectionOpenPath, transitionPath]
     .filter(Boolean)
     .forEach((href) => {
       primeHeadLink("preload", href, {
@@ -874,10 +827,6 @@ function bindSiteAudioGestureListeners() {
 
   const handleGesture = () => {
     siteAudioState.userGestureSeen = true;
-    if (siteAudioState.introAudioPendingStart) {
-      void tryPlayIntroAudio({ syncToSequence: true });
-    }
-
     if (
       siteAudioState.ambientWanted &&
       (siteAudioState.pendingAmbientStart || ensureSiteAudioNodes().ambient?.paused)
@@ -890,135 +839,6 @@ function bindSiteAudioGestureListeners() {
   window.addEventListener("touchend", handleGesture, { passive: true, capture: true });
   window.addEventListener("keydown", handleGesture, { capture: true });
   siteAudioState.gestureBindingReady = true;
-}
-
-function stopIntroAudioPlayback() {
-  if (introAudioFadeFrame) {
-    window.cancelAnimationFrame(introAudioFadeFrame);
-    introAudioFadeFrame = 0;
-  }
-
-  if (introAudioStopTimer) {
-    window.clearTimeout(introAudioStopTimer);
-    introAudioStopTimer = 0;
-  }
-
-  const intro = ensureSiteAudioNodes().intro;
-  if (!intro) {
-    return;
-  }
-
-  pauseManagedAudio(intro, { resetTime: true });
-  intro.volume = audioIntroVolume;
-}
-
-function startIntroAudioFade(durationMs = audioIntroFadeWindowMs) {
-  const intro = ensureSiteAudioNodes().intro;
-  if (!intro) {
-    return;
-  }
-
-  if (introAudioFadeFrame) {
-    window.cancelAnimationFrame(introAudioFadeFrame);
-  }
-
-  const startVolume = intro.volume;
-  const startTime = performance.now();
-  const safeDurationMs = Math.max(durationMs, 80);
-
-  const step = (timestamp) => {
-    const progress = Math.min((timestamp - startTime) / safeDurationMs, 1);
-    intro.volume = Math.max(startVolume * (1 - progress), 0);
-
-    if (progress >= 1) {
-      introAudioFadeFrame = 0;
-      stopIntroAudioPlayback();
-      return;
-    }
-
-    introAudioFadeFrame = window.requestAnimationFrame(step);
-  };
-
-  introAudioFadeFrame = window.requestAnimationFrame(step);
-}
-
-function tryPlayIntroAudio({ syncToSequence = false } = {}) {
-  const intro = ensureSiteAudioNodes().intro;
-  if (!intro || reducedEffectsEnabled || !siteAudioState.introSequenceStartedAt) {
-    return Promise.resolve(false);
-  }
-
-  const remainingMs = getActiveIntroSequenceRemainingMs();
-  if (remainingMs <= audioIntroFadeWindowMs + 40) {
-    siteAudioState.introAudioPendingStart = false;
-    stopIntroAudioPlayback();
-    return Promise.resolve(false);
-  }
-
-  if (!intro.paused && !intro.ended) {
-    siteAudioState.introAudioPendingStart = false;
-    return Promise.resolve(true);
-  }
-
-  const introDurationMs = getWelcomeIntroDurationMs();
-  const startOffsetMs = syncToSequence
-    ? Math.min(
-        getActiveIntroSequenceElapsedMs(),
-        Math.max(introDurationMs - introGestureResumeLeadMs, 0)
-      )
-    : 0;
-
-  stopIntroAudioPlayback();
-  duckAmbientLoop(remainingMs + 120);
-  intro.currentTime = startOffsetMs / 1000;
-  intro.volume = audioIntroVolume;
-
-  const scheduleFade = () => {
-    const fadeWindowMs = Math.min(
-      audioIntroFadeWindowMs,
-      Math.max(remainingMs - 80, 120)
-    );
-
-    introAudioStopTimer = window.setTimeout(() => {
-      introAudioStopTimer = 0;
-      startIntroAudioFade(fadeWindowMs);
-    }, Math.max(remainingMs - fadeWindowMs, 0));
-  };
-
-  const playResult = intro.play();
-  if (!playResult || typeof playResult.then !== "function") {
-    siteAudioState.introAudioPendingStart = false;
-    scheduleFade();
-    return Promise.resolve(true);
-  }
-
-  return playResult
-    .then(() => {
-      siteAudioState.introAudioPendingStart = false;
-      scheduleFade();
-      return true;
-    })
-    .catch(() => {
-      siteAudioState.introAudioPendingStart = true;
-      return false;
-    });
-}
-
-function playIntroAudioForDuration(totalDurationMs) {
-  if (reducedEffectsEnabled || totalDurationMs <= 0) {
-    clearIntroAudioSequenceState();
-    stopIntroAudioPlayback();
-    return;
-  }
-
-  if (!ensureSiteAudioNodes().intro) {
-    return;
-  }
-
-  siteAudioState.introSequenceStartedAt = performance.now();
-  siteAudioState.introSequenceDurationMs = totalDurationMs;
-  siteAudioState.introAudioPendingStart = false;
-  void tryPlayIntroAudio();
 }
 
 function playManagedOneShot(node, { volume = 1, cooldownMs = 180, stateKey, duckMs = 420 } = {}) {
@@ -1152,7 +972,6 @@ function getWarmCacheAssetUrls(manifest) {
     new Set(
       [
         manifest.pageBackdropImagePath,
-        manifest.welcomeIntroAudioPath || welcomeIntroAudioFallbackUrl,
         manifest.sectionOpenAudioPath || sectionOpenAudioFallbackUrl,
         manifest.backgroundLoopAudioPath || backgroundLoopAudioFallbackUrl,
         manifest.transitionAudioPath || transitionAudioFallbackUrl,
@@ -8398,23 +8217,8 @@ function waitForDuration(durationMs) {
 }
 
 function getSiteIntroTimings() {
-  if (reducedEffectsEnabled) {
-    const holdDurationMs = 180;
-    const exitDurationMs = 120;
-
-    return {
-      holdDurationMs,
-      exitDurationMs,
-      totalDurationMs: holdDurationMs + exitDurationMs
-    };
-  }
-
-  const exitDurationMs = introExitFloorMs;
-  const totalDurationMs = Math.max(
-    getWelcomeIntroDurationMs(),
-    introHoldFloorMs + exitDurationMs
-  );
-  const holdDurationMs = Math.max(totalDurationMs - exitDurationMs, introHoldFloorMs);
+  const holdDurationMs = reducedEffectsEnabled ? 180 : 1120;
+  const exitDurationMs = reducedEffectsEnabled ? 120 : 620;
 
   return {
     holdDurationMs,
@@ -8425,13 +8229,11 @@ function getSiteIntroTimings() {
 
 async function playSiteIntro() {
   if (!siteIntro) {
-    clearIntroAudioSequenceState();
-    stopIntroAudioPlayback();
     root.classList.remove("intro-pending", "intro-active", "intro-leaving");
     return;
   }
 
-  const { holdDurationMs, exitDurationMs, totalDurationMs } = getSiteIntroTimings();
+  const { holdDurationMs, exitDurationMs } = getSiteIntroTimings();
 
   siteIntro.hidden = false;
   siteIntro.setAttribute("aria-hidden", "false");
@@ -8441,7 +8243,6 @@ async function playSiteIntro() {
   await waitForFrame();
   root.classList.remove("intro-pending");
   root.classList.add("intro-active");
-  playIntroAudioForDuration(totalDurationMs);
   await waitForDuration(holdDurationMs);
 
   root.classList.add("intro-leaving");
@@ -8454,8 +8255,6 @@ async function playSiteIntro() {
   root.classList.remove("intro-pending", "intro-active", "intro-leaving");
   siteIntro.hidden = true;
   siteIntro.setAttribute("aria-hidden", "true");
-  clearIntroAudioSequenceState();
-  stopIntroAudioPlayback();
 }
 
 async function bootApp() {
