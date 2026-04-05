@@ -248,19 +248,19 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "2日目の大阪から京都への受け渡しを保存しておくと、駅で迷わず京都東側の街歩きを素直に始められます。"
       },
       "details": {
-        "en": "Treat this as a light Kansai city-to-city move, not a luggage-heavy transfer day. Reach Kyoto Station or the Shijo / Karasuma side first, then push east toward Kiyomizu-dera, Gion, and the rest of the Higashiyama cluster. Keep one live route saved once your Osaka starting point for the morning is fixed.",
-        "ja": "この移動は、荷物中心の日ではなく、関西内の軽い都市間移動として扱います。まずは京都駅か四条烏丸側へ入り、そのあと清水寺、祇園、東山エリアへ東へ寄せていく形にします。朝の大阪側の出発地点が固まったら、ライブ経路を一つ保存しておきます。"
+        "en": "Treat this as a light Kansai city-to-city move, not a luggage-heavy transfer day. Reach Kyoto Station or the Shijo / Karasuma side first, then push east toward Kiyomizu-dera, Gion, and the rest of the Higashiyama cluster. Keep the official JR-West reservation search handy once your Osaka starting point for the morning is fixed.",
+        "ja": "この移動は、荷物中心の日ではなく、関西内の軽い都市間移動として扱います。まずは京都駅か四条烏丸側へ入り、そのあと清水寺、祇園、東山エリアへ東へ寄せていく形にします。朝の大阪側の出発地点が固まったら、JR西日本の公式予約検索ページをすぐ開けるようにしておきます。"
       },
       "links": [
         {
-          "href": "https://www.google.com/maps/dir/Osaka+Station/Kyoto+Station",
+          "href": "https://e5489.jr-odekake.net/e5489/ibpc/CBTrainEntryExternalPC?LANG=en%2F1000",
           "label": {
-            "en": "Open live directions",
-            "ja": "ライブ経路を開く"
+            "en": "JR-West reservation search",
+            "ja": "JR西日本の予約検索"
           },
           "note": {
-            "en": "Google Maps handoff for Osaka -> Kyoto",
-            "ja": "大阪 -> 京都の Google マップ経路"
+            "en": "Official JR-West train reservation entry",
+            "ja": "JR西日本の公式列車予約入口"
           },
           "kind": "primary"
         }
@@ -458,7 +458,7 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
       },
       "links": [
         {
-          "href": "https://smart-ex.jp/en/index.php",
+          "href": "https://smart-ex.jp/en/lp/app/",
           "label": {
             "en": "Official booking",
             "ja": "公式予約"
@@ -517,19 +517,19 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "3日目を最も素直に三島から湖側へ渡したいなら、このローカル移動を予約対象として扱います。"
       },
       "details": {
-        "en": "The official SEKITORI route notice is the most dependable operator-run reference for the Mishima-Kawaguchiko liner timing and fare notes, so keep that here once the shinkansen timing is locked.",
-        "ja": "三島・河口湖ライナーの時刻と運賃メモは、運営側の SEKITORI 案内を残すのが最も確実です。新幹線時刻が固まったら、この参照を保存しておきます。"
+        "en": "Use the official SEKITORI route results page once the shinkansen timing is locked. It is the operator-run booking entry for the Mishima-Kawaguchiko liner, with live departures, fares, and seat availability.",
+        "ja": "新幹線時刻が固まったら、SEKITORI の公式検索結果ページを使います。三島・河口湖ライナーのライブ時刻、運賃、空席をそのまま確認できる運営側の予約入口です。"
       },
       "links": [
         {
-          "href": "https://sekitori.jp/en/news/20250314_134/",
+          "href": "https://sekitori.jp/en/apps/results/?getOffAreaMiddleGroupId=2&getOffAreaType=1&rideAreaMiddleGroupId=1&rideAreaType=1&rideDate=today",
           "label": {
-            "en": "Operator fare + timetable notice",
-            "ja": "運営側の運賃・時刻案内"
+            "en": "Mishima bus booking",
+            "ja": "三島バス予約"
           },
           "note": {
-            "en": "SEKITORI notice for the Mishima-Kawaguchiko liner",
-            "ja": "三島・河口湖ライナーのSEKITORI案内"
+            "en": "Official SEKITORI booking results for Mishima -> Kawaguchiko",
+            "ja": "三島 -> 河口湖のSEKITORI公式予約結果"
           },
           "kind": "primary"
         }
@@ -585,7 +585,7 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
       },
       "links": [
         {
-          "href": "https://highway-buses.jp/course/shibuya.php",
+          "href": "https://highway-buses.jp/course/kawaguchiko.php",
           "label": {
             "en": "Direct bus booking",
             "ja": "直通バス予約"
@@ -855,10 +855,10 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         }
       ],
       "action": {
-        "href": "https://www.google.com/maps/dir/Osaka+Station/Kyoto+Station",
+        "href": "https://e5489.jr-odekake.net/e5489/ibpc/CBTrainEntryExternalPC?LANG=en%2F1000",
         "label": {
-          "en": "Open live directions",
-          "ja": "ライブ経路を開く"
+          "en": "JR-West reservation search",
+          "ja": "JR西日本の予約検索"
         }
       }
     },
@@ -931,7 +931,7 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         }
       ],
       "action": {
-        "href": "https://smart-ex.jp/en/index.php",
+        "href": "https://smart-ex.jp/en/lp/app/",
         "label": {
           "en": "Open Smart EX",
           "ja": "Smart EX を開く"
@@ -1007,10 +1007,10 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         }
       ],
       "action": {
-        "href": "https://sekitori.jp/en/news/20250314_134/",
+        "href": "https://sekitori.jp/en/apps/results/?getOffAreaMiddleGroupId=2&getOffAreaType=1&rideAreaMiddleGroupId=1&rideAreaType=1&rideDate=today",
         "label": {
-          "en": "Open Mishima bus info",
-          "ja": "三島バス案内を開く"
+          "en": "Open Mishima bus booking",
+          "ja": "三島バス予約を開く"
         }
       }
     },
@@ -1083,10 +1083,10 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         }
       ],
       "action": {
-        "href": "https://www.google.com/maps/search/Arakurayama+Sengen+Park",
+        "href": "https://e.fujikyu-railway.jp/sightseeing/chureito_pagoda.php",
         "label": {
-          "en": "Open Chureito area map",
-          "ja": "忠霊塔周辺地図を開く"
+          "en": "Open Chureito access guide",
+          "ja": "忠霊塔のアクセス案内を開く"
         }
       }
     },
@@ -1159,7 +1159,7 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         }
       ],
       "action": {
-        "href": "https://highway-buses.jp/course/shibuya.php",
+        "href": "https://highway-buses.jp/course/kawaguchiko.php",
         "label": {
           "en": "Open direct bus",
           "ja": "直通バスを開く"

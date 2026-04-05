@@ -1302,6 +1302,8 @@ h3 {
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   scrollbar-gutter: stable both-edges;
   scrollbar-width: thin;
   padding-right: 0.4rem;
@@ -1390,12 +1392,9 @@ h3 {
 }
 
 .transit-modal__section-body--scrollable {
-  max-height: min(34vh, 12.8rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable both-edges;
-  scrollbar-width: thin;
-  padding-right: 0.2rem;
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
 }
 
 .transit-modal .section-tag,
@@ -4325,8 +4324,7 @@ html.has-modal-open body {
   }
 
   .transit-modal__section-body--scrollable {
-    max-height: min(30vh, 11.6rem);
-    -webkit-overflow-scrolling: touch;
+    max-height: none;
   }
 
   .transit-modal__meta {

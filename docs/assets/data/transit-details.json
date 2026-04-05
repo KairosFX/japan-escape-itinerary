@@ -62,8 +62,8 @@
       }
     ],
     "action": {
-      "href": "https://www.google.com/maps/dir/Osaka+Station/Kyoto+Station",
-      "label": { "en": "Open live directions", "ja": "ライブ経路を開く" }
+      "href": "https://e5489.jr-odekake.net/e5489/ibpc/CBTrainEntryExternalPC?LANG=en%2F1000",
+      "label": { "en": "JR-West reservation search", "ja": "JR西日本の予約検索" }
     }
   },
   {
@@ -126,7 +126,7 @@
       }
     ],
     "action": {
-      "href": "https://smart-ex.jp/en/index.php",
+      "href": "https://smart-ex.jp/en/lp/app/",
       "label": { "en": "Open Smart EX", "ja": "Smart EX を開く" }
     }
   },
@@ -190,8 +190,8 @@
       }
     ],
     "action": {
-      "href": "https://sekitori.jp/en/news/20250314_134/",
-      "label": { "en": "Open Mishima bus info", "ja": "三島バス案内を開く" }
+      "href": "https://sekitori.jp/en/apps/results/?getOffAreaMiddleGroupId=2&getOffAreaType=1&rideAreaMiddleGroupId=1&rideAreaType=1&rideDate=today",
+      "label": { "en": "Open Mishima bus booking", "ja": "三島バス予約を開く" }
     }
   },
   {
@@ -257,8 +257,8 @@
       }
     ],
     "action": {
-      "href": "https://www.google.com/maps/search/Arakurayama+Sengen+Park",
-      "label": { "en": "Open Chureito area map", "ja": "忠霊塔周辺地図を開く" }
+      "href": "https://e.fujikyu-railway.jp/sightseeing/chureito_pagoda.php",
+      "label": { "en": "Open Chureito access guide", "ja": "忠霊塔のアクセス案内を開く" }
     }
   },
   {
@@ -321,7 +321,7 @@
       }
     ],
     "action": {
-      "href": "https://highway-buses.jp/course/shibuya.php",
+      "href": "https://highway-buses.jp/course/kawaguchiko.php",
       "label": { "en": "Open direct bus", "ja": "直通バスを開く" }
     }
   }

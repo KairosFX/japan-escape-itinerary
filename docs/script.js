@@ -1938,27 +1938,11 @@ function renderTransitDetail(detail) {
 
   if (transitDetailSectionsNode) {
     transitDetailSectionsNode.innerHTML = [
-      renderTransitDetailTextSection(transitDetailLabels.transport, detail.transport, {
-        scrollable: true
-      }),
-      renderTransitDetailTextSection(transitDetailLabels.why, detail.why, {
-        scrollable: true
-      }),
-      renderTransitDetailListSection(
-        transitDetailLabels.practicalNotes,
-        detail.practicalNotes,
-        { scrollable: true }
-      ),
-      renderTransitDetailListSection(
-        transitDetailLabels.prepReminders,
-        detail.prepReminders,
-        { scrollable: true }
-      ),
-      renderTransitDetailListSection(
-        transitDetailLabels.fallbackOptions,
-        detail.fallbackOptions,
-        { scrollable: true }
-      )
+      renderTransitDetailTextSection(transitDetailLabels.transport, detail.transport),
+      renderTransitDetailTextSection(transitDetailLabels.why, detail.why),
+      renderTransitDetailListSection(transitDetailLabels.practicalNotes, detail.practicalNotes),
+      renderTransitDetailListSection(transitDetailLabels.prepReminders, detail.prepReminders),
+      renderTransitDetailListSection(transitDetailLabels.fallbackOptions, detail.fallbackOptions)
     ]
       .filter(Boolean)
       .join("");
