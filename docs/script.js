@@ -33,6 +33,7 @@ const transitDetailTitleNode = document.querySelector("[data-transit-detail-titl
 const transitDetailSummaryNode = document.querySelector("[data-transit-detail-summary]");
 const transitDetailMetaNode = document.querySelector("[data-transit-detail-meta]");
 const transitDetailSectionsNode = document.querySelector("[data-transit-detail-sections]");
+const transitDetailContentNode = document.querySelector("[data-transit-detail-content]");
 const transitDetailActionLink = document.querySelector("[data-transit-detail-action]");
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
 const tripNotesGridNode = document.querySelector("[data-trip-notes-grid]");
@@ -1766,34 +1767,46 @@ function setTransitDetailTag(tag = transitDetailLabels.defaultTag) {
   });
 }
 
-function renderTransitDetailTextSection(title, copy) {
+function renderTransitDetailTextSection(title, copy, { scrollable = false } = {}) {
   if (!copy?.en && !copy?.ja) {
     return "";
   }
 
+  const sectionBodyClass = scrollable
+    ? "transit-modal__section-body transit-modal__section-body--scrollable"
+    : "transit-modal__section-body";
+
   return `
     <section class="transit-modal__section">
       <h3 class="transit-modal__section-title">${renderLocalizedContent(title)}</h3>
-      <p class="transit-modal__section-copy">${renderLocalizedContent(copy)}</p>
+      <div class="${sectionBodyClass}">
+        <p class="transit-modal__section-copy">${renderLocalizedContent(copy)}</p>
+      </div>
     </section>
   `;
 }
 
-function renderTransitDetailListSection(title, items) {
+function renderTransitDetailListSection(title, items, { scrollable = false } = {}) {
   if (!Array.isArray(items) || !items.length) {
     return "";
   }
 
+  const sectionBodyClass = scrollable
+    ? "transit-modal__section-body transit-modal__section-body--scrollable"
+    : "transit-modal__section-body";
+
   return `
     <section class="transit-modal__section">
       <h3 class="transit-modal__section-title">${renderLocalizedContent(title)}</h3>
-      <ul class="transit-modal__list">
-        ${items
-          .map(
-            (item) => `<li class="transit-modal__list-item">${renderLocalizedContent(item)}</li>`
-          )
-          .join("")}
-      </ul>
+      <div class="${sectionBodyClass}">
+        <ul class="transit-modal__list">
+          ${items
+            .map(
+              (item) => `<li class="transit-modal__list-item">${renderLocalizedContent(item)}</li>`
+            )
+            .join("")}
+        </ul>
+      </div>
     </section>
   `;
 }
@@ -1815,6 +1828,15 @@ function setTransitDetailBusyState(isBusy) {
   if (transitDetailSectionsNode) {
     transitDetailSectionsNode.setAttribute("aria-busy", String(Boolean(isBusy)));
   }
+}
+
+function resetTransitDetailScrollPosition() {
+  [transitDetailModal, transitDetailContentNode]
+    .filter(Boolean)
+    .forEach((node) => {
+      node.scrollTop = 0;
+      node.scrollLeft = 0;
+    });
 }
 
 function renderTransitDetailPlaceholder(
@@ -1856,6 +1878,7 @@ function renderTransitDetailPlaceholder(
     transitDetailActionLink.removeAttribute("href");
   }
 
+  resetTransitDetailScrollPosition();
   syncLocalizedNodes(transitDetailModal);
 }
 
@@ -1903,8 +1926,7 @@ function renderTransitDetail(detail) {
     const metaMarkup = [
       renderTransitDetailFact(transitDetailLabels.segment, detail.segment),
       renderTransitDetailFact(transitDetailLabels.from, detail.from),
-      renderTransitDetailFact(transitDetailLabels.to, detail.to),
-      renderTransitDetailFact(transitDetailLabels.transport, detail.transport)
+      renderTransitDetailFact(transitDetailLabels.to, detail.to)
     ]
       .filter(Boolean)
       .join("");
@@ -1915,18 +1937,26 @@ function renderTransitDetail(detail) {
 
   if (transitDetailSectionsNode) {
     transitDetailSectionsNode.innerHTML = [
-      renderTransitDetailTextSection(transitDetailLabels.why, detail.why),
+      renderTransitDetailTextSection(transitDetailLabels.transport, detail.transport, {
+        scrollable: true
+      }),
+      renderTransitDetailTextSection(transitDetailLabels.why, detail.why, {
+        scrollable: true
+      }),
       renderTransitDetailListSection(
         transitDetailLabels.practicalNotes,
-        detail.practicalNotes
+        detail.practicalNotes,
+        { scrollable: true }
       ),
       renderTransitDetailListSection(
         transitDetailLabels.prepReminders,
-        detail.prepReminders
+        detail.prepReminders,
+        { scrollable: true }
       ),
       renderTransitDetailListSection(
         transitDetailLabels.fallbackOptions,
-        detail.fallbackOptions
+        detail.fallbackOptions,
+        { scrollable: true }
       )
     ]
       .filter(Boolean)
@@ -1946,6 +1976,7 @@ function renderTransitDetail(detail) {
     }
   }
 
+  resetTransitDetailScrollPosition();
   syncLocalizedNodes(transitDetailModal);
 }
 
@@ -2076,6 +2107,7 @@ function renderChecklistDetail(item) {
     }
   }
 
+  resetTransitDetailScrollPosition();
   syncLocalizedNodes(transitDetailModal);
 }
 
@@ -7547,7 +7579,9 @@ function setTransitModalOpen(isOpen) {
   syncModalOpenState();
 
   if (isOpen) {
+    resetTransitDetailScrollPosition();
     window.requestAnimationFrame(() => {
+      resetTransitDetailScrollPosition();
       transitDetailCloseButtons[0]?.focus();
     });
     return;

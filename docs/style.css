@@ -1288,12 +1288,25 @@ h3 {
 
 .transit-modal {
   position: relative;
-  width: min(100%, 42rem);
-  max-height: min(84vh, 46rem);
-  overflow: auto;
+  width: min(100%, 44rem);
+  max-height: min(90vh, 48rem);
+  grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
+.transit-modal__content {
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-  padding-right: 1.3rem;
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+  padding-right: 0.4rem;
+  padding-bottom: 0.1rem;
+  scroll-snap-type: y proximity;
 }
 
 .transit-modal__close {
@@ -1332,18 +1345,22 @@ h3 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.56rem;
+  min-width: 0;
 }
 
 .transit-modal__fact,
 .transit-modal__section {
   display: grid;
-  gap: 0.32rem;
+  gap: 0.44rem;
+  min-width: 0;
+  min-height: 0;
   padding: 0.82rem 0.88rem;
   border: 1px solid rgba(31, 37, 39, 0.08);
   border-radius: var(--radius-lg);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 250, 245, 0.74)),
     rgba(255, 255, 255, 0.66);
+  scroll-snap-align: start;
 }
 
 .transit-modal__fact-label,
@@ -1362,6 +1379,23 @@ h3 {
   font-size: 0.9rem;
   line-height: 1.55;
   color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.transit-modal__section-body {
+  display: grid;
+  align-content: start;
+  gap: 0.34rem;
+  min-height: 0;
+}
+
+.transit-modal__section-body--scrollable {
+  max-height: min(34vh, 12.8rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+  padding-right: 0.2rem;
 }
 
 .transit-modal .section-tag,
@@ -1373,6 +1407,7 @@ h3 {
 .transit-modal__sections {
   display: grid;
   gap: 0.6rem;
+  min-width: 0;
 }
 
 .transit-modal__list {
@@ -1385,10 +1420,15 @@ h3 {
 
 .transit-modal__list-item {
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .transit-modal__actions {
   justify-content: flex-start;
+  align-items: center;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 250, 244, 0), var(--surface-strong) 38%);
 }
 
 .transit-modal__action-link {
@@ -4276,13 +4316,25 @@ html.has-modal-open body {
 
   .transit-modal {
     width: 100%;
-    max-height: min(88vh, 44rem);
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    max-height: min(92svh, 46rem);
     border-radius: calc(var(--radius-xl) - 0.1rem) calc(var(--radius-xl) - 0.1rem) var(--radius-lg) var(--radius-lg);
+  }
+
+  .transit-modal__content {
+    padding-right: 0.12rem;
+  }
+
+  .transit-modal__section-body--scrollable {
+    max-height: min(30vh, 11.6rem);
+    -webkit-overflow-scrolling: touch;
   }
 
   .transit-modal__meta {
     grid-template-columns: 1fr;
+  }
+
+  .transit-modal__actions {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
 
 }
