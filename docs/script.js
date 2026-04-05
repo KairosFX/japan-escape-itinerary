@@ -1911,6 +1911,7 @@ function renderTransitDetail(detail) {
     return;
   }
 
+  const preferredLink = getPreferredTransitDetailLink(detail);
   setTransitDetailBusyState(false);
   setTransitDetailTag(detail.tag || transitDetailLabels.defaultTag);
 
@@ -1964,11 +1965,11 @@ function renderTransitDetail(detail) {
   }
 
   if (transitDetailActionLink) {
-    if (detail.action?.href) {
+    if (preferredLink?.href) {
       transitDetailActionLink.hidden = false;
-      transitDetailActionLink.href = detail.action.href;
+      transitDetailActionLink.href = preferredLink.href;
       transitDetailActionLink.innerHTML = renderLocalizedContent(
-        detail.action.label || transitDetailLabels.fallbackAction
+        preferredLink.label || detail.action?.label || transitDetailLabels.fallbackAction
       );
     } else {
       transitDetailActionLink.hidden = true;
@@ -3542,6 +3543,22 @@ function getPreferredBookingTransitLink(item) {
       : [];
 
   return links.find((link) => link.kind === "primary") || links[0] || null;
+}
+
+function getBookingTransitItemByDetailId(detailId) {
+  if (!detailId) {
+    return null;
+  }
+
+  return (
+    bookingTransitItemMap.get(detailId) ||
+    bookingTransitItems.find((item) => item.transitDetailId === detailId) ||
+    null
+  );
+}
+
+function getPreferredTransitDetailLink(detail) {
+  return getPreferredBookingTransitLink(getBookingTransitItemByDetailId(detail?.id) || detail);
 }
 
 function renderBookingTransitMetaTag(content, className = "") {
