@@ -9,6 +9,7 @@ const headerAccessoryGroups = Array.from(document.querySelectorAll(".language-sw
 const mainContent = document.querySelector("#main-content");
 const siteFooter = document.querySelector(".site-footer");
 const siteIntro = document.querySelector("[data-site-intro]");
+const siteTransition = document.querySelector("[data-site-transition]");
 const sequenceNotice = document.querySelector("[data-sequence-notice]");
 const checklistGateNotice = document.querySelector("[data-checklist-gate]");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
@@ -110,6 +111,9 @@ const audioSectionOpenVolume = 0.24;
 const audioTransitionVolume = 0.28;
 const audioSectionOpenCooldownMs = 96;
 const audioTransitionCooldownMs = 320;
+const siteTransitionDurationMs = 760;
+const siteTransitionSwapDelayMs = 176;
+const siteTransitionBackToTopDelayMs = 108;
 let budgetSourceUpdatedAt = "2026-03-27";
 let budgetAssumptionCopy = {
   en:
@@ -508,6 +512,8 @@ const siteAudioState = {
   lastSectionOpenAt: 0,
   lastTransitionAt: 0
 };
+let siteTransitionCleanupTimer = 0;
+let siteTransitionToken = 0;
 
 function buildRouteExplorerViewDefinitions(viewDefinitions = []) {
   return viewDefinitions.map((viewDefinition) => {
@@ -3219,6 +3225,8 @@ function syncReducedEffectsMode({ force = false } = {}) {
   root.classList.toggle("enhanced-effects", !reducedEffectsEnabled);
 
   if (reducedEffectsEnabled) {
+    clearSiteTransitionState();
+
     if (desktopReverseScrollTimer) {
       window.clearTimeout(desktopReverseScrollTimer);
       desktopReverseScrollTimer = 0;
@@ -7875,12 +7883,7 @@ async function scrollToChecklistDay(day) {
     return;
   }
 
-  lockHeaderState(420);
-  if (getActivePanelId() !== "checklist") {
-    playTransitionSound();
-  }
-  setActivePanel("checklist");
-  await ensureSectionInitialized("checklist");
+  await activatePanel("checklist");
 
   window.requestAnimationFrame(() => {
     window.requestAnimationFrame(() => {
@@ -8210,14 +8213,7 @@ function bindTabNavigation() {
         return;
       }
 
-      if (panelId !== getActivePanelId()) {
-        playTransitionSound();
-      }
-
-      await ensureSectionAssetsReady(panelId);
-      lockHeaderState(520);
-      setActivePanel(panelId);
-      await ensureSectionInitialized(panelId);
+      await activatePanel(panelId);
       scrollToPanelStart(panelId);
     });
 
@@ -8237,9 +8233,99 @@ function waitForDuration(durationMs) {
   });
 }
 
+function clearSiteTransitionState() {
+  if (siteTransitionCleanupTimer) {
+    window.clearTimeout(siteTransitionCleanupTimer);
+    siteTransitionCleanupTimer = 0;
+  }
+
+  if (siteTransition) {
+    siteTransition.classList.remove("is-active");
+    siteTransition.hidden = true;
+    siteTransition.setAttribute("aria-hidden", "true");
+    delete siteTransition.dataset.direction;
+    delete siteTransition.dataset.mode;
+  }
+
+  delete root.dataset.siteTransitionDirection;
+  delete root.dataset.siteTransitionMode;
+}
+
+function getPanelTransitionDirection(nextPanelId, currentPanelId = getActivePanelId()) {
+  const currentIndex = sectionTabs.findIndex((tab) => tab.dataset.panelTarget === currentPanelId);
+  const nextIndex = sectionTabs.findIndex((tab) => tab.dataset.panelTarget === nextPanelId);
+
+  if (currentIndex === -1 || nextIndex === -1 || currentIndex === nextIndex) {
+    return "forward";
+  }
+
+  return nextIndex > currentIndex ? "forward" : "backward";
+}
+
+function triggerSiteTransition({ mode = "section", direction = "forward" } = {}) {
+  if (!siteTransition || reducedEffectsEnabled) {
+    clearSiteTransitionState();
+    return 0;
+  }
+
+  const token = ++siteTransitionToken;
+  const swapDelayMs =
+    mode === "back-to-top" ? siteTransitionBackToTopDelayMs : siteTransitionSwapDelayMs;
+
+  root.dataset.siteTransitionDirection = direction;
+  root.dataset.siteTransitionMode = mode;
+
+  siteTransition.hidden = false;
+  siteTransition.setAttribute("aria-hidden", "false");
+  siteTransition.dataset.direction = direction;
+  siteTransition.dataset.mode = mode;
+  siteTransition.classList.remove("is-active");
+  void siteTransition.getBoundingClientRect();
+  siteTransition.classList.add("is-active");
+
+  if (siteTransitionCleanupTimer) {
+    window.clearTimeout(siteTransitionCleanupTimer);
+  }
+
+  siteTransitionCleanupTimer = window.setTimeout(() => {
+    if (token !== siteTransitionToken) {
+      return;
+    }
+
+    clearSiteTransitionState();
+  }, siteTransitionDurationMs);
+
+  return swapDelayMs;
+}
+
+async function activatePanel(panelId, { transitionIfChanged = true } = {}) {
+  const currentPanelId = getActivePanelId();
+  const hasChanged = panelId !== currentPanelId;
+
+  await ensureSectionAssetsReady(panelId);
+
+  if (hasChanged && transitionIfChanged) {
+    const transitionDirection = getPanelTransitionDirection(panelId, currentPanelId);
+    playTransitionSound();
+    const swapDelayMs = triggerSiteTransition({
+      mode: "section",
+      direction: transitionDirection
+    });
+
+    if (swapDelayMs > 0) {
+      await waitForDuration(swapDelayMs);
+    }
+  }
+
+  lockHeaderState(hasChanged ? 620 : 520);
+  setActivePanel(panelId);
+  await ensureSectionInitialized(panelId);
+  return hasChanged;
+}
+
 function getSiteIntroTimings() {
-  const holdDurationMs = reducedEffectsEnabled ? 180 : 1120;
-  const exitDurationMs = reducedEffectsEnabled ? 120 : 620;
+  const holdDurationMs = reducedEffectsEnabled ? 180 : 1320;
+  const exitDurationMs = reducedEffectsEnabled ? 120 : 680;
 
   return {
     holdDurationMs,
@@ -8264,6 +8350,7 @@ async function playSiteIntro() {
   await waitForFrame();
   root.classList.remove("intro-pending");
   root.classList.add("intro-active");
+  playSectionOpenSound();
   await waitForDuration(holdDurationMs);
 
   root.classList.add("intro-leaving");
@@ -8416,8 +8503,15 @@ if (resetProgressConfirmButton) {
 }
 
 backToTopButtons.forEach((button) => {
-  button.addEventListener("click", () => {
+  button.addEventListener("click", async () => {
     playTransitionSound();
+    const swapDelayMs = triggerSiteTransition({
+      mode: "back-to-top",
+      direction: "up"
+    });
+    if (swapDelayMs > 0) {
+      await waitForDuration(swapDelayMs);
+    }
     void smoothlyScrollWindowTo(0, { intent: "back-to-top" });
   });
 });
