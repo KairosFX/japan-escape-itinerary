@@ -1098,7 +1098,6 @@ html[data-theme="dark"] .site-backdrop__wash {
   border-radius: 2.4rem;
   filter: blur(0.8px);
   opacity: 0.24;
-  animation: bambooSway 20s ease-in-out infinite alternate;
 }
 
 .site-atmosphere__orb--north,
@@ -1326,16 +1325,6 @@ html[data-theme="dark"] .site-intro__title span:last-child {
   .site-atmosphere__orb--sun {
     left: 30%;
     width: 30vw;
-  }
-}
-
-@keyframes bambooSway {
-  0% {
-    transform: translate3d(0, 0, 0) rotate(-1deg);
-  }
-
-  100% {
-    transform: translate3d(1.2rem, -0.4rem, 0) rotate(1.4deg);
   }
 }
 

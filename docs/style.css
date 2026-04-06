@@ -7405,7 +7405,6 @@ body::after {
   border-radius: 2.4rem;
   filter: blur(0.8px);
   opacity: 0.24;
-  animation: bambooSway 20s ease-in-out infinite alternate;
 }
 
 .site-atmosphere__orb--north,
@@ -7885,16 +7884,6 @@ html[data-theme="dark"] .site-intro__title span:last-child {
   .site-atmosphere__orb--sun {
     left: 30%;
     width: 30vw;
-  }
-}
-
-@keyframes bambooSway {
-  0% {
-    transform: translate3d(0, 0, 0) rotate(-1deg);
-  }
-
-  100% {
-    transform: translate3d(1.2rem, -0.4rem, 0) rotate(1.4deg);
   }
 }
 
@@ -10948,130 +10937,6 @@ html.intro-active .site-intro__glow {
     0 0 34px rgba(218, 241, 223, 0.12);
 }
 
-.site-intro__bamboo-rain {
-  position: absolute;
-  inset: -12% -10%;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 0;
-  mix-blend-mode: screen;
-}
-
-html.intro-pending .site-intro__bamboo-rain,
-html.intro-active .site-intro__bamboo-rain,
-html.intro-leaving .site-intro__bamboo-rain {
-  opacity: 1;
-}
-
-.site-intro__bamboo {
-  --bamboo-left: 12%;
-  --bamboo-rotate: 12deg;
-  --bamboo-scale: 1;
-  --bamboo-duration: 1240ms;
-  --bamboo-delay: 0ms;
-  position: absolute;
-  top: -24rem;
-  left: var(--bamboo-left);
-  width: 0.92rem;
-  height: 22rem;
-  border-radius: 999px;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(218, 246, 221, 0.18),
-      rgba(171, 224, 173, 0.78) 20%,
-      rgba(103, 163, 110, 0.92) 52%,
-      rgba(46, 92, 54, 0.9)
-    );
-  box-shadow:
-    0 0 22px rgba(174, 226, 177, 0.18),
-    inset -0.08rem 0 0 rgba(22, 48, 28, 0.32),
-    inset 0.08rem 0 0 rgba(246, 255, 247, 0.22);
-  opacity: 0;
-  transform: translate3d(0, -6rem, 0) rotate(var(--bamboo-rotate)) scale(var(--bamboo-scale));
-  transform-origin: 50% 15%;
-  will-change: transform, opacity;
-}
-
-.site-intro__bamboo::before,
-.site-intro__bamboo::after {
-  content: "";
-  position: absolute;
-  left: -1.5rem;
-  width: 5rem;
-  height: 4.8rem;
-  background:
-    linear-gradient(132deg, rgba(0, 0, 0, 0) 0 32%, rgba(187, 235, 192, 0.72) 32% 36%, rgba(0, 0, 0, 0) 36%),
-    linear-gradient(150deg, rgba(0, 0, 0, 0) 0 44%, rgba(116, 189, 123, 0.82) 44% 49%, rgba(0, 0, 0, 0) 49%),
-    linear-gradient(44deg, rgba(0, 0, 0, 0) 0 44%, rgba(158, 219, 165, 0.62) 44% 48%, rgba(0, 0, 0, 0) 48%),
-    linear-gradient(28deg, rgba(0, 0, 0, 0) 0 56%, rgba(92, 156, 101, 0.62) 56% 61%, rgba(0, 0, 0, 0) 61%);
-  opacity: 0.9;
-  filter: drop-shadow(0 0 10px rgba(151, 216, 160, 0.16));
-}
-
-.site-intro__bamboo::before {
-  top: 24%;
-  transform: rotate(-18deg);
-}
-
-.site-intro__bamboo::after {
-  top: 58%;
-  transform: rotate(14deg) scale(0.92);
-  opacity: 0.76;
-}
-
-html.intro-active .site-intro__bamboo {
-  animation: introBambooFall var(--bamboo-duration) cubic-bezier(0.16, 1, 0.3, 1) var(--bamboo-delay) both;
-}
-
-.site-intro__bamboo--1 {
-  --bamboo-left: 8%;
-  --bamboo-rotate: 13deg;
-  --bamboo-scale: 0.92;
-  --bamboo-duration: 1160ms;
-  --bamboo-delay: 40ms;
-}
-
-.site-intro__bamboo--2 {
-  --bamboo-left: 24%;
-  --bamboo-rotate: 8deg;
-  --bamboo-scale: 1.06;
-  --bamboo-duration: 1280ms;
-  --bamboo-delay: 120ms;
-}
-
-.site-intro__bamboo--3 {
-  --bamboo-left: 41%;
-  --bamboo-rotate: 11deg;
-  --bamboo-scale: 0.98;
-  --bamboo-duration: 1220ms;
-  --bamboo-delay: 0ms;
-}
-
-.site-intro__bamboo--4 {
-  --bamboo-left: 58%;
-  --bamboo-rotate: 7deg;
-  --bamboo-scale: 1.08;
-  --bamboo-duration: 1320ms;
-  --bamboo-delay: 140ms;
-}
-
-.site-intro__bamboo--5 {
-  --bamboo-left: 72%;
-  --bamboo-rotate: 15deg;
-  --bamboo-scale: 0.94;
-  --bamboo-duration: 1180ms;
-  --bamboo-delay: 80ms;
-}
-
-.site-intro__bamboo--6 {
-  --bamboo-left: 87%;
-  --bamboo-rotate: 10deg;
-  --bamboo-scale: 0.9;
-  --bamboo-duration: 1260ms;
-  --bamboo-delay: 200ms;
-}
-
 .site-transition {
   position: fixed;
   inset: 0;
@@ -11289,17 +11154,6 @@ html[data-theme="dark"] .site-intro__content {
     linear-gradient(135deg, rgba(215, 232, 220, 0.06), rgba(215, 232, 220, 0.02));
 }
 
-html[data-theme="dark"] .site-intro__bamboo {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(195, 232, 201, 0.12),
-      rgba(127, 190, 138, 0.58) 20%,
-      rgba(66, 120, 76, 0.88) 52%,
-      rgba(21, 47, 29, 0.94)
-    );
-}
-
 html[data-theme="dark"] .site-transition__veil {
   background:
     linear-gradient(180deg, rgba(2, 7, 10, 0.08), rgba(2, 7, 10, 0.24)),
@@ -11345,17 +11199,6 @@ html[data-theme="dark"] .site-transition__line {
 }
 
 @media (max-width: 920px) {
-  .site-intro__bamboo-rain {
-    inset: -16% -18%;
-  }
-
-  .site-intro__bamboo {
-    height: 19rem;
-  }
-
-  .site-intro__bamboo--6 {
-    display: none;
-  }
 }
 
 @media (max-width: 720px) {
@@ -11380,16 +11223,6 @@ html[data-theme="dark"] .site-transition__line {
     width: min(100%, calc(100% - 1.6rem));
   }
 
-  .site-intro__bamboo {
-    width: 0.78rem;
-    height: 16rem;
-  }
-
-  .site-intro__bamboo--5,
-  .site-intro__bamboo--6 {
-    display: none;
-  }
-
   .site-transition__line {
     width: 9rem;
   }
@@ -11405,12 +11238,10 @@ html.reduce-effects .site-atmosphere::before,
 html.reduce-effects .site-atmosphere::after,
 html.reduce-effects .site-atmosphere__orb,
 html.reduce-effects .site-intro__glow,
-html.reduce-effects .site-intro__bamboo,
 html.reduce-effects .site-transition {
   animation: none !important;
 }
 
-html.reduce-effects .site-intro__bamboo-rain,
 html.reduce-effects .site-transition {
   display: none !important;
 }
@@ -11434,31 +11265,6 @@ html.reduce-effects .site-transition {
   100% {
     opacity: 0.24;
     transform: scale(1.16);
-  }
-}
-
-@keyframes introBambooFall {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, -8rem, 0) rotate(calc(var(--bamboo-rotate) - 8deg)) scale(var(--bamboo-scale));
-  }
-
-  12% {
-    opacity: 0.9;
-  }
-
-  58% {
-    opacity: 0.88;
-  }
-
-  78% {
-    opacity: 0.76;
-    transform: translate3d(-1.1rem, 68vh, 0) rotate(calc(var(--bamboo-rotate) + 8deg)) scale(var(--bamboo-scale));
-  }
-
-  100% {
-    opacity: 0;
-    transform: translate3d(-2rem, 112vh, 0) rotate(calc(var(--bamboo-rotate) + 14deg)) scale(calc(var(--bamboo-scale) * 1.02));
   }
 }
 
@@ -11632,87 +11438,12 @@ html.reduce-effects .site-transition {
   }
 }
 
-/* Jett-style transition refinement and click bamboo interaction */
+/* Restore the original Jett transition motion. */
 :root {
   --premium-transition-duration: 520ms;
   --premium-transition-swap-delay: 118ms;
   --premium-transition-top-swap-delay: 92ms;
   --premium-panel-slide-distance: 3.2rem;
-}
-
-.site-click-bamboo {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  overflow: hidden;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
-
-.site-click-bamboo__stem {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--click-bamboo-width, 0.48rem);
-  height: var(--click-bamboo-height, 8rem);
-  border-radius: 999px;
-  background:
-    linear-gradient(
-      90deg,
-      rgba(235, 251, 238, 0.12),
-      rgba(198, 240, 206, 0.78) 18%,
-      rgba(121, 186, 131, 0.92) 54%,
-      rgba(34, 73, 45, 0.94)
-    );
-  box-shadow:
-    0 0 18px rgba(172, 228, 183, 0.16),
-    inset -0.06rem 0 0 rgba(12, 28, 19, 0.34),
-    inset 0.06rem 0 0 rgba(250, 255, 251, 0.16);
-  opacity: 0;
-  transform:
-    translate3d(var(--click-bamboo-origin-x), calc(var(--click-bamboo-origin-y) - 1.5rem), 0)
-    rotate(var(--click-bamboo-rotate-start, 8deg))
-    scale(var(--click-bamboo-scale, 1));
-  transform-origin: 50% 14%;
-  will-change: transform, opacity;
-  animation:
-    interactionBambooFall var(--click-bamboo-duration, 820ms) cubic-bezier(0.18, 1, 0.32, 1)
-    var(--click-bamboo-delay, 0ms) both;
-}
-
-.site-click-bamboo__stem::before,
-.site-click-bamboo__stem::after {
-  content: "";
-  position: absolute;
-  left: -1.05rem;
-  width: 3.4rem;
-  height: 3rem;
-  background:
-    linear-gradient(132deg, rgba(0, 0, 0, 0) 0 34%, rgba(205, 243, 211, 0.7) 34% 38%, rgba(0, 0, 0, 0) 38%),
-    linear-gradient(152deg, rgba(0, 0, 0, 0) 0 46%, rgba(114, 191, 127, 0.8) 46% 50%, rgba(0, 0, 0, 0) 50%),
-    linear-gradient(36deg, rgba(0, 0, 0, 0) 0 54%, rgba(94, 166, 108, 0.62) 54% 58%, rgba(0, 0, 0, 0) 58%);
-  opacity: 0.84;
-  filter: drop-shadow(0 0 7px rgba(154, 220, 168, 0.14));
-}
-
-.site-click-bamboo__stem::before {
-  top: 20%;
-  transform: rotate(-16deg);
-}
-
-.site-click-bamboo__stem::after {
-  top: 56%;
-  transform: rotate(12deg) scale(0.9);
-  opacity: 0.68;
-}
-
-.site-click-bamboo__stem[data-intensity="transition"] {
-  filter: saturate(1.08);
-}
-
-.site-click-bamboo__stem[data-intensity="transition"]::before,
-.site-click-bamboo__stem[data-intensity="transition"]::after {
-  opacity: 0.62;
 }
 
 .site-transition__veil {
@@ -11819,17 +11550,6 @@ html[data-site-transition-mode="section"][data-site-transition-direction="forwar
   animation-name: jettPanelReveal;
 }
 
-html[data-theme="dark"] .site-click-bamboo__stem {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(204, 236, 211, 0.08),
-      rgba(124, 187, 137, 0.5) 18%,
-      rgba(67, 123, 78, 0.86) 54%,
-      rgba(18, 38, 25, 0.96)
-    );
-}
-
 html[data-theme="dark"] .site-transition__veil {
   background:
     linear-gradient(180deg, rgba(2, 7, 10, 0), rgba(2, 7, 10, 0.24) 42%, rgba(2, 7, 10, 0)),
@@ -11879,48 +11599,6 @@ html[data-theme="dark"] .site-transition__line {
 @media (max-width: 720px) {
   .site-transition__line {
     width: 7.8rem;
-  }
-
-  .site-click-bamboo__stem::before,
-  .site-click-bamboo__stem::after {
-    width: 2.8rem;
-    height: 2.5rem;
-  }
-}
-
-html.reduce-effects .site-click-bamboo,
-html.reduce-effects .site-click-bamboo__stem {
-  display: none !important;
-  animation: none !important;
-}
-
-@keyframes interactionBambooFall {
-  0% {
-    opacity: 0;
-    transform:
-      translate3d(var(--click-bamboo-origin-x), calc(var(--click-bamboo-origin-y) - 1.8rem), 0)
-      rotate(var(--click-bamboo-rotate-start))
-      scale(var(--click-bamboo-scale));
-  }
-
-  16% {
-    opacity: var(--click-bamboo-opacity);
-  }
-
-  62% {
-    opacity: var(--click-bamboo-opacity);
-  }
-
-  100% {
-    opacity: 0;
-    transform:
-      translate3d(
-        calc(var(--click-bamboo-origin-x) + var(--click-bamboo-drift-x)),
-        calc(var(--click-bamboo-origin-y) + var(--click-bamboo-drift-y)),
-        0
-      )
-      rotate(var(--click-bamboo-rotate-end))
-      scale(var(--click-bamboo-scale));
   }
 }
 
