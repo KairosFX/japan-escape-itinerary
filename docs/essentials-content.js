@@ -115,19 +115,19 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "1日目または3日目に有料の大阪泊が必要な時だけ使います。大阪という広い括りではなく、ミナミ側の動線で選んでいます。"
       },
       "details": {
-        "en": "Nishi-Shinsaibashi / Minami keeps Day 1 Dotonbori-Shinsaibashi walking and Day 3 Osaka-side movement practical. Save the Booking.com Hearton Hotel Shinsaibashi page so you can confirm the property and book the paid Osaka fallback from the same listing.",
-        "ja": "西心斎橋・ミナミなら、1日目の道頓堀・心斎橋の徒歩動線と、3日目の大阪側の動きをまとめやすいです。Booking.com のハートンホテル心斎橋ページを残し、施設確認からそのまま有料の大阪代替宿を予約できるようにしています。"
+        "en": "Yotsubashi / Nishi-Shinsaibashi keeps Day 1 Dotonbori-Shinsaibashi walking and Day 3 Osaka-side movement practical while cutting the fallback room cost. Save the Booking.com Via Inn Prime Shinsaibashi Yotsubashi page so you can confirm the property and book the cheaper paid Osaka fallback from the same listing.",
+        "ja": "四ツ橋・西心斎橋寄りなら、1日目の道頓堀・心斎橋の徒歩動線と、3日目の大阪側の動きをまとめやすく、代替宿の費用も抑えやすいです。Booking.com の Via Inn Prime Shinsaibashi Yotsubashi ページを残し、施設確認からそのまま安い大阪代替宿を予約できるようにしています。"
       },
       "links": [
         {
-          "href": "https://www.booking.com/hotel/jp/hearton-shinsaibashi.html",
+          "href": "https://www.booking.com/hotel/jp/via-inn-shinsaibashi-yotsubashi.html",
           "label": {
             "en": "Booking.com hotel page",
             "ja": "Booking.com ホテルページ"
           },
           "note": {
-            "en": "Booking.com listing for the Osaka fallback stay",
-            "ja": "大阪の代替宿に使う Booking.com ページ"
+            "en": "Booking.com listing for the cheaper Osaka fallback stay",
+            "ja": "より安い大阪代替宿に使う Booking.com ページ"
           },
           "kind": "primary"
         }
@@ -185,19 +185,19 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "この宿は、京都という大枠ではなく、四条烏丸の動線適性で選んでいます。"
       },
       "details": {
-        "en": "Shijo / Karasuma still reaches Higashiyama cleanly on Day 2, but it sets up Day 3 Arashiyama and Osaka much better than staying deep in east Kyoto. Keep the Booking.com Hotel Resol Kyoto Shijo Muromachi page here for the stay reference and booking entry point.",
-        "ja": "四条烏丸なら2日目の東山へ十分動きやすく、3日目の嵐山と大阪戻りも東側の奥へ泊まるより整います。Booking.com の HOTEL RESOL KYOTO SHIJO MUROMACHI ページを残し、宿の確認と予約導線を一つにまとめています。"
+        "en": "Shijo / Karasuma still reaches Higashiyama cleanly on Day 2, but it sets up Day 3 Arashiyama and Osaka much better than staying deep in east Kyoto. Keep the Booking.com Imu Hotel Kyoto page here for the stay reference and cheaper booking entry point.",
+        "ja": "四条烏丸なら2日目の東山へ十分動きやすく、3日目の嵐山と大阪戻りも東側の奥へ泊まるより整います。Booking.com の Imu Hotel Kyoto ページを残し、宿の確認とより安い予約導線を一つにまとめています。"
       },
       "links": [
         {
-          "href": "https://www.booking.com/hotel/jp/hotel-resol-kyoto-shijomuromati.html",
+          "href": "https://www.booking.com/hotel/jp/imu.html",
           "label": {
             "en": "Booking.com hotel page",
             "ja": "Booking.com ホテルページ"
           },
           "note": {
-            "en": "Booking.com listing for the Kyoto route-fit stay",
-            "ja": "京都の動線に合う宿の Booking.com ページ"
+            "en": "Booking.com listing for the cheaper Kyoto route-fit stay",
+            "ja": "より安い京都の動線向き宿の Booking.com ページ"
           },
           "kind": "primary"
         }
@@ -389,19 +389,19 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "東京ホテル泊は5日目と6日目に置き、渋谷到着、観光メイン日、そして帰国前の軽い7日目を同じ拠点で回せるようにします。"
       },
       "details": {
-        "en": "Shibuya access still fits the first Tokyo evening best, and keeping the same west-side base for Day 6 leaves Day 7 free for a lighter Imperial Palace/Shinjuku block instead of wasting time on a mid-route hotel switch before the airport. Keep the Booking.com EN Hotel Shibuya page here for the hotel reference and reservation access.",
-        "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、6日目も同じ西側拠点のままなら、空港前にホテル移動で時間を削らず、7日目を皇居と新宿中心に軽く回せます。ホテル確認と予約導線のために、Booking.com の EN Hotel Shibuya ページを残しています。"
+        "en": "Shibuya access still fits the first Tokyo evening best, and a central Shibuya / Udagawacho base keeps Day 6 and the Day 7 reset simple without wasting time on a mid-route hotel switch before the airport. Keep the Booking.com lyf Shibuya Tokyo page here for the hotel reference and reservation access.",
+        "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、宇田川町寄りの渋谷拠点なら6日目と7日目の立て直しもホテル移動なしで進めやすいです。ホテル確認と予約導線のために、Booking.com の lyf Shibuya Tokyo ページを残しています。"
       },
       "links": [
         {
-          "href": "https://www.booking.com/hotel/jp/shibuya-city.en-gb.html",
+          "href": "https://www.booking.com/hotel/jp/lyf-shibuya-tokyo.html",
           "label": {
             "en": "Booking.com hotel page",
             "ja": "Booking.com ホテルページ"
           },
           "note": {
-            "en": "Booking.com listing for the Shibuya base stay",
-            "ja": "渋谷の拠点ホテルに使う Booking.com ページ"
+            "en": "Booking.com listing for the cheaper Shibuya base stay",
+            "ja": "より安い渋谷拠点ホテルに使う Booking.com ページ"
           },
           "kind": "primary"
         }

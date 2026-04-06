@@ -1,8 +1,8 @@
 window.__JAPAN_BUDGET_CONTENT__ = {
-  "lastUpdated": "2026-03-27",
+  "lastUpdated": "2026-04-06",
   "updatedCopy": {
-    "en": "Accommodation, meals, transit, and ticket references updated Mar 27, 2026",
-    "ja": "宿泊・食費・移動・チケットの基準は2026年3月27日更新"
+    "en": "Accommodation, meals, transit, and ticket references updated Apr 6, 2026",
+    "ja": "宿泊・食費・移動・チケットの基準は2026年4月6日更新"
   },
   "metaCopy": {
     "en": "The old total was inflated mainly because the model stretched the route too far instead of matching the fixed 7-day west-to-east flow through Osaka, Kyoto, the Mt. Fuji area, and Tokyo.",
@@ -26,27 +26,27 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       },
       "roomCapacity": 2,
       "area": {
-        "en": "Nishi-Shinsaibashi / Minami",
-        "ja": "西心斎橋・ミナミ"
+        "en": "Yotsubashi / Nishi-Shinsaibashi",
+        "ja": "四ツ橋・西心斎橋"
       },
       "pricingTier": {
         "en": "Route-practical Osaka Minami hotel",
         "ja": "動線に合う大阪ミナミホテル"
       },
       "routeReason": {
-        "en": "Use this when you need a paid Osaka night. Nishi-Shinsaibashi / Minami supports the actual Day 1 Minami walking and Day 3 Osaka-side movement better than a random Osaka district.",
-        "ja": "大阪で有料宿が必要な時はこの立地を使います。西心斎橋・ミナミなら、1日目のミナミ散策と3日目の大阪側の動きに合いやすく、無関係な地区のホテルより実用的です。"
+        "en": "Use this when you need a paid Osaka night. Yotsubashi / Nishi-Shinsaibashi still supports the actual Day 1 Minami walking and Day 3 Osaka-side movement better than a random Osaka district.",
+        "ja": "大阪で有料宿が必要な時はこの立地を使います。四ツ橋・西心斎橋寄りなら、1日目のミナミ散策と3日目の大阪側の動きに合いやすく、無関係な地区のホテルより実用的です。"
       },
       "assumption": {
-        "en": "Used only if you switch a private/local or no-cost Osaka night to a paid hotel. Hearton Hotel Shinsaibashi is the saved route-fit fallback stay for that paid Osaka night.",
-        "ja": "大阪のローカル・プライベート滞在や宿泊費なしの夜を有料ホテルへ切り替える時だけ使います。ハートンホテル心斎橋を、その有料の大阪泊に使う動線重視の代替宿として保存しています。"
+        "en": "Used only if you switch a private/local or no-cost Osaka night to a paid hotel. Via Inn Prime Shinsaibashi Yotsubashi is the saved cheaper route-fit fallback stay for that paid Osaka night.",
+        "ja": "大阪のローカル・プライベート滞在や宿泊費なしの夜を有料ホテルへ切り替える時だけ使います。Via Inn Prime Shinsaibashi Yotsubashi を、その有料の大阪泊に使うより安い動線重視の代替宿として保存しています。"
       },
       "source": {
         "label": {
-          "en": "Hearton Hotel Shinsaibashi",
-          "ja": "ハートンホテル心斎橋"
+          "en": "Via Inn Prime Shinsaibashi Yotsubashi",
+          "ja": "Via Inn Prime Shinsaibashi Yotsubashi"
         },
-        "url": "https://www.booking.com/hotel/jp/hearton-shinsaibashi.html"
+        "url": "https://www.booking.com/hotel/jp/via-inn-shinsaibashi-yotsubashi.html"
       }
     },
     "kyoto-midrange-hotel": {
@@ -70,15 +70,15 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "ja": "四条烏丸は、2日目の京都東側へ出やすく、3日目の嵐山と大阪戻りにも地下鉄・阪急・JRの選択肢を取りやすいため、実際の動線に合います。"
       },
       "assumption": {
-        "en": "Day 2 uses the saved Hotel Resol Kyoto Shijo Muromachi stay as the route-fit Kyoto hotel reference.",
-        "ja": "2日目は、動線に合う京都ホテルの基準として保存した Hotel Resol Kyoto Shijo Muromachi を使っています。"
+        "en": "Day 2 uses the saved Imu Hotel Kyoto stay as the cheaper route-fit Kyoto hotel reference.",
+        "ja": "2日目は、より安い京都ホテルの基準として保存した Imu Hotel Kyoto を使っています。"
       },
       "source": {
         "label": {
-          "en": "Hotel Resol Kyoto Shijo Muromachi",
-          "ja": "ホテルリソル京都 四条室町"
+          "en": "Imu Hotel Kyoto",
+          "ja": "Imu Hotel Kyoto"
         },
-        "url": "https://www.booking.com/hotel/jp/hotel-resol-kyoto-shijomuromati.html"
+        "url": "https://www.booking.com/hotel/jp/imu.html"
       }
     },
     "kawaguchiko-base-hotel": {
@@ -122,27 +122,27 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       },
       "roomCapacity": 2,
       "area": {
-        "en": "West Shibuya / Maruyamacho",
-        "ja": "渋谷西側・円山町"
+        "en": "Central Shibuya / Udagawacho",
+        "ja": "渋谷中心部・宇田川町"
       },
       "pricingTier": {
         "en": "Current Shibuya hotel",
         "ja": "現在の渋谷ホテル"
       },
       "routeReason": {
-        "en": "The route now lands in Shibuya on Day 5 and keeps the hotel nights on Days 5 and 6, so this area supports the arrival evening and the fuller Tokyo day without switching bases.",
-        "ja": "今回のルートは5日目に渋谷へ入り、東京ホテル泊は5日目と6日目に置くため、このエリアなら到着夜と観光メイン日を拠点変更なしでまとめやすくなります。"
+        "en": "The route now lands in Shibuya on Day 5 and keeps the hotel nights on Days 5 and 6, so a central Shibuya base supports the arrival evening and the fuller Tokyo day without switching bases.",
+        "ja": "今回のルートは5日目に渋谷へ入り、東京ホテル泊は5日目と6日目に置くため、渋谷中心部の拠点なら到着夜と観光メイン日を拠点変更なしでまとめやすくなります。"
       },
       "assumption": {
-        "en": "Tokyo uses the saved EN Hotel Shibuya stay for the fixed hotel base on Days 5 and 6, while Day 7 defaults to no paid stay because it is the flight-home day.",
-        "ja": "東京は、保存した EN Hotel Shibuya を5日目と6日目の固定ホテル拠点として使い、7日目は帰国日のため初期値では有料宿泊を入れていません。"
+        "en": "Tokyo uses the saved lyf Shibuya Tokyo stay for the fixed hotel base on Days 5 and 6, while Day 7 defaults to no paid stay because it is the flight-home day.",
+        "ja": "東京は、保存した lyf Shibuya Tokyo を5日目と6日目の固定ホテル拠点として使い、7日目は帰国日のため初期値では有料宿泊を入れていません。"
       },
       "source": {
         "label": {
-          "en": "EN Hotel Shibuya",
-          "ja": "EN Hotel Shibuya"
+          "en": "lyf Shibuya Tokyo",
+          "ja": "lyf Shibuya Tokyo"
         },
-        "url": "https://www.booking.com/hotel/jp/shibuya-city.en-gb.html"
+        "url": "https://www.booking.com/hotel/jp/lyf-shibuya-tokyo.html"
       }
     },
     "tokyo-subway-24h": {
@@ -181,14 +181,14 @@ window.__JAPAN_BUDGET_CONTENT__ = {
             "en": "Booking.com Osaka fallback stay",
             "ja": "Booking.com 大阪代替ホテル"
           },
-          "url": "https://www.booking.com/hotel/jp/hearton-shinsaibashi.html"
+          "url": "https://www.booking.com/hotel/jp/via-inn-shinsaibashi-yotsubashi.html"
         },
         {
           "label": {
             "en": "Booking.com Kyoto stay",
             "ja": "Booking.com 京都ホテル"
           },
-          "url": "https://www.booking.com/hotel/jp/hotel-resol-kyoto-shijomuromati.html"
+          "url": "https://www.booking.com/hotel/jp/imu.html"
         },
         {
           "label": {
@@ -202,7 +202,7 @@ window.__JAPAN_BUDGET_CONTENT__ = {
             "en": "Booking.com Tokyo stay",
             "ja": "Booking.com 東京ホテル"
           },
-          "url": "https://www.booking.com/hotel/jp/shibuya-city.en-gb.html"
+          "url": "https://www.booking.com/hotel/jp/lyf-shibuya-tokyo.html"
         }
       ]
     },
@@ -349,16 +349,16 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       "bucket": "booked",
       "sourceGroup": "accommodation",
       "area": {
-        "en": "Nishi-Shinsaibashi / Minami",
-        "ja": "西心斎橋・ミナミ"
+        "en": "Yotsubashi / Nishi-Shinsaibashi",
+        "ja": "四ツ橋・西心斎橋"
       },
       "property": {
-        "en": "Hearton Hotel Shinsaibashi",
-        "ja": "ハートンホテル心斎橋"
+        "en": "Via Inn Prime Shinsaibashi Yotsubashi",
+        "ja": "Via Inn Prime Shinsaibashi Yotsubashi"
       },
       "routeReason": {
-        "en": "Use this when you need a paid Osaka night. Nishi-Shinsaibashi / Minami keeps Day 1 Minami walking and Day 3 Osaka-side movement practical without paying for a less relevant Osaka district.",
-        "ja": "大阪で有料宿が必要な時はこの立地を使います。西心斎橋・ミナミなら、1日目のミナミ散策と3日目の大阪側の動きをまとめやすく、関係の薄い地区へ余計に払わずに済みます。"
+        "en": "Use this when you need a paid Osaka night. Yotsubashi / Nishi-Shinsaibashi keeps Day 1 Minami walking and Day 3 Osaka-side movement practical while cutting the fallback room cost.",
+        "ja": "大阪で有料宿が必要な時はこの立地を使います。四ツ橋・西心斎橋寄りなら、1日目のミナミ散策と3日目の大阪側の動きをまとめやすく、代替宿の費用も抑えやすくなります。"
       },
       "cost": {
         "mode": "perGroup",
@@ -380,8 +380,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "ja": "京都・四条烏丸"
       },
       "property": {
-        "en": "Hotel Resol Kyoto Shijo Muromachi",
-        "ja": "ホテルリソル京都 四条室町"
+        "en": "Imu Hotel Kyoto",
+        "ja": "Imu Hotel Kyoto"
       },
       "routeReason": {
         "en": "Shijo / Karasuma works better than a generic Kyoto stay because it keeps the Day 2 Higashiyama side simple while giving cleaner subway, Hankyu, and JR options for Day 3 Arashiyama and the move back to Osaka.",
@@ -430,16 +430,16 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       "bucket": "booked",
       "sourceGroup": "accommodation",
       "area": {
-        "en": "West Shibuya / Maruyamacho",
-        "ja": "渋谷西側・円山町"
+        "en": "Central Shibuya / Udagawacho",
+        "ja": "渋谷中心部・宇田川町"
       },
       "property": {
-        "en": "EN HOTEL Shibuya",
-        "ja": "EN HOTEL Shibuya"
+        "en": "lyf Shibuya Tokyo",
+        "ja": "lyf Shibuya Tokyo"
       },
       "routeReason": {
-        "en": "Shibuya is the Day 5 arrival focus, and the same west-side base keeps the following Tokyo days cleaner than shifting districts mid-route.",
-        "ja": "渋谷は5日目の到着後の主役であり、この西側拠点のままなら、その後の東京日程も地区を変えずに進めやすくなります。"
+        "en": "Shibuya is the Day 5 arrival focus, and the same central Shibuya base keeps the following Tokyo days cleaner than shifting districts mid-route.",
+        "ja": "渋谷は5日目の到着後の主役であり、この渋谷中心部の拠点のままなら、その後の東京日程も地区を変えずに進めやすくなります。"
       },
       "cost": {
         "mode": "perGroup",
