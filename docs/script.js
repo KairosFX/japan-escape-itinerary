@@ -114,6 +114,23 @@ const audioTransitionCooldownMs = 320;
 const siteTransitionDurationMs = 520;
 const siteTransitionSwapDelayMs = 118;
 const siteTransitionBackToTopDelayMs = 92;
+const bambooCelebrationDurationMs = 1180;
+const bambooCelebrationStalkConfigs = [
+  { x: "4%", width: "0.76rem", height: "80%", tilt: "-8deg", delay: "0ms" },
+  { x: "14%", width: "0.58rem", height: "68%", tilt: "-4deg", delay: "60ms" },
+  { x: "79%", width: "0.56rem", height: "66%", tilt: "5deg", delay: "90ms" },
+  { x: "89%", width: "0.72rem", height: "76%", tilt: "9deg", delay: "30ms" }
+];
+const bambooCelebrationLeafConfigs = [
+  { x: "1%", y: "18%", width: "4.2rem", height: "1.02rem", tilt: "-36deg", delay: "110ms" },
+  { x: "8%", y: "42%", width: "3.5rem", height: "0.92rem", tilt: "-14deg", delay: "170ms" },
+  { x: "12%", y: "56%", width: "3rem", height: "0.82rem", tilt: "18deg", delay: "230ms" },
+  { x: "17%", y: "26%", width: "2.8rem", height: "0.78rem", tilt: "24deg", delay: "190ms" },
+  { x: "72%", y: "20%", width: "4rem", height: "1rem", tilt: "28deg", delay: "120ms" },
+  { x: "69%", y: "44%", width: "3.4rem", height: "0.9rem", tilt: "-12deg", delay: "180ms" },
+  { x: "76%", y: "58%", width: "3.1rem", height: "0.84rem", tilt: "16deg", delay: "220ms" },
+  { x: "66%", y: "30%", width: "2.7rem", height: "0.78rem", tilt: "-24deg", delay: "200ms" }
+];
 let budgetSourceUpdatedAt = "2026-03-27";
 let budgetAssumptionCopy = {
   en:
@@ -1487,6 +1504,8 @@ let sequenceNoticeTimer = 0;
 let lastTimelineFocusDay = null;
 let lastResetTrigger = null;
 const pendingClassRestarts = new WeakMap();
+const checklistGroupCompletionState = new WeakMap();
+const bambooCelebrationTimers = new WeakMap();
 let deferredGeometryWorkPending = true;
 let deferredGeometryReleaseTimer = 0;
 let timelineLayoutFrame = 0;
@@ -3957,6 +3976,97 @@ function isPackingItemPacked(itemId) {
   return Boolean(packingState[itemId]);
 }
 
+function applyBambooCelebrationVars(target, config) {
+  Object.entries(config).forEach(([key, value]) => {
+    target.style.setProperty(`--${key}`, String(value));
+  });
+}
+
+function createBambooCelebrationLayer() {
+  const layer = document.createElement("div");
+  layer.className = "bamboo-celebration";
+  layer.setAttribute("aria-hidden", "true");
+
+  const wash = document.createElement("span");
+  wash.className = "bamboo-celebration__wash";
+  layer.append(wash);
+
+  bambooCelebrationStalkConfigs.forEach((config) => {
+    const stalk = document.createElement("span");
+    stalk.className = "bamboo-celebration__stalk";
+    applyBambooCelebrationVars(stalk, config);
+    layer.append(stalk);
+  });
+
+  bambooCelebrationLeafConfigs.forEach((config) => {
+    const leaf = document.createElement("span");
+    leaf.className = "bamboo-celebration__leaf";
+    applyBambooCelebrationVars(leaf, config);
+    layer.append(leaf);
+  });
+
+  return layer;
+}
+
+function ensureBambooCelebrationLayer(target) {
+  if (!target) {
+    return null;
+  }
+
+  const existingLayer = Array.from(target.children).find((node) =>
+    node.classList?.contains("bamboo-celebration")
+  );
+  if (existingLayer) {
+    return existingLayer;
+  }
+
+  const layer = createBambooCelebrationLayer();
+  target.prepend(layer);
+  return layer;
+}
+
+function triggerBambooCelebration(target) {
+  if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
+    return;
+  }
+
+  ensureBambooCelebrationLayer(target);
+  target.classList.remove("is-bamboo-celebrating");
+
+  const existingTimer = bambooCelebrationTimers.get(target);
+  if (existingTimer) {
+    window.clearTimeout(existingTimer);
+  }
+
+  restartClassOnNextFrame(target, "is-bamboo-celebrating");
+
+  const timerId = window.setTimeout(() => {
+    target.classList.remove("is-bamboo-celebrating");
+    bambooCelebrationTimers.delete(target);
+  }, bambooCelebrationDurationMs);
+
+  bambooCelebrationTimers.set(target, timerId);
+}
+
+function celebrateChecklistGroup(target) {
+  animateCompletion(target);
+  triggerBambooCelebration(target);
+}
+
+function syncChecklistGroupCompletion(target, isComplete) {
+  if (!target) {
+    return;
+  }
+
+  const hasKnownState = checklistGroupCompletionState.has(target);
+  const wasComplete = checklistGroupCompletionState.get(target) === true;
+  checklistGroupCompletionState.set(target, isComplete);
+
+  if (hasKnownState && !wasComplete && isComplete) {
+    celebrateChecklistGroup(target);
+  }
+}
+
 function syncPackingSectionUI(sectionElement) {
   if (!sectionElement) {
     return;
@@ -3983,6 +4093,7 @@ function syncPackingSectionUI(sectionElement) {
   const totalCount = items.length;
   const isComplete = totalCount > 0 && packedCount === totalCount;
   sectionElement.dataset.packingComplete = String(isComplete);
+  syncChecklistGroupCompletion(sectionElement, isComplete);
 
   sectionElement.querySelectorAll("[data-packing-progress-language]").forEach((node) => {
     if (node.dataset.packingProgressLanguage === "ja") {
@@ -7798,6 +7909,7 @@ function refreshChecklistProgressState(options = {}) {
       card.classList.toggle("is-current-day", isCurrent && !isComplete);
       card.classList.toggle("is-locked-day", isUnavailable);
       card.setAttribute("aria-disabled", String(isUnavailable));
+      syncChecklistGroupCompletion(card, isComplete);
       getDayInputs(card).forEach((input) => {
         input.disabled = isUnavailable;
       });
@@ -7869,7 +7981,6 @@ function refreshChecklistProgressState(options = {}) {
 }
 
 function celebrateCompletedDay(day) {
-  animateCompletion(dayCardMap.get(String(day)));
   animateCompletion(progressItemMap.get(String(day)));
 }
 
