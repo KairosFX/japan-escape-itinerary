@@ -20,6 +20,7 @@ const progressCurrentDayNode = document.querySelector("[data-progress-current-da
 const progressTotalDaysNode = document.querySelector("[data-progress-total-days]");
 const progressOverviewFill = document.querySelector("[data-progress-overview-fill]");
 const progressOverviewCaptions = document.querySelectorAll(".progress-overview__caption [data-language]");
+const fullItineraryCelebrationDayRange = Object.freeze(["1", "2", "3", "4", "5", "6", "7"]);
 const jumpCurrentDayButton = document.querySelector("[data-jump-current-day]");
 const resetProgressOpenButtons = Array.from(document.querySelectorAll("[data-reset-progress-open]"));
 const resetProgressModal = document.querySelector("[data-reset-progress-modal]");
@@ -115,6 +116,7 @@ const siteTransitionDurationMs = 520;
 const siteTransitionSwapDelayMs = 118;
 const siteTransitionBackToTopDelayMs = 92;
 const bambooCelebrationDurationMs = 1180;
+const fullChecklistCelebrationDurationMs = 2360;
 const bambooCelebrationStalkConfigs = [
   { x: "4%", width: "0.76rem", height: "80%", tilt: "-8deg", delay: "0ms" },
   { x: "14%", width: "0.58rem", height: "68%", tilt: "-4deg", delay: "60ms" },
@@ -130,6 +132,28 @@ const bambooCelebrationLeafConfigs = [
   { x: "69%", y: "44%", width: "3.4rem", height: "0.9rem", tilt: "-12deg", delay: "180ms" },
   { x: "76%", y: "58%", width: "3.1rem", height: "0.84rem", tilt: "16deg", delay: "220ms" },
   { x: "66%", y: "30%", width: "2.7rem", height: "0.78rem", tilt: "-24deg", delay: "200ms" }
+];
+const fullChecklistCelebrationStalkConfigs = [
+  { x: "-4%", width: "1.18rem", height: "100%", tilt: "-8deg", delay: "0ms" },
+  { x: "5%", width: "0.96rem", height: "90%", tilt: "-5deg", delay: "80ms" },
+  { x: "14%", width: "0.82rem", height: "78%", tilt: "-2deg", delay: "150ms" },
+  { x: "25%", width: "0.68rem", height: "66%", tilt: "1deg", delay: "240ms" },
+  { x: "74%", width: "0.72rem", height: "68%", tilt: "-1deg", delay: "230ms" },
+  { x: "83%", width: "0.84rem", height: "80%", tilt: "4deg", delay: "140ms" },
+  { x: "91%", width: "0.98rem", height: "92%", tilt: "7deg", delay: "70ms" },
+  { x: "99%", width: "1.2rem", height: "100%", tilt: "9deg", delay: "0ms" }
+];
+const fullChecklistCelebrationLeafConfigs = [
+  { x: "-1%", y: "16%", width: "6.4rem", height: "1.38rem", tilt: "-34deg", delay: "160ms" },
+  { x: "3%", y: "33%", width: "5.1rem", height: "1.12rem", tilt: "-18deg", delay: "240ms" },
+  { x: "8%", y: "52%", width: "4.5rem", height: "1rem", tilt: "12deg", delay: "320ms" },
+  { x: "15%", y: "23%", width: "4.2rem", height: "0.94rem", tilt: "24deg", delay: "270ms" },
+  { x: "20%", y: "44%", width: "3.8rem", height: "0.92rem", tilt: "-12deg", delay: "350ms" },
+  { x: "75%", y: "18%", width: "6.1rem", height: "1.34rem", tilt: "34deg", delay: "170ms" },
+  { x: "78%", y: "36%", width: "4.9rem", height: "1.08rem", tilt: "16deg", delay: "250ms" },
+  { x: "83%", y: "54%", width: "4.4rem", height: "1rem", tilt: "-14deg", delay: "330ms" },
+  { x: "88%", y: "24%", width: "4rem", height: "0.92rem", tilt: "-26deg", delay: "280ms" },
+  { x: "67%", y: "46%", width: "3.7rem", height: "0.88rem", tilt: "11deg", delay: "360ms" }
 ];
 let budgetSourceUpdatedAt = "2026-03-27";
 let budgetAssumptionCopy = {
@@ -1506,6 +1530,10 @@ let lastResetTrigger = null;
 const pendingClassRestarts = new WeakMap();
 const checklistGroupCompletionState = new WeakMap();
 const bambooCelebrationTimers = new WeakMap();
+let fullChecklistCelebrationLayer = null;
+let fullChecklistCelebrationTimer = 0;
+let hasKnownFullChecklistCompletionState = false;
+let fullChecklistWasComplete = false;
 let deferredGeometryWorkPending = true;
 let deferredGeometryReleaseTimer = 0;
 let timelineLayoutFrame = 0;
@@ -3282,6 +3310,12 @@ function getTrackedDayNumbers() {
   return getOrderedDayNumbers();
 }
 
+function getFullItineraryDayKeys() {
+  return getTrackedDayNumbers()
+    .filter((day) => fullItineraryCelebrationDayRange.includes(String(day)))
+    .map((day) => String(day));
+}
+
 function readStoredDaySet(key) {
   try {
     const parsed = JSON.parse(window.localStorage.getItem(key) || "[]");
@@ -3383,6 +3417,30 @@ function getJourneyState() {
     accessibleDay: highestUnlockedDay,
     currentDay: nextCurrentDay
   };
+}
+
+// Only the full Day 1 through Day 7 span should trigger the larger itinerary celebration.
+function syncFullChecklistCompletionState(rawCompleted) {
+  const itineraryDayKeys = getFullItineraryDayKeys();
+  const isComplete =
+    itineraryDayKeys.length === fullItineraryCelebrationDayRange.length &&
+    itineraryDayKeys.every((dayKey) => rawCompleted.has(dayKey));
+
+  if (!hasKnownFullChecklistCompletionState) {
+    hasKnownFullChecklistCompletionState = true;
+    fullChecklistWasComplete = isComplete;
+    return;
+  }
+
+  if (fullChecklistWasComplete && !isComplete) {
+    clearFullChecklistCelebration();
+  }
+
+  if (!fullChecklistWasComplete && isComplete) {
+    triggerFullChecklistCelebration();
+  }
+
+  fullChecklistWasComplete = isComplete;
 }
 
 function readStoredChecklistState() {
@@ -3982,6 +4040,15 @@ function applyBambooCelebrationVars(target, config) {
   });
 }
 
+function appendConfiguredCelebrationNodes(container, className, configs) {
+  configs.forEach((config) => {
+    const node = document.createElement("span");
+    node.className = className;
+    applyBambooCelebrationVars(node, config);
+    container.append(node);
+  });
+}
+
 function createBambooCelebrationLayer() {
   const layer = document.createElement("div");
   layer.className = "bamboo-celebration";
@@ -3991,21 +4058,102 @@ function createBambooCelebrationLayer() {
   wash.className = "bamboo-celebration__wash";
   layer.append(wash);
 
-  bambooCelebrationStalkConfigs.forEach((config) => {
-    const stalk = document.createElement("span");
-    stalk.className = "bamboo-celebration__stalk";
-    applyBambooCelebrationVars(stalk, config);
-    layer.append(stalk);
-  });
-
-  bambooCelebrationLeafConfigs.forEach((config) => {
-    const leaf = document.createElement("span");
-    leaf.className = "bamboo-celebration__leaf";
-    applyBambooCelebrationVars(leaf, config);
-    layer.append(leaf);
-  });
+  appendConfiguredCelebrationNodes(layer, "bamboo-celebration__stalk", bambooCelebrationStalkConfigs);
+  appendConfiguredCelebrationNodes(layer, "bamboo-celebration__leaf", bambooCelebrationLeafConfigs);
 
   return layer;
+}
+
+function createFullChecklistCelebrationLayer() {
+  const layer = document.createElement("div");
+  layer.className = "full-itinerary-celebration";
+  layer.hidden = true;
+  layer.innerHTML = `
+    <span class="full-itinerary-celebration__backdrop" aria-hidden="true"></span>
+    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--left" aria-hidden="true"></span>
+    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--center" aria-hidden="true"></span>
+    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--right" aria-hidden="true"></span>
+    <div class="full-itinerary-celebration__grove" aria-hidden="true"></div>
+    <div class="full-itinerary-celebration__badge" role="status" aria-live="polite" aria-atomic="true">
+      <p class="full-itinerary-celebration__kicker">
+        <span data-language="en">Bamboo Celebration</span>
+        <span data-language="ja" hidden>竹の祝福</span>
+      </p>
+      <h2 class="full-itinerary-celebration__title">
+        <span data-language="en">Full Itinerary Complete</span>
+        <span data-language="ja" hidden>旅程チェック完了</span>
+      </h2>
+      <p class="full-itinerary-celebration__detail">
+        <span data-language="en">Every checklist item from Day 1 through Day 7 is checked.</span>
+        <span data-language="ja" hidden>1日目から7日目までのチェックリスト項目がすべて完了しました。</span>
+      </p>
+    </div>
+  `;
+
+  const grove = layer.querySelector(".full-itinerary-celebration__grove");
+  if (grove) {
+    appendConfiguredCelebrationNodes(
+      grove,
+      "full-itinerary-celebration__stalk",
+      fullChecklistCelebrationStalkConfigs
+    );
+    appendConfiguredCelebrationNodes(
+      grove,
+      "full-itinerary-celebration__leaf",
+      fullChecklistCelebrationLeafConfigs
+    );
+  }
+
+  syncLocalizedNodes(layer);
+  document.body.append(layer);
+  return layer;
+}
+
+function ensureFullChecklistCelebrationLayer() {
+  if (fullChecklistCelebrationLayer && document.body.contains(fullChecklistCelebrationLayer)) {
+    return fullChecklistCelebrationLayer;
+  }
+
+  fullChecklistCelebrationLayer = createFullChecklistCelebrationLayer();
+  return fullChecklistCelebrationLayer;
+}
+
+function clearFullChecklistCelebration() {
+  if (fullChecklistCelebrationTimer) {
+    window.clearTimeout(fullChecklistCelebrationTimer);
+    fullChecklistCelebrationTimer = 0;
+  }
+
+  if (!fullChecklistCelebrationLayer) {
+    return;
+  }
+
+  fullChecklistCelebrationLayer.classList.remove("is-active");
+  fullChecklistCelebrationLayer.hidden = true;
+}
+
+function triggerFullChecklistCelebration() {
+  if (aggressivePerformanceMode) {
+    return;
+  }
+
+  const layer = ensureFullChecklistCelebrationLayer();
+  if (!layer) {
+    return;
+  }
+
+  syncLocalizedNodes(layer);
+  clearFullChecklistCelebration();
+  layer.hidden = false;
+  layer.classList.remove("is-active");
+  restartClassOnNextFrame(layer, "is-active");
+
+  const durationMs = reducedEffectsEnabled ? 1680 : fullChecklistCelebrationDurationMs;
+  fullChecklistCelebrationTimer = window.setTimeout(() => {
+    layer.classList.remove("is-active");
+    layer.hidden = true;
+    fullChecklistCelebrationTimer = 0;
+  }, durationMs);
 }
 
 function ensureBambooCelebrationLayer(target) {
@@ -7751,6 +7899,7 @@ function setResetModalOpen(isOpen) {
 
 function resetTripProgress() {
   checklistState = {};
+  clearFullChecklistCelebration();
 
   if (initializedSections.has("checklist")) {
     getChecklistInputs().forEach((input) => {
@@ -7978,6 +8127,7 @@ function refreshChecklistProgressState(options = {}) {
   warningDays = nextWarningDays;
   accessibleDay = nextAccessibleDay;
   currentProgressDay = nextCurrentDay;
+  syncFullChecklistCompletionState(rawCompleted);
 }
 
 function celebrateCompletedDay(day) {
