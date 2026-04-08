@@ -23,6 +23,7 @@ const progressOverviewCaptions = document.querySelectorAll(".progress-overview__
 const fullItineraryCelebrationDayRange = Object.freeze(["1", "2", "3", "4", "5", "6", "7"]);
 const jumpCurrentDayButton = document.querySelector("[data-jump-current-day]");
 const checklistMarkAllButton = document.querySelector("[data-checklist-mark-all]");
+const checklistToolbarButtons = Array.from(document.querySelectorAll(".checklist-toolbar__action"));
 const resetProgressOpenButtons = Array.from(document.querySelectorAll("[data-reset-progress-open]"));
 const resetProgressModal = document.querySelector("[data-reset-progress-modal]");
 const resetProgressCancelButton = document.querySelector("[data-reset-progress-cancel]");
@@ -58,6 +59,7 @@ const lazyNodeCache = new Map();
 const aggressivePerformanceMode = false;
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
 const compactViewportQuery = window.matchMedia("(max-width: 920px)");
 const pageTitles = {
   en: "Japan Escape",
@@ -127,6 +129,7 @@ const bambooResetDurationMs = 980;
 const bookingOutlineBloomDurationMs = 820;
 const headerBambooGlowDurationMs = 620;
 const budgetStepperEffectDurationMs = 860;
+const hammerImpactDurationMs = 560;
 const bambooCelebrationStalkConfigs = [
   { x: "4%", width: "0.76rem", height: "80%", tilt: "-8deg", delay: "0ms" },
   { x: "14%", width: "0.58rem", height: "68%", tilt: "-4deg", delay: "60ms" },
@@ -191,6 +194,48 @@ const budgetStepperCoinConfigs = [
 const budgetStepperTrailConfigs = [
   { x: "18%", y: "36%", width: "2.4rem", height: "0.2rem", tilt: "-15deg", delay: "40ms" },
   { x: "56%", y: "48%", width: "2.2rem", height: "0.18rem", tilt: "12deg", delay: "90ms" }
+];
+const hammerImpactShardConfigs = [
+  {
+    x: "-1.18rem",
+    y: "-0.62rem",
+    width: "1.12rem",
+    height: "0.14rem",
+    tilt: "-32deg",
+    delay: "0ms",
+    driftX: "-0.76rem",
+    driftY: "-0.46rem"
+  },
+  {
+    x: "-0.2rem",
+    y: "-0.94rem",
+    width: "0.94rem",
+    height: "0.12rem",
+    tilt: "-78deg",
+    delay: "50ms",
+    driftX: "-0.1rem",
+    driftY: "-0.74rem"
+  },
+  {
+    x: "0.34rem",
+    y: "-0.16rem",
+    width: "1.06rem",
+    height: "0.14rem",
+    tilt: "14deg",
+    delay: "20ms",
+    driftX: "0.88rem",
+    driftY: "-0.12rem"
+  },
+  {
+    x: "-0.4rem",
+    y: "0.24rem",
+    width: "0.9rem",
+    height: "0.12rem",
+    tilt: "52deg",
+    delay: "70ms",
+    driftX: "-0.34rem",
+    driftY: "0.88rem"
+  }
 ];
 let budgetSourceUpdatedAt = "2026-03-27";
 let budgetAssumptionCopy = {
@@ -4795,6 +4840,7 @@ function bindPackingUI() {
 
       if (checkbox.checked) {
         packingState[itemId] = true;
+        triggerPackingItemBambooFeedback(itemElement);
       } else {
         delete packingState[itemId];
       }
@@ -5461,10 +5507,126 @@ function triggerChecklistInteractionFeedback(input) {
   restartClassOnNextFrame(checkItem, "is-feedback-active");
   restartClassOnNextFrame(dayCard, "is-check-feedback");
 
+  if (input.checked) {
+    triggerChecklistItemBambooFeedback(checkItem);
+  }
+
   window.setTimeout(() => {
     checkItem.classList.remove("is-feedback-active");
     dayCard.classList.remove("is-check-feedback");
   }, 820);
+}
+
+function isDesktopBambooHammerAvailable(pointerType = "") {
+  return finePointerQuery.matches && !coarsePointerQuery.matches && (!pointerType || pointerType === "mouse");
+}
+
+function syncDesktopBambooHammerState() {
+  const isEnabled = isDesktopBambooHammerAvailable();
+  root.classList.toggle("is-bamboo-hammer-ready", isEnabled);
+
+  if (!isEnabled) {
+    root.classList.remove("is-bamboo-hammer-pressing");
+  }
+}
+
+function createHammerImpactLayer() {
+  const layer = document.createElement("div");
+  layer.className = "hammer-impact";
+  layer.setAttribute("aria-hidden", "true");
+
+  const glow = document.createElement("span");
+  glow.className = "hammer-impact__glow";
+  layer.append(glow);
+
+  const ring = document.createElement("span");
+  ring.className = "hammer-impact__ring";
+  layer.append(ring);
+
+  appendConfiguredCelebrationNodes(layer, "hammer-impact__shard", hammerImpactShardConfigs);
+  return layer;
+}
+
+function ensureHammerImpactLayer() {
+  return ensureEffectLayer(document.body, "hammer-impact", createHammerImpactLayer, {
+    prepend: false
+  });
+}
+
+function triggerBambooHammerImpact(clientX, clientY) {
+  if (
+    aggressivePerformanceMode ||
+    reducedEffectsEnabled ||
+    !Number.isFinite(clientX) ||
+    !Number.isFinite(clientY) ||
+    !isDesktopBambooHammerAvailable()
+  ) {
+    return;
+  }
+
+  const layer = ensureHammerImpactLayer();
+  if (!layer || !canTriggerInteractionEffect(layer, "hammer-impact", 110)) {
+    return;
+  }
+
+  layer.style.setProperty("--impact-x", `${clientX}px`);
+  layer.style.setProperty("--impact-y", `${clientY}px`);
+  triggerTimedClassEffect(layer, "is-active", hammerImpactDurationMs, {
+    force: true
+  });
+}
+
+function clearDesktopBambooHammerPressState() {
+  root.classList.remove("is-bamboo-hammer-pressing");
+}
+
+function handleDesktopBambooHammerPointerDown(event) {
+  if (
+    event.button !== 0 ||
+    event.isPrimary === false ||
+    !isDesktopBambooHammerAvailable(event.pointerType)
+  ) {
+    return;
+  }
+
+  root.classList.add("is-bamboo-hammer-pressing");
+  triggerBambooHammerImpact(event.clientX, event.clientY);
+}
+
+function triggerChecklistItemBambooFeedback(checkItem) {
+  if (!checkItem || aggressivePerformanceMode || reducedEffectsEnabled) {
+    return;
+  }
+
+  ensureEffectLayer(checkItem, "bamboo-celebration", createBambooCelebrationLayer, {
+    clip: true
+  });
+
+  if (!canTriggerInteractionEffect(checkItem, "check-item-bamboo", 240)) {
+    return;
+  }
+
+  triggerTimedClassEffect(checkItem, "is-bamboo-celebrating", bambooCelebrationDurationMs, {
+    force: true
+  });
+}
+
+function triggerPackingItemBambooFeedback(itemElement) {
+  if (!itemElement || aggressivePerformanceMode || reducedEffectsEnabled) {
+    return;
+  }
+
+  ensureEffectLayer(itemElement, "bamboo-celebration", createBambooCelebrationLayer, {
+    clip: true
+  });
+
+  if (!canTriggerInteractionEffect(itemElement, "packing-item-bamboo", 240)) {
+    return;
+  }
+
+  triggerTimedClassEffect(itemElement, "is-bamboo-celebrating", bambooCelebrationDurationMs, {
+    force: true
+  });
 }
 
 function handleChecklistPanelPointerMove(event) {
@@ -9224,6 +9386,12 @@ if (checklistMarkAllButton) {
   });
 }
 
+checklistToolbarButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    triggerHeaderBambooGlow(button);
+  });
+});
+
 resetProgressOpenButtons.forEach((button) => {
   button.addEventListener("click", () => {
     lastResetTrigger = button;
@@ -9288,6 +9456,18 @@ if (transitDetailModal) {
     syncReducedEffectsMode({ force: true });
   });
 });
+
+[finePointerQuery, coarsePointerQuery].forEach((query) => {
+  bindMediaQueryChange(query, () => {
+    syncDesktopBambooHammerState();
+  });
+});
+
+syncDesktopBambooHammerState();
+document.addEventListener("pointerdown", handleDesktopBambooHammerPointerDown, true);
+document.addEventListener("pointerup", clearDesktopBambooHammerPressState, true);
+document.addEventListener("pointercancel", clearDesktopBambooHammerPressState, true);
+window.addEventListener("blur", clearDesktopBambooHammerPressState);
 
 window.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") {
