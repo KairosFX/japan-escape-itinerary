@@ -22,6 +22,7 @@ const progressOverviewFill = document.querySelector("[data-progress-overview-fil
 const progressOverviewCaptions = document.querySelectorAll(".progress-overview__caption [data-language]");
 const fullItineraryCelebrationDayRange = Object.freeze(["1", "2", "3", "4", "5", "6", "7"]);
 const jumpCurrentDayButton = document.querySelector("[data-jump-current-day]");
+const checklistMarkAllButton = document.querySelector("[data-checklist-mark-all]");
 const resetProgressOpenButtons = Array.from(document.querySelectorAll("[data-reset-progress-open]"));
 const resetProgressModal = document.querySelector("[data-reset-progress-modal]");
 const resetProgressCancelButton = document.querySelector("[data-reset-progress-cancel]");
@@ -43,6 +44,7 @@ const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-
 const checklistTab = sectionTabs.find((tab) => tab.dataset.panelTarget === "checklist") || null;
 const packingMarkAllButtons = Array.from(document.querySelectorAll("[data-packing-mark-all-global]"));
 const packingResetButtons = Array.from(document.querySelectorAll("[data-packing-reset-all]"));
+const packingGroup = document.querySelector(".essentials-group--packing");
 const offlineToolsCard = document.querySelector("[data-offline-tools]");
 const offlineStatusNode = document.querySelector("[data-offline-status]");
 const offlineMetaNode = document.querySelector("[data-offline-meta]");
@@ -86,6 +88,7 @@ const budgetUiRuntimeGlobal = "__JAPAN_BUDGET_UI__";
 const budgetContentRuntimeGlobal = "__JAPAN_BUDGET_CONTENT__";
 const essentialsContentRuntimeGlobal = "__JAPAN_ESSENTIALS_CONTENT__";
 const sectionOpenSoundRuntimeGlobal = "__JAPAN_PLAY_SECTION_OPEN_SOUND__";
+const budgetStepperEffectRuntimeGlobal = "__JAPAN_TRIGGER_BUDGET_STEPPER_EFFECT__";
 const routeMapLibraryScriptUrl = "./assets/vendor/maplibre/maplibre-gl.js";
 const routeMapLibraryStyleUrl = "./assets/vendor/maplibre/maplibre-gl.css";
 const budgetUiFallbackScriptUrl = "./budget-ui.min.js";
@@ -117,6 +120,13 @@ const siteTransitionSwapDelayMs = 118;
 const siteTransitionBackToTopDelayMs = 92;
 const bambooCelebrationDurationMs = 1180;
 const fullChecklistCelebrationDurationMs = 2360;
+const fullPackingCelebrationDurationMs = 2140;
+const pandaCelebrationDurationMs = 1180;
+const checklistJumpHighlightDurationMs = 1320;
+const bambooResetDurationMs = 980;
+const bookingOutlineBloomDurationMs = 820;
+const headerBambooGlowDurationMs = 620;
+const budgetStepperEffectDurationMs = 860;
 const bambooCelebrationStalkConfigs = [
   { x: "4%", width: "0.76rem", height: "80%", tilt: "-8deg", delay: "0ms" },
   { x: "14%", width: "0.58rem", height: "68%", tilt: "-4deg", delay: "60ms" },
@@ -154,6 +164,33 @@ const fullChecklistCelebrationLeafConfigs = [
   { x: "83%", y: "54%", width: "4.4rem", height: "1rem", tilt: "-14deg", delay: "330ms" },
   { x: "88%", y: "24%", width: "4rem", height: "0.92rem", tilt: "-26deg", delay: "280ms" },
   { x: "67%", y: "46%", width: "3.7rem", height: "0.88rem", tilt: "11deg", delay: "360ms" }
+];
+const pandaCelebrationSpriteConfigs = [
+  { x: "72%", y: "15%", size: "2.6rem", delay: "0ms", driftX: "-4%", driftY: "-12%" },
+  { x: "78%", y: "34%", size: "2.15rem", delay: "100ms", driftX: "-7%", driftY: "-9%" },
+  { x: "64%", y: "28%", size: "1.72rem", delay: "170ms", driftX: "-2%", driftY: "-7%" }
+];
+const bambooResetSegmentConfigs = [
+  { x: "4%", y: "-8%", width: "0.84rem", height: "52%", tilt: "-10deg", delay: "0ms" },
+  { x: "18%", y: "-14%", width: "0.62rem", height: "48%", tilt: "-4deg", delay: "50ms" },
+  { x: "76%", y: "-10%", width: "0.64rem", height: "46%", tilt: "5deg", delay: "80ms" },
+  { x: "90%", y: "-6%", width: "0.82rem", height: "54%", tilt: "11deg", delay: "20ms" }
+];
+const bambooResetLeafConfigs = [
+  { x: "2%", y: "14%", width: "4.1rem", height: "0.96rem", tilt: "-32deg", delay: "90ms" },
+  { x: "12%", y: "34%", width: "3.5rem", height: "0.88rem", tilt: "-12deg", delay: "150ms" },
+  { x: "72%", y: "16%", width: "4rem", height: "0.94rem", tilt: "28deg", delay: "100ms" },
+  { x: "66%", y: "38%", width: "3.3rem", height: "0.86rem", tilt: "12deg", delay: "170ms" }
+];
+const budgetStepperCoinConfigs = [
+  { x: "18%", y: "62%", size: "0.76rem", delay: "0ms", driftX: "-18%", driftY: "-34%" },
+  { x: "36%", y: "38%", size: "0.64rem", delay: "60ms", driftX: "-8%", driftY: "-28%" },
+  { x: "64%", y: "44%", size: "0.68rem", delay: "110ms", driftX: "8%", driftY: "-30%" },
+  { x: "82%", y: "66%", size: "0.8rem", delay: "160ms", driftX: "18%", driftY: "-36%" }
+];
+const budgetStepperTrailConfigs = [
+  { x: "18%", y: "36%", width: "2.4rem", height: "0.2rem", tilt: "-15deg", delay: "40ms" },
+  { x: "56%", y: "48%", width: "2.2rem", height: "0.18rem", tilt: "12deg", delay: "90ms" }
 ];
 let budgetSourceUpdatedAt = "2026-03-27";
 let budgetAssumptionCopy = {
@@ -1528,12 +1565,18 @@ let sequenceNoticeTimer = 0;
 let lastTimelineFocusDay = null;
 let lastResetTrigger = null;
 const pendingClassRestarts = new WeakMap();
+const timedEffectTimers = new WeakMap();
+const interactionEffectCooldowns = new WeakMap();
 const checklistGroupCompletionState = new WeakMap();
 const bambooCelebrationTimers = new WeakMap();
 let fullChecklistCelebrationLayer = null;
 let fullChecklistCelebrationTimer = 0;
 let hasKnownFullChecklistCompletionState = false;
 let fullChecklistWasComplete = false;
+let fullPackingCelebrationLayer = null;
+let fullPackingCelebrationTimer = 0;
+let hasKnownFullPackingCompletionState = false;
+let fullPackingWasComplete = false;
 let deferredGeometryWorkPending = true;
 let deferredGeometryReleaseTimer = 0;
 let timelineLayoutFrame = 0;
@@ -3273,6 +3316,8 @@ function syncReducedEffectsMode({ force = false } = {}) {
 
   if (reducedEffectsEnabled) {
     clearSiteTransitionState();
+    clearFullChecklistCelebration();
+    clearFullPackingCelebration();
 
     if (desktopReverseScrollTimer) {
       window.clearTimeout(desktopReverseScrollTimer);
@@ -3441,6 +3486,24 @@ function syncFullChecklistCompletionState(rawCompleted) {
   }
 
   fullChecklistWasComplete = isComplete;
+}
+
+function syncFullPackingCompletionState(isComplete) {
+  if (!hasKnownFullPackingCompletionState) {
+    hasKnownFullPackingCompletionState = true;
+    fullPackingWasComplete = isComplete;
+    return;
+  }
+
+  if (fullPackingWasComplete && !isComplete) {
+    clearFullPackingCelebration();
+  }
+
+  if (!fullPackingWasComplete && isComplete) {
+    triggerFullPackingCelebration();
+  }
+
+  fullPackingWasComplete = isComplete;
 }
 
 function readStoredChecklistState() {
@@ -3905,10 +3968,14 @@ function bindBookingTransitUI() {
       event.preventDefault();
       const itemId = itemElement.dataset.bookingId || "";
       const state = getBookingTransitItemState(itemId);
+      const nextDoneState = !state.done;
       updateStoredBookingTransitItemState(itemId, {
-        done: !state.done
+        done: nextDoneState
       });
       updateBookingTransitUI();
+      if (nextDoneState) {
+        triggerBookingOutlineBloom(itemElement);
+      }
     });
 
     itemElement.querySelector("[data-transit-detail-trigger]")?.addEventListener("click", (event) => {
@@ -4027,7 +4094,19 @@ function updateChecklistAccessState() {
     checklistGateNotice.hidden = !isLocked;
   }
 
+  syncChecklistActionButtons(isLocked);
   return isLocked;
+}
+
+function syncChecklistActionButtons(isLocked = isChecklistAccessLocked()) {
+  if (!checklistMarkAllButton) {
+    return;
+  }
+
+  const checklistInputs = getChecklistInputs();
+  const checkedCount = checklistInputs.filter((input) => Boolean(checklistState[input.id])).length;
+  checklistMarkAllButton.disabled =
+    isLocked || !checklistInputs.length || checkedCount === checklistInputs.length;
 }
 
 function isPackingItemPacked(itemId) {
@@ -4049,6 +4128,98 @@ function appendConfiguredCelebrationNodes(container, className, configs) {
   });
 }
 
+function getTimedEffectTimerBucket(target) {
+  const existingBucket = timedEffectTimers.get(target);
+  if (existingBucket) {
+    return existingBucket;
+  }
+
+  const nextBucket = new Map();
+  timedEffectTimers.set(target, nextBucket);
+  return nextBucket;
+}
+
+function canTriggerInteractionEffect(target, effectKey, cooldownMs = 0) {
+  if (!target || !effectKey || cooldownMs <= 0) {
+    return Boolean(target);
+  }
+
+  const now = window.performance.now();
+  const cooldownState = interactionEffectCooldowns.get(target) || {};
+  if (now - Number(cooldownState[effectKey] || 0) < cooldownMs) {
+    return false;
+  }
+
+  cooldownState[effectKey] = now;
+  interactionEffectCooldowns.set(target, cooldownState);
+  return true;
+}
+
+function triggerTimedClassEffect(
+  target,
+  className,
+  durationMs,
+  { effectKey = className, cooldownMs = 0, force = false } = {}
+) {
+  if (!target) {
+    return false;
+  }
+
+  if (!force && !canTriggerInteractionEffect(target, effectKey, cooldownMs)) {
+    return false;
+  }
+
+  const timerBucket = getTimedEffectTimerBucket(target);
+  const existingTimer = timerBucket.get(className);
+  if (existingTimer) {
+    window.clearTimeout(existingTimer);
+  }
+
+  target.classList.remove(className);
+  restartClassOnNextFrame(target, className);
+
+  const timerId = window.setTimeout(() => {
+    target.classList.remove(className);
+    timerBucket.delete(className);
+  }, durationMs);
+  timerBucket.set(className, timerId);
+  return true;
+}
+
+function ensureEffectHost(target, { clip = false } = {}) {
+  if (!target || target === document.body) {
+    return target;
+  }
+
+  target.classList.add("effect-host");
+  if (clip) {
+    target.classList.add("effect-host--clip");
+  }
+  return target;
+}
+
+function ensureEffectLayer(target, className, createLayer, { prepend = true, clip = false } = {}) {
+  if (!target) {
+    return null;
+  }
+
+  ensureEffectHost(target, { clip });
+  const existingLayer = Array.from(target.children).find((node) =>
+    node.classList?.contains(className)
+  );
+  if (existingLayer) {
+    return existingLayer;
+  }
+
+  const layer = createLayer();
+  if (prepend) {
+    target.prepend(layer);
+  } else {
+    target.append(layer);
+  }
+  return layer;
+}
+
 function createBambooCelebrationLayer() {
   const layer = document.createElement("div");
   layer.className = "bamboo-celebration";
@@ -4064,9 +4235,14 @@ function createBambooCelebrationLayer() {
   return layer;
 }
 
-function createFullChecklistCelebrationLayer() {
+function createGrandBambooCelebrationLayer({
+  modifierClass = "",
+  kicker,
+  title,
+  detail
+}) {
   const layer = document.createElement("div");
-  layer.className = "full-itinerary-celebration";
+  layer.className = ["full-itinerary-celebration", modifierClass].filter(Boolean).join(" ");
   layer.hidden = true;
   layer.innerHTML = `
     <span class="full-itinerary-celebration__backdrop" aria-hidden="true"></span>
@@ -4076,16 +4252,13 @@ function createFullChecklistCelebrationLayer() {
     <div class="full-itinerary-celebration__grove" aria-hidden="true"></div>
     <div class="full-itinerary-celebration__badge" role="status" aria-live="polite" aria-atomic="true">
       <p class="full-itinerary-celebration__kicker">
-        <span data-language="en">Bamboo Celebration</span>
-        <span data-language="ja" hidden>竹の祝福</span>
+        ${renderLocalizedContent(kicker)}
       </p>
       <h2 class="full-itinerary-celebration__title">
-        <span data-language="en">Full Itinerary Complete</span>
-        <span data-language="ja" hidden>旅程チェック完了</span>
+        ${renderLocalizedContent(title)}
       </h2>
       <p class="full-itinerary-celebration__detail">
-        <span data-language="en">Every checklist item from Day 1 through Day 7 is checked.</span>
-        <span data-language="ja" hidden>1日目から7日目までのチェックリスト項目がすべて完了しました。</span>
+        ${renderLocalizedContent(detail)}
       </p>
     </div>
   `;
@@ -4109,6 +4282,29 @@ function createFullChecklistCelebrationLayer() {
   return layer;
 }
 
+function createFullChecklistCelebrationLayer() {
+  return createGrandBambooCelebrationLayer({
+    kicker: { en: "Bamboo Celebration", ja: "竹の祝福" },
+    title: { en: "Full Itinerary Complete", ja: "旅程チェック完了" },
+    detail: {
+      en: "Every checklist item from Day 1 through Day 7 is checked.",
+      ja: "1日目から7日目までのチェックリスト項目がすべて完了しました。"
+    }
+  });
+}
+
+function createFullPackingCelebrationLayer() {
+  return createGrandBambooCelebrationLayer({
+    modifierClass: "full-itinerary-celebration--packing",
+    kicker: { en: "Bamboo Celebration", ja: "竹の祝福" },
+    title: { en: "All Essentials Packed", ja: "準備がすべて完了" },
+    detail: {
+      en: "Every Essentials box is fully checked and ready to travel.",
+      ja: "Essentialsの各ボックスがすべて完了し、出発準備が整いました。"
+    }
+  });
+}
+
 function ensureFullChecklistCelebrationLayer() {
   if (fullChecklistCelebrationLayer && document.body.contains(fullChecklistCelebrationLayer)) {
     return fullChecklistCelebrationLayer;
@@ -4116,6 +4312,15 @@ function ensureFullChecklistCelebrationLayer() {
 
   fullChecklistCelebrationLayer = createFullChecklistCelebrationLayer();
   return fullChecklistCelebrationLayer;
+}
+
+function ensureFullPackingCelebrationLayer() {
+  if (fullPackingCelebrationLayer && document.body.contains(fullPackingCelebrationLayer)) {
+    return fullPackingCelebrationLayer;
+  }
+
+  fullPackingCelebrationLayer = createFullPackingCelebrationLayer();
+  return fullPackingCelebrationLayer;
 }
 
 function clearFullChecklistCelebration() {
@@ -4130,6 +4335,20 @@ function clearFullChecklistCelebration() {
 
   fullChecklistCelebrationLayer.classList.remove("is-active");
   fullChecklistCelebrationLayer.hidden = true;
+}
+
+function clearFullPackingCelebration() {
+  if (fullPackingCelebrationTimer) {
+    window.clearTimeout(fullPackingCelebrationTimer);
+    fullPackingCelebrationTimer = 0;
+  }
+
+  if (!fullPackingCelebrationLayer) {
+    return;
+  }
+
+  fullPackingCelebrationLayer.classList.remove("is-active");
+  fullPackingCelebrationLayer.hidden = true;
 }
 
 function triggerFullChecklistCelebration() {
@@ -4154,6 +4373,201 @@ function triggerFullChecklistCelebration() {
     layer.hidden = true;
     fullChecklistCelebrationTimer = 0;
   }, durationMs);
+}
+
+function triggerFullPackingCelebration() {
+  if (aggressivePerformanceMode) {
+    return;
+  }
+
+  const layer = ensureFullPackingCelebrationLayer();
+  if (!layer) {
+    return;
+  }
+
+  syncLocalizedNodes(layer);
+  clearFullPackingCelebration();
+  layer.hidden = false;
+  layer.classList.remove("is-active");
+  restartClassOnNextFrame(layer, "is-active");
+
+  const durationMs = reducedEffectsEnabled ? 1560 : fullPackingCelebrationDurationMs;
+  fullPackingCelebrationTimer = window.setTimeout(() => {
+    layer.classList.remove("is-active");
+    layer.hidden = true;
+    fullPackingCelebrationTimer = 0;
+  }, durationMs);
+}
+
+function createPandaCelebrationLayer() {
+  const layer = document.createElement("div");
+  layer.className = "panda-celebration";
+  layer.setAttribute("aria-hidden", "true");
+
+  const glow = document.createElement("span");
+  glow.className = "panda-celebration__glow";
+  layer.append(glow);
+  appendConfiguredCelebrationNodes(layer, "panda-celebration__sprite", pandaCelebrationSpriteConfigs);
+  return layer;
+}
+
+function ensurePandaCelebrationLayer(target) {
+  return ensureEffectLayer(target, "panda-celebration", createPandaCelebrationLayer, {
+    prepend: true
+  });
+}
+
+function triggerCurrentDayCelebration(target) {
+  if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
+    return;
+  }
+
+  const effectKey = "current-day-panda";
+  if (!canTriggerInteractionEffect(target, effectKey, 720)) {
+    return;
+  }
+
+  const layer = ensurePandaCelebrationLayer(target);
+  triggerTimedClassEffect(target, "is-current-day-jump", checklistJumpHighlightDurationMs, {
+    force: true
+  });
+  triggerTimedClassEffect(layer, "is-active", pandaCelebrationDurationMs, {
+    force: true
+  });
+}
+
+function createBambooResetLayer({ viewport = false } = {}) {
+  const layer = document.createElement("div");
+  layer.className = viewport ? "bamboo-reset-burst bamboo-reset-burst--viewport" : "bamboo-reset-burst";
+  layer.setAttribute("aria-hidden", "true");
+
+  const mist = document.createElement("span");
+  mist.className = "bamboo-reset-burst__mist";
+  layer.append(mist);
+  appendConfiguredCelebrationNodes(layer, "bamboo-reset-burst__segment", bambooResetSegmentConfigs);
+  appendConfiguredCelebrationNodes(layer, "bamboo-reset-burst__leaf", bambooResetLeafConfigs);
+  return layer;
+}
+
+function ensureBambooResetLayer(target, { viewport = false } = {}) {
+  if (viewport) {
+    const existingLayer = Array.from(document.body.children).find((node) =>
+      node.classList?.contains("bamboo-reset-burst--viewport")
+    );
+    if (existingLayer) {
+      return existingLayer;
+    }
+
+    const layer = createBambooResetLayer({ viewport: true });
+    document.body.append(layer);
+    return layer;
+  }
+
+  return ensureEffectLayer(target, "bamboo-reset-burst", () => createBambooResetLayer(), {
+    prepend: true,
+    clip: true
+  });
+}
+
+function triggerBambooResetEffect(target, { viewport = false } = {}) {
+  if (aggressivePerformanceMode || reducedEffectsEnabled) {
+    return false;
+  }
+
+  const effectHost = viewport ? document.body : target;
+  const effectKey = viewport ? "viewport-reset" : "local-reset";
+  if (!canTriggerInteractionEffect(effectHost, effectKey, 680)) {
+    return false;
+  }
+
+  const layer = ensureBambooResetLayer(target, { viewport });
+  return triggerTimedClassEffect(layer, "is-active", bambooResetDurationMs, {
+    force: true
+  });
+}
+
+function createBudgetStepperEffectLayer() {
+  const layer = document.createElement("div");
+  layer.className = "budget-stepper-celebration";
+  layer.setAttribute("aria-hidden", "true");
+
+  const halo = document.createElement("span");
+  halo.className = "budget-stepper-celebration__halo";
+  layer.append(halo);
+  appendConfiguredCelebrationNodes(
+    layer,
+    "budget-stepper-celebration__trail",
+    budgetStepperTrailConfigs
+  );
+  appendConfiguredCelebrationNodes(
+    layer,
+    "budget-stepper-celebration__coin",
+    budgetStepperCoinConfigs
+  );
+  return layer;
+}
+
+function ensureBudgetStepperEffectLayer(target) {
+  return ensureEffectLayer(target, "budget-stepper-celebration", createBudgetStepperEffectLayer, {
+    prepend: true
+  });
+}
+
+function triggerBudgetStepperEffect(stepperElement, effectName, sourceButton = null) {
+  if (!stepperElement || !effectName || aggressivePerformanceMode || reducedEffectsEnabled) {
+    return;
+  }
+
+  const layer = ensureBudgetStepperEffectLayer(stepperElement);
+  if (!layer || !canTriggerInteractionEffect(layer, effectName, 170)) {
+    return;
+  }
+
+  const hostRect = stepperElement.getBoundingClientRect();
+  const sourceRect = sourceButton?.getBoundingClientRect();
+  if (sourceRect) {
+    layer.style.setProperty("--origin-x", `${sourceRect.left - hostRect.left + sourceRect.width / 2}px`);
+    layer.style.setProperty("--origin-y", `${sourceRect.top - hostRect.top + sourceRect.height / 2}px`);
+  }
+
+  layer.dataset.effect = effectName;
+  triggerTimedClassEffect(layer, "is-active", budgetStepperEffectDurationMs, {
+    force: true
+  });
+}
+
+window[budgetStepperEffectRuntimeGlobal] = triggerBudgetStepperEffect;
+
+function triggerBookingOutlineBloom(target) {
+  if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
+    return;
+  }
+
+  if (!canTriggerInteractionEffect(target, "booking-outline", 520)) {
+    return;
+  }
+
+  triggerTimedClassEffect(target, "is-outline-blooming", bookingOutlineBloomDurationMs, {
+    force: true
+  });
+}
+
+function triggerHeaderBambooGlow(target) {
+  if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
+    return;
+  }
+
+  if (
+    target.disabled ||
+    target.getAttribute("aria-disabled") === "true" ||
+    !canTriggerInteractionEffect(target, "header-bamboo-glow", 180)
+  ) {
+    return;
+  }
+
+  triggerTimedClassEffect(target, "is-bamboo-glow-active", headerBambooGlowDurationMs, {
+    force: true
+  });
 }
 
 function ensureBambooCelebrationLayer(target) {
@@ -4275,6 +4689,10 @@ function syncPackingUI() {
   ).length;
   const hasPackedItems = Object.keys(packingState).length > 0;
   const areAllItemsPacked = totalPackingItems > 0 && packedItemCount === totalPackingItems;
+  const areAllSectionsPacked =
+    areAllItemsPacked &&
+    packingSectionCards.length > 0 &&
+    packingSectionCards.every((sectionElement) => sectionElement.dataset.packingComplete === "true");
 
   packingMarkAllButtons.forEach((button) => {
     button.disabled = !totalPackingItems || areAllItemsPacked;
@@ -4284,6 +4702,7 @@ function syncPackingUI() {
     button.disabled = !hasPackedItems;
   });
 
+  syncFullPackingCompletionState(areAllSectionsPacked);
   updateChecklistAccessState();
   refreshChecklistProgressState({ syncDayCards: initializedSections.has("checklist") });
 }
@@ -4346,7 +4765,11 @@ function bindPackingUI() {
       return;
     }
 
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
+      const resetDelayMs = triggerBambooResetEffect(packingGroup) ? 140 : 0;
+      if (resetDelayMs > 0) {
+        await waitForDuration(resetDelayMs);
+      }
       resetPackingState();
     });
 
@@ -5095,6 +5518,62 @@ function handleChecklistPanelFocusOut(event) {
   });
 }
 
+function syncChecklistProgressTransitions({
+  previousUnlockedDays = new Set(),
+  previousCompletedDays = new Set(),
+  previousCurrentDay = String(currentProgressDay)
+} = {}) {
+  Array.from(unlockedDays)
+    .filter((unlockedDay) => !previousUnlockedDays.has(unlockedDay))
+    .forEach((unlockedDay) => {
+      animateUnlock(progressItemMap.get(unlockedDay));
+      animateUnlock(dayCardMap.get(unlockedDay));
+    });
+
+  if (String(currentProgressDay) !== previousCurrentDay) {
+    lastTimelineFocusDay = null;
+  }
+
+  Array.from(completedDays)
+    .filter((completedDay) => !previousCompletedDays.has(completedDay))
+    .forEach((completedDay) => {
+      celebrateCompletedDay(completedDay);
+    });
+}
+
+function markAllChecklistItemsChecked() {
+  if (isChecklistAccessLocked()) {
+    showChecklistLockNotice();
+    return;
+  }
+
+  const checklistInputs = getChecklistInputs();
+  const pendingInputs = checklistInputs.filter((input) => !Boolean(checklistState[input.id]));
+  if (!pendingInputs.length) {
+    syncChecklistActionButtons(false);
+    return;
+  }
+
+  const previousUnlockedDays = new Set(unlockedDays);
+  const previousCompletedDays = new Set(completedDays);
+  const previousCurrentDay = String(currentProgressDay);
+
+  checklistInputs.forEach((input) => {
+    input.checked = true;
+    checklistState[input.id] = true;
+  });
+
+  playSectionOpenSound();
+  storeChecklistState();
+  refreshChecklistProgressState({ syncDayCards: true });
+  syncProgressTimeline();
+  syncChecklistProgressTransitions({
+    previousUnlockedDays,
+    previousCompletedDays,
+    previousCurrentDay
+  });
+}
+
 function handleChecklistPanelChange(event) {
   if (isChecklistAccessLocked()) {
     event.preventDefault();
@@ -5108,10 +5587,8 @@ function handleChecklistPanelChange(event) {
     return;
   }
 
-  const dayCard = input.closest(".day-card[data-day]");
-  const day = dayCard?.dataset.day;
-  const wasComplete = day ? completedDays.has(day) : false;
   const previousUnlockedDays = new Set(unlockedDays);
+  const previousCompletedDays = new Set(completedDays);
   const previousCurrentDay = String(currentProgressDay);
 
   if (input.checked) {
@@ -5125,21 +5602,11 @@ function handleChecklistPanelChange(event) {
   storeChecklistState();
   refreshChecklistProgressState({ syncDayCards: true });
   syncProgressTimeline();
-
-  Array.from(unlockedDays)
-    .filter((unlockedDay) => !previousUnlockedDays.has(unlockedDay))
-    .forEach((unlockedDay) => {
-      animateUnlock(progressItemMap.get(unlockedDay));
-      animateUnlock(dayCardMap.get(unlockedDay));
-    });
-
-  if (String(currentProgressDay) !== previousCurrentDay) {
-    lastTimelineFocusDay = null;
-  }
-
-  if (day && !wasComplete && completedDays.has(day)) {
-    celebrateCompletedDay(day);
-  }
+  syncChecklistProgressTransitions({
+    previousUnlockedDays,
+    previousCompletedDays,
+    previousCurrentDay
+  });
 }
 
 function initChecklistSection() {
@@ -8134,7 +8601,7 @@ function celebrateCompletedDay(day) {
   animateCompletion(progressItemMap.get(String(day)));
 }
 
-async function scrollToChecklistDay(day) {
+async function scrollToChecklistDay(day, { emphasizeCurrentDay = false } = {}) {
   if (isChecklistAccessLocked()) {
     showChecklistLockNotice();
   }
@@ -8156,9 +8623,12 @@ async function scrollToChecklistDay(day) {
 
       targetCard.classList.remove("is-route-target");
       restartClassOnNextFrame(targetCard, "is-route-target");
+      if (emphasizeCurrentDay) {
+        triggerCurrentDayCelebration(targetCard);
+      }
       window.setTimeout(() => {
         targetCard.classList.remove("is-route-target");
-      }, 1400);
+      }, Math.max(1400, emphasizeCurrentDay ? checklistJumpHighlightDurationMs : 0));
     });
   });
 }
@@ -8286,6 +8756,7 @@ function applyTheme(theme, options = {}) {
 }
 
 function handleLanguageButtonClick(button) {
+  triggerHeaderBambooGlow(button);
   lockHeaderState(280);
   preserveScrollPosition(() => {
     setLanguage(button.dataset.setLanguage);
@@ -8293,6 +8764,7 @@ function handleLanguageButtonClick(button) {
 }
 
 function handleThemeButtonClick(button) {
+  triggerHeaderBambooGlow(button);
   lockHeaderState(280);
   preserveScrollPosition(() => {
     applyTheme(button.dataset.setTheme);
@@ -8474,6 +8946,7 @@ function bindTabNavigation() {
         return;
       }
 
+      triggerHeaderBambooGlow(tab);
       await activatePanel(panelId);
       scrollToPanelStart(panelId);
     });
@@ -8739,7 +9212,15 @@ if (document.readyState === "loading") {
 
 if (jumpCurrentDayButton) {
   jumpCurrentDayButton.addEventListener("click", () => {
-    void scrollToChecklistDay(getCurrentProgressDay());
+    void scrollToChecklistDay(getCurrentProgressDay(), {
+      emphasizeCurrentDay: true
+    });
+  });
+}
+
+if (checklistMarkAllButton) {
+  checklistMarkAllButton.addEventListener("click", () => {
+    markAllChecklistItemsChecked();
   });
 }
 
@@ -8757,7 +9238,11 @@ if (resetProgressCancelButton) {
 }
 
 if (resetProgressConfirmButton) {
-  resetProgressConfirmButton.addEventListener("click", () => {
+  resetProgressConfirmButton.addEventListener("click", async () => {
+    const resetDelayMs = triggerBambooResetEffect(mainContent, { viewport: true }) ? 160 : 0;
+    if (resetDelayMs > 0) {
+      await waitForDuration(resetDelayMs);
+    }
     resetTripProgress();
   });
 }

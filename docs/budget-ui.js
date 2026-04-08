@@ -17,6 +17,11 @@ const playBudgetInteractionSound = () => {
     window.__JAPAN_PLAY_SECTION_OPEN_SOUND__();
   }
 };
+const triggerBudgetStepperEffect = (stepperElement, effectName, sourceButton) => {
+  if (typeof window.__JAPAN_TRIGGER_BUDGET_STEPPER_EFFECT__ === "function") {
+    window.__JAPAN_TRIGGER_BUDGET_STEPPER_EFFECT__(stepperElement, effectName, sourceButton);
+  }
+};
 const budgetDisplayExchangeRates = {
   cadPerJpy: 1 / 109,
   usdPerJpy: 1 / 149
@@ -1516,16 +1521,31 @@ const itineraryBudgetLabels = {
           return;
         }
 
+        let nextValue = null;
+        let effectName = "";
         if (target === "travelers" && budgetTravelersInput) {
-          const nextValue = clamp(getTravelerCount() + delta, 1, 24);
+          nextValue = clamp(getTravelerCount() + delta, 1, 24);
+          effectName = delta > 0 ? "travelers-add" : "travelers-remove";
+          if (nextValue === getTravelerCount()) {
+            return;
+          }
           budgetTravelersInput.value = String(nextValue);
           budgetTravelersInput.dispatchEvent(new Event("input", { bubbles: true }));
         }
 
         if (target === "travelers-per-room" && budgetTravelersPerRoomInput) {
-          const nextValue = clamp(getTravelersPerRoom() + delta, 1, getTravelerCount());
+          nextValue = clamp(getTravelersPerRoom() + delta, 1, getTravelerCount());
+          effectName = delta > 0 ? "room-savings" : "room-cost";
+          if (nextValue === getTravelersPerRoom()) {
+            return;
+          }
           budgetTravelersPerRoomInput.value = String(nextValue);
           budgetTravelersPerRoomInput.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+
+        if (nextValue !== null) {
+          playBudgetInteractionSound();
+          triggerBudgetStepperEffect(button.closest(".budget-stepper"), effectName, button);
         }
       });
 
