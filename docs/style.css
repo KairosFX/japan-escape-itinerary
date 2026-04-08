@@ -1035,7 +1035,7 @@ h3 {
 .progress-item.is-complete {
   border-color: rgba(171, 74, 59, 0.2);
   background: rgba(255, 251, 247, 0.9);
-  opacity: 0.86;
+  opacity: 1;
 }
 
 .progress-item.is-complete::before {
@@ -9283,6 +9283,10 @@ html[data-theme="dark"] .progress-item.is-active .progress-item__ratio {
 html[data-theme="dark"] .progress-item.is-complete {
   border-color: rgba(137, 179, 151, 0.18);
   background: linear-gradient(180deg, rgba(59, 72, 66, 0.9), rgba(47, 57, 53, 0.86));
+  opacity: 1;
+  box-shadow:
+    0 0 0 1px rgba(137, 179, 151, 0.1),
+    0 18px 32px rgba(7, 11, 8, 0.18);
 }
 
 html[data-theme="dark"] .progress-item.is-complete::before {
@@ -10056,6 +10060,8 @@ html[data-theme="dark"] .section-tab[aria-selected="true"] {
 .progress-item.is-complete {
   border-color: rgba(63, 123, 84, 0.18);
   background: rgba(248, 252, 248, 0.9);
+  opacity: 1;
+  box-shadow: 0 12px 26px rgba(16, 33, 22, 0.08);
 }
 
 .progress-item.is-complete::before {
@@ -12489,34 +12495,32 @@ html[data-theme="dark"] .site-transition__line {
 
 html.is-bamboo-hammer-ready,
 html.is-bamboo-hammer-ready body,
-html.is-bamboo-hammer-ready button,
-html.is-bamboo-hammer-ready a,
-html.is-bamboo-hammer-ready label,
-html.is-bamboo-hammer-ready summary,
-html.is-bamboo-hammer-ready [role="button"],
-html.is-bamboo-hammer-ready .section-tab,
-html.is-bamboo-hammer-ready .language-button,
-html.is-bamboo-hammer-ready .theme-button {
-  cursor: var(--bamboo-hammer-cursor);
+html.is-bamboo-hammer-ready body *,
+html.is-bamboo-hammer-ready body *::before,
+html.is-bamboo-hammer-ready body *::after {
+  cursor: var(--bamboo-hammer-cursor) !important;
 }
 
 html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing,
 html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing body,
-html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing button,
-html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing a,
-html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing label,
-html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing summary,
-html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing [role="button"],
-html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing .section-tab,
-html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing .language-button,
-html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing .theme-button {
-  cursor: var(--bamboo-hammer-cursor-active);
+html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing body *,
+html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing body *::before,
+html.is-bamboo-hammer-ready.is-bamboo-hammer-pressing body *::after {
+  cursor: var(--bamboo-hammer-cursor-active) !important;
 }
 
-html.is-bamboo-hammer-ready input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.is-bamboo-hammer-ready input:not([type]),
+html.is-bamboo-hammer-ready input[type="email"],
+html.is-bamboo-hammer-ready input[type="number"],
+html.is-bamboo-hammer-ready input[type="password"],
+html.is-bamboo-hammer-ready input[type="search"],
+html.is-bamboo-hammer-ready input[type="tel"],
+html.is-bamboo-hammer-ready input[type="text"],
+html.is-bamboo-hammer-ready input[type="url"],
 html.is-bamboo-hammer-ready textarea,
-html.is-bamboo-hammer-ready [contenteditable="true"] {
-  cursor: text;
+html.is-bamboo-hammer-ready [contenteditable="true"],
+html.is-bamboo-hammer-ready [contenteditable="plaintext-only"] {
+  cursor: text !important;
 }
 
 .hammer-impact {
