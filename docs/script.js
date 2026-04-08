@@ -90,6 +90,7 @@ const budgetUiRuntimeGlobal = "__JAPAN_BUDGET_UI__";
 const budgetContentRuntimeGlobal = "__JAPAN_BUDGET_CONTENT__";
 const essentialsContentRuntimeGlobal = "__JAPAN_ESSENTIALS_CONTENT__";
 const sectionOpenSoundRuntimeGlobal = "__JAPAN_PLAY_SECTION_OPEN_SOUND__";
+const budgetSoundRuntimeGlobal = "__JAPAN_PLAY_BUDGET_SOUND__";
 const budgetStepperEffectRuntimeGlobal = "__JAPAN_TRIGGER_BUDGET_STEPPER_EFFECT__";
 const routeMapLibraryScriptUrl = "./assets/vendor/maplibre/maplibre-gl.js";
 const routeMapLibraryStyleUrl = "./assets/vendor/maplibre/maplibre-gl.css";
@@ -115,8 +116,12 @@ const audioAmbientVolume = 0.085;
 const audioAmbientDuckVolume = 0.05;
 const audioSectionOpenVolume = 0.24;
 const audioTransitionVolume = 0.28;
+const audioBudgetPositiveVolume = 0.15;
+const audioBudgetNegativeVolume = 0.14;
 const audioSectionOpenCooldownMs = 96;
 const audioTransitionCooldownMs = 320;
+const audioBudgetCooldownMs = 132;
+const audioBudgetDuckMs = 280;
 const siteTransitionDurationMs = 520;
 const siteTransitionSwapDelayMs = 118;
 const siteTransitionBackToTopDelayMs = 92;
@@ -125,7 +130,7 @@ const fullChecklistCelebrationDurationMs = 2360;
 const fullPackingCelebrationDurationMs = 2140;
 const pandaCelebrationDurationMs = 1180;
 const checklistJumpHighlightDurationMs = 1320;
-const bambooResetDurationMs = 980;
+const bambooResetDurationMs = 1120;
 const bookingOutlineBloomDurationMs = 820;
 const headerBambooGlowDurationMs = 620;
 const budgetStepperEffectDurationMs = 860;
@@ -174,16 +179,16 @@ const pandaCelebrationSpriteConfigs = [
   { x: "64%", y: "28%", size: "1.72rem", delay: "170ms", driftX: "-2%", driftY: "-7%" }
 ];
 const bambooResetSegmentConfigs = [
-  { x: "4%", y: "-8%", width: "0.84rem", height: "52%", tilt: "-10deg", delay: "0ms" },
-  { x: "18%", y: "-14%", width: "0.62rem", height: "48%", tilt: "-4deg", delay: "50ms" },
-  { x: "76%", y: "-10%", width: "0.64rem", height: "46%", tilt: "5deg", delay: "80ms" },
-  { x: "90%", y: "-6%", width: "0.82rem", height: "54%", tilt: "11deg", delay: "20ms" }
+  { x: "4%", y: "-10%", width: "0.86rem", height: "54%", tilt: "-9deg", delay: "0ms", driftX: "-0.26rem", driftY: "106%", spin: "16deg" },
+  { x: "18%", y: "-16%", width: "0.64rem", height: "49%", tilt: "-4deg", delay: "70ms", driftX: "-0.14rem", driftY: "102%", spin: "11deg" },
+  { x: "76%", y: "-12%", width: "0.66rem", height: "47%", tilt: "4deg", delay: "110ms", driftX: "0.18rem", driftY: "104%", spin: "-10deg" },
+  { x: "90%", y: "-7%", width: "0.84rem", height: "56%", tilt: "10deg", delay: "36ms", driftX: "0.3rem", driftY: "109%", spin: "-17deg" }
 ];
 const bambooResetLeafConfigs = [
-  { x: "2%", y: "14%", width: "4.1rem", height: "0.96rem", tilt: "-32deg", delay: "90ms" },
-  { x: "12%", y: "34%", width: "3.5rem", height: "0.88rem", tilt: "-12deg", delay: "150ms" },
-  { x: "72%", y: "16%", width: "4rem", height: "0.94rem", tilt: "28deg", delay: "100ms" },
-  { x: "66%", y: "38%", width: "3.3rem", height: "0.86rem", tilt: "12deg", delay: "170ms" }
+  { x: "2%", y: "12%", width: "4.2rem", height: "0.98rem", tilt: "-30deg", delay: "120ms", driftX: "-8%", driftY: "82%", spin: "14deg" },
+  { x: "12%", y: "34%", width: "3.55rem", height: "0.88rem", tilt: "-12deg", delay: "190ms", driftX: "-4%", driftY: "76%", spin: "9deg" },
+  { x: "72%", y: "15%", width: "4.1rem", height: "0.96rem", tilt: "26deg", delay: "130ms", driftX: "8%", driftY: "84%", spin: "-15deg" },
+  { x: "66%", y: "38%", width: "3.35rem", height: "0.86rem", tilt: "11deg", delay: "220ms", driftX: "5%", driftY: "72%", spin: "-9deg" }
 ];
 const budgetStepperCoinConfigs = [
   { x: "18%", y: "62%", size: "0.76rem", delay: "0ms", driftX: "-18%", driftY: "-34%" },
@@ -625,6 +630,10 @@ let budgetUiPromise = null;
 let budgetContentPromise = null;
 let essentialsContentPromise = null;
 let siteAudioNodes = null;
+let siteAudioContext = null;
+let siteAudioSynthMaster = null;
+let siteAudioSynthLimiter = null;
+let siteAudioNoiseBuffer = null;
 let ambientAudioResumeTimer = 0;
 const siteAudioState = {
   ambientWanted: true,
@@ -633,7 +642,8 @@ const siteAudioState = {
   gestureBindingReady: false,
   autoplayBindingReady: false,
   lastSectionOpenAt: 0,
-  lastTransitionAt: 0
+  lastTransitionAt: 0,
+  lastBudgetCueAt: 0
 };
 let siteTransitionCleanupTimer = 0;
 let siteTransitionToken = 0;
@@ -824,6 +834,292 @@ function createManagedAudioNode(url, { loop = false, preload = "metadata", volum
   return audio;
 }
 
+function getManagedAudioContextCtor() {
+  return window.AudioContext || window.webkitAudioContext || null;
+}
+
+function createManagedNoiseBuffer(context) {
+  const bufferLength = Math.max(1, Math.round(context.sampleRate * 0.14));
+  const buffer = context.createBuffer(1, bufferLength, context.sampleRate);
+  const samples = buffer.getChannelData(0);
+
+  for (let index = 0; index < bufferLength; index += 1) {
+    const fade = 1 - index / bufferLength;
+    samples[index] = (Math.random() * 2 - 1) * fade * fade;
+  }
+
+  return buffer;
+}
+
+function ensureManagedAudioContext() {
+  if (siteAudioContext && siteAudioSynthMaster && siteAudioSynthLimiter) {
+    return siteAudioContext;
+  }
+
+  const AudioContextCtor = getManagedAudioContextCtor();
+  if (!AudioContextCtor) {
+    return null;
+  }
+
+  if (!siteAudioContext) {
+    siteAudioContext = new AudioContextCtor({
+      latencyHint: "interactive"
+    });
+  }
+
+  if (!siteAudioSynthLimiter) {
+    siteAudioSynthLimiter = siteAudioContext.createDynamicsCompressor();
+    siteAudioSynthLimiter.threshold.value = -20;
+    siteAudioSynthLimiter.knee.value = 18;
+    siteAudioSynthLimiter.ratio.value = 2.6;
+    siteAudioSynthLimiter.attack.value = 0.003;
+    siteAudioSynthLimiter.release.value = 0.18;
+    siteAudioSynthLimiter.connect(siteAudioContext.destination);
+  }
+
+  if (!siteAudioSynthMaster) {
+    siteAudioSynthMaster = siteAudioContext.createGain();
+    siteAudioSynthMaster.gain.value = 0.92;
+    siteAudioSynthMaster.connect(siteAudioSynthLimiter);
+  }
+
+  if (!siteAudioNoiseBuffer) {
+    siteAudioNoiseBuffer = createManagedNoiseBuffer(siteAudioContext);
+  }
+
+  return siteAudioContext;
+}
+
+function resumeManagedAudioContext() {
+  const context = ensureManagedAudioContext();
+  if (!context || context.state !== "suspended") {
+    return Promise.resolve(Boolean(context));
+  }
+
+  return context.resume()
+    .then(() => true)
+    .catch(() => false);
+}
+
+function scheduleManagedAudioCleanup(nodes, delayMs = 520) {
+  window.setTimeout(() => {
+    nodes.forEach((node) => {
+      try {
+        node.disconnect?.();
+      } catch {
+        // Ignore disconnection failures for one-shot synth nodes.
+      }
+    });
+  }, delayMs);
+}
+
+function scheduleManagedOscillatorVoice(
+  context,
+  destination,
+  {
+    now = context.currentTime,
+    type = "sine",
+    frequency = 440,
+    attack = 0.002,
+    peak = 0.12,
+    decay = 0.24,
+    pitchEndRatio = 0.985,
+    detune = 0,
+    highpass = 0,
+    lowpass = 0
+  } = {}
+) {
+  const oscillator = context.createOscillator();
+  const voiceGain = context.createGain();
+  let outputNode = oscillator;
+  const cleanupNodes = [oscillator, voiceGain];
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, now);
+  oscillator.frequency.exponentialRampToValueAtTime(
+    Math.max(42, frequency * pitchEndRatio),
+    now + decay
+  );
+  oscillator.detune.setValueAtTime(detune, now);
+
+  if (highpass > 0) {
+    const highpassNode = context.createBiquadFilter();
+    highpassNode.type = "highpass";
+    highpassNode.frequency.setValueAtTime(highpass, now);
+    outputNode.connect(highpassNode);
+    outputNode = highpassNode;
+    cleanupNodes.push(highpassNode);
+  }
+
+  if (lowpass > 0) {
+    const lowpassNode = context.createBiquadFilter();
+    lowpassNode.type = "lowpass";
+    lowpassNode.frequency.setValueAtTime(lowpass, now);
+    outputNode.connect(lowpassNode);
+    outputNode = lowpassNode;
+    cleanupNodes.push(lowpassNode);
+  }
+
+  outputNode.connect(voiceGain);
+  voiceGain.connect(destination);
+  voiceGain.gain.setValueAtTime(0.0001, now);
+  voiceGain.gain.linearRampToValueAtTime(peak, now + attack);
+  voiceGain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+  oscillator.start(now);
+  oscillator.stop(now + decay + 0.04);
+  scheduleManagedAudioCleanup(cleanupNodes, Math.ceil((decay + 0.12) * 1000));
+}
+
+function scheduleManagedNoiseBurst(
+  context,
+  destination,
+  {
+    now = context.currentTime,
+    peak = 0.018,
+    decay = 0.06,
+    frequency = 1600,
+    q = 0.8
+  } = {}
+) {
+  const noiseSource = context.createBufferSource();
+  const bandpassNode = context.createBiquadFilter();
+  const noiseGain = context.createGain();
+
+  noiseSource.buffer = siteAudioNoiseBuffer || createManagedNoiseBuffer(context);
+  bandpassNode.type = "bandpass";
+  bandpassNode.frequency.setValueAtTime(frequency, now);
+  bandpassNode.Q.setValueAtTime(q, now);
+  noiseSource.connect(bandpassNode);
+  bandpassNode.connect(noiseGain);
+  noiseGain.connect(destination);
+  noiseGain.gain.setValueAtTime(0.0001, now);
+  noiseGain.gain.linearRampToValueAtTime(peak, now + 0.002);
+  noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+  noiseSource.start(now);
+  noiseSource.stop(now + decay + 0.02);
+  scheduleManagedAudioCleanup(
+    [noiseSource, bandpassNode, noiseGain],
+    Math.ceil((decay + 0.08) * 1000)
+  );
+}
+
+function renderBudgetPositiveCue(context, masterNode, volume = audioBudgetPositiveVolume) {
+  const now = context.currentTime + 0.01;
+  const bus = context.createGain();
+  const highpassNode = context.createBiquadFilter();
+  const sheenNode = context.createBiquadFilter();
+
+  bus.gain.value = volume;
+  highpassNode.type = "highpass";
+  highpassNode.frequency.setValueAtTime(560, now);
+  sheenNode.type = "highshelf";
+  sheenNode.frequency.setValueAtTime(2200, now);
+  sheenNode.gain.setValueAtTime(4.2, now);
+
+  bus.connect(highpassNode);
+  highpassNode.connect(sheenNode);
+  sheenNode.connect(masterNode);
+
+  scheduleManagedNoiseBurst(context, bus, {
+    now,
+    peak: 0.016,
+    decay: 0.048,
+    frequency: 2450,
+    q: 0.9
+  });
+  scheduleManagedOscillatorVoice(context, bus, {
+    now,
+    type: "triangle",
+    frequency: 1318.51,
+    attack: 0.003,
+    peak: 0.15,
+    decay: 0.18,
+    pitchEndRatio: 0.991,
+    highpass: 640
+  });
+  scheduleManagedOscillatorVoice(context, bus, {
+    now: now + 0.016,
+    type: "sine",
+    frequency: 1760,
+    attack: 0.002,
+    peak: 0.11,
+    decay: 0.24,
+    pitchEndRatio: 0.994,
+    highpass: 780
+  });
+  scheduleManagedOscillatorVoice(context, bus, {
+    now: now + 0.03,
+    type: "sine",
+    frequency: 2637.02,
+    attack: 0.0015,
+    peak: 0.045,
+    decay: 0.16,
+    pitchEndRatio: 0.997,
+    highpass: 1020
+  });
+
+  scheduleManagedAudioCleanup([bus, highpassNode, sheenNode], 460);
+}
+
+function renderBudgetNegativeCue(context, masterNode, volume = audioBudgetNegativeVolume) {
+  const now = context.currentTime + 0.01;
+  const bus = context.createGain();
+  const bodyNode = context.createBiquadFilter();
+  const lowpassNode = context.createBiquadFilter();
+
+  bus.gain.value = volume;
+  bodyNode.type = "peaking";
+  bodyNode.frequency.setValueAtTime(340, now);
+  bodyNode.Q.setValueAtTime(1.1, now);
+  bodyNode.gain.setValueAtTime(2.6, now);
+  lowpassNode.type = "lowpass";
+  lowpassNode.frequency.setValueAtTime(1680, now);
+
+  bus.connect(bodyNode);
+  bodyNode.connect(lowpassNode);
+  lowpassNode.connect(masterNode);
+
+  scheduleManagedNoiseBurst(context, bus, {
+    now,
+    peak: 0.014,
+    decay: 0.054,
+    frequency: 920,
+    q: 0.72
+  });
+  scheduleManagedOscillatorVoice(context, bus, {
+    now,
+    type: "triangle",
+    frequency: 246.94,
+    attack: 0.003,
+    peak: 0.16,
+    decay: 0.28,
+    pitchEndRatio: 0.92,
+    lowpass: 1200
+  });
+  scheduleManagedOscillatorVoice(context, bus, {
+    now: now + 0.008,
+    type: "sine",
+    frequency: 329.63,
+    attack: 0.002,
+    peak: 0.082,
+    decay: 0.3,
+    pitchEndRatio: 0.94,
+    lowpass: 1340
+  });
+  scheduleManagedOscillatorVoice(context, bus, {
+    now: now + 0.024,
+    type: "sine",
+    frequency: 493.88,
+    attack: 0.0015,
+    peak: 0.026,
+    decay: 0.18,
+    pitchEndRatio: 0.965,
+    lowpass: 1480
+  });
+
+  scheduleManagedAudioCleanup([bus, bodyNode, lowpassNode], 500);
+}
+
 function ensureSiteAudioNodes() {
   if (siteAudioNodes) {
     return siteAudioNodes;
@@ -944,6 +1240,7 @@ function bindSiteAudioGestureListeners() {
 
   const handleGesture = () => {
     siteAudioState.userGestureSeen = true;
+    void resumeManagedAudioContext();
     if (
       siteAudioState.ambientWanted &&
       (siteAudioState.pendingAmbientStart || ensureSiteAudioNodes().ambient?.paused)
@@ -1014,6 +1311,55 @@ function playManagedOneShot(node, { volume = 1, cooldownMs = 180, stateKey, duck
   }
 }
 
+function playManagedSynthOneShot(
+  renderCue,
+  { cooldownMs = 180, stateKey, duckMs = 320 } = {}
+) {
+  if (typeof renderCue !== "function" || !stateKey) {
+    return;
+  }
+
+  const now = performance.now();
+  if (now - siteAudioState[stateKey] < cooldownMs) {
+    return;
+  }
+
+  siteAudioState[stateKey] = now;
+  siteAudioState.userGestureSeen = true;
+  if (siteAudioState.ambientWanted && siteAudioState.pendingAmbientStart) {
+    void requestAmbientPlayback();
+  }
+
+  const context = ensureManagedAudioContext();
+  if (!context || !siteAudioSynthMaster) {
+    return;
+  }
+
+  duckAmbientLoop(duckMs);
+
+  const triggerCue = () => {
+    try {
+      renderCue(context, siteAudioSynthMaster);
+    } catch {
+      // Ignore synth scheduling failures so the rest of the UI stays responsive.
+    }
+  };
+
+  if (context.state === "suspended") {
+    const resumeResult = context.resume();
+    if (resumeResult && typeof resumeResult.then === "function") {
+      resumeResult.then(() => {
+        if (context.state === "running") {
+          triggerCue();
+        }
+      }).catch(() => null);
+      return;
+    }
+  }
+
+  triggerCue();
+}
+
 function playSectionOpenSound() {
   playManagedOneShot(ensureSiteAudioNodes().sectionOpen, {
     volume: audioSectionOpenVolume,
@@ -1033,6 +1379,29 @@ function playTransitionSound() {
     duckMs: 460
   });
 }
+
+function playBudgetInteractionSound(tone = "positive") {
+  const normalizedTone =
+    tone === "counter" || tone === "negative" || tone === "chung" ? "counter" : "positive";
+
+  if (!getManagedAudioContextCtor()) {
+    playSectionOpenSound();
+    return;
+  }
+
+  const renderCue =
+    normalizedTone === "counter"
+      ? (context, masterNode) => renderBudgetNegativeCue(context, masterNode)
+      : (context, masterNode) => renderBudgetPositiveCue(context, masterNode);
+
+  playManagedSynthOneShot(renderCue, {
+    cooldownMs: audioBudgetCooldownMs,
+    stateKey: "lastBudgetCueAt",
+    duckMs: audioBudgetDuckMs
+  });
+}
+
+window[budgetSoundRuntimeGlobal] = playBudgetInteractionSound;
 
 function shouldPlayGenericButtonSound(button) {
   if (!(button instanceof HTMLButtonElement) || button.disabled) {
@@ -8848,6 +9217,35 @@ function handleAnchorScrollClick(event) {
   }
 }
 
+function getSelectionTargetElement(target) {
+  if (target instanceof Element) {
+    return target;
+  }
+
+  return target?.parentElement || null;
+}
+
+function isEditableSelectionTarget(target) {
+  const targetElement = getSelectionTargetElement(target);
+  if (!targetElement) {
+    return false;
+  }
+
+  return Boolean(
+    targetElement.closest(
+      'input, textarea, select, option, [contenteditable="true"], [contenteditable="plaintext-only"]'
+    )
+  );
+}
+
+function handleSelectionStart(event) {
+  if (isEditableSelectionTarget(event.target)) {
+    return;
+  }
+
+  event.preventDefault();
+}
+
 function setLanguage(language) {
   const nextLanguage = language === "ja" ? "ja" : "en";
   const localizedNodes = document.querySelectorAll("[data-language]");
@@ -9348,6 +9746,7 @@ themeButtons.forEach((button) => {
 bindTabNavigation();
 document.addEventListener("click", handleGenericButtonSoundClick, true);
 document.addEventListener("click", handleAnchorScrollClick);
+document.addEventListener("selectstart", handleSelectionStart);
 document.addEventListener(
   "toggle",
   (event) => {

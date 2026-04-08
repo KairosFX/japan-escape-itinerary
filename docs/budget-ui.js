@@ -12,7 +12,13 @@ const budgetTravelersInput = document.querySelector("[data-budget-travelers]");
 const budgetTravelersPerRoomInput = document.querySelector("[data-budget-travelers-per-room]");
 const budgetIncludeExtrasInput = document.querySelector("[data-budget-include-extras]");
 const budgetStepButtons = Array.from(document.querySelectorAll("[data-budget-step-target]"));
-const playBudgetInteractionSound = () => {
+const budgetSoundRuntimeGlobal = "__JAPAN_PLAY_BUDGET_SOUND__";
+const playBudgetInteractionSound = (tone = "positive") => {
+  if (typeof window[budgetSoundRuntimeGlobal] === "function") {
+    window[budgetSoundRuntimeGlobal](tone);
+    return;
+  }
+
   if (typeof window.__JAPAN_PLAY_SECTION_OPEN_SOUND__ === "function") {
     window.__JAPAN_PLAY_SECTION_OPEN_SOUND__();
   }
@@ -1049,6 +1055,50 @@ const itineraryBudgetLabels = {
       categoryAvailableRanges
     };
   };
+  const getBudgetEstimateTotal = () => calculateEstimate().total;
+  const resolveBudgetInteractionTone = (
+    previousTotal,
+    nextTotal,
+    fallbackTone = "positive"
+  ) => {
+    const normalizedPreviousTotal = Number(previousTotal);
+    const normalizedNextTotal = Number(nextTotal);
+
+    if (
+      !Number.isFinite(normalizedPreviousTotal) ||
+      !Number.isFinite(normalizedNextTotal) ||
+      Math.abs(normalizedNextTotal - normalizedPreviousTotal) < 1
+    ) {
+      return fallbackTone;
+    }
+
+    return normalizedNextTotal < normalizedPreviousTotal ? "positive" : "counter";
+  };
+  const playBudgetSoundForTotals = (
+    previousTotal,
+    nextTotal,
+    fallbackTone = "positive"
+  ) => {
+    playBudgetInteractionSound(
+      resolveBudgetInteractionTone(previousTotal, nextTotal, fallbackTone)
+    );
+  };
+  const captureBudgetEstimateBaseline = (control) => {
+    if (!control) {
+      return;
+    }
+
+    control.dataset.budgetEstimateBaseline = String(getBudgetEstimateTotal());
+  };
+  const consumeBudgetEstimateBaseline = (control) => {
+    if (!control) {
+      return Number.NaN;
+    }
+
+    const previousTotal = Number.parseFloat(control.dataset.budgetEstimateBaseline || "");
+    delete control.dataset.budgetEstimateBaseline;
+    return previousTotal;
+  };
   const renderSummaryMarkup = (estimate = calculateEstimate()) => {
     const summaryCards = [
       {
@@ -1464,6 +1514,9 @@ const itineraryBudgetLabels = {
     }
 
     if (budgetTravelersInput && budgetTravelersInput.dataset.itineraryBudgetBound !== "true") {
+      budgetTravelersInput.addEventListener("focus", () => {
+        captureBudgetEstimateBaseline(budgetTravelersInput);
+      });
       budgetTravelersInput.addEventListener("input", () => {
         const parsedValue = Number.parseInt(budgetTravelersInput.value, 10);
         if (Number.isNaN(parsedValue)) {
@@ -1480,7 +1533,11 @@ const itineraryBudgetLabels = {
         syncControls();
       });
       budgetTravelersInput.addEventListener("change", () => {
-        playBudgetInteractionSound();
+        playBudgetSoundForTotals(
+          consumeBudgetEstimateBaseline(budgetTravelersInput),
+          getBudgetEstimateTotal(),
+          getTravelerCount() <= budgetDefaultTravelerCount ? "positive" : "counter"
+        );
       });
       budgetTravelersInput.dataset.itineraryBudgetBound = "true";
     }
@@ -1489,6 +1546,9 @@ const itineraryBudgetLabels = {
       budgetTravelersPerRoomInput &&
       budgetTravelersPerRoomInput.dataset.itineraryBudgetBound !== "true"
     ) {
+      budgetTravelersPerRoomInput.addEventListener("focus", () => {
+        captureBudgetEstimateBaseline(budgetTravelersPerRoomInput);
+      });
       budgetTravelersPerRoomInput.addEventListener("input", () => {
         const parsedValue = Number.parseInt(budgetTravelersPerRoomInput.value, 10);
         if (Number.isNaN(parsedValue)) {
@@ -1504,7 +1564,11 @@ const itineraryBudgetLabels = {
         syncControls();
       });
       budgetTravelersPerRoomInput.addEventListener("change", () => {
-        playBudgetInteractionSound();
+        playBudgetSoundForTotals(
+          consumeBudgetEstimateBaseline(budgetTravelersPerRoomInput),
+          getBudgetEstimateTotal(),
+          getTravelersPerRoom() >= budgetSharedRoomOccupancy ? "positive" : "counter"
+        );
       });
       budgetTravelersPerRoomInput.dataset.itineraryBudgetBound = "true";
     }
@@ -1521,6 +1585,7 @@ const itineraryBudgetLabels = {
           return;
         }
 
+        const previousTotal = getBudgetEstimateTotal();
         let nextValue = null;
         let effectName = "";
         if (target === "travelers" && budgetTravelersInput) {
@@ -1544,7 +1609,13 @@ const itineraryBudgetLabels = {
         }
 
         if (nextValue !== null) {
-          playBudgetInteractionSound();
+          playBudgetSoundForTotals(
+            previousTotal,
+            getBudgetEstimateTotal(),
+            effectName === "travelers-remove" || effectName === "room-savings"
+              ? "positive"
+              : "counter"
+          );
           triggerBudgetStepperEffect(button.closest(".budget-stepper"), effectName, button);
         }
       });
@@ -1554,8 +1625,13 @@ const itineraryBudgetLabels = {
 
     if (budgetIncludeExtrasInput && budgetIncludeExtrasInput.dataset.itineraryBudgetBound !== "true") {
       budgetIncludeExtrasInput.addEventListener("change", () => {
-        playBudgetInteractionSound();
+        const previousTotal = getBudgetEstimateTotal();
         commitSettings();
+        playBudgetSoundForTotals(
+          previousTotal,
+          getBudgetEstimateTotal(),
+          budgetIncludeExtrasInput.checked ? "counter" : "positive"
+        );
       });
       budgetIncludeExtrasInput.dataset.itineraryBudgetBound = "true";
     }
@@ -1566,7 +1642,13 @@ const itineraryBudgetLabels = {
       }
 
       button.addEventListener("click", () => {
+        if (!hasChanges()) {
+          return;
+        }
+
+        const previousTotal = getBudgetEstimateTotal();
         resetState();
+        playBudgetSoundForTotals(previousTotal, getBudgetEstimateTotal(), "positive");
       });
       button.dataset.itineraryBudgetBound = "true";
     });
@@ -1584,13 +1666,14 @@ const itineraryBudgetLabels = {
       }
 
       const day = stayControl.dataset.budgetStayOption || stayControl.dataset.budgetStaySelect;
-      playBudgetInteractionSound();
+      const previousTotal = getBudgetEstimateTotal();
       updateDayState(day, {
         ...getDayState(day),
         stayId: stayControl.value
       });
       syncControls();
       syncUI();
+      playBudgetSoundForTotals(previousTotal, getBudgetEstimateTotal());
     });
 
     budgetDaysNode.addEventListener("input", (event) => {
