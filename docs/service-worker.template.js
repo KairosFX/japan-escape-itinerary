@@ -13,6 +13,7 @@ const NETWORK_FIRST_URLS = NETWORK_FIRST_PATHS.map((assetPath) =>
 const APP_SHELL_URL_SET = new Set(APP_SHELL_URLS);
 const NETWORK_FIRST_URL_SET = new Set(NETWORK_FIRST_URLS);
 const STATIC_DESTINATIONS = new Set(["font", "image", "script", "style", "worker"]);
+const NON_CACHEABLE_MEDIA_EXTENSIONS = [".mp4", ".mov", ".lottie"];
 
 function isAppOrigin(url) {
   return url.origin === self.location.origin && url.pathname.startsWith(APP_SCOPE_PATH);
@@ -41,6 +42,10 @@ function isNetworkFirstAppAsset(url) {
 
 function isRangeRequest(request) {
   return request.headers.has("range");
+}
+
+function isNonCacheableMediaRequest(url) {
+  return NON_CACHEABLE_MEDIA_EXTENSIONS.some((extension) => url.pathname.endsWith(extension));
 }
 
 function isStaticAssetRequest(request, url) {
@@ -186,6 +191,7 @@ self.addEventListener("message", (event) => {
         if (
           !isAppOrigin(nextUrl) ||
           isNetworkFirstAppAsset(nextUrl) ||
+          isNonCacheableMediaRequest(nextUrl) ||
           nextUrl.pathname === APP_SCOPE_PATH ||
           nextUrl.pathname === `${APP_SCOPE_PATH}index.html`
         ) {
@@ -216,6 +222,11 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (isRangeRequest(event.request)) {
+    return;
+  }
+
+  if (isNonCacheableMediaRequest(requestUrl)) {
+    event.respondWith(fetch(event.request));
     return;
   }
 

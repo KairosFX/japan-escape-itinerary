@@ -1,4 +1,4 @@
-const OFFLINE_CACHE_VERSION = "61d6a4eb03-2d8476cd59-5fecf4f95c-f5a38cf4cd-521698fae8-2505fd076d-93befc11bf-1e878db773-b71f05a930-bcde8dff98-9afc15ad27";
+const OFFLINE_CACHE_VERSION = "ae0343d073-2d8476cd59-fde6e0cc88-f5a38cf4cd-521698fae8-2505fd076d-93befc11bf-1e878db773-b71f05a930-bcde8dff98-9afc15ad27";
 const CACHE_PREFIX = "japan-escape-itinerary-";
 const APP_SHELL_CACHE_NAME = `${CACHE_PREFIX}shell-${OFFLINE_CACHE_VERSION}`;
 const RUNTIME_CACHE_NAME = `${CACHE_PREFIX}runtime-${OFFLINE_CACHE_VERSION}`;
@@ -15,8 +15,8 @@ const APP_SHELL_PATHS = [
   "./assets/app/opening.b71f05a930.mp3",
   "./assets/app/page-background-loop.bcde8dff98.mp3",
   "./assets/app/transition.9afc15ad27.mp3",
-  "./assets/app/style.61d6a4eb03.css",
-  "./assets/app/script.5fecf4f95c.js",
+  "./assets/app/style.ae0343d073.css",
+  "./assets/app/script.fde6e0cc88.js",
   "./assets/app/routeStyle.2d8476cd59.css",
   "./assets/app/routeContent.f5a38cf4cd.js",
   "./assets/app/budgetUi.521698fae8.js",
@@ -36,6 +36,7 @@ const NETWORK_FIRST_URLS = NETWORK_FIRST_PATHS.map((assetPath) =>
 const APP_SHELL_URL_SET = new Set(APP_SHELL_URLS);
 const NETWORK_FIRST_URL_SET = new Set(NETWORK_FIRST_URLS);
 const STATIC_DESTINATIONS = new Set(["font", "image", "script", "style", "worker"]);
+const NON_CACHEABLE_MEDIA_EXTENSIONS = [".mp4", ".mov", ".lottie"];
 
 function isAppOrigin(url) {
   return url.origin === self.location.origin && url.pathname.startsWith(APP_SCOPE_PATH);
@@ -64,6 +65,10 @@ function isNetworkFirstAppAsset(url) {
 
 function isRangeRequest(request) {
   return request.headers.has("range");
+}
+
+function isNonCacheableMediaRequest(url) {
+  return NON_CACHEABLE_MEDIA_EXTENSIONS.some((extension) => url.pathname.endsWith(extension));
 }
 
 function isStaticAssetRequest(request, url) {
@@ -209,6 +214,7 @@ self.addEventListener("message", (event) => {
         if (
           !isAppOrigin(nextUrl) ||
           isNetworkFirstAppAsset(nextUrl) ||
+          isNonCacheableMediaRequest(nextUrl) ||
           nextUrl.pathname === APP_SCOPE_PATH ||
           nextUrl.pathname === `${APP_SCOPE_PATH}index.html`
         ) {
@@ -239,6 +245,11 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (isRangeRequest(event.request)) {
+    return;
+  }
+
+  if (isNonCacheableMediaRequest(requestUrl)) {
+    event.respondWith(fetch(event.request));
     return;
   }
 

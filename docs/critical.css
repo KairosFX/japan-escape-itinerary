@@ -29,10 +29,10 @@
     "Yu Mincho",
     "Hiragino Mincho ProN",
     serif;
-  --page-backdrop-image: url("__PAGE_BACKDROP_IMAGE_PATH__");
+  --page-backdrop-image: url("./assets/media/background-poster.jpg");
   --page-backdrop-position: 50% 12%;
-  --page-backdrop-ratio-width: 3648;
-  --page-backdrop-ratio-height: 4511;
+  --page-backdrop-ratio-width: 1920;
+  --page-backdrop-ratio-height: 1012;
   --page-backdrop-render-height: max(100vh, calc(100vw * var(--page-backdrop-ratio-height) / var(--page-backdrop-ratio-width)));
   --page-backdrop-render-height: max(100svh, calc(100vw * var(--page-backdrop-ratio-height) / var(--page-backdrop-ratio-width)));
   --header-ease: 260ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -611,26 +611,33 @@ body::after {
 }
 
 .site-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
 
+.site-backdrop__video,
 .site-backdrop__image,
 .site-backdrop__wash {
   position: absolute;
-  inset-inline: 0;
   display: block;
   pointer-events: none;
 }
 
+.site-backdrop__video {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
 .site-backdrop__image {
-  inset-block-start: 0;
-  inset-block-end: auto;
-  z-index: 0;
-  block-size: var(--page-backdrop-render-height);
+  inset: 0;
+  z-index: 1;
+  block-size: auto;
   background-image:
     radial-gradient(circle at 50% 10%, rgba(255, 246, 236, 0.12), rgba(255, 246, 236, 0) 28%),
     var(--page-backdrop-image, none);
@@ -639,13 +646,20 @@ body::after {
   background-position:
     center center,
     var(--page-backdrop-position);
+  opacity: 0.24;
 }
 
 .site-backdrop__wash {
   inset-block: 0;
-  z-index: 1;
+  z-index: 2;
+  display: block;
+  background:
+    linear-gradient(180deg, rgba(247, 250, 245, 0.66), rgba(238, 245, 236, 0.72) 38%, rgba(229, 239, 226, 0.8) 100%);
+}
+
+.site-panda-sleeper,
+.site-vessel {
   display: none;
-  background: none;
 }
 
 .site-atmosphere {

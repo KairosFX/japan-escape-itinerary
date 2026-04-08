@@ -10,6 +10,8 @@ const mainContent = document.querySelector("#main-content");
 const siteFooter = document.querySelector(".site-footer");
 const siteIntro = document.querySelector("[data-site-intro]");
 const siteTransition = document.querySelector("[data-site-transition]");
+const siteBackdropVideo = document.querySelector("[data-site-background-video]");
+const siteVesselVideo = document.querySelector("[data-site-vessel-video]");
 const sequenceNotice = document.querySelector("[data-sequence-notice]");
 const checklistGateNotice = document.querySelector("[data-checklist-gate]");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
@@ -103,6 +105,7 @@ const routeStyleFallbackUrl = "./route.min.css";
 const sectionOpenAudioFallbackUrl = "./assets/audio/opening.mp3";
 const backgroundLoopAudioFallbackUrl = "./assets/audio/page-background-loop.mp3";
 const transitionAudioFallbackUrl = "./assets/audio/transition.mp3";
+const celebrationVideoAssetUrl = "./assets/media/celebrationanimation.mp4";
 const routeMapOriginUrl = "https://tiles.openfreemap.org";
 const routeMapStyleUrl = "https://tiles.openfreemap.org/styles/positron";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
@@ -651,6 +654,132 @@ const siteAudioState = {
 };
 let siteTransitionCleanupTimer = 0;
 let siteTransitionToken = 0;
+
+function configureManagedVideoNode(video, { playbackRate = 1, loop = true, preload = "metadata" } = {}) {
+  if (!(video instanceof HTMLMediaElement)) {
+    return null;
+  }
+
+  video.loop = loop;
+  video.muted = true;
+  video.defaultMuted = true;
+  video.preload = preload;
+
+  try {
+    video.playsInline = true;
+  } catch {
+    // Ignore unsupported playsInline assignments.
+  }
+
+  try {
+    video.disableRemotePlayback = true;
+  } catch {
+    // Ignore unsupported remote playback flags.
+  }
+
+  try {
+    video.playbackRate = playbackRate;
+  } catch {
+    // Ignore unsupported playback rate changes.
+  }
+
+  return video;
+}
+
+function playManagedVideoNode(video, { restart = false } = {}) {
+  if (!(video instanceof HTMLMediaElement)) {
+    return;
+  }
+
+  if (restart) {
+    try {
+      video.pause();
+      video.currentTime = 0;
+    } catch {
+      // Ignore media reset failures.
+    }
+  }
+
+  const playResult = video.play();
+  if (playResult && typeof playResult.catch === "function") {
+    playResult.catch(() => null);
+  }
+}
+
+function pauseManagedVideoNode(video) {
+  if (!(video instanceof HTMLMediaElement)) {
+    return;
+  }
+
+  try {
+    video.pause();
+  } catch {
+    // Ignore media pause failures.
+  }
+}
+
+function syncDecorativeVideoPlayback() {
+  const shouldAnimate =
+    !reducedEffectsEnabled && document.visibilityState !== "hidden" && !offlineSnapshotMode;
+
+  [siteBackdropVideo, siteVesselVideo].forEach((video) => {
+    if (!video) {
+      return;
+    }
+
+    if (shouldAnimate) {
+      playManagedVideoNode(video);
+      return;
+    }
+
+    pauseManagedVideoNode(video);
+  });
+}
+
+function initializeDecorativeMediaExperience() {
+  configureManagedVideoNode(siteBackdropVideo, {
+    playbackRate: 0.92,
+    preload: "auto"
+  });
+  configureManagedVideoNode(siteVesselVideo, {
+    playbackRate: 0.88,
+    preload: "metadata"
+  });
+  syncDecorativeVideoPlayback();
+}
+
+function createCelebrationVideoNode(className) {
+  const video = document.createElement("video");
+  video.className = className;
+  video.setAttribute("aria-hidden", "true");
+  configureManagedVideoNode(video, {
+    playbackRate: 0.96,
+    loop: false,
+    preload: "metadata"
+  });
+
+  const source = document.createElement("source");
+  source.src = celebrationVideoAssetUrl;
+  source.type = "video/mp4";
+  video.append(source);
+  return video;
+}
+
+function restartCelebrationLayerPlayback(layer) {
+  if (!(layer instanceof Element)) {
+    return;
+  }
+
+  playManagedVideoNode(layer.querySelector("video"), { restart: true });
+}
+
+function pauseCelebrationLayerPlayback(layer) {
+  if (!(layer instanceof Element)) {
+    return;
+  }
+
+  pauseManagedVideoNode(layer.querySelector("video"));
+}
 
 function buildRouteExplorerViewDefinitions(viewDefinitions = []) {
   return viewDefinitions.map((viewDefinition) => {
@@ -3836,6 +3965,8 @@ function syncReducedEffectsMode({ force = false } = {}) {
 
     root.classList.remove("desktop-scroll-reverse", "scroll-motion-economy");
   }
+
+  syncDecorativeVideoPlayback();
 }
 
 function bindMediaQueryChange(query, handler) {
@@ -4729,14 +4860,7 @@ function createBambooCelebrationLayer() {
   const layer = document.createElement("div");
   layer.className = "bamboo-celebration";
   layer.setAttribute("aria-hidden", "true");
-
-  const wash = document.createElement("span");
-  wash.className = "bamboo-celebration__wash";
-  layer.append(wash);
-
-  appendConfiguredCelebrationNodes(layer, "bamboo-celebration__stalk", bambooCelebrationStalkConfigs);
-  appendConfiguredCelebrationNodes(layer, "bamboo-celebration__leaf", bambooCelebrationLeafConfigs);
-
+  layer.append(createCelebrationVideoNode("bamboo-celebration__media"));
   return layer;
 }
 
@@ -4750,11 +4874,7 @@ function createGrandBambooCelebrationLayer({
   layer.className = ["full-itinerary-celebration", modifierClass].filter(Boolean).join(" ");
   layer.hidden = true;
   layer.innerHTML = `
-    <span class="full-itinerary-celebration__backdrop" aria-hidden="true"></span>
-    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--left" aria-hidden="true"></span>
-    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--center" aria-hidden="true"></span>
-    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--right" aria-hidden="true"></span>
-    <div class="full-itinerary-celebration__grove" aria-hidden="true"></div>
+    <div class="full-itinerary-celebration__video-shell" aria-hidden="true"></div>
     <div class="full-itinerary-celebration__badge" role="status" aria-live="polite" aria-atomic="true">
       <p class="full-itinerary-celebration__kicker">
         ${renderLocalizedContent(kicker)}
@@ -4768,18 +4888,9 @@ function createGrandBambooCelebrationLayer({
     </div>
   `;
 
-  const grove = layer.querySelector(".full-itinerary-celebration__grove");
-  if (grove) {
-    appendConfiguredCelebrationNodes(
-      grove,
-      "full-itinerary-celebration__stalk",
-      fullChecklistCelebrationStalkConfigs
-    );
-    appendConfiguredCelebrationNodes(
-      grove,
-      "full-itinerary-celebration__leaf",
-      fullChecklistCelebrationLeafConfigs
-    );
+  const videoShell = layer.querySelector(".full-itinerary-celebration__video-shell");
+  if (videoShell) {
+    videoShell.append(createCelebrationVideoNode("full-itinerary-celebration__video"));
   }
 
   syncLocalizedNodes(layer);
@@ -4840,6 +4951,7 @@ function clearFullChecklistCelebration() {
 
   fullChecklistCelebrationLayer.classList.remove("is-active");
   fullChecklistCelebrationLayer.hidden = true;
+  pauseCelebrationLayerPlayback(fullChecklistCelebrationLayer);
 }
 
 function clearFullPackingCelebration() {
@@ -4854,6 +4966,7 @@ function clearFullPackingCelebration() {
 
   fullPackingCelebrationLayer.classList.remove("is-active");
   fullPackingCelebrationLayer.hidden = true;
+  pauseCelebrationLayerPlayback(fullPackingCelebrationLayer);
 }
 
 function triggerFullChecklistCelebration() {
@@ -4870,12 +4983,14 @@ function triggerFullChecklistCelebration() {
   clearFullChecklistCelebration();
   layer.hidden = false;
   layer.classList.remove("is-active");
+  restartCelebrationLayerPlayback(layer);
   restartClassOnNextFrame(layer, "is-active");
 
   const durationMs = reducedEffectsEnabled ? 1680 : fullChecklistCelebrationDurationMs;
   fullChecklistCelebrationTimer = window.setTimeout(() => {
     layer.classList.remove("is-active");
     layer.hidden = true;
+    pauseCelebrationLayerPlayback(layer);
     fullChecklistCelebrationTimer = 0;
   }, durationMs);
 }
@@ -4894,12 +5009,14 @@ function triggerFullPackingCelebration() {
   clearFullPackingCelebration();
   layer.hidden = false;
   layer.classList.remove("is-active");
+  restartCelebrationLayerPlayback(layer);
   restartClassOnNextFrame(layer, "is-active");
 
   const durationMs = reducedEffectsEnabled ? 1560 : fullPackingCelebrationDurationMs;
   fullPackingCelebrationTimer = window.setTimeout(() => {
     layer.classList.remove("is-active");
     layer.hidden = true;
+    pauseCelebrationLayerPlayback(layer);
     fullPackingCelebrationTimer = 0;
   }, durationMs);
 }
@@ -4908,11 +5025,7 @@ function createPandaCelebrationLayer() {
   const layer = document.createElement("div");
   layer.className = "panda-celebration";
   layer.setAttribute("aria-hidden", "true");
-
-  const glow = document.createElement("span");
-  glow.className = "panda-celebration__glow";
-  layer.append(glow);
-  appendConfiguredCelebrationNodes(layer, "panda-celebration__sprite", pandaCelebrationSpriteConfigs);
+  layer.append(createCelebrationVideoNode("panda-celebration__media"));
   return layer;
 }
 
@@ -4936,9 +5049,13 @@ function triggerCurrentDayCelebration(target) {
   triggerTimedClassEffect(target, "is-current-day-jump", checklistJumpHighlightDurationMs, {
     force: true
   });
+  restartCelebrationLayerPlayback(layer);
   triggerTimedClassEffect(layer, "is-active", pandaCelebrationDurationMs, {
     force: true
   });
+  window.setTimeout(() => {
+    pauseCelebrationLayerPlayback(layer);
+  }, pandaCelebrationDurationMs);
 }
 
 function createBambooResetLayer({ viewport = false } = {}) {
@@ -5097,7 +5214,8 @@ function triggerBambooCelebration(target) {
     return;
   }
 
-  ensureBambooCelebrationLayer(target);
+  const layer = ensureBambooCelebrationLayer(target);
+  restartCelebrationLayerPlayback(layer);
   target.classList.remove("is-bamboo-celebrating");
 
   const existingTimer = bambooCelebrationTimers.get(target);
@@ -5109,6 +5227,7 @@ function triggerBambooCelebration(target) {
 
   const timerId = window.setTimeout(() => {
     target.classList.remove("is-bamboo-celebrating");
+    pauseCelebrationLayerPlayback(layer);
     bambooCelebrationTimers.delete(target);
   }, bambooCelebrationDurationMs);
 
@@ -9752,6 +9871,7 @@ async function playSiteIntro() {
 
 async function bootApp() {
   syncReducedEffectsMode({ force: true });
+  initializeDecorativeMediaExperience();
   initializeSiteAudioExperience();
   completedHistoryDays = readStoredDaySet(completedHistoryStorageKey);
   checklistState = readStoredChecklistState();
@@ -10056,11 +10176,13 @@ if (siteHeader) {
 }
 
 window.addEventListener("pagehide", () => {
+  syncDecorativeVideoPlayback();
   pauseAmbientPlayback({ keepIntent: true });
   flushQueuedStorageWrites();
 });
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") {
+    syncDecorativeVideoPlayback();
     pauseAmbientPlayback({ keepIntent: true });
     if (desktopReverseScrollTimer) {
       window.clearTimeout(desktopReverseScrollTimer);
@@ -10077,6 +10199,7 @@ document.addEventListener("visibilitychange", () => {
     return;
   }
 
+  syncDecorativeVideoPlayback();
   if (siteAudioState.ambientWanted) {
     void requestAmbientPlayback();
   }
