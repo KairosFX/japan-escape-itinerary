@@ -118,10 +118,13 @@ const audioSectionOpenVolume = 0.24;
 const audioTransitionVolume = 0.28;
 const audioBudgetPositiveVolume = 0.15;
 const audioBudgetNegativeVolume = 0.14;
+const audioHammerClickVolume = 0.112;
 const audioSectionOpenCooldownMs = 96;
 const audioTransitionCooldownMs = 320;
 const audioBudgetCooldownMs = 132;
+const audioHammerClickCooldownMs = 84;
 const audioBudgetDuckMs = 280;
+const audioHammerClickDuckMs = 140;
 const siteTransitionDurationMs = 520;
 const siteTransitionSwapDelayMs = 118;
 const siteTransitionBackToTopDelayMs = 92;
@@ -643,7 +646,8 @@ const siteAudioState = {
   autoplayBindingReady: false,
   lastSectionOpenAt: 0,
   lastTransitionAt: 0,
-  lastBudgetCueAt: 0
+  lastBudgetCueAt: 0,
+  lastHammerClickAt: 0
 };
 let siteTransitionCleanupTimer = 0;
 let siteTransitionToken = 0;
@@ -1120,6 +1124,78 @@ function renderBudgetNegativeCue(context, masterNode, volume = audioBudgetNegati
   scheduleManagedAudioCleanup([bus, bodyNode, lowpassNode], 500);
 }
 
+function renderBambooHammerClickCue(context, masterNode, volume = audioHammerClickVolume) {
+  const now = context.currentTime + 0.005;
+  const bus = context.createGain();
+  const bodyNode = context.createBiquadFilter();
+  const presenceNode = context.createBiquadFilter();
+  const lowpassNode = context.createBiquadFilter();
+
+  bus.gain.value = volume;
+  bodyNode.type = "peaking";
+  bodyNode.frequency.setValueAtTime(430, now);
+  bodyNode.Q.setValueAtTime(1.05, now);
+  bodyNode.gain.setValueAtTime(2.2, now);
+  presenceNode.type = "highshelf";
+  presenceNode.frequency.setValueAtTime(2150, now);
+  presenceNode.gain.setValueAtTime(1.6, now);
+  lowpassNode.type = "lowpass";
+  lowpassNode.frequency.setValueAtTime(3800, now);
+
+  bus.connect(bodyNode);
+  bodyNode.connect(presenceNode);
+  presenceNode.connect(lowpassNode);
+  lowpassNode.connect(masterNode);
+
+  scheduleManagedNoiseBurst(context, bus, {
+    now,
+    peak: 0.013,
+    decay: 0.026,
+    frequency: 2080,
+    q: 1.45
+  });
+  scheduleManagedNoiseBurst(context, bus, {
+    now: now + 0.006,
+    peak: 0.006,
+    decay: 0.04,
+    frequency: 1180,
+    q: 0.92
+  });
+  scheduleManagedOscillatorVoice(context, bus, {
+    now,
+    type: "triangle",
+    frequency: 218,
+    attack: 0.0015,
+    peak: 0.108,
+    decay: 0.12,
+    pitchEndRatio: 0.9,
+    lowpass: 1550
+  });
+  scheduleManagedOscillatorVoice(context, bus, {
+    now: now + 0.003,
+    type: "sine",
+    frequency: 396,
+    attack: 0.0012,
+    peak: 0.054,
+    decay: 0.108,
+    pitchEndRatio: 0.93,
+    lowpass: 2050
+  });
+  scheduleManagedOscillatorVoice(context, bus, {
+    now: now + 0.001,
+    type: "sine",
+    frequency: 812,
+    attack: 0.001,
+    peak: 0.016,
+    decay: 0.048,
+    pitchEndRatio: 0.96,
+    highpass: 420,
+    lowpass: 2400
+  });
+
+  scheduleManagedAudioCleanup([bus, bodyNode, presenceNode, lowpassNode], 320);
+}
+
 function ensureSiteAudioNodes() {
   if (siteAudioNodes) {
     return siteAudioNodes;
@@ -1402,6 +1478,21 @@ function playBudgetInteractionSound(tone = "positive") {
 }
 
 window[budgetSoundRuntimeGlobal] = playBudgetInteractionSound;
+
+function playBambooHammerClickSound() {
+  if (!isDesktopBambooHammerAvailable() || !getManagedAudioContextCtor()) {
+    return;
+  }
+
+  playManagedSynthOneShot(
+    (context, masterNode) => renderBambooHammerClickCue(context, masterNode),
+    {
+      cooldownMs: audioHammerClickCooldownMs,
+      stateKey: "lastHammerClickAt",
+      duckMs: audioHammerClickDuckMs
+    }
+  );
+}
 
 function shouldPlayGenericButtonSound(button) {
   if (!(button instanceof HTMLButtonElement) || button.disabled) {
@@ -5959,6 +6050,7 @@ function handleDesktopBambooHammerPointerDown(event) {
   }
 
   root.classList.add("is-bamboo-hammer-pressing");
+  playBambooHammerClickSound();
   triggerBambooHammerImpact(event.clientX, event.clientY);
 }
 
