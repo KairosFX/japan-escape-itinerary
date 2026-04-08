@@ -1,17 +1,13 @@
 const languageButtons = document.querySelectorAll("[data-set-language]");
-const themeButtons = document.querySelectorAll("[data-set-theme]");
 const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const appleWebAppTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
 const sectionTabs = Array.from(document.querySelectorAll("[data-panel-target]"));
 const contentPanels = Array.from(document.querySelectorAll("[data-panel]"));
 const siteHeader = document.querySelector(".site-header");
-const headerAccessoryGroups = Array.from(document.querySelectorAll(".language-switcher, .theme-switcher"));
+const headerAccessoryGroups = Array.from(document.querySelectorAll(".language-switcher"));
 const mainContent = document.querySelector("#main-content");
 const siteFooter = document.querySelector(".site-footer");
-const siteIntro = document.querySelector("[data-site-intro]");
-const siteTransition = document.querySelector("[data-site-transition]");
 const siteBackdropVideo = document.querySelector("[data-site-background-video]");
-const siteVesselVideo = document.querySelector("[data-site-vessel-video]");
 const sequenceNotice = document.querySelector("[data-sequence-notice]");
 const checklistGateNotice = document.querySelector("[data-checklist-gate]");
 const dayCards = Array.from(document.querySelectorAll(".day-card[data-day]"));
@@ -68,7 +64,6 @@ const pageTitles = {
   ja: "日本旅行"
 };
 const storageKey = "japan-trip-language";
-const themeStorageKey = "japan-trip-theme";
 const itineraryStateVersion = "2026-03-27-flight-home-v1";
 const checklistStorageKey = `japan-trip-checklist-state-${itineraryStateVersion}`;
 const completedHistoryStorageKey = `japan-trip-completed-history-${itineraryStateVersion}`;
@@ -128,9 +123,6 @@ const audioBudgetCooldownMs = 132;
 const audioHammerClickCooldownMs = 84;
 const audioBudgetDuckMs = 280;
 const audioHammerClickDuckMs = 140;
-const siteTransitionDurationMs = 520;
-const siteTransitionSwapDelayMs = 118;
-const siteTransitionBackToTopDelayMs = 92;
 const bambooCelebrationDurationMs = 1180;
 const fullChecklistCelebrationDurationMs = 2360;
 const fullPackingCelebrationDurationMs = 2140;
@@ -652,8 +644,6 @@ const siteAudioState = {
   lastBudgetCueAt: 0,
   lastHammerClickAt: 0
 };
-let siteTransitionCleanupTimer = 0;
-let siteTransitionToken = 0;
 
 function configureManagedVideoNode(video, { playbackRate = 1, loop = true, preload = "metadata" } = {}) {
   if (!(video instanceof HTMLMediaElement)) {
@@ -722,28 +712,22 @@ function syncDecorativeVideoPlayback() {
   const shouldAnimate =
     !reducedEffectsEnabled && document.visibilityState !== "hidden" && !offlineSnapshotMode;
 
-  [siteBackdropVideo, siteVesselVideo].forEach((video) => {
-    if (!video) {
-      return;
-    }
+  if (!siteBackdropVideo) {
+    return;
+  }
 
-    if (shouldAnimate) {
-      playManagedVideoNode(video);
-      return;
-    }
+  if (shouldAnimate) {
+    playManagedVideoNode(siteBackdropVideo);
+    return;
+  }
 
-    pauseManagedVideoNode(video);
-  });
+  pauseManagedVideoNode(siteBackdropVideo);
 }
 
 function initializeDecorativeMediaExperience() {
   configureManagedVideoNode(siteBackdropVideo, {
-    playbackRate: 0.92,
+    playbackRate: 1,
     preload: "auto"
-  });
-  configureManagedVideoNode(siteVesselVideo, {
-    playbackRate: 0.88,
-    preload: "metadata"
   });
   syncDecorativeVideoPlayback();
 }
@@ -1577,12 +1561,7 @@ function playSectionOpenSound() {
 window[sectionOpenSoundRuntimeGlobal] = playSectionOpenSound;
 
 function playTransitionSound() {
-  playManagedOneShot(ensureSiteAudioNodes().transition, {
-    volume: audioTransitionVolume,
-    cooldownMs: audioTransitionCooldownMs,
-    stateKey: "lastTransitionAt",
-    duckMs: 460
-  });
+  return;
 }
 
 function playBudgetInteractionSound(tone = "positive") {
@@ -3878,38 +3857,8 @@ function initializeFujiForecast() {
   return fujiForecastPromise;
 }
 
-function readStoredThemePreference() {
-  try {
-    const storedTheme = window.localStorage.getItem(themeStorageKey);
-    return storedTheme === "light" || storedTheme === "dark" ? storedTheme : "";
-  } catch (error) {
-    return "";
-  }
-}
-
-function storeThemePreference(theme) {
-  try {
-    queueStorageValue(themeStorageKey, theme);
-  } catch (error) {
-    // Ignore storage failures and keep the page usable.
-  }
-}
-
 function getCurrentTheme() {
-  const explicitTheme = root.dataset.theme;
-  if (explicitTheme === "light" || explicitTheme === "dark") {
-    return explicitTheme;
-  }
-
-  return getSystemTheme();
-}
-
-function updateThemeButtons(theme) {
-  themeButtons.forEach((button) => {
-    const isActive = button.dataset.setTheme === theme;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", String(isActive));
-  });
+  return "dark";
 }
 
 function updateThemeColorMeta(theme) {
@@ -3917,7 +3866,7 @@ function updateThemeColorMeta(theme) {
     return;
   }
 
-  themeColorMeta.content = theme === "dark" ? "#18261d" : "#e7efe3";
+  themeColorMeta.content = "#18261d";
 }
 
 function isLikelyLowerPowerDevice() {
@@ -5062,12 +5011,7 @@ function createBambooResetLayer({ viewport = false } = {}) {
   const layer = document.createElement("div");
   layer.className = viewport ? "bamboo-reset-burst bamboo-reset-burst--viewport" : "bamboo-reset-burst";
   layer.setAttribute("aria-hidden", "true");
-
-  const mist = document.createElement("span");
-  mist.className = "bamboo-reset-burst__mist";
-  layer.append(mist);
-  appendConfiguredCelebrationNodes(layer, "bamboo-reset-burst__segment", bambooResetSegmentConfigs);
-  appendConfiguredCelebrationNodes(layer, "bamboo-reset-burst__leaf", bambooResetLeafConfigs);
+  layer.append(createCelebrationVideoNode("bamboo-reset-burst__media"));
   return layer;
 }
 
@@ -5103,9 +5047,23 @@ function triggerBambooResetEffect(target, { viewport = false } = {}) {
   }
 
   const layer = ensureBambooResetLayer(target, { viewport });
-  return triggerTimedClassEffect(layer, "is-active", bambooResetDurationMs, {
+  restartCelebrationLayerPlayback(layer);
+  const didTrigger = triggerTimedClassEffect(layer, "is-active", bambooResetDurationMs, {
     force: true
   });
+  if (didTrigger) {
+    const existingPauseTimer = Number.parseInt(layer.dataset.resetPauseTimer || "", 10);
+    if (Number.isFinite(existingPauseTimer) && existingPauseTimer > 0) {
+      window.clearTimeout(existingPauseTimer);
+    }
+
+    const pauseTimer = window.setTimeout(() => {
+      pauseCelebrationLayerPlayback(layer);
+      delete layer.dataset.resetPauseTimer;
+    }, bambooResetDurationMs);
+    layer.dataset.resetPauseTimer = String(pauseTimer);
+  }
+  return didTrigger;
 }
 
 function createBudgetStepperEffectLayer() {
@@ -9511,17 +9469,13 @@ function setLanguage(language) {
 }
 
 function applyTheme(theme, options = {}) {
-  const nextTheme = theme === "dark" ? "dark" : "light";
+  const nextTheme = "dark";
   const { persist = true } = options;
 
   root.dataset.theme = nextTheme;
   root.style.colorScheme = nextTheme;
-  updateThemeButtons(nextTheme);
   updateThemeColorMeta(nextTheme);
-
-  if (persist) {
-    storeThemePreference(nextTheme);
-  }
+  void persist;
 
   refreshRouteMapsIfReady();
 }
@@ -9531,14 +9485,6 @@ function handleLanguageButtonClick(button) {
   lockHeaderState(280);
   preserveScrollPosition(() => {
     setLanguage(button.dataset.setLanguage);
-  });
-}
-
-function handleThemeButtonClick(button) {
-  triggerHeaderBambooGlow(button);
-  lockHeaderState(280);
-  preserveScrollPosition(() => {
-    applyTheme(button.dataset.setTheme);
   });
 }
 
@@ -9726,12 +9672,6 @@ function bindTabNavigation() {
   });
 }
 
-function waitForFrame() {
-  return new Promise((resolve) => {
-    window.requestAnimationFrame(() => resolve());
-  });
-}
-
 function waitForDuration(durationMs) {
   return new Promise((resolve) => {
     window.setTimeout(resolve, durationMs);
@@ -9739,134 +9679,19 @@ function waitForDuration(durationMs) {
 }
 
 function clearSiteTransitionState() {
-  if (siteTransitionCleanupTimer) {
-    window.clearTimeout(siteTransitionCleanupTimer);
-    siteTransitionCleanupTimer = 0;
-  }
-
-  if (siteTransition) {
-    siteTransition.classList.remove("is-active");
-    siteTransition.hidden = true;
-    siteTransition.setAttribute("aria-hidden", "true");
-    delete siteTransition.dataset.direction;
-    delete siteTransition.dataset.mode;
-  }
-
   delete root.dataset.siteTransitionDirection;
   delete root.dataset.siteTransitionMode;
 }
-
-function getPanelTransitionDirection(nextPanelId, currentPanelId = getActivePanelId()) {
-  const currentIndex = sectionTabs.findIndex((tab) => tab.dataset.panelTarget === currentPanelId);
-  const nextIndex = sectionTabs.findIndex((tab) => tab.dataset.panelTarget === nextPanelId);
-
-  if (currentIndex === -1 || nextIndex === -1 || currentIndex === nextIndex) {
-    return "forward";
-  }
-
-  return nextIndex > currentIndex ? "forward" : "backward";
-}
-
-function triggerSiteTransition({ mode = "section", direction = "forward" } = {}) {
-  if (!siteTransition || reducedEffectsEnabled) {
-    clearSiteTransitionState();
-    return 0;
-  }
-
-  const token = ++siteTransitionToken;
-  const swapDelayMs =
-    mode === "back-to-top" ? siteTransitionBackToTopDelayMs : siteTransitionSwapDelayMs;
-
-  root.dataset.siteTransitionDirection = direction;
-  root.dataset.siteTransitionMode = mode;
-
-  siteTransition.hidden = false;
-  siteTransition.setAttribute("aria-hidden", "false");
-  siteTransition.dataset.direction = direction;
-  siteTransition.dataset.mode = mode;
-  siteTransition.classList.remove("is-active");
-  void siteTransition.getBoundingClientRect();
-  siteTransition.classList.add("is-active");
-
-  if (siteTransitionCleanupTimer) {
-    window.clearTimeout(siteTransitionCleanupTimer);
-  }
-
-  siteTransitionCleanupTimer = window.setTimeout(() => {
-    if (token !== siteTransitionToken) {
-      return;
-    }
-
-    clearSiteTransitionState();
-  }, siteTransitionDurationMs);
-
-  return swapDelayMs;
-}
-
-async function activatePanel(panelId, { transitionIfChanged = true } = {}) {
+async function activatePanel(panelId) {
   const currentPanelId = getActivePanelId();
   const hasChanged = panelId !== currentPanelId;
 
   await ensureSectionAssetsReady(panelId);
 
-  if (hasChanged && transitionIfChanged) {
-    const transitionDirection = getPanelTransitionDirection(panelId, currentPanelId);
-    playTransitionSound();
-    const swapDelayMs = triggerSiteTransition({
-      mode: "section",
-      direction: transitionDirection
-    });
-
-    if (swapDelayMs > 0) {
-      await waitForDuration(swapDelayMs);
-    }
-  }
-
   lockHeaderState(hasChanged ? 620 : 520);
   setActivePanel(panelId);
   await ensureSectionInitialized(panelId);
   return hasChanged;
-}
-
-function getSiteIntroTimings() {
-  const holdDurationMs = reducedEffectsEnabled ? 180 : 1120;
-  const exitDurationMs = reducedEffectsEnabled ? 120 : 620;
-
-  return {
-    holdDurationMs,
-    exitDurationMs,
-    totalDurationMs: holdDurationMs + exitDurationMs
-  };
-}
-
-async function playSiteIntro() {
-  if (!siteIntro) {
-    root.classList.remove("intro-pending", "intro-active", "intro-leaving");
-    return;
-  }
-
-  const { holdDurationMs, exitDurationMs } = getSiteIntroTimings();
-
-  siteIntro.hidden = false;
-  siteIntro.setAttribute("aria-hidden", "false");
-  root.classList.remove("intro-leaving");
-
-  await waitForFrame();
-  await waitForFrame();
-  root.classList.remove("intro-pending");
-  root.classList.add("intro-active");
-  await waitForDuration(holdDurationMs);
-
-  root.classList.add("intro-leaving");
-  root.classList.remove("intro-active");
-
-  if (exitDurationMs > 0) {
-    await waitForDuration(exitDurationMs);
-  }
-
-  root.classList.remove("intro-pending", "intro-active", "intro-leaving");
-  siteIntro.hidden = true;
-  siteIntro.setAttribute("aria-hidden", "true");
 }
 
 async function bootApp() {
@@ -9877,7 +9702,7 @@ async function bootApp() {
   checklistState = readStoredChecklistState();
   updateChecklistAccessState();
   syncOptionalDaysUI();
-  applyTheme(readStoredThemePreference() || getCurrentTheme(), { persist: false });
+  applyTheme("dark", { persist: false });
   const storedLanguage = readStoredLanguage();
   if (storedLanguage === "ja") {
     setLanguage("ja");
@@ -9888,12 +9713,10 @@ async function bootApp() {
   }
 
   bootOfflineExperience();
-  const introPromise = playSiteIntro();
-  introPromise.finally(() => {
-    if (siteAudioState.ambientWanted) {
-      void requestAmbientPlayback();
-    }
-  });
+  root.classList.remove("intro-pending", "intro-active", "intro-leaving");
+  if (siteAudioState.ambientWanted) {
+    void requestAmbientPlayback();
+  }
   void warmRouteExperience();
   const siteFooter = document.querySelector(".site-footer");
   const initialPanelId = getInitialPanelId();
@@ -9929,8 +9752,6 @@ async function bootApp() {
       scheduleDayCardRowHeights();
     });
   }
-
-  await introPromise;
 }
 
 function scheduleAppBoot() {
@@ -9946,12 +9767,6 @@ function scheduleAppBoot() {
 languageButtons.forEach((button) => {
   button.addEventListener("click", () => {
     handleLanguageButtonClick(button);
-  });
-});
-
-themeButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    handleThemeButtonClick(button);
   });
 });
 
@@ -10028,14 +9843,6 @@ if (resetProgressConfirmButton) {
 
 backToTopButtons.forEach((button) => {
   button.addEventListener("click", async () => {
-    playTransitionSound();
-    const swapDelayMs = triggerSiteTransition({
-      mode: "back-to-top",
-      direction: "up"
-    });
-    if (swapDelayMs > 0) {
-      await waitForDuration(swapDelayMs);
-    }
     void smoothlyScrollWindowTo(0, { intent: "back-to-top" });
   });
 });

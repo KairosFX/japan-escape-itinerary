@@ -49,7 +49,7 @@
     "Yu Mincho",
     "Hiragino Mincho ProN",
     serif;
-  --page-backdrop-image: url("./assets/media/background-poster.jpg");
+  --page-backdrop-image: none;
   --page-backdrop-position: 50% 12%;
   --page-backdrop-ratio-width: 1920;
   --page-backdrop-ratio-height: 1012;
@@ -13639,73 +13639,6 @@ html[data-theme="dark"] .full-itinerary-celebration--packing .full-itinerary-cel
     radial-gradient(circle at 48% 82%, rgba(231, 201, 150, 0.16), rgba(231, 201, 150, 0) 34%);
 }
 
-.site-panda-sleeper,
-.site-vessel {
-  position: fixed;
-  z-index: 3;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.site-panda-sleeper {
-  top: calc(var(--header-reserved-height) + clamp(0.2rem, 0.7vw, 0.7rem));
-  right: clamp(0.75rem, 1.6vw, 1.5rem);
-  width: clamp(7rem, 10vw, 10.25rem);
-  aspect-ratio: 1.24 / 1;
-  opacity: 0.94;
-}
-
-.site-panda-sleeper__shadow {
-  position: absolute;
-  inset: auto 14% 12% 18%;
-  height: 18%;
-  border-radius: 999px;
-  background: radial-gradient(circle at 50% 50%, rgba(40, 29, 22, 0.2), rgba(40, 29, 22, 0) 72%);
-  filter: blur(11px);
-}
-
-dotlottie-player.site-panda-sleeper__player {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  filter:
-    drop-shadow(0 18px 26px rgba(52, 37, 28, 0.18))
-    drop-shadow(0 8px 18px rgba(255, 255, 255, 0.18));
-}
-
-.site-vessel {
-  right: max(0.55rem, env(safe-area-inset-right));
-  bottom: max(0.4rem, env(safe-area-inset-bottom));
-  width: clamp(4.5rem, 7.2vw, 6.9rem);
-  aspect-ratio: 720 / 404;
-  opacity: 0.72;
-}
-
-.site-vessel::before {
-  content: "";
-  position: absolute;
-  inset: 50% 12% -4% 18%;
-  border-radius: 999px;
-  background: radial-gradient(circle at 50% 50%, rgba(28, 38, 26, 0.18), rgba(28, 38, 26, 0) 72%);
-  filter: blur(12px);
-}
-
-.site-vessel__video {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  filter:
-    saturate(0.84)
-    brightness(0.94)
-    contrast(1.04)
-    drop-shadow(0 16px 18px rgba(21, 34, 24, 0.12));
-}
-
 html[data-theme="dark"] .site-backdrop__video {
   opacity: 0.72;
   filter: saturate(0.76) brightness(0.5) contrast(1.08);
@@ -13729,26 +13662,6 @@ html[data-theme="dark"] .site-backdrop__wash {
     ),
     radial-gradient(circle at 16% 18%, rgba(148, 195, 160, 0.08), rgba(148, 195, 160, 0) 26%),
     radial-gradient(circle at 82% 22%, rgba(228, 242, 230, 0.08), rgba(228, 242, 230, 0) 26%);
-}
-
-html[data-theme="dark"] .site-panda-sleeper {
-  opacity: 0.9;
-}
-
-html[data-theme="dark"] dotlottie-player.site-panda-sleeper__player {
-  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.34));
-}
-
-html[data-theme="dark"] .site-vessel {
-  opacity: 0.56;
-}
-
-html[data-theme="dark"] .site-vessel__video {
-  filter:
-    saturate(0.72)
-    brightness(0.72)
-    contrast(1.06)
-    drop-shadow(0 16px 24px rgba(0, 0, 0, 0.22));
 }
 
 .bamboo-celebration,
@@ -13885,9 +13798,7 @@ html[data-theme="dark"] .full-itinerary-celebration__video {
   filter: saturate(0.72) brightness(0.7) contrast(1.08);
 }
 
-html.reduce-effects .site-backdrop__video,
-html.reduce-effects .site-panda-sleeper,
-html.reduce-effects .site-vessel {
+html.reduce-effects .site-backdrop__video {
   display: none !important;
 }
 
@@ -13900,38 +13811,12 @@ html.reduce-effects .site-backdrop__image {
     opacity: 0.78;
     transform: scale(1.055);
   }
-
-  .site-panda-sleeper {
-    top: calc(var(--header-reserved-height) + 0.12rem);
-    right: 0.65rem;
-    width: clamp(5.8rem, 18vw, 7rem);
-    opacity: 0.9;
-  }
-
-  .site-vessel {
-    width: clamp(3.8rem, 12vw, 5.4rem);
-    opacity: 0.64;
-  }
 }
 
 @media (max-width: 640px) {
   .site-backdrop__video {
     opacity: 0.74;
     object-position: 54% 46%;
-  }
-
-  .site-panda-sleeper {
-    top: calc(var(--header-reserved-height) - 0.08rem);
-    right: 0.45rem;
-    width: clamp(4.8rem, 24vw, 6rem);
-    opacity: 0.86;
-  }
-
-  .site-vessel {
-    right: 0.2rem;
-    bottom: 0.18rem;
-    width: clamp(3rem, 16vw, 4.3rem);
-    opacity: 0.56;
   }
 }
 
@@ -14046,5 +13931,122 @@ html.reduce-effects .site-backdrop__image {
   100% {
     opacity: 0;
     transform: translate3d(0, -2%, 0) scale(1.02);
+  }
+}
+
+/* Dark-only cleanup overrides */
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: #08100c !important;
+  background-color: #08100c !important;
+  color: #eef6ef;
+}
+
+.header-actions {
+  grid-template-areas:
+    "nav"
+    "language";
+}
+
+.theme-switcher,
+.site-panda-sleeper,
+.site-vessel,
+.site-atmosphere,
+.site-intro,
+.site-transition {
+  display: none !important;
+}
+
+.site-backdrop::before,
+.site-backdrop::after {
+  content: none !important;
+}
+
+.site-backdrop__image,
+.site-backdrop__wash {
+  display: none !important;
+}
+
+.site-backdrop__video {
+  opacity: 0.94 !important;
+  filter: saturate(0.86) brightness(0.72) contrast(1.06) !important;
+  transform: none !important;
+  object-position: 50% 48%;
+}
+
+html[data-theme="dark"] .site-backdrop__video {
+  opacity: 0.94 !important;
+  filter: saturate(0.86) brightness(0.72) contrast(1.06) !important;
+}
+
+.content-panel.is-active,
+html[data-site-transition-mode] .content-panel.is-active,
+html[data-site-transition-direction] .content-panel.is-active {
+  animation: none !important;
+}
+
+.bamboo-reset-burst {
+  border-radius: inherit;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.bamboo-reset-burst::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 14, 10, 0.08), rgba(8, 14, 10, 0.16) 100%),
+    radial-gradient(circle at 50% 18%, rgba(240, 248, 241, 0.08), rgba(240, 248, 241, 0) 24%);
+}
+
+.bamboo-reset-burst__media {
+  position: absolute;
+  inset: -6%;
+  display: block;
+  width: 112%;
+  height: 112%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0;
+  filter: saturate(0.82) brightness(0.78) contrast(1.05);
+  transform: translate3d(0, 4%, 0) scale(1.05);
+  pointer-events: none;
+}
+
+.bamboo-reset-burst.is-active {
+  animation: celebrationVideoPresence 1120ms cubic-bezier(0.18, 0.9, 0.24, 1) both;
+}
+
+.bamboo-reset-burst.is-active::before {
+  animation: celebrationVideoGlow 1120ms cubic-bezier(0.18, 0.9, 0.24, 1) both;
+}
+
+.bamboo-reset-burst.is-active .bamboo-reset-burst__media {
+  animation: resetCelebrationDrift 1120ms cubic-bezier(0.18, 0.9, 0.24, 1) both;
+}
+
+@keyframes resetCelebrationDrift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 4%, 0) scale(1.05);
+  }
+
+  18% {
+    opacity: 0.72;
+  }
+
+  72% {
+    opacity: 0.62;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -2%, 0) scale(1.01);
   }
 }

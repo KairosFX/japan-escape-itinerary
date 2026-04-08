@@ -63,77 +63,6 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
       ]
     },
     {
-      "id": "osaka-stay",
-      "group": "accommodations",
-      "filters": [
-        "to-book"
-      ],
-      "kind": "booking",
-      "dayLabel": {
-        "en": "Days 1 or 3",
-        "ja": "1日目または3日目"
-      },
-      "typeLabel": {
-        "en": "Hotel / Accommodation",
-        "ja": "ホテル・宿泊"
-      },
-      "stayVisibility": {
-        "days": [
-          1,
-          3
-        ],
-        "stayIds": [
-          "osaka-compact-hotel"
-        ]
-      },
-      "tone": {
-        "en": "Stay booking",
-        "ja": "宿泊予約"
-      },
-      "defaultStatus": {
-        "en": "Optional",
-        "ja": "任意"
-      },
-      "doneStatus": {
-        "en": "Booked",
-        "ja": "予約済み"
-      },
-      "toggleDefault": {
-        "en": "Save option",
-        "ja": "候補保存"
-      },
-      "toggleDone": {
-        "en": "Booked",
-        "ja": "予約済み"
-      },
-      "title": {
-        "en": "Optional Osaka Minami hotel",
-        "ja": "任意の大阪ミナミホテル"
-      },
-      "summary": {
-        "en": "Use this only if Day 1 or Day 3 needs a paid Osaka night. The Minami side is chosen for route fit, not just because it is in Osaka.",
-        "ja": "1日目または3日目に有料の大阪泊が必要な時だけ使います。大阪という広い括りではなく、ミナミ側の動線で選んでいます。"
-      },
-      "details": {
-        "en": "Nishi-Shinsaibashi keeps Day 1 Dotonbori-Shinsaibashi walking and Day 3 Osaka-side movement practical while trimming the paid fallback cost. Keep the BudgetAir hotel partner page for Hotel Trend Nishi Shinsaibashi here so the cheaper Minami fallback still lands in the right part of Osaka.",
-        "ja": "西心斎橋寄りなら、1日目の道頓堀・心斎橋の徒歩動線と、3日目の大阪側の動きをまとめやすく、代替宿の費用も抑えやすいです。より安い大阪ミナミ代替宿として、Hotel Trend Nishi Shinsaibashi の BudgetAir 提携ホテルページを残しています。"
-      },
-      "links": [
-        {
-          "href": "https://us.trip.com/hotels/osaka-hotel-detail-32615922/hotel-trend-nishi-shinsaibashi/?locale=en-US&allianceid=3817871&sid=22541534&ouid=BUAUS_home_page_tab",
-          "label": {
-            "en": "BudgetAir hotel partner page",
-            "ja": "BudgetAir 提携ホテルページ"
-          },
-          "note": {
-            "en": "BudgetAir hotel-channel listing for the cheaper Osaka fallback stay",
-            "ja": "より安い大阪代替宿に使う BudgetAir 提携ホテルページ"
-          },
-          "kind": "primary"
-        }
-      ]
-    },
-    {
       "id": "kyoto-stay",
       "group": "accommodations",
       "filters": [
@@ -274,8 +203,8 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
       ],
       "kind": "booking",
       "dayLabel": {
-        "en": "Day 3",
-        "ja": "3日目"
+        "en": "Day 4",
+        "ja": "4日目"
       },
       "typeLabel": {
         "en": "Hotel / Accommodation",
