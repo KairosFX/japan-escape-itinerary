@@ -1688,7 +1688,6 @@ function getWarmCacheAssetUrls(manifest) {
   return Array.from(
     new Set(
       [
-        manifest.pageBackdropImagePath,
         manifest.sectionOpenAudioPath || sectionOpenAudioFallbackUrl,
         manifest.backgroundLoopAudioPath || backgroundLoopAudioFallbackUrl,
         manifest.transitionAudioPath || transitionAudioFallbackUrl,
@@ -10011,4 +10010,6 @@ document.addEventListener("visibilitychange", () => {
     void requestAmbientPlayback();
   }
 });
+
+
 

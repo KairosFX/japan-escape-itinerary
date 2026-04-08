@@ -2337,11 +2337,58 @@ html.reduce-effects .site-intro__panorama,
 html.reduce-effects .site-intro__content {
   transform: none !important;
   filter: none !important;
+}
+
+/* Final site backdrop clarity overrides */
+body {
+  background: #000 !important;
+  background-color: #000 !important;
+}
+
+.site-backdrop {
+  background: #000 !important;
+}
+
+.site-backdrop::before,
+.site-backdrop::after,
+.site-backdrop__image,
+.site-backdrop__wash,
+.site-atmosphere,
+.site-panda-sleeper,
+.site-vessel,
+.site-intro,
+.site-transition {
+  display: none !important;
+  content: none !important;
+}
+
+.site-backdrop__video,
+html[data-theme="dark"] .site-backdrop__video,
+html.reduce-effects .site-backdrop__video {
+  display: block !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: 50% 48% !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  background: transparent !important;
+  backface-visibility: hidden;
+}
+
+@media (max-width: 640px) {
+  .site-backdrop__video,
+  html[data-theme="dark"] .site-backdrop__video,
+  html.reduce-effects .site-backdrop__video {
+    object-position: 54% 46% !important;
+  }
 }</style>
-  <link rel="preload" href="./assets/app/style.b0b59e3cc4.css" as="style" fetchpriority="high">
-  <link rel="preload" href="./assets/app/script.a81a11ce02.js" as="script" fetchpriority="high">
-  <link rel="stylesheet" href="./assets/app/style.b0b59e3cc4.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.b0b59e3cc4.css"></noscript>
+  <link rel="preload" href="./assets/app/style.757bb2ffe3.css" as="style" fetchpriority="high">
+  <link rel="preload" href="./assets/app/script.da5e09ad1f.js" as="script" fetchpriority="high">
+  <link rel="stylesheet" href="./assets/app/style.757bb2ffe3.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.757bb2ffe3.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -3864,10 +3911,10 @@ html.reduce-effects .site-intro__content {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"pageBackdropImagePath":"./assets/app/1yegabjjbjp01.1e878db773.jpg","pageBackdropImageCssPath":"./1yegabjjbjp01.1e878db773.jpg","pageBackdropImageHash":"1e878db773","sectionOpenAudioPath":"./assets/app/opening.b71f05a930.mp3","sectionOpenAudioCssPath":"./opening.b71f05a930.mp3","sectionOpenAudioHash":"b71f05a930","backgroundLoopAudioPath":"./assets/app/page-background-loop.bcde8dff98.mp3","backgroundLoopAudioCssPath":"./page-background-loop.bcde8dff98.mp3","backgroundLoopAudioHash":"bcde8dff98","transitionAudioPath":"./assets/app/transition.9afc15ad27.mp3","transitionAudioCssPath":"./transition.9afc15ad27.mp3","transitionAudioHash":"9afc15ad27","stylePath":"./assets/app/style.b0b59e3cc4.css","styleHash":"b0b59e3cc4","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.a81a11ce02.js","scriptHash":"a81a11ce02","routeContentPath":"./assets/app/routeContent.f5a38cf4cd.js","routeContentHash":"f5a38cf4cd","budgetUiPath":"./assets/app/budgetUi.521698fae8.js","budgetUiHash":"521698fae8","budgetContentPath":"./assets/app/budgetContent.2505fd076d.js","budgetContentHash":"2505fd076d","essentialsContentPath":"./assets/app/essentialsContent.9f71cbe550.js","essentialsContentHash":"9f71cbe550","generatedAt":"2026-04-08T20:34:52.147Z","cacheVersion":"b0b59e3cc4-2d8476cd59-a81a11ce02-f5a38cf4cd-521698fae8-2505fd076d-9f71cbe550-1e878db773-b71f05a930-bcde8dff98-9afc15ad27"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"sectionOpenAudioPath":"./assets/app/opening.b71f05a930.mp3","sectionOpenAudioCssPath":"./opening.b71f05a930.mp3","sectionOpenAudioHash":"b71f05a930","backgroundLoopAudioPath":"./assets/app/page-background-loop.bcde8dff98.mp3","backgroundLoopAudioCssPath":"./page-background-loop.bcde8dff98.mp3","backgroundLoopAudioHash":"bcde8dff98","transitionAudioPath":"./assets/app/transition.9afc15ad27.mp3","transitionAudioCssPath":"./transition.9afc15ad27.mp3","transitionAudioHash":"9afc15ad27","stylePath":"./assets/app/style.757bb2ffe3.css","styleHash":"757bb2ffe3","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.da5e09ad1f.js","scriptHash":"da5e09ad1f","routeContentPath":"./assets/app/routeContent.f5a38cf4cd.js","routeContentHash":"f5a38cf4cd","budgetUiPath":"./assets/app/budgetUi.521698fae8.js","budgetUiHash":"521698fae8","budgetContentPath":"./assets/app/budgetContent.2505fd076d.js","budgetContentHash":"2505fd076d","essentialsContentPath":"./assets/app/essentialsContent.9f71cbe550.js","essentialsContentHash":"9f71cbe550","generatedAt":"2026-04-08T21:46:15.073Z","cacheVersion":"757bb2ffe3-2d8476cd59-da5e09ad1f-f5a38cf4cd-521698fae8-2505fd076d-9f71cbe550-b71f05a930-bcde8dff98-9afc15ad27"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
-  <script src="./assets/app/script.a81a11ce02.js" defer></script>
+  <script src="./assets/app/script.da5e09ad1f.js" defer></script>
   <!-- build:inline-script:end -->
 </body>
 </html>

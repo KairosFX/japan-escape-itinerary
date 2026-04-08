@@ -47,10 +47,6 @@ const assetDefinitions = [
 
 const staticAssetDefinitions = [
   {
-    key: "pageBackdropImage",
-    sourcePath: path.join(docsDir, "assets", "icons", "1yegabjjbjp01.jpg")
-  },
-  {
     key: "sectionOpenAudio",
     sourcePath: path.join(docsDir, "assets", "audio", "opening.mp3")
   },
@@ -102,17 +98,7 @@ staticAssetDefinitions.forEach(({ key, sourcePath }) => {
 });
 
 assetDefinitions.forEach(({ key, sourcePath, extension }) => {
-  let assetBuffer = fs.readFileSync(sourcePath);
-
-  if (key === "style" && manifest.pageBackdropImageCssPath) {
-    const cssSource = assetBuffer.toString("utf8");
-    const rewrittenCss = cssSource.replace(
-      /\.\/assets\/icons\/1yegabjjbjp01\.jpg/g,
-      manifest.pageBackdropImageCssPath
-    );
-    assetBuffer = Buffer.from(rewrittenCss, "utf8");
-  }
-
+  const assetBuffer = fs.readFileSync(sourcePath);
   const assetHash = createAssetHash(assetBuffer);
   const fileName = `${key}.${assetHash}${extension}`;
   const destinationPath = path.join(appAssetsDir, fileName);
@@ -133,7 +119,6 @@ manifest.cacheVersion = [
   manifest.budgetUiHash,
   manifest.budgetContentHash,
   manifest.essentialsContentHash,
-  manifest.pageBackdropImageHash,
   manifest.sectionOpenAudioHash,
   manifest.backgroundLoopAudioHash,
   manifest.transitionAudioHash

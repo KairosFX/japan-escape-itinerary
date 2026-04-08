@@ -2303,3 +2303,50 @@ html.reduce-effects .site-intro__content {
   transform: none !important;
   filter: none !important;
 }
+
+/* Final site backdrop clarity overrides */
+body {
+  background: #000 !important;
+  background-color: #000 !important;
+}
+
+.site-backdrop {
+  background: #000 !important;
+}
+
+.site-backdrop::before,
+.site-backdrop::after,
+.site-backdrop__image,
+.site-backdrop__wash,
+.site-atmosphere,
+.site-panda-sleeper,
+.site-vessel,
+.site-intro,
+.site-transition {
+  display: none !important;
+  content: none !important;
+}
+
+.site-backdrop__video,
+html[data-theme="dark"] .site-backdrop__video,
+html.reduce-effects .site-backdrop__video {
+  display: block !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: 50% 48% !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  background: transparent !important;
+  backface-visibility: hidden;
+}
+
+@media (max-width: 640px) {
+  .site-backdrop__video,
+  html[data-theme="dark"] .site-backdrop__video,
+  html.reduce-effects .site-backdrop__video {
+    object-position: 54% 46% !important;
+  }
+}

@@ -1,7 +1,4 @@
 {
-  "pageBackdropImagePath": "./assets/app/1yegabjjbjp01.1e878db773.jpg",
-  "pageBackdropImageCssPath": "./1yegabjjbjp01.1e878db773.jpg",
-  "pageBackdropImageHash": "1e878db773",
   "sectionOpenAudioPath": "./assets/app/opening.b71f05a930.mp3",
   "sectionOpenAudioCssPath": "./opening.b71f05a930.mp3",
   "sectionOpenAudioHash": "b71f05a930",
@@ -11,12 +8,12 @@
   "transitionAudioPath": "./assets/app/transition.9afc15ad27.mp3",
   "transitionAudioCssPath": "./transition.9afc15ad27.mp3",
   "transitionAudioHash": "9afc15ad27",
-  "stylePath": "./assets/app/style.b0b59e3cc4.css",
-  "styleHash": "b0b59e3cc4",
+  "stylePath": "./assets/app/style.757bb2ffe3.css",
+  "styleHash": "757bb2ffe3",
   "routeStylePath": "./assets/app/routeStyle.2d8476cd59.css",
   "routeStyleHash": "2d8476cd59",
-  "scriptPath": "./assets/app/script.a81a11ce02.js",
-  "scriptHash": "a81a11ce02",
+  "scriptPath": "./assets/app/script.da5e09ad1f.js",
+  "scriptHash": "da5e09ad1f",
   "routeContentPath": "./assets/app/routeContent.f5a38cf4cd.js",
   "routeContentHash": "f5a38cf4cd",
   "budgetUiPath": "./assets/app/budgetUi.521698fae8.js",
@@ -25,6 +22,6 @@
   "budgetContentHash": "2505fd076d",
   "essentialsContentPath": "./assets/app/essentialsContent.9f71cbe550.js",
   "essentialsContentHash": "9f71cbe550",
-  "generatedAt": "2026-04-08T20:34:52.147Z",
-  "cacheVersion": "b0b59e3cc4-2d8476cd59-a81a11ce02-f5a38cf4cd-521698fae8-2505fd076d-9f71cbe550-1e878db773-b71f05a930-bcde8dff98-9afc15ad27"
+  "generatedAt": "2026-04-08T21:46:15.073Z",
+  "cacheVersion": "757bb2ffe3-2d8476cd59-da5e09ad1f-f5a38cf4cd-521698fae8-2505fd076d-9f71cbe550-b71f05a930-bcde8dff98-9afc15ad27"
 }
