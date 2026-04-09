@@ -114,11 +114,11 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       }
     },
     "tokyo-base-hotel": {
-      "amount": 21988,
+      "amount": 41400,
       "range": {
-        "lean": 21988,
-        "expected": 21988,
-        "high": 25000
+        "lean": 41400,
+        "expected": 41400,
+        "high": 56000
       },
       "roomCapacity": 2,
       "area": {
@@ -134,15 +134,15 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "ja": "今回のルートは4日目に渋谷へ入り、東京ホテル泊は4日目、5日目、6日目に置くため、渋谷中心部の拠点なら到着夜とその後の東京日程を拠点変更なしでまとめやすくなります。"
       },
       "assumption": {
-        "en": "Tokyo keeps the current Expedia hotel page for The OneFive Tokyo Shibuya as the Day 4-6 base, and the saved amount now reflects the cheapest reviewed safe shared-room quote that still keeps the Shibuya handoff simple after removing Trip.com from hotel sourcing.",
-        "ja": "東京は4日目から6日目の拠点として The OneFive Tokyo Shibuya の現在の Expedia ホテルページを使い、保存金額もホテル導線から Trip.com を外した上で、渋谷への受け渡しを崩さない範囲で確認した最安の安全な共有ルーム料金へ更新しています。"
+        "en": "Tokyo now uses the current Booking.com page for The OneFive Tokyo Shibuya as the Day 4-6 base, and the saved amount is aligned to a recent Booking.com twin-room quote that still keeps the Shibuya handoff simple.",
+        "ja": "東京は4日目から6日目の拠点として The OneFive Tokyo Shibuya の現在の Booking.com ページを使い、保存金額も渋谷への受け渡しを崩さない最近の Booking.com ツインルーム料金へそろえています。"
       },
       "source": {
         "label": {
           "en": "The OneFive Tokyo Shibuya",
           "ja": "The OneFive Tokyo Shibuya"
         },
-        "url": "https://www.expedia.com/Tokyo-Hotels-HOTEL-EMIT-SHIBUYA.h22869543.Hotel-Information"
+        "url": "https://www.booking.com/hotel/jp/emit-shibuya.html"
       }
     },
     "tokyo-subway-24h": {
@@ -199,10 +199,10 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         },
         {
           "label": {
-            "en": "Expedia Tokyo stay",
-            "ja": "Expedia 東京ホテル"
+            "en": "Booking.com Tokyo stay",
+            "ja": "Booking.com 東京ホテル"
           },
-          "url": "https://www.expedia.com/Tokyo-Hotels-HOTEL-EMIT-SHIBUYA.h22869543.Hotel-Information"
+          "url": "https://www.booking.com/hotel/jp/emit-shibuya.html"
         }
       ]
     },
@@ -234,7 +234,7 @@ window.__JAPAN_BUDGET_CONTENT__ = {
             "en": "Trip.com Shin-Osaka -> Mishima",
             "ja": "Trip.com 新大阪 -> 三島"
           },
-          "url": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/?locale=en-US&curr=JPY"
+          "url": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/"
         },
         {
           "label": {
@@ -443,7 +443,7 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       },
       "cost": {
         "mode": "perGroup",
-        "amount": 21988,
+        "amount": 41400,
         "sourceCostId": "tokyo-base-hotel"
       }
     },

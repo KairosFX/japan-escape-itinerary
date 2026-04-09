@@ -327,23 +327,23 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "東京ホテル泊は4日目、5日目、6日目に置き、4日目の渋谷到着、続く観光日、そして帰国前の軽い7日目を同じ拠点で回せるようにします。"
       },
       "details": {
-        "en": "Shibuya access still fits the first Tokyo evening best, and a central Shibuya / Jinnan base keeps Days 5 and 6 plus the Day 7 reset simple without wasting time on a mid-route hotel switch after the Fuji handoff. With Trip.com removed from hotel sourcing, Expedia is the cheapest safe exact-match hotel page reviewed here, and the saved price stays one shared-room quote for group splitting.",
-        "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、神南寄りの渋谷拠点なら富士側から入ったあとも、5日目と6日目、そして7日目の立て直しまでホテル移動なしで進めやすいです。ホテル導線から Trip.com を外した上で、ここでは Expedia の正確ページが最も安く安全だったため、表示価格もグループで割る共有ルーム料金として扱います。"
+        "en": "Shibuya access still fits the first Tokyo evening best, and a central Shibuya / Jinnan base keeps Days 5 and 6 plus the Day 7 reset simple without wasting time on a mid-route hotel switch after the Fuji handoff. The OneFive Tokyo Shibuya Booking.com page is the exact-match stay page for this stop, and the saved price now follows a recent Booking.com twin-room quote as the shared-room baseline.",
+        "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、神南寄りの渋谷拠点なら富士側から入ったあとも、5日目と6日目、そして7日目の立て直しまでホテル移動なしで進めやすいです。ここでは The OneFive Tokyo Shibuya の Booking.com 正確ページを使い、保存金額も最近の Booking.com ツインルーム料金を共有ルーム基準へそろえています。"
       },
       "links": [
         {
-          "href": "https://www.expedia.com/Tokyo-Hotels-HOTEL-EMIT-SHIBUYA.h22869543.Hotel-Information",
+          "href": "https://www.booking.com/hotel/jp/emit-shibuya.html",
           "label": {
-            "en": "Expedia hotel page",
-            "ja": "Expediaホテルページ"
+            "en": "Booking.com hotel page",
+            "ja": "Booking.comホテルページ"
           },
           "note": {
-            "en": "Cheapest reviewed safe exact-match Expedia page; use as a shared-room quote",
-            "ja": "確認した中で最安だった Expedia の正確一致ホテルページ。共有ルーム料金として使う前提です"
+            "en": "Exact-match Booking.com page for The OneFive Tokyo Shibuya; use as a shared-room baseline",
+            "ja": "The OneFive Tokyo Shibuya の正確な Booking.com ページ。共有ルーム基準で使う前提です"
           },
           "price": {
-            "en": "From JPY 21,988 / night",
-            "ja": "1泊 JPY 21,988から"
+            "en": "Approx. JPY 41,400 / night",
+            "ja": "1泊 約 JPY 41,400"
           },
           "kind": "primary"
         }
@@ -395,23 +395,23 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "3日目の三島ハンドオフから河口湖へ入るための、固定の都市間予約として扱います。"
       },
       "details": {
-        "en": "Use the Trip.com Shin-Osaka -> Mishima route page once Day 3 timing is fixed. It remained the cheapest safe exact-match route page reviewed and keeps the station pair preselected with live timetable and fares.",
-        "ja": "3日目の時刻が固まったら、Trip.com の新大阪 -> 三島ルートページを使います。確認した中で最も安く安全な正確一致の経路ページで、駅ペアが最初から選択され、ライブ時刻表と運賃を確認できます。"
+        "en": "Use the Trip.com Shin-Osaka -> Mishima route page once Day 3 timing is fixed. It keeps the exact station pair open with live timetable and fares for the Day 3 handoff.",
+        "ja": "3日目の時刻が固まったら、Trip.com の新大阪 -> 三島ルートページを使います。駅ペアが最初から選択された状態で開き、3日目の受け渡しに必要なライブ時刻表と運賃を確認できます。"
       },
       "links": [
         {
-          "href": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/?locale=en-US&curr=JPY",
+          "href": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/",
           "label": {
-            "en": "Trip.com rail booking",
-            "ja": "Trip.com鉄道予約"
+            "en": "Trip.com route page",
+            "ja": "Trip.comルートページ"
           },
           "note": {
-            "en": "Lowest reviewed safe exact-match route page for Shin-Osaka -> Mishima",
-            "ja": "確認した中で最安だった新大阪 -> 三島の安全な正確一致ルートページ"
+            "en": "Working exact-match Trip.com route page for Shin-Osaka -> Mishima",
+            "ja": "新大阪 -> 三島の動作する Trip.com 正確ルートページ"
           },
           "price": {
-            "en": "From JPY 8,240 / person",
-            "ja": "1人 JPY 8,240から"
+            "en": "From JPY 12,272 / person",
+            "ja": "1人 JPY 12,272から"
           },
           "kind": "primary"
         }
@@ -885,10 +885,10 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         }
       ],
       "action": {
-        "href": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/?locale=en-US&curr=JPY",
+        "href": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/",
         "label": {
-          "en": "Open Trip.com rail booking",
-          "ja": "Trip.com鉄道予約を開く"
+          "en": "Open Trip.com route page",
+          "ja": "Trip.comルートページを開く"
         }
       }
     },

@@ -126,8 +126,8 @@
       }
     ],
     "action": {
-      "href": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/?locale=en-US&curr=JPY",
-      "label": { "en": "Open Trip.com rail booking", "ja": "Trip.com鉄道予約を開く" }
+      "href": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/",
+      "label": { "en": "Open Trip.com route page", "ja": "Trip.comルートページを開く" }
     }
   },
   {
