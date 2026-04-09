@@ -98,7 +98,6 @@ const routeContentFallbackScriptUrl = "./route-content.min.js";
 const routeStyleFallbackUrl = "./route.min.css";
 const backgroundLoopAudioFallbackUrl = "./assets/audio/page-background-loop.mp3";
 const transitionAudioFallbackUrl = "./assets/audio/transition.mp3";
-const celebrationVideoAssetUrl = "./assets/media/celebrationanimation.mp4";
 const routeMapOriginUrl = "https://tiles.openfreemap.org";
 const routeMapStyleUrl = "https://tiles.openfreemap.org/styles/positron";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
@@ -113,12 +112,9 @@ const audioAmbientDuckVolume = 0.05;
 const audioTransitionVolume = 0.28;
 const audioBudgetPositiveVolume = 0.15;
 const audioBudgetNegativeVolume = 0.14;
-const audioHammerClickVolume = 0.112;
 const audioTransitionCooldownMs = 320;
 const audioBudgetCooldownMs = 132;
-const audioHammerClickCooldownMs = 84;
 const audioBudgetDuckMs = 280;
-const audioHammerClickDuckMs = 140;
 const bambooCelebrationDurationMs = 1180;
 const fullChecklistCelebrationDurationMs = 2360;
 const fullPackingCelebrationDurationMs = 2140;
@@ -128,7 +124,6 @@ const bambooResetDurationMs = 1120;
 const bookingOutlineBloomDurationMs = 820;
 const headerBambooGlowDurationMs = 620;
 const budgetStepperEffectDurationMs = 860;
-const hammerImpactDurationMs = 560;
 const bambooCelebrationStalkConfigs = [
   { x: "4%", width: "0.76rem", height: "80%", tilt: "-8deg", delay: "0ms" },
   { x: "14%", width: "0.58rem", height: "68%", tilt: "-4deg", delay: "60ms" },
@@ -193,48 +188,6 @@ const budgetStepperCoinConfigs = [
 const budgetStepperTrailConfigs = [
   { x: "18%", y: "36%", width: "2.4rem", height: "0.2rem", tilt: "-15deg", delay: "40ms" },
   { x: "56%", y: "48%", width: "2.2rem", height: "0.18rem", tilt: "12deg", delay: "90ms" }
-];
-const hammerImpactShardConfigs = [
-  {
-    x: "-1.18rem",
-    y: "-0.62rem",
-    width: "1.12rem",
-    height: "0.14rem",
-    tilt: "-32deg",
-    delay: "0ms",
-    driftX: "-0.76rem",
-    driftY: "-0.46rem"
-  },
-  {
-    x: "-0.2rem",
-    y: "-0.94rem",
-    width: "0.94rem",
-    height: "0.12rem",
-    tilt: "-78deg",
-    delay: "50ms",
-    driftX: "-0.1rem",
-    driftY: "-0.74rem"
-  },
-  {
-    x: "0.34rem",
-    y: "-0.16rem",
-    width: "1.06rem",
-    height: "0.14rem",
-    tilt: "14deg",
-    delay: "20ms",
-    driftX: "0.88rem",
-    driftY: "-0.12rem"
-  },
-  {
-    x: "-0.4rem",
-    y: "0.24rem",
-    width: "0.9rem",
-    height: "0.12rem",
-    tilt: "52deg",
-    delay: "70ms",
-    driftX: "-0.34rem",
-    driftY: "0.88rem"
-  }
 ];
 let budgetSourceUpdatedAt = "2026-03-27";
 let budgetAssumptionCopy = {
@@ -636,8 +589,7 @@ const siteAudioState = {
   gestureBindingReady: false,
   autoplayBindingReady: false,
   lastTransitionAt: 0,
-  lastBudgetCueAt: 0,
-  lastHammerClickAt: 0
+  lastBudgetCueAt: 0
 };
 
 function configureManagedVideoNode(video, { playbackRate = 1, loop = true, preload = "metadata" } = {}) {
@@ -727,37 +679,11 @@ function initializeDecorativeMediaExperience() {
   syncDecorativeVideoPlayback();
 }
 
-function createCelebrationVideoNode(className) {
-  const video = document.createElement("video");
-  video.className = className;
-  video.setAttribute("aria-hidden", "true");
-  configureManagedVideoNode(video, {
-    playbackRate: 0.96,
-    loop: false,
-    preload: "metadata"
-  });
-
-  const source = document.createElement("source");
-  source.src = celebrationVideoAssetUrl;
-  source.type = "video/mp4";
-  video.append(source);
-  return video;
-}
-
-function restartCelebrationLayerPlayback(layer) {
-  if (!(layer instanceof Element)) {
-    return;
-  }
-
-  playManagedVideoNode(layer.querySelector("video"), { restart: true });
-}
-
-function pauseCelebrationLayerPlayback(layer) {
-  if (!(layer instanceof Element)) {
-    return;
-  }
-
-  pauseManagedVideoNode(layer.querySelector("video"));
+function appendEffectNode(container, className) {
+  const node = document.createElement("span");
+  node.className = className;
+  container.append(node);
+  return node;
 }
 
 function buildRouteExplorerViewDefinitions(viewDefinitions = []) {
@@ -1231,78 +1157,6 @@ function renderBudgetNegativeCue(context, masterNode, volume = audioBudgetNegati
   scheduleManagedAudioCleanup([bus, bodyNode, lowpassNode], 500);
 }
 
-function renderBambooHammerClickCue(context, masterNode, volume = audioHammerClickVolume) {
-  const now = context.currentTime + 0.005;
-  const bus = context.createGain();
-  const bodyNode = context.createBiquadFilter();
-  const presenceNode = context.createBiquadFilter();
-  const lowpassNode = context.createBiquadFilter();
-
-  bus.gain.value = volume;
-  bodyNode.type = "peaking";
-  bodyNode.frequency.setValueAtTime(430, now);
-  bodyNode.Q.setValueAtTime(1.05, now);
-  bodyNode.gain.setValueAtTime(2.2, now);
-  presenceNode.type = "highshelf";
-  presenceNode.frequency.setValueAtTime(2150, now);
-  presenceNode.gain.setValueAtTime(1.6, now);
-  lowpassNode.type = "lowpass";
-  lowpassNode.frequency.setValueAtTime(3800, now);
-
-  bus.connect(bodyNode);
-  bodyNode.connect(presenceNode);
-  presenceNode.connect(lowpassNode);
-  lowpassNode.connect(masterNode);
-
-  scheduleManagedNoiseBurst(context, bus, {
-    now,
-    peak: 0.013,
-    decay: 0.026,
-    frequency: 2080,
-    q: 1.45
-  });
-  scheduleManagedNoiseBurst(context, bus, {
-    now: now + 0.006,
-    peak: 0.006,
-    decay: 0.04,
-    frequency: 1180,
-    q: 0.92
-  });
-  scheduleManagedOscillatorVoice(context, bus, {
-    now,
-    type: "triangle",
-    frequency: 218,
-    attack: 0.0015,
-    peak: 0.108,
-    decay: 0.12,
-    pitchEndRatio: 0.9,
-    lowpass: 1550
-  });
-  scheduleManagedOscillatorVoice(context, bus, {
-    now: now + 0.003,
-    type: "sine",
-    frequency: 396,
-    attack: 0.0012,
-    peak: 0.054,
-    decay: 0.108,
-    pitchEndRatio: 0.93,
-    lowpass: 2050
-  });
-  scheduleManagedOscillatorVoice(context, bus, {
-    now: now + 0.001,
-    type: "sine",
-    frequency: 812,
-    attack: 0.001,
-    peak: 0.016,
-    decay: 0.048,
-    pitchEndRatio: 0.96,
-    highpass: 420,
-    lowpass: 2400
-  });
-
-  scheduleManagedAudioCleanup([bus, bodyNode, presenceNode, lowpassNode], 320);
-}
-
 function ensureSiteAudioNodes() {
   if (siteAudioNodes) {
     return siteAudioNodes;
@@ -1564,21 +1418,6 @@ function playBudgetInteractionSound(tone = "positive") {
 }
 
 window[budgetSoundRuntimeGlobal] = playBudgetInteractionSound;
-
-function playBambooHammerClickSound() {
-  if (!isDesktopBambooHammerAvailable() || !getManagedAudioContextCtor()) {
-    return;
-  }
-
-  playManagedSynthOneShot(
-    (context, masterNode) => renderBambooHammerClickCue(context, masterNode),
-    {
-      cooldownMs: audioHammerClickCooldownMs,
-      stateKey: "lastHammerClickAt",
-      duckMs: audioHammerClickDuckMs
-    }
-  );
-}
 
 function initializeSiteAudioExperience() {
   bindSiteAudioGestureListeners();
@@ -4741,7 +4580,9 @@ function createBambooCelebrationLayer() {
   const layer = document.createElement("div");
   layer.className = "bamboo-celebration";
   layer.setAttribute("aria-hidden", "true");
-  layer.append(createCelebrationVideoNode("bamboo-celebration__media"));
+  appendEffectNode(layer, "bamboo-celebration__wash");
+  appendConfiguredCelebrationNodes(layer, "bamboo-celebration__stalk", bambooCelebrationStalkConfigs);
+  appendConfiguredCelebrationNodes(layer, "bamboo-celebration__leaf", bambooCelebrationLeafConfigs);
   return layer;
 }
 
@@ -4755,7 +4596,11 @@ function createGrandBambooCelebrationLayer({
   layer.className = ["full-itinerary-celebration", modifierClass].filter(Boolean).join(" ");
   layer.hidden = true;
   layer.innerHTML = `
-    <div class="full-itinerary-celebration__video-shell" aria-hidden="true"></div>
+    <span class="full-itinerary-celebration__backdrop" aria-hidden="true"></span>
+    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--left" aria-hidden="true"></span>
+    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--center" aria-hidden="true"></span>
+    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--right" aria-hidden="true"></span>
+    <div class="full-itinerary-celebration__grove" aria-hidden="true"></div>
     <div class="full-itinerary-celebration__badge" role="status" aria-live="polite" aria-atomic="true">
       <p class="full-itinerary-celebration__kicker">
         ${renderLocalizedContent(kicker)}
@@ -4769,9 +4614,18 @@ function createGrandBambooCelebrationLayer({
     </div>
   `;
 
-  const videoShell = layer.querySelector(".full-itinerary-celebration__video-shell");
-  if (videoShell) {
-    videoShell.append(createCelebrationVideoNode("full-itinerary-celebration__video"));
+  const grove = layer.querySelector(".full-itinerary-celebration__grove");
+  if (grove) {
+    appendConfiguredCelebrationNodes(
+      grove,
+      "full-itinerary-celebration__stalk",
+      fullChecklistCelebrationStalkConfigs
+    );
+    appendConfiguredCelebrationNodes(
+      grove,
+      "full-itinerary-celebration__leaf",
+      fullChecklistCelebrationLeafConfigs
+    );
   }
 
   syncLocalizedNodes(layer);
@@ -4832,7 +4686,6 @@ function clearFullChecklistCelebration() {
 
   fullChecklistCelebrationLayer.classList.remove("is-active");
   fullChecklistCelebrationLayer.hidden = true;
-  pauseCelebrationLayerPlayback(fullChecklistCelebrationLayer);
 }
 
 function clearFullPackingCelebration() {
@@ -4847,7 +4700,6 @@ function clearFullPackingCelebration() {
 
   fullPackingCelebrationLayer.classList.remove("is-active");
   fullPackingCelebrationLayer.hidden = true;
-  pauseCelebrationLayerPlayback(fullPackingCelebrationLayer);
 }
 
 function triggerFullChecklistCelebration() {
@@ -4864,14 +4716,12 @@ function triggerFullChecklistCelebration() {
   clearFullChecklistCelebration();
   layer.hidden = false;
   layer.classList.remove("is-active");
-  restartCelebrationLayerPlayback(layer);
   restartClassOnNextFrame(layer, "is-active");
 
   const durationMs = reducedEffectsEnabled ? 1680 : fullChecklistCelebrationDurationMs;
   fullChecklistCelebrationTimer = window.setTimeout(() => {
     layer.classList.remove("is-active");
     layer.hidden = true;
-    pauseCelebrationLayerPlayback(layer);
     fullChecklistCelebrationTimer = 0;
   }, durationMs);
 }
@@ -4890,14 +4740,12 @@ function triggerFullPackingCelebration() {
   clearFullPackingCelebration();
   layer.hidden = false;
   layer.classList.remove("is-active");
-  restartCelebrationLayerPlayback(layer);
   restartClassOnNextFrame(layer, "is-active");
 
   const durationMs = reducedEffectsEnabled ? 1560 : fullPackingCelebrationDurationMs;
   fullPackingCelebrationTimer = window.setTimeout(() => {
     layer.classList.remove("is-active");
     layer.hidden = true;
-    pauseCelebrationLayerPlayback(layer);
     fullPackingCelebrationTimer = 0;
   }, durationMs);
 }
@@ -4906,7 +4754,8 @@ function createPandaCelebrationLayer() {
   const layer = document.createElement("div");
   layer.className = "panda-celebration";
   layer.setAttribute("aria-hidden", "true");
-  layer.append(createCelebrationVideoNode("panda-celebration__media"));
+  appendEffectNode(layer, "panda-celebration__glow");
+  appendConfiguredCelebrationNodes(layer, "panda-celebration__sprite", pandaCelebrationSpriteConfigs);
   return layer;
 }
 
@@ -4930,20 +4779,18 @@ function triggerCurrentDayCelebration(target) {
   triggerTimedClassEffect(target, "is-current-day-jump", checklistJumpHighlightDurationMs, {
     force: true
   });
-  restartCelebrationLayerPlayback(layer);
   triggerTimedClassEffect(layer, "is-active", pandaCelebrationDurationMs, {
     force: true
   });
-  window.setTimeout(() => {
-    pauseCelebrationLayerPlayback(layer);
-  }, pandaCelebrationDurationMs);
 }
 
 function createBambooResetLayer({ viewport = false } = {}) {
   const layer = document.createElement("div");
   layer.className = viewport ? "bamboo-reset-burst bamboo-reset-burst--viewport" : "bamboo-reset-burst";
   layer.setAttribute("aria-hidden", "true");
-  layer.append(createCelebrationVideoNode("bamboo-reset-burst__media"));
+  appendEffectNode(layer, "bamboo-reset-burst__mist");
+  appendConfiguredCelebrationNodes(layer, "bamboo-reset-burst__segment", bambooResetSegmentConfigs);
+  appendConfiguredCelebrationNodes(layer, "bamboo-reset-burst__leaf", bambooResetLeafConfigs);
   return layer;
 }
 
@@ -4979,23 +4826,9 @@ function triggerBambooResetEffect(target, { viewport = false } = {}) {
   }
 
   const layer = ensureBambooResetLayer(target, { viewport });
-  restartCelebrationLayerPlayback(layer);
-  const didTrigger = triggerTimedClassEffect(layer, "is-active", bambooResetDurationMs, {
+  return triggerTimedClassEffect(layer, "is-active", bambooResetDurationMs, {
     force: true
   });
-  if (didTrigger) {
-    const existingPauseTimer = Number.parseInt(layer.dataset.resetPauseTimer || "", 10);
-    if (Number.isFinite(existingPauseTimer) && existingPauseTimer > 0) {
-      window.clearTimeout(existingPauseTimer);
-    }
-
-    const pauseTimer = window.setTimeout(() => {
-      pauseCelebrationLayerPlayback(layer);
-      delete layer.dataset.resetPauseTimer;
-    }, bambooResetDurationMs);
-    layer.dataset.resetPauseTimer = String(pauseTimer);
-  }
-  return didTrigger;
 }
 
 function createBudgetStepperEffectLayer() {
@@ -5104,8 +4937,7 @@ function triggerBambooCelebration(target) {
     return;
   }
 
-  const layer = ensureBambooCelebrationLayer(target);
-  restartCelebrationLayerPlayback(layer);
+  ensureBambooCelebrationLayer(target);
   target.classList.remove("is-bamboo-celebrating");
 
   const existingTimer = bambooCelebrationTimers.get(target);
@@ -5117,7 +4949,6 @@ function triggerBambooCelebration(target) {
 
   const timerId = window.setTimeout(() => {
     target.classList.remove("is-bamboo-celebrating");
-    pauseCelebrationLayerPlayback(layer);
     bambooCelebrationTimers.delete(target);
   }, bambooCelebrationDurationMs);
 
@@ -5992,74 +5823,6 @@ function isDesktopBambooHammerAvailable(pointerType = "") {
 function syncDesktopBambooHammerState() {
   const isEnabled = isDesktopBambooHammerAvailable();
   root.classList.toggle("is-bamboo-hammer-ready", isEnabled);
-
-  if (!isEnabled) {
-    root.classList.remove("is-bamboo-hammer-pressing");
-  }
-}
-
-function createHammerImpactLayer() {
-  const layer = document.createElement("div");
-  layer.className = "hammer-impact";
-  layer.setAttribute("aria-hidden", "true");
-
-  const glow = document.createElement("span");
-  glow.className = "hammer-impact__glow";
-  layer.append(glow);
-
-  const ring = document.createElement("span");
-  ring.className = "hammer-impact__ring";
-  layer.append(ring);
-
-  appendConfiguredCelebrationNodes(layer, "hammer-impact__shard", hammerImpactShardConfigs);
-  return layer;
-}
-
-function ensureHammerImpactLayer() {
-  return ensureEffectLayer(document.body, "hammer-impact", createHammerImpactLayer, {
-    prepend: false
-  });
-}
-
-function triggerBambooHammerImpact(clientX, clientY) {
-  if (
-    aggressivePerformanceMode ||
-    reducedEffectsEnabled ||
-    !Number.isFinite(clientX) ||
-    !Number.isFinite(clientY) ||
-    !isDesktopBambooHammerAvailable()
-  ) {
-    return;
-  }
-
-  const layer = ensureHammerImpactLayer();
-  if (!layer || !canTriggerInteractionEffect(layer, "hammer-impact", 110)) {
-    return;
-  }
-
-  layer.style.setProperty("--impact-x", `${clientX}px`);
-  layer.style.setProperty("--impact-y", `${clientY}px`);
-  triggerTimedClassEffect(layer, "is-active", hammerImpactDurationMs, {
-    force: true
-  });
-}
-
-function clearDesktopBambooHammerPressState() {
-  root.classList.remove("is-bamboo-hammer-pressing");
-}
-
-function handleDesktopBambooHammerPointerDown(event) {
-  if (
-    event.button !== 0 ||
-    event.isPrimary === false ||
-    !isDesktopBambooHammerAvailable(event.pointerType)
-  ) {
-    return;
-  }
-
-  root.classList.add("is-bamboo-hammer-pressing");
-  playBambooHammerClickSound();
-  triggerBambooHammerImpact(event.clientX, event.clientY);
 }
 
 function triggerChecklistItemBambooFeedback(checkItem) {
@@ -9795,10 +9558,6 @@ if (transitDetailModal) {
 });
 
 syncDesktopBambooHammerState();
-document.addEventListener("pointerdown", handleDesktopBambooHammerPointerDown, true);
-document.addEventListener("pointerup", clearDesktopBambooHammerPressState, true);
-document.addEventListener("pointercancel", clearDesktopBambooHammerPressState, true);
-window.addEventListener("blur", clearDesktopBambooHammerPressState);
 
 window.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") {
