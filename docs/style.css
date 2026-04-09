@@ -11783,6 +11783,7 @@ html[data-theme="dark"] .site-transition__line {
     linear-gradient(180deg, rgba(255, 252, 249, 0.9), rgba(251, 246, 240, 0.84)),
     rgba(255, 252, 249, 0.84);
   color: rgba(103, 56, 43, 0.96);
+  text-transform: none;
 }
 
 .checklist-toolbar__action:hover,

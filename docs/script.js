@@ -3782,6 +3782,11 @@ function renderBookingTransitMetaTag(content, className = "") {
   return `<span class="booking-item__tag ${className}">${labelMarkup}</span>`;
 }
 
+const bookingTransitPrimaryCtaLabel = {
+  en: "Book now",
+  ja: "Book now"
+};
+
 function renderBookingTransitItem(item) {
   const state = getBookingTransitItemState(item.id);
   const preferredLink = getPreferredBookingTransitLink(item);
@@ -3796,7 +3801,7 @@ function renderBookingTransitItem(item) {
               href="${escapeHtml(preferredLink.href)}"
               target="_blank"
               rel="noopener noreferrer">
-              <span class="booking-item__cta-label">${renderLocalizedContent(item.title)}</span>
+              <span class="booking-item__cta-label">${renderLocalizedContent(bookingTransitPrimaryCtaLabel)}</span>
             </a>
           </div>
       `
