@@ -40,23 +40,23 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "ICカード"
       },
       "summary": {
-        "en": "Choose mobile IC, ICOCA, or Suica before landing so local transit stays frictionless.",
-        "ja": "到着前にモバイルIC、ICOCA、Suicaを決めておくと現地移動が楽です。"
+        "en": "Start with ICOCA before landing so Kansai transit stays frictionless from Day 1.",
+        "ja": "関西スタートに合わせて、到着前から ICOCA を基準にしておくと1日目から現地移動が楽です。"
       },
       "details": {
-        "en": "Keep one tap card or mobile wallet ready for Kansai and Tokyo city transit. Save the JR East Suica guide as the most reliable official setup reference.",
-        "ja": "関西と東京の市内移動に使うタッチ決済のカードかモバイルICを一つ用意しておくと動きやすいです。最も確実な公式案内として JR東日本の Suica ガイドを残しています。"
+        "en": "Because the trip starts in Kansai, keep ICOCA as the default IC card reference for local rail, subway, and bus use. Save the official JR-West ICOCA guide so purchase, Apple Pay, top-up, and nationwide usage-area notes stay in one official place.",
+        "ja": "旅の開始地が関西なので、在来線・地下鉄・バス用の基準ICカードは ICOCA にそろえます。購入方法、Apple Pay、チャージ、全国相互利用エリアの確認を一か所で見られるよう、JR西日本の公式 ICOCA 案内を保存しておきます。"
       },
       "links": [
         {
-          "href": "https://www.jreast.co.jp/e/pass/suica.html",
+          "href": "https://www.westjr.co.jp/global/en/howto/icoca/",
           "label": {
-            "en": "Suica official guide",
-            "ja": "Suica公式案内"
+            "en": "ICOCA official guide",
+            "ja": "ICOCA公式案内"
           },
           "note": {
-            "en": "Official setup and supported use",
-            "ja": "公式の設定方法と利用案内"
+            "en": "Official JR-West ICOCA purchase, Apple Pay, and usage guide",
+            "ja": "JR西日本の公式 ICOCA 購入・Apple Pay・利用案内"
           },
           "kind": "primary"
         }
@@ -114,25 +114,45 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "この宿は、京都という大枠ではなく、四条烏丸の動線適性で選んでいます。"
       },
       "details": {
-        "en": "Shijo / Karasuma still reaches Higashiyama cleanly on Day 2, but it sets up Day 3 Arashiyama to Osaka much better than staying deep in east Kyoto. With Trip.com removed from hotel sourcing, Booking.com is the cheapest safe exact-match page reviewed here, and the saved price stays one shared-room quote rather than a solo-style lead-in rate.",
-        "ja": "四条烏丸なら2日目の東山へ十分動きやすく、3日目の嵐山から大阪への流れも東側の奥へ泊まるより整います。ホテル導線から Trip.com を外した上で、ここでは Booking.com の Imu Hotel Kyoto 正確ページが最も安く安全だったため、表示価格も1人用の先頭料金ではなく、グループで割る共有ルーム料金として扱います。"
+        "en": "Keep the Kyoto stop to a compact Booking.com shortlist inside the Shijo / Karasuma pocket so Day 2 Higashiyama access and the Day 3 Arashiyama -> Osaka flow both stay clean.",
+        "ja": "京都の候補は四条烏丸エリアの Booking.com 短い候補リストに絞り、2日目の東山アクセスと3日目の嵐山 -> 大阪の流れをどちらも崩さないようにします。"
       },
       "links": [
         {
           "href": "https://www.booking.com/hotel/jp/imu.html",
           "label": {
-            "en": "Booking.com hotel page",
-            "ja": "Booking.comホテルページ"
+            "en": "Imu Hotel Kyoto",
+            "ja": "Imu Hotel Kyoto"
           },
           "note": {
-            "en": "Cheapest reviewed safe exact-match Booking.com page; use as a shared-room quote",
-            "ja": "確認した中で最安だった Booking.com の正確一致ホテルページ。共有ルーム料金として使う前提です"
-          },
-          "price": {
-            "en": "From JPY 11,476 / night",
-            "ja": "1泊 JPY 11,476から"
+            "en": "Closest match to the current Shijo / Karasuma baseline.",
+            "ja": "現在の四条烏丸ベースに最も近い候補です。"
           },
           "kind": "primary"
+        },
+        {
+          "href": "https://www.booking.com/hotel/jp/daiwa-roynet-kyoto-shijyo-karasuma.html",
+          "label": {
+            "en": "Daiwa Roynet Hotel Kyoto Shijo Karasuma",
+            "ja": "Daiwa Roynet Hotel Kyoto Shijo Karasuma"
+          },
+          "note": {
+            "en": "Closest subway access for the Day 2 Kyoto East start.",
+            "ja": "2日目の京都東側スタートに最も寄せやすい駅近候補です。"
+          },
+          "kind": "secondary"
+        },
+        {
+          "href": "https://www.booking.com/hotel/jp/hotel-intergate-kyoto-shijoshinmachi.html",
+          "label": {
+            "en": "Hotel Intergate Kyoto Shijo Shinmachi",
+            "ja": "Hotel Intergate Kyoto Shijo Shinmachi"
+          },
+          "note": {
+            "en": "Quiet Shinmachi-side option still walkable to Karasuma Station.",
+            "ja": "新町側で落ち着きつつ、烏丸駅へ歩いて戻れる候補です。"
+          },
+          "kind": "secondary"
         }
       ]
     },
@@ -251,25 +271,45 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "3日目の河口湖到着を落ち着いて進めつつ、宿で整えたあとに4日目の富士エリア立ち寄りと東京移動まで無理なくつなげられるよう、駅から湖側の動きで拠点を選んでいます。"
       },
       "details": {
-        "en": "A Fujikawaguchiko base with a natural hot spring works better than a remote resort because it keeps the Day 3 station handoff, onsen reset, Day 4 lake-side stops, and the Day 4 Tokyo transfer aligned with the real route. With Trip.com removed from hotel sourcing, Booking.com is the cheapest safe exact-match page reviewed here, and the saved price stays one shared-room quote for group splitting.",
-        "ja": "遠いリゾート立地より、天然温泉付きの富士河口湖拠点の方が、3日目の駅からの受け渡し、温泉での立て直し、4日目の河口湖側の立ち寄り、同日の東京移動までを実際の流れに合わせやすいです。ホテル導線から Trip.com を外した上で、ここでは Booking.com の正確ページが最も安く安全だったため、表示価格もグループで割る共有ルーム料金として扱います。"
+        "en": "Keep the Fuji stop to a small Booking.com shortlist around the Funatsu / Kawaguchiko corridor so the Day 3 Mishima handoff, onsen reset, and Day 4 lake-side plan still fit the real route.",
+        "ja": "富士エリアは船津・河口湖動線の Booking.com 短い候補リストに絞り、3日目の三島ハンドオフ、温泉での立て直し、4日目の湖側プランを実際の動線に合わせます。"
       },
       "links": [
         {
           "href": "https://www.booking.com/hotel/jp/supahoterufu-shi-he-kou-hu-tian-ran-wen-quan.html",
           "label": {
-            "en": "Booking.com hotel page",
-            "ja": "Booking.comホテルページ"
+            "en": "Super Hotel Fujikawaguchiko Tennenonsen",
+            "ja": "Super Hotel Fujikawaguchiko Tennenonsen"
           },
           "note": {
-            "en": "Cheapest reviewed safe exact-match Booking.com page; use as a shared-room quote",
-            "ja": "確認した中で最安だった Booking.com の正確一致ホテルページ。共有ルーム料金として使う前提です"
-          },
-          "price": {
-            "en": "From JPY 11,544 / night",
-            "ja": "1泊 JPY 11,544から"
+            "en": "Current practical onsen baseline on the Funatsu side.",
+            "ja": "現在の船津側の実用的な温泉ベースです。"
           },
           "kind": "primary"
+        },
+        {
+          "href": "https://www.booking.com/hotel/jp/haostay.html",
+          "label": {
+            "en": "HAOSTAY",
+            "ja": "HAOSTAY"
+          },
+          "note": {
+            "en": "Closer to the station / bridge side with strong lake-and-Fuji access.",
+            "ja": "駅と大橋側に寄せやすく、湖と富士の動きが取りやすい候補です。"
+          },
+          "kind": "secondary"
+        },
+        {
+          "href": "https://www.booking.com/hotel/jp/kasuitei-ooya.html",
+          "label": {
+            "en": "Kasuitei Ooya",
+            "ja": "Kasuitei Ooya"
+          },
+          "note": {
+            "en": "Lakeside ryokan option if you want a more scenic onsen night.",
+            "ja": "景色重視の温泉夜に寄せたい時の湖畔旅館候補です。"
+          },
+          "kind": "secondary"
         }
       ]
     },
@@ -327,25 +367,45 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "東京ホテル泊は4日目、5日目、6日目に置き、4日目の渋谷到着、続く観光日、そして帰国前の軽い7日目を同じ拠点で回せるようにします。"
       },
       "details": {
-        "en": "Shibuya access still fits the first Tokyo evening best, and a central Shibuya / Jinnan base keeps Days 5 and 6 plus the Day 7 reset simple without wasting time on a mid-route hotel switch after the Fuji handoff. The OneFive Tokyo Shibuya Booking.com page is the exact-match stay page for this stop, and the saved price now follows a recent Booking.com twin-room quote as the shared-room baseline.",
-        "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、神南寄りの渋谷拠点なら富士側から入ったあとも、5日目と6日目、そして7日目の立て直しまでホテル移動なしで進めやすいです。ここでは The OneFive Tokyo Shibuya の Booking.com 正確ページを使い、保存金額も最近の Booking.com ツインルーム料金を共有ルーム基準へそろえています。"
+        "en": "Keep the Tokyo stop to a small Booking.com shortlist across Jinnan and Shibuya Station access so the Day 4 arrival, Days 5-6 sightseeing, and the Day 7 exit all stay easy to land from one base.",
+        "ja": "東京は神南と渋谷駅アクセスの Booking.com 短い候補リストに絞り、4日目の到着、5-6日目の観光、7日目の出発を同じ拠点から回しやすくします。"
       },
       "links": [
         {
           "href": "https://www.booking.com/hotel/jp/emit-shibuya.html",
           "label": {
-            "en": "Booking.com hotel page",
-            "ja": "Booking.comホテルページ"
+            "en": "The OneFive Tokyo Shibuya",
+            "ja": "The OneFive Tokyo Shibuya"
           },
           "note": {
-            "en": "Exact-match Booking.com page for The OneFive Tokyo Shibuya; use as a shared-room baseline",
-            "ja": "The OneFive Tokyo Shibuya の正確な Booking.com ページ。共有ルーム基準で使う前提です"
-          },
-          "price": {
-            "en": "Approx. JPY 41,400 / night",
-            "ja": "1泊 約 JPY 41,400"
+            "en": "Current Jinnan baseline on the quieter side of Shibuya.",
+            "ja": "現在の神南寄りで、渋谷の中では少し落ち着いた基準候補です。"
           },
           "kind": "primary"
+        },
+        {
+          "href": "https://www.booking.com/hotel/jp/jr-east-mets-shibuya.html",
+          "label": {
+            "en": "JR-East Hotel Mets Shibuya",
+            "ja": "JR-East Hotel Mets Shibuya"
+          },
+          "note": {
+            "en": "Best if you want the easiest station-side Day 4 arrival and Day 7 exit.",
+            "ja": "4日目の到着と7日目の出発を駅近で最も簡単にしたい時の候補です。"
+          },
+          "kind": "secondary"
+        },
+        {
+          "href": "https://www.booking.com/hotel/jp/all-day-place-shibuya.html",
+          "label": {
+            "en": "all day place shibuya",
+            "ja": "all day place shibuya"
+          },
+          "note": {
+            "en": "More central Shibuya option near the scramble side.",
+            "ja": "スクランブル交差点側へ寄せやすい、より中心寄りの候補です。"
+          },
+          "kind": "secondary"
         }
       ]
     },

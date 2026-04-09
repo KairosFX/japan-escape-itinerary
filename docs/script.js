@@ -3781,14 +3781,53 @@ const bookingTransitPriceLabel = {
   en: "Current linked price",
   ja: "現在のリンク料金"
 };
+const bookingTransitHotelVendorLabel = {
+  en: "Booking.com",
+  ja: "Booking.com"
+};
+
+function renderBookingTransitAccommodationLinks(item) {
+  const links = Array.isArray(item.links) ? item.links : [];
+  if (!links.length) {
+    return "";
+  }
+
+  const optionMarkup = links
+    .map((link) => {
+      const noteMarkup = link.note
+        ? `<span class="booking-item__option-note">${renderLocalizedContent(link.note)}</span>`
+        : "";
+
+      return `
+          <a
+            class="booking-item__option"
+            href="${escapeHtml(link.href)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-booking-link>
+            <span class="booking-item__option-vendor">${renderLocalizedContent(bookingTransitHotelVendorLabel)}</span>
+            <span class="booking-item__option-title">${renderLocalizedContent(link.label)}</span>
+            ${noteMarkup}
+          </a>
+      `;
+    })
+    .join("");
+
+  return `
+        <div class="booking-item__option-list">
+          ${optionMarkup}
+        </div>
+    `;
+}
 
 function renderBookingTransitItem(item) {
   const state = getBookingTransitItemState(item.id);
   const preferredLink = getPreferredBookingTransitLink(item);
+  const isAccommodationItem = item.group === "accommodations";
   const dayTagMarkup = renderBookingTransitMetaTag(item.dayLabel, "booking-item__tag--day");
   const typeTagMarkup = renderBookingTransitMetaTag(item.typeLabel, "booking-item__tag--type");
   const transitTriggerMarkup = "";
-  const priceMarkup = preferredLink?.price
+  const priceMarkup = !isAccommodationItem && preferredLink?.price
     ? `
           <p class="booking-item__price" data-booking-price hidden>
             <span class="booking-item__price-label">
@@ -3802,7 +3841,9 @@ function renderBookingTransitItem(item) {
           </p>
       `
     : "";
-  const linkMarkup = preferredLink
+  const linkMarkup = isAccommodationItem
+    ? renderBookingTransitAccommodationLinks(item)
+    : preferredLink
     ? `
           <div class="booking-item__link-grid">
             <a
@@ -4044,14 +4085,16 @@ function bindBookingTransitUI() {
       updateBookingTransitUI();
     });
 
-    itemElement.querySelector("[data-booking-link]")?.addEventListener("click", () => {
-      const priceNode = itemElement.querySelector("[data-booking-price]");
-      if (!priceNode) {
-        return;
-      }
+    itemElement.querySelectorAll("[data-booking-link]").forEach((linkNode) => {
+      linkNode.addEventListener("click", () => {
+        const priceNode = itemElement.querySelector("[data-booking-price]");
+        if (!priceNode) {
+          return;
+        }
 
-      priceNode.hidden = false;
-      priceNode.classList.add("is-visible");
+        priceNode.hidden = false;
+        priceNode.classList.add("is-visible");
+      });
     });
 
     itemElement.querySelector("[data-transit-detail-trigger]")?.addEventListener("click", (event) => {
