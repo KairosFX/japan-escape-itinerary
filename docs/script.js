@@ -3788,34 +3788,31 @@ const bookingTransitHotelVendorLabel = {
 
 function renderBookingTransitAccommodationLinks(item) {
   const links = Array.isArray(item.links) ? item.links : [];
-  if (!links.length) {
+  const preferredLink = links.find((link) => link?.kind === "primary") || links[0];
+  if (!preferredLink) {
     return "";
   }
 
-  const optionMarkup = links
-    .map((link) => {
-      const noteMarkup = link.note
-        ? `<span class="booking-item__option-note">${renderLocalizedContent(link.note)}</span>`
-        : "";
-
-      return `
-          <a
-            class="booking-item__option"
-            href="${escapeHtml(link.href)}"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-booking-link>
-            <span class="booking-item__option-vendor">${renderLocalizedContent(bookingTransitHotelVendorLabel)}</span>
-            <span class="booking-item__option-title">${renderLocalizedContent(link.label)}</span>
-            ${noteMarkup}
-          </a>
-      `;
-    })
-    .join("");
+  const noteMarkup = preferredLink.note
+    ? `<span class="booking-item__option-note">${renderLocalizedContent(preferredLink.note)}</span>`
+    : "";
 
   return `
         <div class="booking-item__option-list">
-          ${optionMarkup}
+          <a
+            class="booking-item__option"
+            href="${escapeHtml(preferredLink.href)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-booking-link>
+            <span class="booking-item__option-vendor">${renderLocalizedContent(
+              bookingTransitHotelVendorLabel
+            )}</span>
+            <span class="booking-item__option-title">${renderLocalizedContent(
+              preferredLink.label
+            )}</span>
+            ${noteMarkup}
+          </a>
         </div>
     `;
 }

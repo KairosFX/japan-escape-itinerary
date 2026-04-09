@@ -430,10 +430,12 @@ const itineraryBudgetLabels = {
       return null;
     }
 
+    if (stayDefinition.property && typeof stayDefinition.property === "object") {
+      return stayDefinition.property;
+    }
+
     const sourceLabel = getSourceCostConfig(stayDefinition.cost?.sourceCostId)?.source?.label;
-    return sourceLabel && typeof sourceLabel === "object"
-      ? sourceLabel
-      : stayDefinition.property || null;
+    return sourceLabel && typeof sourceLabel === "object" ? sourceLabel : null;
   };
   const normalizeDayEntry = (definition, entry) => {
     const defaultStayId = definition?.defaultStayId || null;

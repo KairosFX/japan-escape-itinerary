@@ -51,27 +51,15 @@
       "ja": "この宿は、京都という大枠ではなく、四条烏丸の動線適性で選んでいます。"
     },
     "details": {
-      "en": "Keep the Kyoto stop to a compact Booking.com shortlist inside the Shijo / Karasuma pocket so Day 2 Higashiyama access and the Day 3 Arashiyama -> Osaka flow both stay clean.",
-      "ja": "京都の候補は四条烏丸エリアの Booking.com 短い候補リストに絞り、2日目の東山アクセスと3日目の嵐山 -> 大阪の流れをどちらも崩さないようにします。"
+      "en": "Use one Booking.com Karasuma results page so you can compare multiple Shijo / Karasuma options inside Booking.com while keeping Day 2 Higashiyama access and the Day 3 Arashiyama -> Osaka flow aligned to the same route logic.",
+      "ja": "京都泊は Booking.com の烏丸エリア検索結果ページを1つだけ使い、サイト側はリンクを増やさずに、2日目の東山アクセスと3日目の嵐山 -> 大阪の流れに合う候補を Booking.com 内で比較できるようにします。"
     },
     "links": [
       {
-        "href": "https://www.booking.com/hotel/jp/imu.html",
-        "label": { "en": "Imu Hotel Kyoto", "ja": "Imu Hotel Kyoto" },
-        "note": { "en": "Closest match to the current Shijo / Karasuma baseline.", "ja": "現在の四条烏丸ベースに最も近い候補です。" },
+        "href": "https://www.booking.com/district/jp/kyoto/karasuma.html",
+        "label": { "en": "Karasuma area results", "ja": "烏丸エリアの検索結果" },
+        "note": { "en": "Booking.com results page with multiple Kyoto hotel options around Karasuma for this stop.", "ja": "この滞在に合う烏丸周辺の京都ホテルを Booking.com 内で複数比較できる検索結果ページです。" },
         "kind": "primary"
-      },
-      {
-        "href": "https://www.booking.com/hotel/jp/daiwa-roynet-kyoto-shijyo-karasuma.html",
-        "label": { "en": "Daiwa Roynet Hotel Kyoto Shijo Karasuma", "ja": "Daiwa Roynet Hotel Kyoto Shijo Karasuma" },
-        "note": { "en": "Closest subway access for the Day 2 Kyoto East start.", "ja": "2日目の京都東側スタートに最も寄せやすい駅近候補です。" },
-        "kind": "secondary"
-      },
-      {
-        "href": "https://www.booking.com/hotel/jp/hotel-intergate-kyoto-shijoshinmachi.html",
-        "label": { "en": "Hotel Intergate Kyoto Shijo Shinmachi", "ja": "Hotel Intergate Kyoto Shijo Shinmachi" },
-        "note": { "en": "Quiet Shinmachi-side option still walkable to Karasuma Station.", "ja": "新町側で落ち着きつつ、烏丸駅へ歩いて戻れる候補です。" },
-        "kind": "secondary"
       }
     ]
   },
@@ -128,27 +116,15 @@
       "ja": "3日目の河口湖到着を落ち着いて進めつつ、宿で整えたあとに4日目の富士エリア立ち寄りと東京移動まで無理なくつなげられるよう、駅から湖側の動きで拠点を選んでいます。"
     },
     "details": {
-      "en": "Keep the Fuji stop to a small Booking.com shortlist around the Funatsu / Kawaguchiko corridor so the Day 3 Mishima handoff, onsen reset, and Day 4 lake-side plan still fit the real route.",
-      "ja": "富士エリアは船津・河口湖動線の Booking.com 短い候補リストに絞り、3日目の三島ハンドオフ、温泉での立て直し、4日目の湖側プランを実際の動線に合わせます。"
+      "en": "Use one Booking.com Funatsu results page so you can compare multiple Mt. Fuji area stays inside Booking.com while keeping the Day 3 Mishima handoff, onsen reset, and Day 4 lake-side plan aligned to the same corridor.",
+      "ja": "富士エリアは Booking.com の船津エリア検索結果ページを1つだけ使い、サイト側はリンクを増やさずに、3日目の三島ハンドオフ、温泉での立て直し、4日目の湖側プランに合う候補を Booking.com 内で比較できるようにします。"
     },
     "links": [
       {
-        "href": "https://www.booking.com/hotel/jp/supahoterufu-shi-he-kou-hu-tian-ran-wen-quan.html",
-        "label": { "en": "Super Hotel Fujikawaguchiko Tennenonsen", "ja": "Super Hotel Fujikawaguchiko Tennenonsen" },
-        "note": { "en": "Current practical onsen baseline on the Funatsu side.", "ja": "現在の船津側の実用的な温泉ベースです。" },
+        "href": "https://www.booking.com/city/jp/funatsu.html",
+        "label": { "en": "Funatsu / Kawaguchiko results", "ja": "船津・河口湖の検索結果" },
+        "note": { "en": "Booking.com results page with multiple Funatsu-side stays for the Mt. Fuji stop.", "ja": "この富士エリア滞在に合う船津側の宿を Booking.com 内で複数比較できる検索結果ページです。" },
         "kind": "primary"
-      },
-      {
-        "href": "https://www.booking.com/hotel/jp/haostay.html",
-        "label": { "en": "HAOSTAY", "ja": "HAOSTAY" },
-        "note": { "en": "Closer to the station / bridge side with strong lake-and-Fuji access.", "ja": "駅と大橋側に寄せやすく、湖と富士の動きが取りやすい候補です。" },
-        "kind": "secondary"
-      },
-      {
-        "href": "https://www.booking.com/hotel/jp/kasuitei-ooya.html",
-        "label": { "en": "Kasuitei Ooya", "ja": "Kasuitei Ooya" },
-        "note": { "en": "Lakeside ryokan option if you want a more scenic onsen night.", "ja": "景色重視の温泉夜に寄せたい時の湖畔旅館候補です。" },
-        "kind": "secondary"
       }
     ]
   },
@@ -174,27 +150,15 @@
       "ja": "東京ホテル泊は4日目、5日目、6日目に置き、4日目の渋谷到着、続く観光日、そして帰国前の軽い7日目を同じ拠点で回せるようにします。"
     },
     "details": {
-      "en": "Keep the Tokyo stop to a small Booking.com shortlist across Jinnan and Shibuya Station access so the Day 4 arrival, Days 5-6 sightseeing, and the Day 7 exit all stay easy to land from one base.",
-      "ja": "東京は神南と渋谷駅アクセスの Booking.com 短い候補リストに絞り、4日目の到着、5-6日目の観光、7日目の出発を同じ拠点から回しやすくします。"
+      "en": "Use one Booking.com Shibuya Area results page so you can compare multiple Tokyo base options inside Booking.com while keeping the Day 4 arrival, Days 5-6 sightseeing, and the Day 7 exit centered on the same Shibuya-side handoff.",
+      "ja": "東京泊は Booking.com の渋谷エリア検索結果ページを1つだけ使い、サイト側はリンクを増やさずに、4日目の到着、5-6日目の観光、7日目の出発に合う候補を Booking.com 内で比較できるようにします。"
     },
     "links": [
       {
-        "href": "https://www.booking.com/hotel/jp/emit-shibuya.html",
-        "label": { "en": "The OneFive Tokyo Shibuya", "ja": "The OneFive Tokyo Shibuya" },
-        "note": { "en": "Current Jinnan baseline on the quieter side of Shibuya.", "ja": "現在の神南寄りで、渋谷の中では少し落ち着いた基準候補です。" },
+        "href": "https://www.booking.com/searchresults.html?dest_id=3046&dest_type=district&from_district=1&redirected=1&source=district",
+        "label": { "en": "Shibuya Area results", "ja": "渋谷エリアの検索結果" },
+        "note": { "en": "Booking.com results page with multiple Shibuya-area hotels for the Day 4-6 Tokyo base.", "ja": "4日目から6日目の東京拠点に合う渋谷エリアのホテルを Booking.com 内で複数比較できる検索結果ページです。" },
         "kind": "primary"
-      },
-      {
-        "href": "https://www.booking.com/hotel/jp/jr-east-mets-shibuya.html",
-        "label": { "en": "JR-East Hotel Mets Shibuya", "ja": "JR-East Hotel Mets Shibuya" },
-        "note": { "en": "Best if you want the easiest station-side Day 4 arrival and Day 7 exit.", "ja": "4日目の到着と7日目の出発を駅近で最も簡単にしたい時の候補です。" },
-        "kind": "secondary"
-      },
-      {
-        "href": "https://www.booking.com/hotel/jp/all-day-place-shibuya.html",
-        "label": { "en": "all day place shibuya", "ja": "all day place shibuya" },
-        "note": { "en": "More central Shibuya option near the scramble side.", "ja": "スクランブル交差点側へ寄せやすい、より中心寄りの候補です。" },
-        "kind": "secondary"
       }
     ]
   },

@@ -9,8 +9,8 @@
     "ja": "以前の合計が膨らんでいた主因は、大阪、京都、富士エリア、東京をつなぐ固定7日間の西から東への流れに合わせず、旅程を広げすぎていたことです。"
   },
   "helperCopy": {
-    "en": "Each day keeps its own stay selector, the accommodation split control treats the saved hotel amounts as shared-room quotes for group math, and the live route or official ticket links stay in Essentials.",
-    "ja": "各日に滞在セレクターを残し、宿泊費の分け方コントロールでは保存したホテル金額を共有ルーム料金として扱い、ライブ経路や公式チケットのリンクはすべて Essentials にまとめています。"
+    "en": "Each day keeps its own stay selector, the accommodation split control still treats the saved hotel amounts as shared-room quotes for group math, and each live hotel link now opens one Booking.com area-results page per stay so you can compare multiple options there without cluttering the site.",
+    "ja": "各日に滞在セレクターを残し、宿泊費の分け方コントロールでは保存したホテル金額を引き続き共有ルーム料金として扱い、ホテルのライブリンクは各滞在ごとに Booking.com のエリア検索結果ページを1つだけ開く形へ変更して、サイト側を散らかさずに Booking.com 内で複数候補を比較できるようにしています。"
   },
   "assumptionCopy": {
     "en": "The cost model matches one fixed 7-day route through Osaka, Kyoto, the Mt. Fuji area, and Tokyo.",
@@ -38,15 +38,15 @@
         "ja": "大阪で有料宿が必要な時はこの立地を使います。四ツ橋・西心斎橋寄りなら、1日目のミナミ散策と3日目の大阪側の動きに合いやすく、無関係な地区のホテルより実用的です。"
       },
       "assumption": {
-        "en": "Used only if you switch a private/local or no-cost Osaka night to a paid hotel. With Trip.com removed from hotel sourcing, Booking.com is the cheapest reviewed safe Minami-side fallback for Hotel Trend Nishi Shinsaibashi, and the amount stays stored as one shared-room quote.",
-        "ja": "大阪のローカル・プライベート滞在や宿泊費なしの夜を有料ホテルへ切り替える時だけ使います。ホテル導線から Trip.com を外した上で、Hotel Trend Nishi Shinsaibashi は Booking.com が確認した中で最も安く安全なミナミ側代替になり、金額も1室を共有する前提の料金で保存しています。"
+        "en": "Used only if you switch a private/local or no-cost Osaka night to a paid hotel. The saved amount still tracks the current Minami-side fallback room quote, while the live Booking.com link now opens Shinsaibashi area results so you can compare multiple route-fitting options there.",
+        "ja": "大阪のローカル・プライベート滞在や宿泊費なしの夜を有料ホテルへ切り替える時だけ使います。保存金額は引き続きミナミ側の基準ルーム料金に合わせつつ、ライブの Booking.com リンクは心斎橋エリアの検索結果ページを開き、実際の動線に合う候補を複数比較できるようにしています。"
       },
       "source": {
         "label": {
-          "en": "Hotel Trend Nishi Shinsaibashi",
-          "ja": "Hotel Trend Nishi Shinsaibashi"
+          "en": "Booking.com Shinsaibashi results",
+          "ja": "Booking.com 心斎橋エリア検索結果"
         },
-        "url": "https://www.booking.com/hotel/jp/hotel-trend-nishi-shinsaibashi.en-gb.html"
+        "url": "https://www.booking.com/district/jp/osaka/shinsaibashi.html"
       }
     },
     "kyoto-midrange-hotel": {
@@ -70,15 +70,15 @@
         "ja": "四条烏丸は、2日目の京都東側へ出やすく、3日目の嵐山と大阪戻りにも地下鉄・阪急・JRの選択肢を取りやすいため、実際の動線に合います。"
       },
       "assumption": {
-        "en": "Day 2 keeps the current Booking.com hotel page for Imu Hotel Kyoto, and the saved amount now reflects the cheapest reviewed safe shared-room quote that still fits the same Shijo / Karasuma route logic after removing Trip.com from hotel sourcing.",
-        "ja": "2日目は Imu Hotel Kyoto の現在の Booking.com ホテルページを使い、保存金額もホテル導線から Trip.com を外した上で、同じ四条烏丸の動線に合う中で確認した最安の安全な共有ルーム料金へ更新しています。"
+        "en": "Day 2 keeps its saved amount anchored to the current Shijo / Karasuma baseline shared-room quote, while the live Booking.com link now opens Karasuma area results so you can compare multiple Kyoto options without leaving the intended route pocket.",
+        "ja": "2日目の保存金額は引き続き四条烏丸の基準共有ルーム料金に合わせつつ、ライブの Booking.com リンクは烏丸エリアの検索結果ページを開き、想定した動線から外れずに京都の複数候補を比較できるようにしています。"
       },
       "source": {
         "label": {
-          "en": "Imu Hotel Kyoto",
-          "ja": "Imu Hotel Kyoto"
+          "en": "Booking.com Karasuma results",
+          "ja": "Booking.com 烏丸エリア検索結果"
         },
-        "url": "https://www.booking.com/hotel/jp/imu.html"
+        "url": "https://www.booking.com/district/jp/kyoto/karasuma.html"
       }
     },
     "kawaguchiko-base-hotel": {
@@ -102,15 +102,15 @@
         "ja": "このエリアなら、3日目の三島ハンドオフに加え、4日目の忠霊塔・下吉田と河口湖のまとまりも進めやすく、実際の動線に合いにくい遠いリゾート立地へ余計に払わずに済みます。"
       },
       "assumption": {
-        "en": "Day 3 keeps the current Booking.com hotel page for SUPER HOTEL Fujikawaguchiko Natural Hot Spring, and the saved amount now reflects the cheapest reviewed safe shared-room quote that still preserves the onsen reset and station-to-lake flow after removing Trip.com from hotel sourcing.",
-        "ja": "3日目は SUPER HOTEL Fujikawaguchiko Natural Hot Spring の現在の Booking.com ホテルページを使い、保存金額もホテル導線から Trip.com を外した上で、温泉での立て直しと駅から湖側への流れを崩さない範囲で確認した最安の安全な共有ルーム料金へ更新しています。"
+        "en": "Day 3 keeps its saved amount anchored to the current Funatsu-side baseline shared-room quote, while the live Booking.com link now opens Funatsu results so you can compare multiple Kawaguchiko-area stays that still preserve the onsen reset and station-to-lake flow.",
+        "ja": "3日目の保存金額は引き続き船津側の基準共有ルーム料金に合わせつつ、ライブの Booking.com リンクは船津エリアの検索結果ページを開き、温泉での立て直しと駅から湖側への流れを崩さない複数候補を比較できるようにしています。"
       },
       "source": {
         "label": {
-          "en": "SUPER HOTEL Fujikawaguchiko Natural Hot Spring",
-          "ja": "SUPER HOTEL Fujikawaguchiko Natural Hot Spring"
+          "en": "Booking.com Funatsu results",
+          "ja": "Booking.com 船津エリア検索結果"
         },
-        "url": "https://www.booking.com/hotel/jp/supahoterufu-shi-he-kou-hu-tian-ran-wen-quan.html"
+        "url": "https://www.booking.com/city/jp/funatsu.html"
       }
     },
     "tokyo-base-hotel": {
@@ -134,15 +134,15 @@
         "ja": "今回のルートは4日目に渋谷へ入り、東京ホテル泊は4日目、5日目、6日目に置くため、渋谷中心部の拠点なら到着夜とその後の東京日程を拠点変更なしでまとめやすくなります。"
       },
       "assumption": {
-        "en": "Tokyo now uses the current Booking.com page for The OneFive Tokyo Shibuya as the Day 4-6 base, and the saved amount is aligned to a recent Booking.com twin-room quote that still keeps the Shibuya handoff simple.",
-        "ja": "東京は4日目から6日目の拠点として The OneFive Tokyo Shibuya の現在の Booking.com ページを使い、保存金額も渋谷への受け渡しを崩さない最近の Booking.com ツインルーム料金へそろえています。"
+        "en": "Tokyo keeps its saved amount aligned to the current Shibuya/Jinnan baseline room quote, while the live Booking.com link now opens Shibuya Area results so you can compare multiple Day 4-6 base options inside the same Tokyo handoff zone.",
+        "ja": "東京の保存金額は引き続き渋谷・神南側の基準ルーム料金に合わせつつ、ライブの Booking.com リンクは渋谷エリアの検索結果ページを開き、4日目から6日目の拠点候補を同じ受け渡し圏内で複数比較できるようにしています。"
       },
       "source": {
         "label": {
-          "en": "The OneFive Tokyo Shibuya",
-          "ja": "The OneFive Tokyo Shibuya"
+          "en": "Booking.com Shibuya Area results",
+          "ja": "Booking.com 渋谷エリア検索結果"
         },
-        "url": "https://www.booking.com/hotel/jp/emit-shibuya.html"
+        "url": "https://www.booking.com/searchresults.html?dest_id=3046&dest_type=district&from_district=1&redirected=1&source=district"
       }
     },
     "tokyo-subway-24h": {
@@ -172,37 +172,37 @@
         "ja": "宿泊予約導線"
       },
       "summary": {
-        "en": "The base stay plan is now explicit: private/local or no-cost Osaka night on Day 1 unless switched, Kyoto hotel on Day 2, one Mt. Fuji area stay on Day 3, Tokyo hotel nights on Days 4-6, and no paid stay by default on the Day 7 flight-home wrap-up. Saved hotel amounts are now stored as shared-room quotes before the travellers-per-room split.",
-        "ja": "基本の滞在計画を明示しました。1日目の大阪は、切り替えない限りローカル・プライベート滞在または宿泊費なし、2日目は京都ホテル、3日目は富士エリア宿泊、東京ホテルは4日目から6日目で、7日目は帰国日のため初期値では有料宿泊を入れていません。保存したホテル金額も、1室を何人で分けるかの計算前の共有ルーム料金として扱います。"
+        "en": "The base stay plan is now explicit: private/local or no-cost Osaka night on Day 1 unless switched, Kyoto hotel on Day 2, one Mt. Fuji area stay on Day 3, Tokyo hotel nights on Days 4-6, and no paid stay by default on the Day 7 flight-home wrap-up. Saved hotel amounts still stay stored as shared-room quotes before the travellers-per-room split, while each live Booking.com hotel link now opens one area-specific results page with multiple matching options.",
+        "ja": "基本の滞在計画を明示しました。1日目の大阪は、切り替えない限りローカル・プライベート滞在または宿泊費なし、2日目は京都ホテル、3日目は富士エリア宿泊、東京ホテルは4日目から6日目で、7日目は帰国日のため初期値では有料宿泊を入れていません。保存したホテル金額も引き続き1室を何人で分けるかの計算前の共有ルーム料金として扱い、ライブの Booking.com ホテルリンクは各滞在ごとに複数候補を比較できるエリア検索結果ページを1つだけ開くようにしています。"
       },
       "links": [
         {
           "label": {
-            "en": "Booking.com Osaka fallback stay",
-            "ja": "Booking.com 大阪代替ホテル"
+            "en": "Booking.com Shinsaibashi results",
+            "ja": "Booking.com 心斎橋エリア検索結果"
           },
-          "url": "https://www.booking.com/hotel/jp/hotel-trend-nishi-shinsaibashi.en-gb.html"
+          "url": "https://www.booking.com/district/jp/osaka/shinsaibashi.html"
         },
         {
           "label": {
-            "en": "Booking.com Kyoto stay",
-            "ja": "Booking.com 京都ホテル"
+            "en": "Booking.com Karasuma results",
+            "ja": "Booking.com 烏丸エリア検索結果"
           },
-          "url": "https://www.booking.com/hotel/jp/imu.html"
+          "url": "https://www.booking.com/district/jp/kyoto/karasuma.html"
         },
         {
           "label": {
-            "en": "Booking.com Mt. Fuji area stay",
-            "ja": "Booking.com 富士エリアホテル"
+            "en": "Booking.com Funatsu results",
+            "ja": "Booking.com 船津エリア検索結果"
           },
-          "url": "https://www.booking.com/hotel/jp/supahoterufu-shi-he-kou-hu-tian-ran-wen-quan.html"
+          "url": "https://www.booking.com/city/jp/funatsu.html"
         },
         {
           "label": {
-            "en": "Booking.com Tokyo stay",
-            "ja": "Booking.com 東京ホテル"
+            "en": "Booking.com Shibuya Area results",
+            "ja": "Booking.com 渋谷エリア検索結果"
           },
-          "url": "https://www.booking.com/hotel/jp/emit-shibuya.html"
+          "url": "https://www.booking.com/searchresults.html?dest_id=3046&dest_type=district&from_district=1&redirected=1&source=district"
         }
       ]
     },
