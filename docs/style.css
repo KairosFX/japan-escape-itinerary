@@ -11861,6 +11861,11 @@ html[data-theme="dark"] .site-transition__line {
     background-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.checklist-toolbar__action[data-checklist-mark-all] {
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
 .checklist-toolbar__action--reset {
   min-height: 2.18rem;
   height: auto;

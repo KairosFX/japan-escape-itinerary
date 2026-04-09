@@ -4,56 +4,56 @@ window.__JAPAN_ROUTE_CONTENT__ = (() => {
       day: 1,
       title: { en: "Day 1 - Osaka", ja: "1日目・大阪" },
       summary: {
-        en: "Land in Osaka and keep the first evening in Minami: Dotonbori for the canal-side neon, Shinsaibashi for the covered shopping streets, and an easy nearby dinner before turning in.",
-        ja: "到着日はミナミ周辺で無理をせず、道頓堀と心斎橋を歩いて近くで食事し、最初の夜は軽く整える日にします。"
+        en: "Keep Day 1 exactly in Minami order: Dotonbori first, Shinsaibashi next, then dinner in Minami before calling it an easy arrival night.",
+        ja: "1日目はミナミの順番を崩さず、まず道頓堀、次に心斎橋、そのあとミナミで夕食を取って到着日の夜を軽く整えます。"
       }
     },
     {
       day: 2,
       title: { en: "Day 2 - Kyoto", ja: "2日目・京都" },
       summary: {
-        en: "Keep Kyoto East as one walking sweep: Kiyomizu-dera for the hillside view, Ninenzaka and Yasaka Pagoda for the preserved lanes, Gion for the classic streets, and Nanzen-ji for a quieter temple finish.",
-        ja: "京都東側は、清水寺、二年坂、八坂の塔、祇園、南禅寺を同じ側でまとめて回る一日にします。"
+        en: "Start with the Kyoto transfer and hotel check-in, then keep the east-side walking order clean: Kiyomizu-dera, Ninenzaka, Yasaka Pagoda, Gion, and Nanzen-ji.",
+        ja: "2日目はまず京都へ移動してホテルにチェックインし、そのあと清水寺、二年坂、八坂の塔、祇園、南禅寺の順で東側をまとめて回ります。"
       }
     },
     {
       day: 3,
       title: { en: "Day 3 - Arashiyama to Osaka", ja: "3日目・嵐山から大阪" },
       summary: {
-        en: "Start Day 3 in Arashiyama, head back through Osaka for Kaiyukan, then use the second half as the fixed transfer night into the Mt. Fuji base.",
-        ja: "3日目は嵐山から始め、大阪へ戻って海遊館を挟み、その後半を富士エリア拠点へ入る固定移動日にします。"
+        en: "Run Day 3 in checklist order: Arashiyama first, return to Osaka, stop at Kaiyukan, then lock in the Shin-Osaka to Mishima rail leg, the Fujikawaguchiko transfer, and the onsen check-in.",
+        ja: "3日目はチェックリスト順で進め、嵐山、大阪へ戻る流れ、海遊館、そのあと新大阪から三島への新幹線、富士河口湖への移動、温泉チェックインまでを固定でつなげます。"
       }
     },
     {
       day: 4,
       title: { en: "Day 4 - Mt. Fuji", ja: "4日目・富士山" },
       summary: {
-        en: "Use Day 4 for the Fuji-area block first, with Chureito Shimoyoshida and Lake Kawaguchiko before the clean Tokyo handoff into Shibuya.",
-        ja: "4日目は富士エリアのまとまりを先に回し、忠霊塔・下吉田と河口湖のあとに渋谷へきれいに入る流れにします。"
+        en: "Keep the Fuji block in order: Chureito Shimoyoshida first, Lake Kawaguchiko next, then the Shibuya transfer and Tokyo hotel check-in.",
+        ja: "4日目は富士エリアの順番を崩さず、まず忠霊塔・下吉田、次に河口湖、そのあと渋谷への移動と東京ホテルのチェックインへつなげます。"
       }
     },
     {
       day: 5,
       title: { en: "West Tokyo", ja: "東京西側" },
       summary: {
-        en: "Keep Day 5 tightly local around Shibuya: Scramble Crossing, nearby food lanes, and Shibuya Sky once the city lights come on.",
-        ja: "5日目は渋谷周辺に絞り、交差点、食べ歩き、渋谷スカイへつなげます。"
+        en: "Keep Day 5 tightly in Shibuya order: Crossing first, food walk second, and Shibuya Sky once the evening window is ready.",
+        ja: "5日目は渋谷の順番を揃え、まず交差点、次に食べ歩き、そのあと夕方以降の渋谷スカイへ進みます。"
       }
     },
     {
       day: 6,
       title: { en: "East Tokyo", ja: "東京東側" },
       summary: {
-        en: "Keep Tokyo East compact and rail-efficient: start with Skytree for the panorama, browse Solamachi underneath, and finish in Akihabara where arcades, anime shops, and electronics stay lively later into the evening.",
-        ja: "6日目は東京観光の本番日にし、スカイツリー、ソラマチ、秋葉原をまとめて回ります。"
+        en: "Keep Day 6 compact and in sequence: Tokyo Skytree first, Solamachi under it next, and Akihabara last.",
+        ja: "6日目は順番を整理し、まず東京スカイツリー、次にその下のソラマチ、最後に秋葉原へ進みます。"
       }
     },
     {
       day: 7,
       title: { en: "Central Tokyo", ja: "東京中心部" },
       summary: {
-        en: "Keep the last day short and deliberate: Imperial Palace grounds for a calm morning walk, a brief Shinjuku stop for one final Tokyo pulse, then bag pickup or handoff and a direct airport transfer.",
-        ja: "7日目は軽めにし、皇居を見てから新宿を短く回り、荷物対応と空港までの余裕を残します。"
+        en: "Keep the final day deliberate and checklist-led: Imperial Palace first, Shinjuku second, then bag pickup and the airport transfer.",
+        ja: "最終日はチェックリスト主導で進め、まず皇居、次に新宿、そのあと荷物回収と空港移動で締めます。"
       }
     }
   ];

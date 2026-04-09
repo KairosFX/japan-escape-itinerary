@@ -21,9 +21,6 @@ const progressOverviewCaptions = document.querySelectorAll(".progress-overview__
 const jumpCurrentDayButton = document.querySelector("[data-jump-current-day]");
 const checklistMarkAllButton = document.querySelector("[data-checklist-mark-all]");
 const resetProgressOpenButtons = Array.from(document.querySelectorAll("[data-reset-progress-open]"));
-const resetProgressModal = document.querySelector("[data-reset-progress-modal]");
-const resetProgressCancelButton = document.querySelector("[data-reset-progress-cancel]");
-const resetProgressConfirmButton = document.querySelector("[data-reset-progress-confirm]");
 const transitDetailModal = document.querySelector("[data-transit-detail-modal]");
 const transitDetailCloseButtons = Array.from(document.querySelectorAll("[data-transit-detail-close]"));
 const transitDetailTagNodes = Array.from(
@@ -1718,7 +1715,6 @@ let checklistPointerGlowFrame = 0;
 let pendingChecklistPointerGlow = null;
 let sequenceNoticeTimer = 0;
 let lastTimelineFocusDay = null;
-let lastResetTrigger = null;
 const pendingClassRestarts = new WeakMap();
 let activeWindowScrollAnimation = null;
 const activeElementScrollAnimations = new WeakMap();
@@ -2308,10 +2304,6 @@ function openChecklistDetail(detailId, triggerElement) {
     return;
   }
 
-  if (resetProgressModal && !resetProgressModal.hidden) {
-    setResetModalOpen(false);
-  }
-
   const requestKey = `checklist:${detailId}`;
   lastTransitTrigger = triggerElement || document.activeElement;
   activeTransitDetailId = requestKey;
@@ -2342,10 +2334,6 @@ function openChecklistDetail(detailId, triggerElement) {
 function openTransitDetail(detailId, triggerElement) {
   if (!transitDetailModal || !detailId) {
     return;
-  }
-
-  if (resetProgressModal && !resetProgressModal.hidden) {
-    setResetModalOpen(false);
   }
 
   lastTransitTrigger = triggerElement || document.activeElement;
@@ -3790,8 +3778,8 @@ const bookingTransitPrimaryCtaLabel = {
   ja: "Book now"
 };
 const bookingTransitPriceLabel = {
-  en: "Booking.com price",
-  ja: "Booking.com料金"
+  en: "Current linked price",
+  ja: "現在のリンク料金"
 };
 
 function renderBookingTransitItem(item) {
@@ -8039,9 +8027,7 @@ function scheduleDayCardRowHeights() {
 }
 
 function syncModalOpenState() {
-  const isModalOpen =
-    Boolean(resetProgressModal && !resetProgressModal.hidden) ||
-    Boolean(transitDetailModal && !transitDetailModal.hidden);
+  const isModalOpen = Boolean(transitDetailModal && !transitDetailModal.hidden);
 
   root.classList.toggle("has-modal-open", isModalOpen);
   [siteHeader, mainContent, siteFooter].forEach((node) => {
@@ -8072,27 +8058,6 @@ function setTransitModalOpen(isOpen) {
 
   if (lastTransitTrigger && document.contains(lastTransitTrigger)) {
     lastTransitTrigger.focus();
-  }
-}
-
-function setResetModalOpen(isOpen) {
-  if (!resetProgressModal) {
-    return;
-  }
-
-  if (isOpen && transitDetailModal && !transitDetailModal.hidden) {
-    setTransitModalOpen(false);
-  }
-
-  resetProgressModal.hidden = !isOpen;
-  syncModalOpenState();
-
-  if (isOpen) {
-    window.requestAnimationFrame(() => {
-      resetProgressCancelButton?.focus();
-    });
-  } else if (lastResetTrigger && document.contains(lastResetTrigger)) {
-    lastResetTrigger?.focus();
   }
 }
 
@@ -8127,7 +8092,6 @@ function resetTripProgress() {
   refreshRouteMapsIfReady({ updateCamera: true });
   syncProgressTimeline();
   setActivePanel("checklist");
-  setResetModalOpen(false);
 
   window.requestAnimationFrame(() => {
     void scrollToChecklistDay(1);
@@ -8813,36 +8777,15 @@ if (checklistMarkAllButton) {
 
 resetProgressOpenButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    lastResetTrigger = button;
-    setResetModalOpen(true);
-  });
-});
-
-if (resetProgressCancelButton) {
-  resetProgressCancelButton.addEventListener("click", () => {
-    setResetModalOpen(false);
-  });
-}
-
-if (resetProgressConfirmButton) {
-  resetProgressConfirmButton.addEventListener("click", () => {
     resetTripProgress();
   });
-}
+});
 
 backToTopButtons.forEach((button) => {
   button.addEventListener("click", async () => {
     void smoothlyScrollWindowTo(0, { intent: "back-to-top" });
   });
 });
-
-if (resetProgressModal) {
-  resetProgressModal.addEventListener("click", (event) => {
-    if (event.target === resetProgressModal) {
-      setResetModalOpen(false);
-    }
-  });
-}
 
 transitDetailCloseButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -8871,11 +8814,6 @@ window.addEventListener("keydown", (event) => {
 
   if (transitDetailModal && !transitDetailModal.hidden) {
     setTransitModalOpen(false);
-    return;
-  }
-
-  if (resetProgressModal && !resetProgressModal.hidden) {
-    setResetModalOpen(false);
   }
 });
 

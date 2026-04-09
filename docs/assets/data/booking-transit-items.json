@@ -51,15 +51,15 @@
       "ja": "この宿は、京都という大枠ではなく、四条烏丸の動線適性で選んでいます。"
     },
     "details": {
-      "en": "Shijo / Karasuma still reaches Higashiyama cleanly on Day 2, but it sets up Day 3 Arashiyama to Osaka much better than staying deep in east Kyoto. Keep the Booking.com listing for Imu Hotel Kyoto here for the same route-fit stay.",
-      "ja": "四条烏丸なら2日目の東山へ十分動きやすく、3日目の嵐山から大阪への流れも東側の奥へ泊まるより整います。同じ動線向き宿として、Imu Hotel Kyoto の Booking.com ページを残しています。"
+      "en": "Shijo / Karasuma still reaches Higashiyama cleanly on Day 2, but it sets up Day 3 Arashiyama to Osaka much better than staying deep in east Kyoto. Keep the BudgetAir hotel handoff for Imu Hotel Kyoto here so the exact route-fit property stays preselected.",
+      "ja": "四条烏丸なら2日目の東山へ十分動きやすく、3日目の嵐山から大阪への流れも東側の奥へ泊まるより整います。同じ動線向き宿として、Imu Hotel Kyoto が最初から選ばれた BudgetAir ホテル予約導線を残しています。"
     },
     "links": [
       {
-        "href": "https://www.booking.com/hotel/jp/imu.html",
-        "label": { "en": "Booking.com", "ja": "Booking.com" },
-        "note": { "en": "Current Booking.com listing for the Kyoto route-fit stay", "ja": "京都の動線向き宿に使う Booking.com ページ" },
-        "price": { "en": "¥27,065 / night", "ja": "1泊 ¥27,065" },
+        "href": "https://us.trip.com/hotels/kyoto-hotel-detail-21887858/imu-hotel-kyoto/?locale=en-US&curr=JPY&allianceid=3817871&sid=22541534&ouid=BUAUS_home_page_tab",
+        "label": { "en": "BudgetAir hotel handoff", "ja": "BudgetAirホテル予約" },
+        "note": { "en": "BudgetAir hotel handoff with Imu Hotel Kyoto preselected", "ja": "Imu Hotel Kyoto が選択済みの BudgetAir ホテル予約導線" },
+        "price": { "en": "From JPY 15,280 / night", "ja": "1泊 JPY 15,280から" },
         "kind": "primary"
       }
     ]
@@ -117,15 +117,15 @@
       "ja": "3日目の河口湖到着を落ち着いて進めつつ、宿で整えたあとに4日目の富士エリア立ち寄りと東京移動まで無理なくつなげられるよう、駅から湖側の動きで拠点を選んでいます。"
     },
     "details": {
-      "en": "A Fujikawaguchiko base with a natural hot spring works better than a remote resort because it keeps the Day 3 station handoff, onsen reset, Day 4 lake-side stops, and the Day 4 Tokyo transfer aligned with the real route. Keep the Booking.com listing for SUPER HOTEL Fujikawaguchiko Natural Hot Spring here for the Fuji stay reference.",
-      "ja": "遠いリゾート立地より、天然温泉付きの富士河口湖拠点の方が、3日目の駅からの受け渡し、温泉での立て直し、4日目の河口湖側の立ち寄り、同日の東京移動までを実際の流れに合わせやすいです。富士エリア宿の参照先として、SUPER HOTEL Fujikawaguchiko Natural Hot Spring の Booking.com ページを残しています。"
+      "en": "A Fujikawaguchiko base with a natural hot spring works better than a remote resort because it keeps the Day 3 station handoff, onsen reset, Day 4 lake-side stops, and the Day 4 Tokyo transfer aligned with the real route. Keep the BudgetAir hotel handoff for SUPER HOTEL Fujikawaguchiko Natural Hot Spring here so the exact Fuji stay stays preselected.",
+      "ja": "遠いリゾート立地より、天然温泉付きの富士河口湖拠点の方が、3日目の駅からの受け渡し、温泉での立て直し、4日目の河口湖側の立ち寄り、同日の東京移動までを実際の流れに合わせやすいです。富士エリア宿の参照先として、SUPER HOTEL Fujikawaguchiko Natural Hot Spring が選択済みの BudgetAir ホテル予約導線を残しています。"
     },
     "links": [
       {
-        "href": "https://www.booking.com/hotel/jp/supahoterufu-shi-he-kou-hu-tian-ran-wen-quan.html",
-        "label": { "en": "Booking.com", "ja": "Booking.com" },
-        "note": { "en": "Current Booking.com listing for the Fuji-area stay", "ja": "富士エリア宿に使う Booking.com ページ" },
-        "price": { "en": "$185 / night", "ja": "1泊 $185" },
+        "href": "https://us.trip.com/hotels/fujikawaguchiko-hotel-detail-76325560/super-hotel-fujikawaguchiko-natural-hot-spring/?locale=en-US&curr=JPY&allianceid=3817871&sid=22541534&ouid=BUAUS_home_page_tab",
+        "label": { "en": "BudgetAir hotel handoff", "ja": "BudgetAirホテル予約" },
+        "note": { "en": "BudgetAir hotel handoff with the Fuji onsen stay preselected", "ja": "富士温泉ホテルが選択済みの BudgetAir ホテル予約導線" },
+        "price": { "en": "From JPY 11,656 / night", "ja": "1泊 JPY 11,656から" },
         "kind": "primary"
       }
     ]
@@ -152,15 +152,15 @@
       "ja": "東京ホテル泊は4日目、5日目、6日目に置き、4日目の渋谷到着、続く観光日、そして帰国前の軽い7日目を同じ拠点で回せるようにします。"
     },
     "details": {
-      "en": "Shibuya access still fits the first Tokyo evening best, and a central Shibuya / Jinnan base keeps Days 5 and 6 plus the Day 7 reset simple without wasting time on a mid-route hotel switch after the Fuji handoff. Keep the Booking.com listing for The OneFive Tokyo Shibuya here for the Shibuya booking reference.",
-      "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、神南寄りの渋谷拠点なら富士側から入ったあとも、5日目と6日目、そして7日目の立て直しまでホテル移動なしで進めやすいです。渋谷拠点の参照先として、The OneFive Tokyo Shibuya の Booking.com ページを残しています。"
+      "en": "Shibuya access still fits the first Tokyo evening best, and a central Shibuya / Jinnan base keeps Days 5 and 6 plus the Day 7 reset simple without wasting time on a mid-route hotel switch after the Fuji handoff. Keep the BudgetAir hotel handoff for The OneFive Tokyo Shibuya here so the Shibuya base stays preselected.",
+      "ja": "最初の東京の夜には渋谷アクセスが最も合いやすく、神南寄りの渋谷拠点なら富士側から入ったあとも、5日目と6日目、そして7日目の立て直しまでホテル移動なしで進めやすいです。渋谷拠点の参照先として、The OneFive Tokyo Shibuya が選択済みの BudgetAir ホテル予約導線を残しています。"
     },
     "links": [
       {
-        "href": "https://www.booking.com/hotel/jp/emit-shibuya.html",
-        "label": { "en": "Booking.com", "ja": "Booking.com" },
-        "note": { "en": "Current Booking.com listing for the Shibuya base stay", "ja": "渋谷拠点ホテルに使う Booking.com ページ" },
-        "price": { "en": "$126 / night", "ja": "1泊 $126" },
+        "href": "https://us.trip.com/hotels/tokyo-hotel-detail-15935455/hotel-emit-shibuya/?locale=en-US&curr=JPY&allianceid=3817871&sid=22541534&ouid=BUAUS_home_page_tab",
+        "label": { "en": "BudgetAir hotel handoff", "ja": "BudgetAirホテル予約" },
+        "note": { "en": "BudgetAir hotel handoff with the Shibuya base preselected", "ja": "渋谷拠点ホテルが選択済みの BudgetAir ホテル予約導線" },
+        "price": { "en": "From JPY 10,865 / night", "ja": "1泊 JPY 10,865から" },
         "kind": "primary"
       }
     ]
@@ -184,14 +184,15 @@
       "ja": "3日目の三島ハンドオフから河口湖へ入るための、固定の都市間予約として扱います。"
     },
     "details": {
-      "en": "Reserve on Smart EX once Day 3 timing is fixed. Shin-Osaka -> Mishima is the main timed rail commitment on this route, so the official Smart EX page is the safest place to keep.",
-      "ja": "3日目の時刻が固まったら Smart EX で押さえます。新大阪 -> 三島はこの旅程の主要な時間指定の鉄道予約になるため、公式の Smart EX ページを残すのが最も安全です。"
+      "en": "Use the Trip.com Shin-Osaka -> Mishima route page once Day 3 timing is fixed. It keeps the exact station pair preselected and shows the live train timetable plus the current starting fare for this route.",
+      "ja": "3日目の時刻が固まったら、Trip.com の新大阪 -> 三島ルートページを使います。駅ペアが最初から選択されていて、この区間のライブ時刻表と現在の最安運賃をそのまま確認できます。"
     },
     "links": [
       {
-        "href": "https://smart-ex.jp/en/lp/app/",
-        "label": { "en": "Official booking", "ja": "公式予約" },
-        "note": { "en": "Reserve shinkansen seats on Smart EX", "ja": "Smart EXで新幹線を予約" },
+        "href": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/?locale=en-US&curr=JPY",
+        "label": { "en": "Trip.com rail booking", "ja": "Trip.com鉄道予約" },
+        "note": { "en": "Trip.com route page for Shin-Osaka -> Mishima", "ja": "新大阪 -> 三島の Trip.com ルートページ" },
+        "price": { "en": "From JPY 8,578 / person", "ja": "1人 JPY 8,578から" },
         "kind": "primary"
       }
     ]
@@ -215,14 +216,15 @@
       "ja": "3日目を最も素直に三島から湖側へ渡したいなら、このローカル移動を予約対象として扱います。"
     },
     "details": {
-      "en": "Use the official SEKITORI route results page once the shinkansen timing is locked. It is the operator-run booking entry for the Mishima-Kawaguchiko liner, with live departures, fares, and seat availability.",
-      "ja": "新幹線時刻が固まったら、SEKITORI の公式検索結果ページを使います。三島・河口湖ライナーのライブ時刻、運賃、空席をそのまま確認できる運営側の予約入口です。"
+      "en": "Use the official SEKITORI route results page once the shinkansen timing is locked. It keeps Mishima -> Kawaguchiko preselected and shows the live departures, fares, and seat availability for the liner.",
+      "ja": "新幹線時刻が固まったら、SEKITORI の公式検索結果ページを使います。三島 -> 河口湖が最初から選択されていて、ライナーのライブ時刻、運賃、空席をそのまま確認できます。"
     },
     "links": [
       {
-        "href": "https://sekitori.jp/en/apps/results/?getOffAreaMiddleGroupId=2&getOffAreaType=1&rideAreaMiddleGroupId=1&rideAreaType=1&rideDate=today",
-        "label": { "en": "Mishima bus booking", "ja": "三島バス予約" },
-        "note": { "en": "Official SEKITORI booking results for Mishima -> Kawaguchiko", "ja": "三島 -> 河口湖のSEKITORI公式予約結果" },
+        "href": "https://sekitori.jp/en/apps/results/?getOffAreaMiddleGroupId=2&getOffAreaType=1&rideAreaMiddleGroupId=1&rideAreaType=1",
+        "label": { "en": "SEKITORI bus booking", "ja": "SEKITORIバス予約" },
+        "note": { "en": "Official SEKITORI results for Mishima -> Kawaguchiko", "ja": "三島 -> 河口湖のSEKITORI公式結果" },
+        "price": { "en": "JPY 2,300 / person", "ja": "1人 JPY 2,300" },
         "kind": "primary"
       }
     ]
@@ -284,6 +286,7 @@
         "href": "https://pop.kaiyukan.com/info/admission/",
         "label": { "en": "Official tickets", "ja": "公式チケット" },
         "note": { "en": "Current price and web-ticket info", "ja": "現在料金とWEBチケット案内" },
+        "price": { "en": "JPY 2,700 / adult", "ja": "大人 JPY 2,700" },
         "kind": "primary"
       }
     ]
@@ -306,14 +309,15 @@
       "ja": "SHIBUYA SKY をルートに残すなら、5日目の時間指定チケットとして扱います。"
     },
     "details": {
-      "en": "Use the official booking page for the actual reservation. Save it once the Day 5 evening window is clear.",
-      "ja": "実際の予約は公式ページで行います。5日目の夕方以降の時間帯が見えたら保存しておきます。"
+      "en": "Use the Trip.com SHIBUYA SKY ticket page once the Day 5 evening window is clear. It keeps the exact attraction page open and surfaces the current discounted ticket entry point directly.",
+      "ja": "5日目の夕方以降の時間帯が見えたら、Trip.com の SHIBUYA SKY チケットページを使います。対象アトラクションのページをそのまま開けて、現在の販売入口へすぐ進めます。"
     },
     "links": [
       {
-        "href": "https://www.shibuya-scramble-square.com/sky/ticket/",
-        "label": { "en": "Official tickets", "ja": "公式チケット" },
-        "note": { "en": "Actual timed-entry booking", "ja": "実際の時間指定予約" },
+        "href": "https://us.trip.com/travel-guide/attraction/tokyo/shibuya-sky-136018827/",
+        "label": { "en": "Trip.com tickets", "ja": "Trip.comチケット" },
+        "note": { "en": "Trip.com SHIBUYA SKY ticket page", "ja": "Trip.com の SHIBUYA SKY チケットページ" },
+        "price": { "en": "From $18.70 / adult", "ja": "大人 $18.70から" },
         "kind": "primary"
       }
     ]
@@ -344,6 +348,7 @@
         "href": "https://www.tokyo-skytree.jp/en/ticket/individual/",
         "label": { "en": "Official tickets", "ja": "公式チケット" },
         "note": { "en": "Timed-entry ticket information", "ja": "時間指定チケット案内" },
+        "price": { "en": "JPY 2,100-2,300 / adult", "ja": "大人 JPY 2,100-2,300" },
         "kind": "primary"
       }
     ]
