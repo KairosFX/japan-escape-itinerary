@@ -135,8 +135,8 @@ const itineraryBudgetLabels = {
   },
   dayViewerHint: { en: "", ja: "" },
   totalMeta: {
-    en: "Combined total of every day shown in the Day Budget Viewer. Any day change updates this trip total immediately.",
-    ja: "Day Budget Viewer に表示される全日程の合計です。各日の金額が変わると、この旅全体の合計もすぐ更新されます。"
+    en: "Combined booked and required costs across every day in the Day Budget Viewer. Flexible and optional costs stay outside this trip total.",
+    ja: "Day Budget Viewer に表示される全日程のうち、予約前提と必須の費用だけを合計しています。変動費や任意の費用はこの旅全体の合計に含めません。"
   },
   noPaidAccommodationMeta: {
     en: "No paid hotel or ryokan stays are selected right now.",
@@ -325,6 +325,7 @@ const itineraryBudgetLabels = {
     );
   const hasBudgetRangeValue = (range) =>
     budgetRangeLevels.some((definition) => getBudgetRangeValue(range, definition.id) > 0);
+  const isCoreBudgetBucket = (bucketId) => bucketId === "booked" || bucketId === "required";
   const getCompactRangeCopy = (range) => ({
     en: `${itineraryBudgetLabels.rangeCompactPrefix.en} ${formatCurrencyForLanguage(
       getBudgetRangeValue(range, "lean"),
@@ -853,6 +854,18 @@ const itineraryBudgetLabels = {
         totalRange: itemEstimates.reduce(
           (sum, item) => sumBudgetRanges(sum, item.lineRangeTotals),
           getZeroBudgetRange()
+        ),
+        coreTotal: itemEstimates.reduce(
+          (sum, item) => sum + (isCoreBudgetBucket(item.bucket) ? item.lineTotal : 0),
+          0
+        ),
+        coreTotalRange: itemEstimates.reduce(
+          (sum, item) =>
+            sumBudgetRanges(
+              sum,
+              isCoreBudgetBucket(item.bucket) ? item.lineRangeTotals : getZeroBudgetRange()
+            ),
+          getZeroBudgetRange()
         )
       };
     };
@@ -914,10 +927,13 @@ const itineraryBudgetLabels = {
       (sum, day) => sumBudgetRanges(sum, day.totalRange),
       getZeroBudgetRange()
     );
-    const bookedAndFixedTotal = (bucketTotals.booked || 0) + (bucketTotals.required || 0);
-    const bookedAndFixedTotalRange = sumBudgetRanges(
-      bucketTotalsRange.booked,
-      bucketTotalsRange.required
+    const bookedAndFixedTotal = visibleDayEstimates.reduce(
+      (sum, dayEstimate) => sum + dayEstimate.coreTotal,
+      0
+    );
+    const bookedAndFixedTotalRange = visibleDayEstimates.reduce(
+      (sum, dayEstimate) => sumBudgetRanges(sum, dayEstimate.coreTotalRange),
+      getZeroBudgetRange()
     );
 
     return {
@@ -931,8 +947,8 @@ const itineraryBudgetLabels = {
       visibleDayEstimates,
       total,
       totalRange,
-      mainTotal: total,
-      mainTotalRange: totalRange,
+      mainTotal: bookedAndFixedTotal,
+      mainTotalRange: bookedAndFixedTotalRange,
       perPerson: getBudgetRangeValue(perPersonRange, "expected"),
       perPersonRange,
       bookedAndFixedTotal,
