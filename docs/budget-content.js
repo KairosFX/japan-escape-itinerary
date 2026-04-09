@@ -282,14 +282,14 @@ window.__JAPAN_BUDGET_CONTENT__ = {
             "en": "Kaiyukan official tickets",
             "ja": "海遊館公式チケット"
           },
-          "url": "https://pop.kaiyukan.com/info/admission/"
+          "url": "https://www.kaiyukan.com/info/ticket/kaiyukan/"
         },
         {
           "label": {
-            "en": "Shibuya Sky tickets via Trip.com",
-            "ja": "渋谷スカイ Trip.com チケット"
+            "en": "Shibuya Sky tickets via Klook",
+            "ja": "渋谷スカイ Klook チケット"
           },
-          "url": "https://us.trip.com/travel-guide/attraction/tokyo/shibuya-sky-136018827/"
+          "url": "https://www.klook.com/activity/70672-shibuya-sky-tokyo/"
         },
         {
           "label": {
