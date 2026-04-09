@@ -3792,16 +3792,11 @@ function renderBookingTransitItem(item) {
     ? `
           <div class="booking-item__link-grid">
             <a
-              class="booking-item__cta booking-item__cta--primary booking-item__cta--stacked"
+              class="booking-item__cta booking-item__cta--primary booking-item__cta--name"
               href="${escapeHtml(preferredLink.href)}"
               target="_blank"
               rel="noopener noreferrer">
-              <span class="booking-item__cta-label">${renderLocalizedContent(preferredLink.label)}</span>
-              ${
-                preferredLink.note
-                  ? `<span class="booking-item__cta-note">${renderLocalizedContent(preferredLink.note)}</span>`
-                  : ""
-              }
+              <span class="booking-item__cta-label">${renderLocalizedContent(item.title)}</span>
             </a>
           </div>
       `
@@ -3831,11 +3826,9 @@ function renderBookingTransitItem(item) {
           <span class="booking-item__title">${renderLocalizedContent(item.title)}</span>
           <span class="booking-item__caret" aria-hidden="true"></span>
         </span>
-        <span class="booking-item__summary-copy">${renderLocalizedContent(item.summary)}</span>
       </summary>
       <div class="booking-item__details">
         <div class="booking-item__details-inner">
-          <p class="booking-item__detail-copy">${renderLocalizedContent(item.details)}</p>
           ${transitTriggerMarkup}
           <div class="booking-item__actions">
             ${linkMarkup}
@@ -3862,10 +3855,6 @@ function renderBookingTransitBoard() {
 
   bookingTransitGroupsRoot.innerHTML = bookingTransitGroupDefinitions
     .map((group) => {
-      const groupCopyMarkup =
-        group.copy?.en || group.copy?.ja
-          ? `<p class="booking-group__copy">${renderLocalizedContent(group.copy)}</p>`
-          : "";
       const itemsMarkup = bookingTransitItems
         .filter((item) => item.group === group.id)
         .map((item) => renderBookingTransitItem(item))
@@ -3876,7 +3865,6 @@ function renderBookingTransitBoard() {
           <summary class="booking-group__summary">
             <div class="booking-group__header">
               <h5 class="booking-group__title">${renderLocalizedContent(group.title)}</h5>
-              ${groupCopyMarkup}
             </div>
             <span class="booking-group__caret" aria-hidden="true"></span>
           </summary>
