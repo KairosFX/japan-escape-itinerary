@@ -18,10 +18,8 @@ const progressCurrentDayNode = document.querySelector("[data-progress-current-da
 const progressTotalDaysNode = document.querySelector("[data-progress-total-days]");
 const progressOverviewFill = document.querySelector("[data-progress-overview-fill]");
 const progressOverviewCaptions = document.querySelectorAll(".progress-overview__caption [data-language]");
-const fullItineraryCelebrationDayRange = Object.freeze(["1", "2", "3", "4", "5", "6", "7"]);
 const jumpCurrentDayButton = document.querySelector("[data-jump-current-day]");
 const checklistMarkAllButton = document.querySelector("[data-checklist-mark-all]");
-const checklistToolbarButtons = Array.from(document.querySelectorAll(".checklist-toolbar__action"));
 const resetProgressOpenButtons = Array.from(document.querySelectorAll("[data-reset-progress-open]"));
 const resetProgressModal = document.querySelector("[data-reset-progress-modal]");
 const resetProgressCancelButton = document.querySelector("[data-reset-progress-cancel]");
@@ -86,8 +84,6 @@ const appAssetConfigRuntimeGlobal = "__JAPAN_APP_ASSETS__";
 const budgetUiRuntimeGlobal = "__JAPAN_BUDGET_UI__";
 const budgetContentRuntimeGlobal = "__JAPAN_BUDGET_CONTENT__";
 const essentialsContentRuntimeGlobal = "__JAPAN_ESSENTIALS_CONTENT__";
-const budgetSoundRuntimeGlobal = "__JAPAN_PLAY_BUDGET_SOUND__";
-const budgetStepperEffectRuntimeGlobal = "__JAPAN_TRIGGER_BUDGET_STEPPER_EFFECT__";
 const routeMapLibraryScriptUrl = "./assets/vendor/maplibre/maplibre-gl.js";
 const routeMapLibraryStyleUrl = "./assets/vendor/maplibre/maplibre-gl.css";
 const budgetUiFallbackScriptUrl = "./budget-ui.min.js";
@@ -110,85 +106,8 @@ const serviceWorkerWarmMessageType = "CACHE_URLS";
 const audioAmbientVolume = 0.085;
 const audioAmbientDuckVolume = 0.05;
 const audioTransitionVolume = 0.28;
-const audioBudgetPositiveVolume = 0.15;
-const audioBudgetNegativeVolume = 0.14;
 const audioTransitionCooldownMs = 320;
-const audioBudgetCooldownMs = 132;
-const audioBudgetDuckMs = 280;
-const bambooCelebrationDurationMs = 1180;
-const fullChecklistCelebrationDurationMs = 2360;
-const fullPackingCelebrationDurationMs = 2140;
-const pandaCelebrationDurationMs = 1180;
-const checklistJumpHighlightDurationMs = 1320;
-const bambooResetDurationMs = 1120;
 const bookingOutlineBloomDurationMs = 820;
-const headerBambooGlowDurationMs = 620;
-const budgetStepperEffectDurationMs = 860;
-const bambooCelebrationStalkConfigs = [
-  { x: "4%", width: "0.76rem", height: "80%", tilt: "-8deg", delay: "0ms" },
-  { x: "14%", width: "0.58rem", height: "68%", tilt: "-4deg", delay: "60ms" },
-  { x: "79%", width: "0.56rem", height: "66%", tilt: "5deg", delay: "90ms" },
-  { x: "89%", width: "0.72rem", height: "76%", tilt: "9deg", delay: "30ms" }
-];
-const bambooCelebrationLeafConfigs = [
-  { x: "1%", y: "18%", width: "4.2rem", height: "1.02rem", tilt: "-36deg", delay: "110ms" },
-  { x: "8%", y: "42%", width: "3.5rem", height: "0.92rem", tilt: "-14deg", delay: "170ms" },
-  { x: "12%", y: "56%", width: "3rem", height: "0.82rem", tilt: "18deg", delay: "230ms" },
-  { x: "17%", y: "26%", width: "2.8rem", height: "0.78rem", tilt: "24deg", delay: "190ms" },
-  { x: "72%", y: "20%", width: "4rem", height: "1rem", tilt: "28deg", delay: "120ms" },
-  { x: "69%", y: "44%", width: "3.4rem", height: "0.9rem", tilt: "-12deg", delay: "180ms" },
-  { x: "76%", y: "58%", width: "3.1rem", height: "0.84rem", tilt: "16deg", delay: "220ms" },
-  { x: "66%", y: "30%", width: "2.7rem", height: "0.78rem", tilt: "-24deg", delay: "200ms" }
-];
-const fullChecklistCelebrationStalkConfigs = [
-  { x: "-4%", width: "1.18rem", height: "100%", tilt: "-8deg", delay: "0ms" },
-  { x: "5%", width: "0.96rem", height: "90%", tilt: "-5deg", delay: "80ms" },
-  { x: "14%", width: "0.82rem", height: "78%", tilt: "-2deg", delay: "150ms" },
-  { x: "25%", width: "0.68rem", height: "66%", tilt: "1deg", delay: "240ms" },
-  { x: "74%", width: "0.72rem", height: "68%", tilt: "-1deg", delay: "230ms" },
-  { x: "83%", width: "0.84rem", height: "80%", tilt: "4deg", delay: "140ms" },
-  { x: "91%", width: "0.98rem", height: "92%", tilt: "7deg", delay: "70ms" },
-  { x: "99%", width: "1.2rem", height: "100%", tilt: "9deg", delay: "0ms" }
-];
-const fullChecklistCelebrationLeafConfigs = [
-  { x: "-1%", y: "16%", width: "6.4rem", height: "1.38rem", tilt: "-34deg", delay: "160ms" },
-  { x: "3%", y: "33%", width: "5.1rem", height: "1.12rem", tilt: "-18deg", delay: "240ms" },
-  { x: "8%", y: "52%", width: "4.5rem", height: "1rem", tilt: "12deg", delay: "320ms" },
-  { x: "15%", y: "23%", width: "4.2rem", height: "0.94rem", tilt: "24deg", delay: "270ms" },
-  { x: "20%", y: "44%", width: "3.8rem", height: "0.92rem", tilt: "-12deg", delay: "350ms" },
-  { x: "75%", y: "18%", width: "6.1rem", height: "1.34rem", tilt: "34deg", delay: "170ms" },
-  { x: "78%", y: "36%", width: "4.9rem", height: "1.08rem", tilt: "16deg", delay: "250ms" },
-  { x: "83%", y: "54%", width: "4.4rem", height: "1rem", tilt: "-14deg", delay: "330ms" },
-  { x: "88%", y: "24%", width: "4rem", height: "0.92rem", tilt: "-26deg", delay: "280ms" },
-  { x: "67%", y: "46%", width: "3.7rem", height: "0.88rem", tilt: "11deg", delay: "360ms" }
-];
-const pandaCelebrationSpriteConfigs = [
-  { x: "72%", y: "15%", size: "2.6rem", delay: "0ms", driftX: "-4%", driftY: "-12%" },
-  { x: "78%", y: "34%", size: "2.15rem", delay: "100ms", driftX: "-7%", driftY: "-9%" },
-  { x: "64%", y: "28%", size: "1.72rem", delay: "170ms", driftX: "-2%", driftY: "-7%" }
-];
-const bambooResetSegmentConfigs = [
-  { x: "4%", y: "-10%", width: "0.86rem", height: "54%", tilt: "-9deg", delay: "0ms", driftX: "-0.26rem", driftY: "106%", spin: "16deg" },
-  { x: "18%", y: "-16%", width: "0.64rem", height: "49%", tilt: "-4deg", delay: "70ms", driftX: "-0.14rem", driftY: "102%", spin: "11deg" },
-  { x: "76%", y: "-12%", width: "0.66rem", height: "47%", tilt: "4deg", delay: "110ms", driftX: "0.18rem", driftY: "104%", spin: "-10deg" },
-  { x: "90%", y: "-7%", width: "0.84rem", height: "56%", tilt: "10deg", delay: "36ms", driftX: "0.3rem", driftY: "109%", spin: "-17deg" }
-];
-const bambooResetLeafConfigs = [
-  { x: "2%", y: "12%", width: "4.2rem", height: "0.98rem", tilt: "-30deg", delay: "120ms", driftX: "-8%", driftY: "82%", spin: "14deg" },
-  { x: "12%", y: "34%", width: "3.55rem", height: "0.88rem", tilt: "-12deg", delay: "190ms", driftX: "-4%", driftY: "76%", spin: "9deg" },
-  { x: "72%", y: "15%", width: "4.1rem", height: "0.96rem", tilt: "26deg", delay: "130ms", driftX: "8%", driftY: "84%", spin: "-15deg" },
-  { x: "66%", y: "38%", width: "3.35rem", height: "0.86rem", tilt: "11deg", delay: "220ms", driftX: "5%", driftY: "72%", spin: "-9deg" }
-];
-const budgetStepperCoinConfigs = [
-  { x: "18%", y: "62%", size: "0.76rem", delay: "0ms", driftX: "-18%", driftY: "-34%" },
-  { x: "36%", y: "38%", size: "0.64rem", delay: "60ms", driftX: "-8%", driftY: "-28%" },
-  { x: "64%", y: "44%", size: "0.68rem", delay: "110ms", driftX: "8%", driftY: "-30%" },
-  { x: "82%", y: "66%", size: "0.8rem", delay: "160ms", driftX: "18%", driftY: "-36%" }
-];
-const budgetStepperTrailConfigs = [
-  { x: "18%", y: "36%", width: "2.4rem", height: "0.2rem", tilt: "-15deg", delay: "40ms" },
-  { x: "56%", y: "48%", width: "2.2rem", height: "0.18rem", tilt: "12deg", delay: "90ms" }
-];
 let budgetSourceUpdatedAt = "2026-03-27";
 let budgetAssumptionCopy = {
   en:
@@ -588,8 +507,7 @@ const siteAudioState = {
   userGestureSeen: false,
   gestureBindingReady: false,
   autoplayBindingReady: false,
-  lastTransitionAt: 0,
-  lastBudgetCueAt: 0
+  lastTransitionAt: 0
 };
 
 function configureManagedVideoNode(video, { playbackRate = 1, loop = true, preload = "metadata" } = {}) {
@@ -677,13 +595,6 @@ function initializeDecorativeMediaExperience() {
     preload: "auto"
   });
   syncDecorativeVideoPlayback();
-}
-
-function appendEffectNode(container, className) {
-  const node = document.createElement("span");
-  node.className = className;
-  container.append(node);
-  return node;
 }
 
 function buildRouteExplorerViewDefinitions(viewDefinitions = []) {
@@ -1040,123 +951,6 @@ function scheduleManagedNoiseBurst(
   );
 }
 
-function renderBudgetPositiveCue(context, masterNode, volume = audioBudgetPositiveVolume) {
-  const now = context.currentTime + 0.01;
-  const bus = context.createGain();
-  const highpassNode = context.createBiquadFilter();
-  const sheenNode = context.createBiquadFilter();
-
-  bus.gain.value = volume;
-  highpassNode.type = "highpass";
-  highpassNode.frequency.setValueAtTime(560, now);
-  sheenNode.type = "highshelf";
-  sheenNode.frequency.setValueAtTime(2200, now);
-  sheenNode.gain.setValueAtTime(4.2, now);
-
-  bus.connect(highpassNode);
-  highpassNode.connect(sheenNode);
-  sheenNode.connect(masterNode);
-
-  scheduleManagedNoiseBurst(context, bus, {
-    now,
-    peak: 0.016,
-    decay: 0.048,
-    frequency: 2450,
-    q: 0.9
-  });
-  scheduleManagedOscillatorVoice(context, bus, {
-    now,
-    type: "triangle",
-    frequency: 1318.51,
-    attack: 0.003,
-    peak: 0.15,
-    decay: 0.18,
-    pitchEndRatio: 0.991,
-    highpass: 640
-  });
-  scheduleManagedOscillatorVoice(context, bus, {
-    now: now + 0.016,
-    type: "sine",
-    frequency: 1760,
-    attack: 0.002,
-    peak: 0.11,
-    decay: 0.24,
-    pitchEndRatio: 0.994,
-    highpass: 780
-  });
-  scheduleManagedOscillatorVoice(context, bus, {
-    now: now + 0.03,
-    type: "sine",
-    frequency: 2637.02,
-    attack: 0.0015,
-    peak: 0.045,
-    decay: 0.16,
-    pitchEndRatio: 0.997,
-    highpass: 1020
-  });
-
-  scheduleManagedAudioCleanup([bus, highpassNode, sheenNode], 460);
-}
-
-function renderBudgetNegativeCue(context, masterNode, volume = audioBudgetNegativeVolume) {
-  const now = context.currentTime + 0.01;
-  const bus = context.createGain();
-  const bodyNode = context.createBiquadFilter();
-  const lowpassNode = context.createBiquadFilter();
-
-  bus.gain.value = volume;
-  bodyNode.type = "peaking";
-  bodyNode.frequency.setValueAtTime(340, now);
-  bodyNode.Q.setValueAtTime(1.1, now);
-  bodyNode.gain.setValueAtTime(2.6, now);
-  lowpassNode.type = "lowpass";
-  lowpassNode.frequency.setValueAtTime(1680, now);
-
-  bus.connect(bodyNode);
-  bodyNode.connect(lowpassNode);
-  lowpassNode.connect(masterNode);
-
-  scheduleManagedNoiseBurst(context, bus, {
-    now,
-    peak: 0.014,
-    decay: 0.054,
-    frequency: 920,
-    q: 0.72
-  });
-  scheduleManagedOscillatorVoice(context, bus, {
-    now,
-    type: "triangle",
-    frequency: 246.94,
-    attack: 0.003,
-    peak: 0.16,
-    decay: 0.28,
-    pitchEndRatio: 0.92,
-    lowpass: 1200
-  });
-  scheduleManagedOscillatorVoice(context, bus, {
-    now: now + 0.008,
-    type: "sine",
-    frequency: 329.63,
-    attack: 0.002,
-    peak: 0.082,
-    decay: 0.3,
-    pitchEndRatio: 0.94,
-    lowpass: 1340
-  });
-  scheduleManagedOscillatorVoice(context, bus, {
-    now: now + 0.024,
-    type: "sine",
-    frequency: 493.88,
-    attack: 0.0015,
-    peak: 0.026,
-    decay: 0.18,
-    pitchEndRatio: 0.965,
-    lowpass: 1480
-  });
-
-  scheduleManagedAudioCleanup([bus, bodyNode, lowpassNode], 500);
-}
-
 function ensureSiteAudioNodes() {
   if (siteAudioNodes) {
     return siteAudioNodes;
@@ -1396,28 +1190,6 @@ function playManagedSynthOneShot(
 function playTransitionSound() {
   return;
 }
-
-function playBudgetInteractionSound(tone = "positive") {
-  const normalizedTone =
-    tone === "counter" || tone === "negative" || tone === "chung" ? "counter" : "positive";
-
-  if (!getManagedAudioContextCtor()) {
-    return;
-  }
-
-  const renderCue =
-    normalizedTone === "counter"
-      ? (context, masterNode) => renderBudgetNegativeCue(context, masterNode)
-      : (context, masterNode) => renderBudgetPositiveCue(context, masterNode);
-
-  playManagedSynthOneShot(renderCue, {
-    cooldownMs: audioBudgetCooldownMs,
-    stateKey: "lastBudgetCueAt",
-    duckMs: audioBudgetDuckMs
-  });
-}
-
-window[budgetSoundRuntimeGlobal] = playBudgetInteractionSound;
 
 function initializeSiteAudioExperience() {
   bindSiteAudioGestureListeners();
@@ -1952,15 +1724,6 @@ const pendingClassRestarts = new WeakMap();
 const timedEffectTimers = new WeakMap();
 const interactionEffectCooldowns = new WeakMap();
 const checklistGroupCompletionState = new WeakMap();
-const bambooCelebrationTimers = new WeakMap();
-let fullChecklistCelebrationLayer = null;
-let fullChecklistCelebrationTimer = 0;
-let hasKnownFullChecklistCompletionState = false;
-let fullChecklistWasComplete = false;
-let fullPackingCelebrationLayer = null;
-let fullPackingCelebrationTimer = 0;
-let hasKnownFullPackingCompletionState = false;
-let fullPackingWasComplete = false;
 let deferredGeometryWorkPending = true;
 let deferredGeometryReleaseTimer = 0;
 let timelineLayoutFrame = 0;
@@ -3670,8 +3433,6 @@ function syncReducedEffectsMode({ force = false } = {}) {
 
   if (reducedEffectsEnabled) {
     clearSiteTransitionState();
-    clearFullChecklistCelebration();
-    clearFullPackingCelebration();
 
     if (desktopReverseScrollTimer) {
       window.clearTimeout(desktopReverseScrollTimer);
@@ -3709,12 +3470,6 @@ function getOrderedDayNumbers() {
 
 function getTrackedDayNumbers() {
   return getOrderedDayNumbers();
-}
-
-function getFullItineraryDayKeys() {
-  return getTrackedDayNumbers()
-    .filter((day) => fullItineraryCelebrationDayRange.includes(String(day)))
-    .map((day) => String(day));
 }
 
 function readStoredDaySet(key) {
@@ -3818,48 +3573,6 @@ function getJourneyState() {
     accessibleDay: highestUnlockedDay,
     currentDay: nextCurrentDay
   };
-}
-
-// Only the full Day 1 through Day 7 span should trigger the larger itinerary celebration.
-function syncFullChecklistCompletionState(rawCompleted) {
-  const itineraryDayKeys = getFullItineraryDayKeys();
-  const isComplete =
-    itineraryDayKeys.length === fullItineraryCelebrationDayRange.length &&
-    itineraryDayKeys.every((dayKey) => rawCompleted.has(dayKey));
-
-  if (!hasKnownFullChecklistCompletionState) {
-    hasKnownFullChecklistCompletionState = true;
-    fullChecklistWasComplete = isComplete;
-    return;
-  }
-
-  if (fullChecklistWasComplete && !isComplete) {
-    clearFullChecklistCelebration();
-  }
-
-  if (!fullChecklistWasComplete && isComplete) {
-    triggerFullChecklistCelebration();
-  }
-
-  fullChecklistWasComplete = isComplete;
-}
-
-function syncFullPackingCompletionState(isComplete) {
-  if (!hasKnownFullPackingCompletionState) {
-    hasKnownFullPackingCompletionState = true;
-    fullPackingWasComplete = isComplete;
-    return;
-  }
-
-  if (fullPackingWasComplete && !isComplete) {
-    clearFullPackingCelebration();
-  }
-
-  if (!fullPackingWasComplete && isComplete) {
-    triggerFullPackingCelebration();
-  }
-
-  fullPackingWasComplete = isComplete;
 }
 
 function readStoredChecklistState() {
@@ -4469,21 +4182,6 @@ function isPackingItemPacked(itemId) {
   return Boolean(packingState[itemId]);
 }
 
-function applyBambooCelebrationVars(target, config) {
-  Object.entries(config).forEach(([key, value]) => {
-    target.style.setProperty(`--${key}`, String(value));
-  });
-}
-
-function appendConfiguredCelebrationNodes(container, className, configs) {
-  configs.forEach((config) => {
-    const node = document.createElement("span");
-    node.className = className;
-    applyBambooCelebrationVars(node, config);
-    container.append(node);
-  });
-}
-
 function getTimedEffectTimerBucket(target) {
   const existingBucket = timedEffectTimers.get(target);
   if (existingBucket) {
@@ -4542,347 +4240,6 @@ function triggerTimedClassEffect(
   return true;
 }
 
-function ensureEffectHost(target, { clip = false } = {}) {
-  if (!target || target === document.body) {
-    return target;
-  }
-
-  target.classList.add("effect-host");
-  if (clip) {
-    target.classList.add("effect-host--clip");
-  }
-  return target;
-}
-
-function ensureEffectLayer(target, className, createLayer, { prepend = true, clip = false } = {}) {
-  if (!target) {
-    return null;
-  }
-
-  ensureEffectHost(target, { clip });
-  const existingLayer = Array.from(target.children).find((node) =>
-    node.classList?.contains(className)
-  );
-  if (existingLayer) {
-    return existingLayer;
-  }
-
-  const layer = createLayer();
-  if (prepend) {
-    target.prepend(layer);
-  } else {
-    target.append(layer);
-  }
-  return layer;
-}
-
-function createBambooCelebrationLayer() {
-  const layer = document.createElement("div");
-  layer.className = "bamboo-celebration";
-  layer.setAttribute("aria-hidden", "true");
-  appendEffectNode(layer, "bamboo-celebration__wash");
-  appendConfiguredCelebrationNodes(layer, "bamboo-celebration__stalk", bambooCelebrationStalkConfigs);
-  appendConfiguredCelebrationNodes(layer, "bamboo-celebration__leaf", bambooCelebrationLeafConfigs);
-  return layer;
-}
-
-function createGrandBambooCelebrationLayer({
-  modifierClass = "",
-  kicker,
-  title,
-  detail
-}) {
-  const layer = document.createElement("div");
-  layer.className = ["full-itinerary-celebration", modifierClass].filter(Boolean).join(" ");
-  layer.hidden = true;
-  layer.innerHTML = `
-    <span class="full-itinerary-celebration__backdrop" aria-hidden="true"></span>
-    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--left" aria-hidden="true"></span>
-    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--center" aria-hidden="true"></span>
-    <span class="full-itinerary-celebration__wash full-itinerary-celebration__wash--right" aria-hidden="true"></span>
-    <div class="full-itinerary-celebration__grove" aria-hidden="true"></div>
-    <div class="full-itinerary-celebration__badge" role="status" aria-live="polite" aria-atomic="true">
-      <p class="full-itinerary-celebration__kicker">
-        ${renderLocalizedContent(kicker)}
-      </p>
-      <h2 class="full-itinerary-celebration__title">
-        ${renderLocalizedContent(title)}
-      </h2>
-      <p class="full-itinerary-celebration__detail">
-        ${renderLocalizedContent(detail)}
-      </p>
-    </div>
-  `;
-
-  const grove = layer.querySelector(".full-itinerary-celebration__grove");
-  if (grove) {
-    appendConfiguredCelebrationNodes(
-      grove,
-      "full-itinerary-celebration__stalk",
-      fullChecklistCelebrationStalkConfigs
-    );
-    appendConfiguredCelebrationNodes(
-      grove,
-      "full-itinerary-celebration__leaf",
-      fullChecklistCelebrationLeafConfigs
-    );
-  }
-
-  syncLocalizedNodes(layer);
-  document.body.append(layer);
-  return layer;
-}
-
-function createFullChecklistCelebrationLayer() {
-  return createGrandBambooCelebrationLayer({
-    kicker: { en: "Bamboo Celebration", ja: "竹の祝福" },
-    title: { en: "Full Itinerary Complete", ja: "旅程チェック完了" },
-    detail: {
-      en: "Every checklist item from Day 1 through Day 7 is checked.",
-      ja: "1日目から7日目までのチェックリスト項目がすべて完了しました。"
-    }
-  });
-}
-
-function createFullPackingCelebrationLayer() {
-  return createGrandBambooCelebrationLayer({
-    modifierClass: "full-itinerary-celebration--packing",
-    kicker: { en: "Bamboo Celebration", ja: "竹の祝福" },
-    title: { en: "All Essentials Packed", ja: "準備がすべて完了" },
-    detail: {
-      en: "Every Essentials box is fully checked and ready to travel.",
-      ja: "Essentialsの各ボックスがすべて完了し、出発準備が整いました。"
-    }
-  });
-}
-
-function ensureFullChecklistCelebrationLayer() {
-  if (fullChecklistCelebrationLayer && document.body.contains(fullChecklistCelebrationLayer)) {
-    return fullChecklistCelebrationLayer;
-  }
-
-  fullChecklistCelebrationLayer = createFullChecklistCelebrationLayer();
-  return fullChecklistCelebrationLayer;
-}
-
-function ensureFullPackingCelebrationLayer() {
-  if (fullPackingCelebrationLayer && document.body.contains(fullPackingCelebrationLayer)) {
-    return fullPackingCelebrationLayer;
-  }
-
-  fullPackingCelebrationLayer = createFullPackingCelebrationLayer();
-  return fullPackingCelebrationLayer;
-}
-
-function clearFullChecklistCelebration() {
-  if (fullChecklistCelebrationTimer) {
-    window.clearTimeout(fullChecklistCelebrationTimer);
-    fullChecklistCelebrationTimer = 0;
-  }
-
-  if (!fullChecklistCelebrationLayer) {
-    return;
-  }
-
-  fullChecklistCelebrationLayer.classList.remove("is-active");
-  fullChecklistCelebrationLayer.hidden = true;
-}
-
-function clearFullPackingCelebration() {
-  if (fullPackingCelebrationTimer) {
-    window.clearTimeout(fullPackingCelebrationTimer);
-    fullPackingCelebrationTimer = 0;
-  }
-
-  if (!fullPackingCelebrationLayer) {
-    return;
-  }
-
-  fullPackingCelebrationLayer.classList.remove("is-active");
-  fullPackingCelebrationLayer.hidden = true;
-}
-
-function triggerFullChecklistCelebration() {
-  if (aggressivePerformanceMode) {
-    return;
-  }
-
-  const layer = ensureFullChecklistCelebrationLayer();
-  if (!layer) {
-    return;
-  }
-
-  syncLocalizedNodes(layer);
-  clearFullChecklistCelebration();
-  layer.hidden = false;
-  layer.classList.remove("is-active");
-  restartClassOnNextFrame(layer, "is-active");
-
-  const durationMs = reducedEffectsEnabled ? 1680 : fullChecklistCelebrationDurationMs;
-  fullChecklistCelebrationTimer = window.setTimeout(() => {
-    layer.classList.remove("is-active");
-    layer.hidden = true;
-    fullChecklistCelebrationTimer = 0;
-  }, durationMs);
-}
-
-function triggerFullPackingCelebration() {
-  if (aggressivePerformanceMode) {
-    return;
-  }
-
-  const layer = ensureFullPackingCelebrationLayer();
-  if (!layer) {
-    return;
-  }
-
-  syncLocalizedNodes(layer);
-  clearFullPackingCelebration();
-  layer.hidden = false;
-  layer.classList.remove("is-active");
-  restartClassOnNextFrame(layer, "is-active");
-
-  const durationMs = reducedEffectsEnabled ? 1560 : fullPackingCelebrationDurationMs;
-  fullPackingCelebrationTimer = window.setTimeout(() => {
-    layer.classList.remove("is-active");
-    layer.hidden = true;
-    fullPackingCelebrationTimer = 0;
-  }, durationMs);
-}
-
-function createPandaCelebrationLayer() {
-  const layer = document.createElement("div");
-  layer.className = "panda-celebration";
-  layer.setAttribute("aria-hidden", "true");
-  appendEffectNode(layer, "panda-celebration__glow");
-  appendConfiguredCelebrationNodes(layer, "panda-celebration__sprite", pandaCelebrationSpriteConfigs);
-  return layer;
-}
-
-function ensurePandaCelebrationLayer(target) {
-  return ensureEffectLayer(target, "panda-celebration", createPandaCelebrationLayer, {
-    prepend: true
-  });
-}
-
-function triggerCurrentDayCelebration(target) {
-  if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  const effectKey = "current-day-panda";
-  if (!canTriggerInteractionEffect(target, effectKey, 720)) {
-    return;
-  }
-
-  const layer = ensurePandaCelebrationLayer(target);
-  triggerTimedClassEffect(target, "is-current-day-jump", checklistJumpHighlightDurationMs, {
-    force: true
-  });
-  triggerTimedClassEffect(layer, "is-active", pandaCelebrationDurationMs, {
-    force: true
-  });
-}
-
-function createBambooResetLayer({ viewport = false } = {}) {
-  const layer = document.createElement("div");
-  layer.className = viewport ? "bamboo-reset-burst bamboo-reset-burst--viewport" : "bamboo-reset-burst";
-  layer.setAttribute("aria-hidden", "true");
-  appendEffectNode(layer, "bamboo-reset-burst__mist");
-  appendConfiguredCelebrationNodes(layer, "bamboo-reset-burst__segment", bambooResetSegmentConfigs);
-  appendConfiguredCelebrationNodes(layer, "bamboo-reset-burst__leaf", bambooResetLeafConfigs);
-  return layer;
-}
-
-function ensureBambooResetLayer(target, { viewport = false } = {}) {
-  if (viewport) {
-    const existingLayer = Array.from(document.body.children).find((node) =>
-      node.classList?.contains("bamboo-reset-burst--viewport")
-    );
-    if (existingLayer) {
-      return existingLayer;
-    }
-
-    const layer = createBambooResetLayer({ viewport: true });
-    document.body.append(layer);
-    return layer;
-  }
-
-  return ensureEffectLayer(target, "bamboo-reset-burst", () => createBambooResetLayer(), {
-    prepend: true,
-    clip: true
-  });
-}
-
-function triggerBambooResetEffect(target, { viewport = false } = {}) {
-  if (aggressivePerformanceMode || reducedEffectsEnabled) {
-    return false;
-  }
-
-  const effectHost = viewport ? document.body : target;
-  const effectKey = viewport ? "viewport-reset" : "local-reset";
-  if (!canTriggerInteractionEffect(effectHost, effectKey, 680)) {
-    return false;
-  }
-
-  const layer = ensureBambooResetLayer(target, { viewport });
-  return triggerTimedClassEffect(layer, "is-active", bambooResetDurationMs, {
-    force: true
-  });
-}
-
-function createBudgetStepperEffectLayer() {
-  const layer = document.createElement("div");
-  layer.className = "budget-stepper-celebration";
-  layer.setAttribute("aria-hidden", "true");
-
-  const halo = document.createElement("span");
-  halo.className = "budget-stepper-celebration__halo";
-  layer.append(halo);
-  appendConfiguredCelebrationNodes(
-    layer,
-    "budget-stepper-celebration__trail",
-    budgetStepperTrailConfigs
-  );
-  appendConfiguredCelebrationNodes(
-    layer,
-    "budget-stepper-celebration__coin",
-    budgetStepperCoinConfigs
-  );
-  return layer;
-}
-
-function ensureBudgetStepperEffectLayer(target) {
-  return ensureEffectLayer(target, "budget-stepper-celebration", createBudgetStepperEffectLayer, {
-    prepend: true
-  });
-}
-
-function triggerBudgetStepperEffect(stepperElement, effectName, sourceButton = null) {
-  if (!stepperElement || !effectName || aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  const layer = ensureBudgetStepperEffectLayer(stepperElement);
-  if (!layer || !canTriggerInteractionEffect(layer, effectName, 170)) {
-    return;
-  }
-
-  const hostRect = stepperElement.getBoundingClientRect();
-  const sourceRect = sourceButton?.getBoundingClientRect();
-  if (sourceRect) {
-    layer.style.setProperty("--origin-x", `${sourceRect.left - hostRect.left + sourceRect.width / 2}px`);
-    layer.style.setProperty("--origin-y", `${sourceRect.top - hostRect.top + sourceRect.height / 2}px`);
-  }
-
-  layer.dataset.effect = effectName;
-  triggerTimedClassEffect(layer, "is-active", budgetStepperEffectDurationMs, {
-    force: true
-  });
-}
-
-window[budgetStepperEffectRuntimeGlobal] = triggerBudgetStepperEffect;
-
 function triggerBookingOutlineBloom(target) {
   if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
     return;
@@ -4897,69 +4254,6 @@ function triggerBookingOutlineBloom(target) {
   });
 }
 
-function triggerHeaderBambooGlow(target) {
-  if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  if (
-    target.disabled ||
-    target.getAttribute("aria-disabled") === "true" ||
-    !canTriggerInteractionEffect(target, "header-bamboo-glow", 180)
-  ) {
-    return;
-  }
-
-  triggerTimedClassEffect(target, "is-bamboo-glow-active", headerBambooGlowDurationMs, {
-    force: true
-  });
-}
-
-function ensureBambooCelebrationLayer(target) {
-  if (!target) {
-    return null;
-  }
-
-  const existingLayer = Array.from(target.children).find((node) =>
-    node.classList?.contains("bamboo-celebration")
-  );
-  if (existingLayer) {
-    return existingLayer;
-  }
-
-  const layer = createBambooCelebrationLayer();
-  target.prepend(layer);
-  return layer;
-}
-
-function triggerBambooCelebration(target) {
-  if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  ensureBambooCelebrationLayer(target);
-  target.classList.remove("is-bamboo-celebrating");
-
-  const existingTimer = bambooCelebrationTimers.get(target);
-  if (existingTimer) {
-    window.clearTimeout(existingTimer);
-  }
-
-  restartClassOnNextFrame(target, "is-bamboo-celebrating");
-
-  const timerId = window.setTimeout(() => {
-    target.classList.remove("is-bamboo-celebrating");
-    bambooCelebrationTimers.delete(target);
-  }, bambooCelebrationDurationMs);
-
-  bambooCelebrationTimers.set(target, timerId);
-}
-
-function celebrateChecklistGroup(target) {
-  animateCompletion(target);
-  triggerBambooCelebration(target);
-}
-
 function syncChecklistGroupCompletion(target, isComplete) {
   if (!target) {
     return;
@@ -4968,9 +4262,8 @@ function syncChecklistGroupCompletion(target, isComplete) {
   const hasKnownState = checklistGroupCompletionState.has(target);
   const wasComplete = checklistGroupCompletionState.get(target) === true;
   checklistGroupCompletionState.set(target, isComplete);
-
   if (hasKnownState && !wasComplete && isComplete) {
-    celebrateChecklistGroup(target);
+    return;
   }
 }
 
@@ -5034,11 +4327,6 @@ function syncPackingUI() {
   ).length;
   const hasPackedItems = Object.keys(packingState).length > 0;
   const areAllItemsPacked = totalPackingItems > 0 && packedItemCount === totalPackingItems;
-  const areAllSectionsPacked =
-    areAllItemsPacked &&
-    packingSectionCards.length > 0 &&
-    packingSectionCards.every((sectionElement) => sectionElement.dataset.packingComplete === "true");
-
   packingMarkAllButtons.forEach((button) => {
     button.disabled = !totalPackingItems || areAllItemsPacked;
   });
@@ -5047,7 +4335,6 @@ function syncPackingUI() {
     button.disabled = !hasPackedItems;
   });
 
-  syncFullPackingCompletionState(areAllSectionsPacked);
   updateChecklistAccessState();
   refreshChecklistProgressState({ syncDayCards: initializedSections.has("checklist") });
 }
@@ -5110,11 +4397,7 @@ function bindPackingUI() {
       return;
     }
 
-    button.addEventListener("click", async () => {
-      const resetDelayMs = triggerBambooResetEffect(packingGroup) ? 140 : 0;
-      if (resetDelayMs > 0) {
-        await waitForDuration(resetDelayMs);
-      }
+    button.addEventListener("click", () => {
       resetPackingState();
     });
 
@@ -5140,7 +4423,6 @@ function bindPackingUI() {
 
       if (checkbox.checked) {
         packingState[itemId] = true;
-        triggerPackingItemBambooFeedback(itemElement);
       } else {
         delete packingState[itemId];
       }
@@ -5806,10 +5088,6 @@ function triggerChecklistInteractionFeedback(input) {
   restartClassOnNextFrame(checkItem, "is-feedback-active");
   restartClassOnNextFrame(dayCard, "is-check-feedback");
 
-  if (input.checked) {
-    triggerChecklistItemBambooFeedback(checkItem);
-  }
-
   window.setTimeout(() => {
     checkItem.classList.remove("is-feedback-active");
     dayCard.classList.remove("is-check-feedback");
@@ -5823,42 +5101,6 @@ function isDesktopBambooHammerAvailable(pointerType = "") {
 function syncDesktopBambooHammerState() {
   const isEnabled = isDesktopBambooHammerAvailable();
   root.classList.toggle("is-bamboo-hammer-ready", isEnabled);
-}
-
-function triggerChecklistItemBambooFeedback(checkItem) {
-  if (!checkItem || aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  ensureEffectLayer(checkItem, "bamboo-celebration", createBambooCelebrationLayer, {
-    clip: true
-  });
-
-  if (!canTriggerInteractionEffect(checkItem, "check-item-bamboo", 240)) {
-    return;
-  }
-
-  triggerTimedClassEffect(checkItem, "is-bamboo-celebrating", bambooCelebrationDurationMs, {
-    force: true
-  });
-}
-
-function triggerPackingItemBambooFeedback(itemElement) {
-  if (!itemElement || aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  ensureEffectLayer(itemElement, "bamboo-celebration", createBambooCelebrationLayer, {
-    clip: true
-  });
-
-  if (!canTriggerInteractionEffect(itemElement, "packing-item-bamboo", 240)) {
-    return;
-  }
-
-  triggerTimedClassEffect(itemElement, "is-bamboo-celebrating", bambooCelebrationDurationMs, {
-    force: true
-  });
 }
 
 function handleChecklistPanelPointerMove(event) {
@@ -5917,22 +5159,12 @@ function syncChecklistProgressTransitions({
   previousCompletedDays = new Set(),
   previousCurrentDay = String(currentProgressDay)
 } = {}) {
-  Array.from(unlockedDays)
-    .filter((unlockedDay) => !previousUnlockedDays.has(unlockedDay))
-    .forEach((unlockedDay) => {
-      animateUnlock(progressItemMap.get(unlockedDay));
-      animateUnlock(dayCardMap.get(unlockedDay));
-    });
+  void previousUnlockedDays;
+  void previousCompletedDays;
 
   if (String(currentProgressDay) !== previousCurrentDay) {
     lastTimelineFocusDay = null;
   }
-
-  Array.from(completedDays)
-    .filter((completedDay) => !previousCompletedDays.has(completedDay))
-    .forEach((completedDay) => {
-      celebrateCompletedDay(completedDay);
-    });
 }
 
 function markAllChecklistItemsChecked() {
@@ -8529,30 +7761,6 @@ function restartClassOnNextFrame(target, className) {
   pendingClassRestarts.set(target, nextRestart);
 }
 
-function animateCompletion(target) {
-  if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  target.classList.remove("is-celebrating", "is-unlocking");
-  restartClassOnNextFrame(target, "is-celebrating");
-  window.setTimeout(() => {
-    target.classList.remove("is-celebrating");
-  }, 920);
-}
-
-function animateUnlock(target) {
-  if (!target || aggressivePerformanceMode || reducedEffectsEnabled) {
-    return;
-  }
-
-  target.classList.remove("is-unlocking");
-  restartClassOnNextFrame(target, "is-unlocking");
-  window.setTimeout(() => {
-    target.classList.remove("is-unlocking");
-  }, 1200);
-}
-
 function showToastNotice(message) {
   if (!sequenceNotice) {
     return;
@@ -8758,7 +7966,6 @@ function setResetModalOpen(isOpen) {
 
 function resetTripProgress() {
   checklistState = {};
-  clearFullChecklistCelebration();
 
   if (initializedSections.has("checklist")) {
     getChecklistInputs().forEach((input) => {
@@ -8986,11 +8193,6 @@ function refreshChecklistProgressState(options = {}) {
   warningDays = nextWarningDays;
   accessibleDay = nextAccessibleDay;
   currentProgressDay = nextCurrentDay;
-  syncFullChecklistCompletionState(rawCompleted);
-}
-
-function celebrateCompletedDay(day) {
-  animateCompletion(progressItemMap.get(String(day)));
 }
 
 async function scrollToChecklistDay(day, { emphasizeCurrentDay = false } = {}) {
@@ -9015,12 +8217,9 @@ async function scrollToChecklistDay(day, { emphasizeCurrentDay = false } = {}) {
 
       targetCard.classList.remove("is-route-target");
       restartClassOnNextFrame(targetCard, "is-route-target");
-      if (emphasizeCurrentDay) {
-        triggerCurrentDayCelebration(targetCard);
-      }
       window.setTimeout(() => {
         targetCard.classList.remove("is-route-target");
-      }, Math.max(1400, emphasizeCurrentDay ? checklistJumpHighlightDurationMs : 0));
+      }, 1400);
     });
   });
 }
@@ -9173,7 +8372,6 @@ function applyTheme(theme, options = {}) {
 }
 
 function handleLanguageButtonClick(button) {
-  triggerHeaderBambooGlow(button);
   lockHeaderState(280);
   preserveScrollPosition(() => {
     setLanguage(button.dataset.setLanguage);
@@ -9355,18 +8553,11 @@ function bindTabNavigation() {
         return;
       }
 
-      triggerHeaderBambooGlow(tab);
       await activatePanel(panelId);
       scrollToPanelStart(panelId);
     });
 
     tab.dataset.navigationBound = "true";
-  });
-}
-
-function waitForDuration(durationMs) {
-  return new Promise((resolve) => {
-    window.setTimeout(resolve, durationMs);
   });
 }
 
@@ -9488,12 +8679,6 @@ if (checklistMarkAllButton) {
   });
 }
 
-checklistToolbarButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    triggerHeaderBambooGlow(button);
-  });
-});
-
 resetProgressOpenButtons.forEach((button) => {
   button.addEventListener("click", () => {
     lastResetTrigger = button;
@@ -9508,11 +8693,7 @@ if (resetProgressCancelButton) {
 }
 
 if (resetProgressConfirmButton) {
-  resetProgressConfirmButton.addEventListener("click", async () => {
-    const resetDelayMs = triggerBambooResetEffect(mainContent, { viewport: true }) ? 160 : 0;
-    if (resetDelayMs > 0) {
-      await waitForDuration(resetDelayMs);
-    }
+  resetProgressConfirmButton.addEventListener("click", () => {
     resetTripProgress();
   });
 }

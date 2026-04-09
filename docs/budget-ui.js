@@ -12,17 +12,6 @@ const budgetTravelersInput = document.querySelector("[data-budget-travelers]");
 const budgetTravelersPerRoomInput = document.querySelector("[data-budget-travelers-per-room]");
 const budgetIncludeExtrasInput = document.querySelector("[data-budget-include-extras]");
 const budgetStepButtons = Array.from(document.querySelectorAll("[data-budget-step-target]"));
-const budgetSoundRuntimeGlobal = "__JAPAN_PLAY_BUDGET_SOUND__";
-const playBudgetInteractionSound = (tone = "positive") => {
-  if (typeof window[budgetSoundRuntimeGlobal] === "function") {
-    window[budgetSoundRuntimeGlobal](tone);
-  }
-};
-const triggerBudgetStepperEffect = (stepperElement, effectName, sourceButton) => {
-  if (typeof window.__JAPAN_TRIGGER_BUDGET_STEPPER_EFFECT__ === "function") {
-    window.__JAPAN_TRIGGER_BUDGET_STEPPER_EFFECT__(stepperElement, effectName, sourceButton);
-  }
-};
 const budgetDisplayExchangeRates = {
   cadPerJpy: 1 / 109,
   usdPerJpy: 1 / 149
@@ -1051,49 +1040,6 @@ const itineraryBudgetLabels = {
     };
   };
   const getBudgetEstimateTotal = () => calculateEstimate().total;
-  const resolveBudgetInteractionTone = (
-    previousTotal,
-    nextTotal,
-    fallbackTone = "positive"
-  ) => {
-    const normalizedPreviousTotal = Number(previousTotal);
-    const normalizedNextTotal = Number(nextTotal);
-
-    if (
-      !Number.isFinite(normalizedPreviousTotal) ||
-      !Number.isFinite(normalizedNextTotal) ||
-      Math.abs(normalizedNextTotal - normalizedPreviousTotal) < 1
-    ) {
-      return fallbackTone;
-    }
-
-    return normalizedNextTotal < normalizedPreviousTotal ? "positive" : "counter";
-  };
-  const playBudgetSoundForTotals = (
-    previousTotal,
-    nextTotal,
-    fallbackTone = "positive"
-  ) => {
-    playBudgetInteractionSound(
-      resolveBudgetInteractionTone(previousTotal, nextTotal, fallbackTone)
-    );
-  };
-  const captureBudgetEstimateBaseline = (control) => {
-    if (!control) {
-      return;
-    }
-
-    control.dataset.budgetEstimateBaseline = String(getBudgetEstimateTotal());
-  };
-  const consumeBudgetEstimateBaseline = (control) => {
-    if (!control) {
-      return Number.NaN;
-    }
-
-    const previousTotal = Number.parseFloat(control.dataset.budgetEstimateBaseline || "");
-    delete control.dataset.budgetEstimateBaseline;
-    return previousTotal;
-  };
   const renderSummaryMarkup = (estimate = calculateEstimate()) => {
     const summaryCards = [
       {
@@ -1509,9 +1455,6 @@ const itineraryBudgetLabels = {
     }
 
     if (budgetTravelersInput && budgetTravelersInput.dataset.itineraryBudgetBound !== "true") {
-      budgetTravelersInput.addEventListener("focus", () => {
-        captureBudgetEstimateBaseline(budgetTravelersInput);
-      });
       budgetTravelersInput.addEventListener("input", () => {
         const parsedValue = Number.parseInt(budgetTravelersInput.value, 10);
         if (Number.isNaN(parsedValue)) {
@@ -1527,13 +1470,6 @@ const itineraryBudgetLabels = {
       budgetTravelersInput.addEventListener("blur", () => {
         syncControls();
       });
-      budgetTravelersInput.addEventListener("change", () => {
-        playBudgetSoundForTotals(
-          consumeBudgetEstimateBaseline(budgetTravelersInput),
-          getBudgetEstimateTotal(),
-          getTravelerCount() <= budgetDefaultTravelerCount ? "positive" : "counter"
-        );
-      });
       budgetTravelersInput.dataset.itineraryBudgetBound = "true";
     }
 
@@ -1541,9 +1477,6 @@ const itineraryBudgetLabels = {
       budgetTravelersPerRoomInput &&
       budgetTravelersPerRoomInput.dataset.itineraryBudgetBound !== "true"
     ) {
-      budgetTravelersPerRoomInput.addEventListener("focus", () => {
-        captureBudgetEstimateBaseline(budgetTravelersPerRoomInput);
-      });
       budgetTravelersPerRoomInput.addEventListener("input", () => {
         const parsedValue = Number.parseInt(budgetTravelersPerRoomInput.value, 10);
         if (Number.isNaN(parsedValue)) {
@@ -1557,13 +1490,6 @@ const itineraryBudgetLabels = {
       });
       budgetTravelersPerRoomInput.addEventListener("blur", () => {
         syncControls();
-      });
-      budgetTravelersPerRoomInput.addEventListener("change", () => {
-        playBudgetSoundForTotals(
-          consumeBudgetEstimateBaseline(budgetTravelersPerRoomInput),
-          getBudgetEstimateTotal(),
-          getTravelersPerRoom() >= budgetSharedRoomOccupancy ? "positive" : "counter"
-        );
       });
       budgetTravelersPerRoomInput.dataset.itineraryBudgetBound = "true";
     }
@@ -1580,12 +1506,9 @@ const itineraryBudgetLabels = {
           return;
         }
 
-        const previousTotal = getBudgetEstimateTotal();
         let nextValue = null;
-        let effectName = "";
         if (target === "travelers" && budgetTravelersInput) {
           nextValue = clamp(getTravelerCount() + delta, 1, 24);
-          effectName = delta > 0 ? "travelers-add" : "travelers-remove";
           if (nextValue === getTravelerCount()) {
             return;
           }
@@ -1595,23 +1518,11 @@ const itineraryBudgetLabels = {
 
         if (target === "travelers-per-room" && budgetTravelersPerRoomInput) {
           nextValue = clamp(getTravelersPerRoom() + delta, 1, getTravelerCount());
-          effectName = delta > 0 ? "room-savings" : "room-cost";
           if (nextValue === getTravelersPerRoom()) {
             return;
           }
           budgetTravelersPerRoomInput.value = String(nextValue);
           budgetTravelersPerRoomInput.dispatchEvent(new Event("input", { bubbles: true }));
-        }
-
-        if (nextValue !== null) {
-          playBudgetSoundForTotals(
-            previousTotal,
-            getBudgetEstimateTotal(),
-            effectName === "travelers-remove" || effectName === "room-savings"
-              ? "positive"
-              : "counter"
-          );
-          triggerBudgetStepperEffect(button.closest(".budget-stepper"), effectName, button);
         }
       });
 
@@ -1620,13 +1531,7 @@ const itineraryBudgetLabels = {
 
     if (budgetIncludeExtrasInput && budgetIncludeExtrasInput.dataset.itineraryBudgetBound !== "true") {
       budgetIncludeExtrasInput.addEventListener("change", () => {
-        const previousTotal = getBudgetEstimateTotal();
         commitSettings();
-        playBudgetSoundForTotals(
-          previousTotal,
-          getBudgetEstimateTotal(),
-          budgetIncludeExtrasInput.checked ? "counter" : "positive"
-        );
       });
       budgetIncludeExtrasInput.dataset.itineraryBudgetBound = "true";
     }
@@ -1641,9 +1546,7 @@ const itineraryBudgetLabels = {
           return;
         }
 
-        const previousTotal = getBudgetEstimateTotal();
         resetState();
-        playBudgetSoundForTotals(previousTotal, getBudgetEstimateTotal(), "positive");
       });
       button.dataset.itineraryBudgetBound = "true";
     });
@@ -1661,14 +1564,12 @@ const itineraryBudgetLabels = {
       }
 
       const day = stayControl.dataset.budgetStayOption || stayControl.dataset.budgetStaySelect;
-      const previousTotal = getBudgetEstimateTotal();
       updateDayState(day, {
         ...getDayState(day),
         stayId: stayControl.value
       });
       syncControls();
       syncUI();
-      playBudgetSoundForTotals(previousTotal, getBudgetEstimateTotal());
     });
 
     budgetDaysNode.addEventListener("input", (event) => {
