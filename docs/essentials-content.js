@@ -342,8 +342,8 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
             "ja": "確認した中で最安だった正確一致ホテルページ。共有ルーム料金として使う前提です"
           },
           "price": {
-            "en": "From JPY 8,598 / night",
-            "ja": "1泊 JPY 8,598から"
+            "en": "From JPY 10,000 / night",
+            "ja": "1泊 JPY 10,000から"
           },
           "kind": "primary"
         }

@@ -114,10 +114,10 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       }
     },
     "tokyo-base-hotel": {
-      "amount": 8598,
+      "amount": 10000,
       "range": {
-        "lean": 8598,
-        "expected": 8598,
+        "lean": 10000,
+        "expected": 10000,
         "high": 12000
       },
       "roomCapacity": 2,
@@ -443,7 +443,7 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       },
       "cost": {
         "mode": "perGroup",
-        "amount": 8598,
+        "amount": 10000,
         "sourceCostId": "tokyo-base-hotel"
       }
     },

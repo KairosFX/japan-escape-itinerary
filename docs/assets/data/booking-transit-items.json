@@ -160,7 +160,7 @@
         "href": "https://www.trip.com/hotels/tokyo-hotel-detail-15935455/the-onefive-tokyo-shibuya",
         "label": { "en": "Trip.com hotel page", "ja": "Trip.comホテルページ" },
         "note": { "en": "Lowest reviewed safe exact-match hotel page; use as a shared-room quote", "ja": "確認した中で最安だった正確一致ホテルページ。共有ルーム料金として使う前提です" },
-        "price": { "en": "From JPY 8,598 / night", "ja": "1泊 JPY 8,598から" },
+        "price": { "en": "From JPY 10,000 / night", "ja": "1泊 JPY 10,000から" },
         "kind": "primary"
       }
     ]
