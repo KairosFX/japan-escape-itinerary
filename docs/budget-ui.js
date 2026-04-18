@@ -12,8 +12,8 @@ const budgetTravelersInput = document.querySelector("[data-budget-travelers]");
 const budgetTravelersPerRoomInput = document.querySelector("[data-budget-travelers-per-room]");
 const budgetStepButtons = Array.from(document.querySelectorAll("[data-budget-step-target]"));
 const budgetDisplayExchangeRates = {
-  cadPerJpy: 1 / 109,
-  usdPerJpy: 1 / 149
+  cadPerJpy: 0.00864,
+  usdPerJpy: 0.00628
 };
 const budgetCategoryDefinitions = [
   {
@@ -134,8 +134,8 @@ const itineraryBudgetLabels = {
   },
   dayViewerHint: { en: "", ja: "" },
   totalMeta: {
-    en: "Cheapest practical route-wide total across every day in the Day Budget Viewer.",
-    ja: "Day Budget Viewer に表示される全日程のうち、最も控えめで現実的な合計を表示しています。"
+    en: "Cheapest practical route-wide total including booked, required, and baseline flexible spending across every day in the Day Budget Viewer.",
+    ja: "Day Budget Viewer の全日程で、予約前提・必須・基準の変動費まで含めた控えめで現実的な合計を表示しています。"
   },
   noPaidAccommodationMeta: {
     en: "No paid hotel or ryokan stays are selected right now.",
@@ -324,7 +324,8 @@ const itineraryBudgetLabels = {
     );
   const hasBudgetRangeValue = (range) =>
     budgetRangeLevels.some((definition) => getBudgetRangeValue(range, definition.id) > 0);
-  const isCoreBudgetBucket = (bucketId) => bucketId === "booked" || bucketId === "required";
+  const isCoreBudgetBucket = (bucketId) =>
+    bucketId === "booked" || bucketId === "required" || bucketId === "flexible";
   const getCoreBudgetDayItems = (itemEstimates = []) =>
     itemEstimates.filter(
       (item) => item?.itemCost?.included && isCoreBudgetBucket(item.bucket)

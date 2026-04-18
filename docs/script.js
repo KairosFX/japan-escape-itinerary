@@ -3853,23 +3853,53 @@ function renderTripNotes() {
   }
 
   const notesMarkup = tripNoteDefinitions
-    .map(
-      (definition) => `
+    .map((definition) => {
+      const routeDay = getRouteDayReference(definition.day);
+      return `
         <article class="note-card note-card--trip card" data-trip-note-day="${definition.day}">
-          <div class="note-card__meta-row">
-            <span class="note-card__pill">${root.lang === "ja" ? `${definition.day}日目` : `Day ${definition.day}`}</span>
-            <span class="note-card__pill note-card__pill--route">${root.lang === "ja" ? "参照" : "Reference"}</span>
+          <div class="note-card__head">
+            <div class="note-card__meta-row">
+              <span class="note-card__pill">${root.lang === "ja" ? `${definition.day}日目` : `Day ${definition.day}`}</span>
+              <span class="note-card__pill note-card__pill--route">${root.lang === "ja" ? "順路" : "Sequence"}</span>
+            </div>
+            <h3>${renderLocalizedContent(definition.title)}</h3>
           </div>
-          <h3>${renderLocalizedContent(definition.title)}</h3>
+          ${renderTripNoteStopSummary(routeDay)}
           <p>${renderLocalizedContent(definition.summary)}</p>
         </article>
-      `
-    )
+      `;
+    })
     .join("");
 
   tripNotesGridNode.innerHTML = notesMarkup;
   syncLocalizedNodes(tripNotesGridNode);
   syncTripNotesWorkspace();
+}
+
+function renderTripNoteStopSummary(routeDay) {
+  const stopSummary = getCompactRouteDayStops(routeDay);
+  if (!stopSummary?.length) {
+    return "";
+  }
+
+  const renderStops = (language) =>
+    stopSummary
+      .map((stop) => escapeHtml(stop?.[language] || ""))
+      .filter(Boolean)
+      .join(" · ");
+
+  return `
+    <p class="note-card__route-line">
+      <span class="note-card__route-label">${renderLocalizedContent({
+        en: "Flow",
+        ja: "流れ"
+      })}</span>
+      <span class="note-card__route-stops">
+        <span data-language="en">${renderStops("en")}</span>
+        <span data-language="ja" hidden>${renderStops("ja")}</span>
+      </span>
+    </p>
+  `;
 }
 
 function refreshTripNotesIfReady() {
@@ -9062,9 +9092,9 @@ function waitForDuration(durationMs) {
 }
 
 function getSiteGateTimings() {
-  const inputRevealDelayMs = reducedEffectsEnabled ? 120 : 680;
-  const unlockDurationMs = reducedEffectsEnabled ? 180 : 780;
-  const rejectDurationMs = reducedEffectsEnabled ? 220 : 720;
+  const inputRevealDelayMs = reducedEffectsEnabled ? 120 : 360;
+  const unlockDurationMs = reducedEffectsEnabled ? 180 : 680;
+  const rejectDurationMs = reducedEffectsEnabled ? 220 : 560;
 
   return {
     inputRevealDelayMs,
@@ -9415,9 +9445,11 @@ async function animatePanelTransition(previousPanelId, nextPanelId) {
   await new Promise((resolve) => {
     gsapRuntime.to(previousPanel, {
       autoAlpha: 0,
-      x: -26 * direction,
-      y: 10,
-      duration: 0.22,
+      scale: 0.992,
+      filter: "blur(12px)",
+      x: -34 * direction,
+      y: 12,
+      duration: 0.26,
       ease: "power2.inOut",
       overwrite: "auto",
       onComplete: resolve
@@ -9430,7 +9462,7 @@ async function animatePanelTransition(previousPanelId, nextPanelId) {
   }
 
   gsapRuntime.set(previousPanel, {
-    clearProps: "opacity,transform,visibility"
+    clearProps: "opacity,transform,visibility,filter"
   });
 
   setActivePanel(nextPanelId);
@@ -9443,16 +9475,20 @@ async function animatePanelTransition(previousPanelId, nextPanelId) {
 
   gsapRuntime.set(nextPanel, {
     autoAlpha: 0,
-    x: 28 * direction,
-    y: 14
+    scale: 0.986,
+    filter: "blur(16px)",
+    x: 38 * direction,
+    y: 18
   });
 
   await new Promise((resolve) => {
     gsapRuntime.to(nextPanel, {
       autoAlpha: 1,
+      scale: 1,
+      filter: "blur(0px)",
       x: 0,
       y: 0,
-      duration: 0.34,
+      duration: 0.42,
       ease: "power3.out",
       overwrite: "auto",
       onComplete: resolve
@@ -9460,7 +9496,7 @@ async function animatePanelTransition(previousPanelId, nextPanelId) {
   });
 
   gsapRuntime.set(nextPanel, {
-    clearProps: "opacity,transform,visibility"
+    clearProps: "opacity,transform,visibility,filter"
   });
 
   mainContent?.style.removeProperty("--panel-transition-height");

@@ -114,19 +114,19 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "この宿は、京都という大枠ではなく、四条烏丸の動線適性で選んでいます。"
       },
       "details": {
-        "en": "Use one Booking.com Karasuma results page so you can compare multiple Shijo / Karasuma options inside Booking.com while keeping Day 2 Higashiyama access and the Day 3 Arashiyama -> Osaka flow aligned to the same route logic.",
-        "ja": "京都泊は Booking.com の烏丸エリア検索結果ページを1つだけ使い、サイト側はリンクを増やさずに、2日目の東山アクセスと3日目の嵐山 -> 大阪の流れに合う候補を Booking.com 内で比較できるようにします。"
+        "en": "Use the direct Booking.com property page for Keio Prelia Hotel Kyoto Karasuma-Gojo as the current low-cost route-fit pick. It stays close to the Karasuma / Gojo side for the Day 2 Higashiyama sweep while still keeping the Day 3 Arashiyama -> Osaka flow practical.",
+        "ja": "現在の低コスト候補として、Keio Prelia Hotel Kyoto Karasuma-Gojo の Booking.com 直リンクを使います。烏丸・五条寄りに置くことで、2日目の東山回遊と3日目の嵐山 -> 大阪の流れをどちらも進めやすくしています。"
       },
       "links": [
         {
-          "href": "https://www.booking.com/district/jp/kyoto/karasuma.html",
+          "href": "https://www.booking.com/hotel/jp/keio-prelia-hotel-kyoto-karasuma-gojo.html",
           "label": {
-            "en": "Karasuma area results",
-            "ja": "烏丸エリアの検索結果"
+            "en": "Keio Prelia Hotel Kyoto Karasuma-Gojo",
+            "ja": "Keio Prelia Hotel Kyoto Karasuma-Gojo"
           },
           "note": {
-            "en": "Booking.com results page with multiple Kyoto hotel options around Karasuma for this stop.",
-            "ja": "この滞在に合う烏丸周辺の京都ホテルを Booking.com 内で複数比較できる検索結果ページです。"
+            "en": "Direct Booking.com page for the current low-cost Kyoto route-fit stay.",
+            "ja": "現在の京都の動線向き低コスト候補へ直接飛ぶ Booking.com ページです。"
           },
           "kind": "primary"
         }
@@ -239,27 +239,27 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "予約済み"
       },
       "title": {
-        "en": "Mt. Fuji Onsen",
-        "ja": "富士山温泉"
+        "en": "Kawaguchiko Stay",
+        "ja": "河口湖ステイ"
       },
       "summary": {
         "en": "The base is chosen for station-to-lake practicality so the Day 3 Kawaguchiko arrival stays calm while the Day 4 Fuji-area stops and Tokyo handoff still fit cleanly after the overnight reset.",
         "ja": "3日目の河口湖到着を落ち着いて進めつつ、宿で整えたあとに4日目の富士エリア立ち寄りと東京移動まで無理なくつなげられるよう、駅から湖側の動きで拠点を選んでいます。"
       },
       "details": {
-        "en": "Use one Booking.com Funatsu results page so you can compare multiple Mt. Fuji area stays inside Booking.com while keeping the Day 3 Mishima handoff, onsen reset, and Day 4 lake-side plan aligned to the same corridor.",
-        "ja": "富士エリアは Booking.com の船津エリア検索結果ページを1つだけ使い、サイト側はリンクを増やさずに、3日目の三島ハンドオフ、温泉での立て直し、4日目の湖側プランに合う候補を Booking.com 内で比較できるようにします。"
+        "en": "Use the direct Booking.com property page for HaoStay Kawaguchiko Station as the current low-cost practical base. It keeps the Day 3 Mishima handoff calm and leaves the Day 4 Fuji-area stops plus the Tokyo return easy to sequence from one station-near base.",
+        "ja": "現在の実用的な低コスト候補として、HaoStay Kawaguchiko Station の Booking.com 直リンクを使います。駅に近い拠点に置くことで、3日目の三島ハンドオフを落ち着いて受けつつ、4日目の富士エリア立ち寄りと東京戻りも一つの流れで組みやすくなります。"
       },
       "links": [
         {
-          "href": "https://www.booking.com/city/jp/funatsu.html",
+          "href": "https://www.booking.com/hotel/jp/haostayhe-kou-hu-yi-qian.html",
           "label": {
-            "en": "Funatsu / Kawaguchiko results",
-            "ja": "船津・河口湖の検索結果"
+            "en": "HaoStay Kawaguchiko Station",
+            "ja": "HaoStay Kawaguchiko Station"
           },
           "note": {
-            "en": "Booking.com results page with multiple Funatsu-side stays for the Mt. Fuji stop.",
-            "ja": "この富士エリア滞在に合う船津側の宿を Booking.com 内で複数比較できる検索結果ページです。"
+            "en": "Direct Booking.com page for the current low-cost Kawaguchiko base near station access.",
+            "ja": "駅アクセスに近い現在の河口湖低コスト候補へ直接飛ぶ Booking.com ページです。"
           },
           "kind": "primary"
         }
@@ -319,19 +319,19 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "東京ホテル泊は4日目、5日目、6日目に置き、4日目の渋谷到着、続く観光日、そして帰国前の軽い7日目を同じ拠点で回せるようにします。"
       },
       "details": {
-        "en": "Use one Booking.com Shibuya Area results page so you can compare multiple Tokyo base options inside Booking.com while keeping the Day 4 arrival, Days 5-6 sightseeing, and the Day 7 exit centered on the same Shibuya-side handoff.",
-        "ja": "東京泊は Booking.com の渋谷エリア検索結果ページを1つだけ使い、サイト側はリンクを増やさずに、4日目の到着、5-6日目の観光、7日目の出発に合う候補を Booking.com 内で比較できるようにします。"
+        "en": "Use the direct Booking.com property page for The OneFive Tokyo Shibuya as the current low-cost Shibuya-side base. It keeps the Day 4 arrival, Days 5-6 sightseeing, and the Day 7 exit centered on one practical Tokyo handoff instead of a generic district search.",
+        "ja": "現在の渋谷側低コスト候補として、The OneFive Tokyo Shibuya の Booking.com 直リンクを使います。汎用的な地区検索ではなく、4日目の到着、5-6日目の観光、7日目の出発を一つの実用的な東京拠点でまとめやすくします。"
       },
       "links": [
         {
-          "href": "https://www.booking.com/searchresults.html?dest_id=3046&dest_type=district&from_district=1&redirected=1&source=district",
+          "href": "https://www.booking.com/hotel/jp/emit-shibuya.html",
           "label": {
-            "en": "Shibuya Area results",
-            "ja": "渋谷エリアの検索結果"
+            "en": "The OneFive Tokyo Shibuya",
+            "ja": "The OneFive Tokyo Shibuya"
           },
           "note": {
-            "en": "Booking.com results page with multiple Shibuya-area hotels for the Day 4-6 Tokyo base.",
-            "ja": "4日目から6日目の東京拠点に合う渋谷エリアのホテルを Booking.com 内で複数比較できる検索結果ページです。"
+            "en": "Direct Booking.com page for the current low-cost Shibuya-side Tokyo base.",
+            "ja": "現在の渋谷側東京拠点の低コスト候補へ直接飛ぶ Booking.com ページです。"
           },
           "kind": "primary"
         }
@@ -383,23 +383,23 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "3日目の三島ハンドオフから河口湖へ入るための、固定の都市間予約として扱います。"
       },
       "details": {
-        "en": "Use the Trip.com Shin-Osaka -> Mishima route page once Day 3 timing is fixed. It keeps the exact station pair open with live timetable and fares for the Day 3 handoff.",
-        "ja": "3日目の時刻が固まったら、Trip.com の新大阪 -> 三島ルートページを使います。駅ペアが最初から選択された状態で開き、3日目の受け渡しに必要なライブ時刻表と運賃を確認できます。"
+        "en": "Use SmartEX once Day 3 timing is fixed. The official current baseline for a Shin-Osaka -> Mishima reserved seat on Hikari or Kodama is JPY 12,100 in regular season, so this card now points to the official booking flow instead of a reseller route page.",
+        "ja": "3日目の時刻が固まったら SmartEX を使います。新大阪 -> 三島の Hikari または Kodama 指定席は、現在の通常期基準で JPY 12,100 なので、このカードも外部販売ページではなく公式予約導線へ変更しています。"
       },
       "links": [
         {
-          "href": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/",
+          "href": "https://smart-ex.jp/en/lp/app/",
           "label": {
-            "en": "Trip.com route page",
-            "ja": "Trip.comルートページ"
+            "en": "SmartEX official booking",
+            "ja": "SmartEX公式予約"
           },
           "note": {
-            "en": "Working exact-match Trip.com route page for Shin-Osaka -> Mishima",
-            "ja": "新大阪 -> 三島の動作する Trip.com 正確ルートページ"
+            "en": "Official JR Central SmartEX route and booking entry for the Shin-Osaka -> Mishima shinkansen leg.",
+            "ja": "新大阪 -> 三島の新幹線区間に使う JR東海 SmartEX の公式予約導線です。"
           },
           "price": {
-            "en": "From JPY 12,272 / person",
-            "ja": "1人 JPY 12,272から"
+            "en": "JPY 12,100 / person",
+            "ja": "1人 JPY 12,100"
           },
           "kind": "primary"
         }
@@ -518,19 +518,19 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "4日目の東京入りを保存しておき、富士側のまとまりのあとも渋谷到着とホテルチェックインへ入りやすくします。"
       },
       "details": {
-        "en": "Use the Trip.com Shibuya MARK CITY direct bus page for the simplest one-step move toward Shibuya/Tokyo. It keeps the exact bus product open instead of a generic operator landing page.",
-        "ja": "渋谷・東京方面へ最も単純に戻るなら、Trip.com の渋谷マークシティ直通バスページが使いやすいです。汎用的な運行トップではなく、該当バス商品ページをそのまま開けます。"
+        "en": "Use the official Tokyu Bus highway page for the simplest Shibuya-side return. The current tourist highway listing shows the Shibuya / Futakotamagawa -> Kawaguchiko fare from JPY 2,000 one way, so this card now points to the official bus operator page instead of a reseller ticket page.",
+        "ja": "渋谷側へ最も単純に戻るなら、Tokyu Bus の公式高速バスページを使います。現在の観光向け高速バス案内では、渋谷・二子玉川 -> 河口湖が片道 JPY 2,000 からなので、このカードも外部販売ページではなく公式運行ページへ変更しています。"
       },
       "links": [
         {
-          "href": "https://us.trip.com/things-to-do/detail/102425674?districtId=294&districtType=1&language=EN&locale=en_us",
+          "href": "https://www.tokyubus.co.jp/tourist/highway/",
           "label": {
-            "en": "Trip.com direct bus",
-            "ja": "Trip.com直通バス"
+            "en": "Tokyu Bus highway page",
+            "ja": "Tokyu Bus 高速バス案内"
           },
           "note": {
-            "en": "Trip.com Shibuya MARK CITY <-> Kawaguchiko bus ticket page",
-            "ja": "渋谷マークシティ <-> 河口湖の Trip.com バスチケットページ"
+            "en": "Official Shibuya-side highway bus page for Kawaguchiko-bound service.",
+            "ja": "河口湖方面の渋谷側高速バスを案内する Tokyu Bus 公式ページです。"
           },
           "kind": "primary"
         }
@@ -704,8 +704,8 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "スカイツリーは6日目の観光メイン日に入ったため、公式チケットページをすぐ見られるようにしておきます。"
       },
       "details": {
-        "en": "Use the official Skytree ticket page if you want a timed booking instead of deciding on the spot.",
-        "ja": "現地判断ではなく時間指定で押さえたいなら、公式チケットページを使います。"
+        "en": "Use the official Skytree ticket page if you want a timed booking instead of deciding on the spot. The current online Tembo Deck adult ticket starts from JPY 1,800, with higher same-day options if you buy on site.",
+        "ja": "現地判断ではなく時間指定で押さえたいなら、公式チケットページを使います。現在の天望デッキ大人オンライン券は JPY 1,800 からで、当日現地購入はそれより高い枠があります。"
       },
       "links": [
         {
@@ -719,8 +719,8 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
             "ja": "時間指定チケット案内"
           },
           "price": {
-            "en": "JPY 2,100-2,300 / adult",
-            "ja": "大人 JPY 2,100-2,300"
+            "en": "From JPY 1,800 / adult online",
+            "ja": "大人 JPY 1,800から（オンライン）"
           },
           "kind": "primary"
         }
@@ -831,8 +831,8 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "三島駅"
       },
       "transport": {
-        "en": "Tokaido Shinkansen; reserve if you want a specific Hikari departure or luggage-friendly seat. Treat Shin-Osaka -> Mishima as the fixed Day 3 rail commitment and keep the exact train details saved in one place.",
-        "ja": "東海道新幹線。Hikari の時刻や荷物を置きやすい席を押さえたいなら指定席基準で考えます。新大阪 -> 三島を3日目の固定鉄道移動として扱い、列車情報は一か所にまとめて保存します。"
+        "en": "Tokaido Shinkansen via SmartEX or JR Central's online flow. The current regular-season reserved-seat baseline for Shin-Osaka -> Mishima on Hikari or Kodama is JPY 12,100, so treat this as the fixed Day 3 rail commitment and keep the train details saved in one place.",
+        "ja": "SmartEX または JR東海のオンライン導線で押さえる東海道新幹線です。新大阪 -> 三島の Hikari または Kodama 指定席は、現在の通常期基準で JPY 12,100 なので、これを3日目の固定鉄道移動として扱い、列車情報は一か所にまとめて保存します。"
       },
       "why": {
         "en": "It keeps Day 3 as one clear eastbound move, shortens the long leg, and leaves the local Kawaguchiko access decisions for after the rail arrival.",
@@ -844,8 +844,8 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
           "ja": "接続を詰めすぎず、少し余裕が残る便を基準にします。"
         },
         {
-          "en": "Lock the seat from Shin-Osaka once the morning Osaka departure flow is fixed, and keep Mishima as the fixed handoff point.",
-          "ja": "朝の大阪側の出発動線が固まったら新大阪発で座席を押さえ、受け渡し先は三島で固定しておきます。"
+          "en": "Lock the seat in SmartEX once the morning Osaka departure flow is fixed, and keep Mishima as the fixed handoff point.",
+          "ja": "朝の大阪側の出発動線が固まったら SmartEX で新大阪発の座席を押さえ、受け渡し先は三島で固定しておきます。"
         },
         {
           "en": "Keep seats, train number, and luggage notes saved in one place on your phone.",
@@ -854,8 +854,8 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
       ],
       "prepReminders": [
         {
-          "en": "Book once Day 3 is fixed rather than leaving the Kansai-to-Fuji handoff to the last minute.",
-          "ja": "3日目が固まったら予約し、関西から富士側への受け渡しを直前判断にしないようにします。"
+          "en": "Book in SmartEX once Day 3 is fixed rather than leaving the Kansai-to-Fuji handoff to the last minute.",
+          "ja": "3日目が固まったら SmartEX で予約し、関西から富士側への受け渡しを直前判断にしないようにします。"
         },
         {
           "en": "Save the next local step toward Kawaguchiko so the arrival platform decision stays simple.",
@@ -873,10 +873,10 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         }
       ],
       "action": {
-        "href": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/",
+        "href": "https://smart-ex.jp/en/lp/app/",
         "label": {
-          "en": "Open Trip.com route page",
-          "ja": "Trip.comルートページを開く"
+          "en": "Open SmartEX",
+          "ja": "SmartEXを開く"
         }
       }
     },
@@ -1059,8 +1059,8 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         "ja": "東京・渋谷側"
       },
       "transport": {
-        "en": "Direct highway bus or rail depending on the timing that best fits your Day 4 Shibuya arrival. The direct bus anchor is around JPY 2,200 one way.",
-        "ja": "4日目の渋谷到着に合わせやすい時刻を優先して、直通高速バスまたは鉄道を選びます。直通バスの目安は片道約2,200円です。"
+        "en": "Direct highway bus is the cleanest default if you want the simplest Shibuya arrival, with rail as fallback when timings fit better. The current Tokyu Bus tourist highway page shows Shibuya / Futakotamagawa -> Kawaguchiko fares from JPY 2,000 one way.",
+        "ja": "渋谷到着を最も単純にしたいなら、基本は直通高速バスで、時刻が合いにくい時だけ鉄道を代替にします。現在の Tokyu Bus 観光向け高速バス案内では、渋谷・二子玉川 -> 河口湖が片道 JPY 2,000 からです。"
       },
       "why": {
         "en": "It keeps the west-to-east flow intact, gets you into Tokyo cleanly on Day 4, and leaves Day 5 open for the West Tokyo block while Day 6 stays free for the fuller east-side city day.",
@@ -1082,8 +1082,8 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
       ],
       "prepReminders": [
         {
-          "en": "Save the direct bus page first if you want the simplest one-step handoff into Tokyo.",
-          "ja": "東京へ一段で入りたいなら、まず直通バスのページを保存しておきます。"
+          "en": "Save the official Tokyu Bus page first if you want the simplest one-step handoff into Tokyo.",
+          "ja": "東京へ一段で入りたいなら、まず Tokyu Bus の公式ページを保存しておきます。"
         },
         {
           "en": "Keep one rail fallback saved in case the bus timing stops fitting your day.",
@@ -1101,10 +1101,10 @@ window.__JAPAN_ESSENTIALS_CONTENT__ = {
         }
       ],
       "action": {
-        "href": "https://us.trip.com/things-to-do/detail/102425674?districtId=294&districtType=1&language=EN&locale=en_us",
+        "href": "https://www.tokyubus.co.jp/tourist/highway/",
         "label": {
-          "en": "Open Trip.com direct bus",
-          "ja": "Trip.com直通バスを開く"
+          "en": "Open Tokyu Bus page",
+          "ja": "Tokyu Bus案内を開く"
         }
       }
     }

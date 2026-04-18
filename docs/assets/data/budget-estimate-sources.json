@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-04-09",
+  "lastUpdated": "2026-04-18",
   "updatedCopy": {
-    "en": "Accommodation, meals, transit, and ticket references updated Apr 9, 2026",
-    "ja": "宿泊・食費・移動・チケットの基準は2026年4月9日更新"
+    "en": "Transit, ticket, and booking-link references updated Apr 18, 2026",
+    "ja": "移動・チケット・予約リンクの基準は2026年4月18日更新"
   },
   "metaCopy": {
-    "en": "The old total was inflated mainly because the model stretched the route too far instead of matching the fixed 7-day west-to-east flow through Osaka, Kyoto, the Mt. Fuji area, and Tokyo.",
-    "ja": "以前の合計が膨らんでいた主因は、大阪、京都、富士エリア、東京をつなぐ固定7日間の西から東への流れに合わせず、旅程を広げすぎていたことです。"
+    "en": "The route itself is fixed, but hotel prices remain the unstable part until exact travel dates are locked. This refresh keeps the route-fit stay baselines while replacing the live booking links with current low-cost candidates and official transit sources.",
+    "ja": "ルート自体は固定ですが、宿泊価格は正確な日程を入れない限り変動が大きい部分です。今回の更新では、動線に合う滞在基準額は残しつつ、ライブの予約リンクを現在の低コスト候補と公式移動ソースへ差し替えています。"
   },
   "helperCopy": {
-    "en": "Each day keeps its own stay selector, the accommodation split control still treats the saved hotel amounts as shared-room quotes for group math, and each live hotel link now opens one Booking.com area-results page per stay so you can compare multiple options there without cluttering the site.",
-    "ja": "各日に滞在セレクターを残し、宿泊費の分け方コントロールでは保存したホテル金額を引き続き共有ルーム料金として扱い、ホテルのライブリンクは各滞在ごとに Booking.com のエリア検索結果ページを1つだけ開く形へ変更して、サイト側を散らかさずに Booking.com 内で複数候補を比較できるようにしています。"
+    "en": "Each day still keeps its own stay selector, the accommodation split control still treats the saved hotel amounts as shared-room quotes for group math, and the hotel links now jump directly to one current low-cost route-fit property per stop. Because no exact travel dates are locked, treat the stored hotel figures as baseline planning numbers and verify the live checkout total before booking.",
+    "ja": "各日に滞在セレクターを残し、宿泊費の分け方コントロールでは保存したホテル金額を引き続き共有ルーム料金として扱い、ホテルのライブリンクは各滞在ごとに現在の低コスト候補へ直接飛ぶ形に更新しています。正確な旅行日程が未確定のため、保存しているホテル金額は計画用の基準値として扱い、実際の予約前にライブの合計金額を必ず確認してください。"
   },
   "assumptionCopy": {
-    "en": "The cost model matches one fixed 7-day route through Osaka, Kyoto, the Mt. Fuji area, and Tokyo.",
-    "ja": "費用モデルは、大阪、京都、富士エリア、東京を回る固定の7日間ルートに合わせています。"
+    "en": "The cost model matches one fixed 7-day Osaka -> Kyoto -> Mt. Fuji -> Tokyo route and treats hotel amounts as baseline quotes until your exact stay dates are chosen.",
+    "ja": "費用モデルは、大阪 -> 京都 -> 富士エリア -> 東京の固定7日間ルートに合わせ、ホテル金額は実際の日程を決めるまで基準見積りとして扱います。"
   },
   "costIndex": {
     "osaka-compact-hotel": {
@@ -38,15 +38,15 @@
         "ja": "大阪で有料宿が必要な時はこの立地を使います。四ツ橋・西心斎橋寄りなら、1日目のミナミ散策と3日目の大阪側の動きに合いやすく、無関係な地区のホテルより実用的です。"
       },
       "assumption": {
-        "en": "Used only if you switch a private/local or no-cost Osaka night to a paid hotel. The saved amount still tracks the current Minami-side fallback room quote, while the live Booking.com link now opens Shinsaibashi area results so you can compare multiple route-fitting options there.",
-        "ja": "大阪のローカル・プライベート滞在や宿泊費なしの夜を有料ホテルへ切り替える時だけ使います。保存金額は引き続きミナミ側の基準ルーム料金に合わせつつ、ライブの Booking.com リンクは心斎橋エリアの検索結果ページを開き、実際の動線に合う候補を複数比較できるようにしています。"
+        "en": "Used only if you switch a private/local or no-cost Osaka night to a paid hotel. The saved amount still tracks a low-end Minami-side baseline room quote, while the live Booking.com link now jumps straight to Via Inn Prime Shinsaibashi Yotsubashi as the current route-fit value pick.",
+        "ja": "大阪のローカル・プライベート滞在や宿泊費なしの夜を有料ホテルへ切り替える時だけ使います。保存金額は引き続きミナミ側の低め基準ルーム料金に合わせつつ、ライブの Booking.com リンクは現在の動線に合う低コスト候補として Via Inn Prime Shinsaibashi Yotsubashi を直接開きます。"
       },
       "source": {
         "label": {
-          "en": "Booking.com Shinsaibashi results",
-          "ja": "Booking.com 心斎橋エリア検索結果"
+          "en": "Booking.com: Via Inn Prime Shinsaibashi Yotsubashi",
+          "ja": "Booking.com: Via Inn Prime Shinsaibashi Yotsubashi"
         },
-        "url": "https://www.booking.com/district/jp/osaka/shinsaibashi.html"
+        "url": "https://www.booking.com/hotel/jp/via-inn-shinsaibashi-yotsubashi.html"
       }
     },
     "kyoto-midrange-hotel": {
@@ -70,15 +70,15 @@
         "ja": "四条烏丸は、2日目の京都東側へ出やすく、3日目の嵐山と大阪戻りにも地下鉄・阪急・JRの選択肢を取りやすいため、実際の動線に合います。"
       },
       "assumption": {
-        "en": "Day 2 keeps its saved amount anchored to the current Shijo / Karasuma baseline shared-room quote, while the live Booking.com link now opens Karasuma area results so you can compare multiple Kyoto options without leaving the intended route pocket.",
-        "ja": "2日目の保存金額は引き続き四条烏丸の基準共有ルーム料金に合わせつつ、ライブの Booking.com リンクは烏丸エリアの検索結果ページを開き、想定した動線から外れずに京都の複数候補を比較できるようにしています。"
+        "en": "Day 2 keeps its saved amount anchored to the Shijo / Karasuma baseline shared-room quote, while the live Booking.com link now opens Keio Prelia Hotel Kyoto Karasuma-Gojo as the current low-cost route-fit pick.",
+        "ja": "2日目の保存金額は引き続き四条烏丸の基準共有ルーム料金に合わせつつ、ライブの Booking.com リンクは現在の低コスト候補として Keio Prelia Hotel Kyoto Karasuma-Gojo を直接開きます。"
       },
       "source": {
         "label": {
-          "en": "Booking.com Karasuma results",
-          "ja": "Booking.com 烏丸エリア検索結果"
+          "en": "Booking.com: Keio Prelia Hotel Kyoto Karasuma-Gojo",
+          "ja": "Booking.com: Keio Prelia Hotel Kyoto Karasuma-Gojo"
         },
-        "url": "https://www.booking.com/district/jp/kyoto/karasuma.html"
+        "url": "https://www.booking.com/hotel/jp/keio-prelia-hotel-kyoto-karasuma-gojo.html"
       }
     },
     "kawaguchiko-base-hotel": {
@@ -102,15 +102,15 @@
         "ja": "このエリアなら、3日目の三島ハンドオフに加え、4日目の忠霊塔・下吉田と河口湖のまとまりも進めやすく、実際の動線に合いにくい遠いリゾート立地へ余計に払わずに済みます。"
       },
       "assumption": {
-        "en": "Day 3 keeps its saved amount anchored to the current Funatsu-side baseline shared-room quote, while the live Booking.com link now opens Funatsu results so you can compare multiple Kawaguchiko-area stays that still preserve the onsen reset and station-to-lake flow.",
-        "ja": "3日目の保存金額は引き続き船津側の基準共有ルーム料金に合わせつつ、ライブの Booking.com リンクは船津エリアの検索結果ページを開き、温泉での立て直しと駅から湖側への流れを崩さない複数候補を比較できるようにしています。"
+        "en": "Day 3 keeps its saved amount anchored to the Kawaguchiko-side baseline shared-room quote, while the live Booking.com link now opens HaoStay Kawaguchiko Station as the current low-cost practical base near the station and lake access.",
+        "ja": "3日目の保存金額は引き続き河口湖側の基準共有ルーム料金に合わせつつ、ライブの Booking.com リンクは駅と湖側アクセスを両立しやすい現在の低コスト候補として HaoStay Kawaguchiko Station を直接開きます。"
       },
       "source": {
         "label": {
-          "en": "Booking.com Funatsu results",
-          "ja": "Booking.com 船津エリア検索結果"
+          "en": "Booking.com: HaoStay Kawaguchiko Station",
+          "ja": "Booking.com: HaoStay Kawaguchiko Station"
         },
-        "url": "https://www.booking.com/city/jp/funatsu.html"
+        "url": "https://www.booking.com/hotel/jp/haostayhe-kou-hu-yi-qian.html"
       }
     },
     "tokyo-base-hotel": {
@@ -134,33 +134,33 @@
         "ja": "今回のルートは4日目に渋谷へ入り、東京ホテル泊は4日目、5日目、6日目に置くため、渋谷中心部の拠点なら到着夜とその後の東京日程を拠点変更なしでまとめやすくなります。"
       },
       "assumption": {
-        "en": "Tokyo keeps its saved amount aligned to the current Shibuya/Jinnan baseline room quote, while the live Booking.com link now opens Shibuya Area results so you can compare multiple Day 4-6 base options inside the same Tokyo handoff zone.",
-        "ja": "東京の保存金額は引き続き渋谷・神南側の基準ルーム料金に合わせつつ、ライブの Booking.com リンクは渋谷エリアの検索結果ページを開き、4日目から6日目の拠点候補を同じ受け渡し圏内で複数比較できるようにしています。"
+        "en": "Tokyo keeps its saved amount aligned to the Shibuya/Jinnan baseline room quote, while the live Booking.com link now opens The OneFive Tokyo Shibuya as the current low-cost Shibuya-side starting point. Exact Tokyo pricing remains date-sensitive, so confirm the live total before locking it.",
+        "ja": "東京の保存金額は引き続き渋谷・神南側の基準ルーム料金に合わせつつ、ライブの Booking.com リンクは現在の低コストな渋谷側候補として The OneFive Tokyo Shibuya を直接開きます。東京価格は日程依存が特に強いため、確定前にライブの合計額を確認してください。"
       },
       "source": {
         "label": {
-          "en": "Booking.com Shibuya Area results",
-          "ja": "Booking.com 渋谷エリア検索結果"
+          "en": "Booking.com: The OneFive Tokyo Shibuya",
+          "ja": "Booking.com: The OneFive Tokyo Shibuya"
         },
-        "url": "https://www.booking.com/searchresults.html?dest_id=3046&dest_type=district&from_district=1&redirected=1&source=district"
+        "url": "https://www.booking.com/hotel/jp/emit-shibuya.html"
       }
     },
     "tokyo-subway-24h": {
-      "amount": 800,
+      "amount": 1000,
       "pricingTier": {
         "en": "Official 24-hour ticket",
         "ja": "公式の24時間券"
       },
       "assumption": {
-        "en": "Day 6 can use the current Tokyo Subway 24-hour Ticket adult fare of JPY 800 if you want the Skytree, Solamachi, and Akihabara cluster on one pass.",
-        "ja": "6日目は、スカイツリー、ソラマチ、秋葉原のまとまりを1枚で動くなら、東京サブウェイ24時間券の現在の大人料金800円を使えます。"
+        "en": "Day 6 can use the current Tokyo Subway 24-hour Ticket adult fare of JPY 1,000. Tokyo Metro's current visitor ticket page shows the fare revision that took effect on March 14, 2026.",
+        "ja": "6日目は、現在の東京サブウェイ24時間券大人料金 JPY 1,000 を使えます。Tokyo Metro の現行訪日客向けページでは、2026年3月14日からの改定後料金が案内されています。"
       },
       "source": {
         "label": {
-          "en": "Tokyo Subway Ticket",
-          "ja": "東京サブウェイチケット"
+          "en": "Tokyo Subway Ticket (current)",
+          "ja": "東京サブウェイチケット（現行）"
         },
-        "url": "https://www.tokyometro.jp/ticket/value/travel/index.html"
+        "url": "https://www.tokyometro.jp/en/ticket/travel/index.html"
       }
     }
   },
@@ -172,37 +172,37 @@
         "ja": "宿泊予約導線"
       },
       "summary": {
-        "en": "The base stay plan is now explicit: private/local or no-cost Osaka night on Day 1 unless switched, Kyoto hotel on Day 2, one Mt. Fuji area stay on Day 3, Tokyo hotel nights on Days 4-6, and no paid stay by default on the Day 7 flight-home wrap-up. Saved hotel amounts still stay stored as shared-room quotes before the travellers-per-room split, while each live Booking.com hotel link now opens one area-specific results page with multiple matching options.",
-        "ja": "基本の滞在計画を明示しました。1日目の大阪は、切り替えない限りローカル・プライベート滞在または宿泊費なし、2日目は京都ホテル、3日目は富士エリア宿泊、東京ホテルは4日目から6日目で、7日目は帰国日のため初期値では有料宿泊を入れていません。保存したホテル金額も引き続き1室を何人で分けるかの計算前の共有ルーム料金として扱い、ライブの Booking.com ホテルリンクは各滞在ごとに複数候補を比較できるエリア検索結果ページを1つだけ開くようにしています。"
+        "en": "The base stay plan is now explicit: private/local or no-cost Osaka night on Day 1 unless switched, Kyoto hotel on Day 2, one Mt. Fuji area stay on Day 3, Tokyo hotel nights on Days 4-6, and no paid stay by default on the Day 7 flight-home wrap-up. Saved hotel amounts still stay stored as shared-room quotes before the travellers-per-room split, but the live links now open one current low-cost route-fit property per stop instead of a generic area search.",
+        "ja": "基本の滞在計画を明示しました。1日目の大阪は、切り替えない限りローカル・プライベート滞在または宿泊費なし、2日目は京都ホテル、3日目は富士エリア宿泊、東京ホテルは4日目から6日目で、7日目は帰国日のため初期値では有料宿泊を入れていません。保存したホテル金額も引き続き1室を何人で分けるかの計算前の共有ルーム料金として扱い、ライブリンクは汎用的なエリア検索ではなく、各滞在ごとの現在の低コスト候補を直接開く形にしています。"
       },
       "links": [
         {
           "label": {
-            "en": "Booking.com Shinsaibashi results",
-            "ja": "Booking.com 心斎橋エリア検索結果"
+            "en": "Via Inn Prime Shinsaibashi Yotsubashi",
+            "ja": "Via Inn Prime Shinsaibashi Yotsubashi"
           },
-          "url": "https://www.booking.com/district/jp/osaka/shinsaibashi.html"
+          "url": "https://www.booking.com/hotel/jp/via-inn-shinsaibashi-yotsubashi.html"
         },
         {
           "label": {
-            "en": "Booking.com Karasuma results",
-            "ja": "Booking.com 烏丸エリア検索結果"
+            "en": "Keio Prelia Hotel Kyoto Karasuma-Gojo",
+            "ja": "Keio Prelia Hotel Kyoto Karasuma-Gojo"
           },
-          "url": "https://www.booking.com/district/jp/kyoto/karasuma.html"
+          "url": "https://www.booking.com/hotel/jp/keio-prelia-hotel-kyoto-karasuma-gojo.html"
         },
         {
           "label": {
-            "en": "Booking.com Funatsu results",
-            "ja": "Booking.com 船津エリア検索結果"
+            "en": "HaoStay Kawaguchiko Station",
+            "ja": "HaoStay Kawaguchiko Station"
           },
-          "url": "https://www.booking.com/city/jp/funatsu.html"
+          "url": "https://www.booking.com/hotel/jp/haostayhe-kou-hu-yi-qian.html"
         },
         {
           "label": {
-            "en": "Booking.com Shibuya Area results",
-            "ja": "Booking.com 渋谷エリア検索結果"
+            "en": "The OneFive Tokyo Shibuya",
+            "ja": "The OneFive Tokyo Shibuya"
           },
-          "url": "https://www.booking.com/searchresults.html?dest_id=3046&dest_type=district&from_district=1&redirected=1&source=district"
+          "url": "https://www.booking.com/hotel/jp/emit-shibuya.html"
         }
       ]
     },
@@ -225,16 +225,16 @@
         "ja": "主要移動の確認先"
       },
       "summary": {
-        "en": "Day 3 now carries the full eastbound transfer into the Mt. Fuji base, and Day 4 then keeps Chureito Shimoyoshida, Lake Kawaguchiko, and the Tokyo handoff in one clean sequence.",
-        "ja": "3日目は富士エリア拠点までの東向き移動をまとめ、4日目は忠霊塔・下吉田、河口湖、東京への受け渡しを一つの流れに整理しました。"
+        "en": "Day 3 now carries the full eastbound transfer into the Mt. Fuji base, and Day 4 then keeps Chureito Shimoyoshida, Lake Kawaguchiko, and the Tokyo handoff in one clean sequence. The live links now prioritize official SmartEX, official highway-bus pages, and working official bus search results where possible.",
+        "ja": "3日目は富士エリア拠点までの東向き移動をまとめ、4日目は忠霊塔・下吉田、河口湖、東京への受け渡しを一つの流れに整理しました。ライブリンクも、可能な限り SmartEX 公式、高速バス公式、動作する公式バス検索結果を優先しています。"
       },
       "links": [
         {
           "label": {
-            "en": "Trip.com Shin-Osaka -> Mishima",
-            "ja": "Trip.com 新大阪 -> 三島"
+            "en": "SmartEX Shinkansen booking",
+            "ja": "SmartEX 新幹線予約"
           },
-          "url": "https://us.trip.com/trains/japan/route/shin-osaka-to-mishima/"
+          "url": "https://smart-ex.jp/en/lp/app/"
         },
         {
           "label": {
@@ -252,10 +252,10 @@
         },
         {
           "label": {
-            "en": "Trip.com Shibuya <-> Kawaguchiko bus",
-            "ja": "Trip.com 渋谷 <-> 河口湖バス"
+            "en": "Tokyu Bus Shibuya -> Kawaguchiko",
+            "ja": "Tokyu Bus 渋谷 -> 河口湖"
           },
-          "url": "https://us.trip.com/things-to-do/detail/102425674?districtId=294&districtType=1&language=EN&locale=en_us"
+          "url": "https://www.tokyubus.co.jp/tourist/highway/"
         },
         {
           "label": {
@@ -273,8 +273,8 @@
         "ja": "チケットと時間帯"
       },
       "summary": {
-        "en": "Shibuya Sky and Tokyo Skytree are the main timed tickets in the fixed route, while Kaiyukan remains a simpler Day 3 same-day ticket check. SHIBUYA SKY now points back to the official ticket page instead of a reseller page.",
-        "ja": "固定ルートで主な時間指定チケットになるのは渋谷スカイと東京スカイツリーで、海遊館は3日目に当日判断しやすいチケットとして残しています。SHIBUYA SKY は再販ページではなく公式チケットページへ戻しています。"
+        "en": "Shibuya Sky and Tokyo Skytree are the main timed tickets in the fixed route, while Kaiyukan remains a simpler Day 3 same-day ticket check. The current official Tokyo Skytree deck ticket now starts from JPY 1,800 online, while Kaiyukan's current official adult ticket remains JPY 2,700.",
+        "ja": "固定ルートで主な時間指定チケットになるのは渋谷スカイと東京スカイツリーで、海遊館は3日目に当日判断しやすいチケットとして残しています。現在の東京スカイツリー公式天望デッキ券はオンラインで JPY 1,800 から、海遊館の公式大人料金は JPY 2,700 のままです。"
       },
       "links": [
         {
@@ -779,11 +779,11 @@
           "sourceGroup": "core-transit",
           "cost": {
             "mode": "perPerson",
-            "amount": 12272,
+            "amount": 12100,
             "range": {
-              "lean": 8578,
-              "expected": 12272,
-              "high": 12272
+              "lean": 11900,
+              "expected": 12100,
+              "high": 12500
             }
           }
         },
@@ -891,10 +891,10 @@
           "sourceGroup": "core-transit",
           "cost": {
             "mode": "perPerson",
-            "amount": 2200,
+            "amount": 2000,
             "range": {
-              "lean": 2100,
-              "expected": 2200,
+              "lean": 2000,
+              "expected": 2000,
               "high": 4130
             }
           }
@@ -1040,7 +1040,7 @@
           "sourceGroup": "core-transit",
           "cost": {
             "mode": "perPerson",
-            "amount": 800,
+            "amount": 1000,
             "sourceCostId": "tokyo-subway-24h"
           }
         },
@@ -1054,10 +1054,10 @@
           "sourceGroup": "tickets",
           "cost": {
             "mode": "perPerson",
-            "amount": 2100,
+            "amount": 1800,
             "range": {
-              "lean": 2100,
-              "expected": 2100,
+              "lean": 1800,
+              "expected": 1800,
               "high": 2300
             }
           }
