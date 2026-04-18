@@ -2922,10 +2922,10 @@ html.reduce-effects .site-gate__form-shell {
     min-height: 3.05rem;
   }
 }</style>
-  <link rel="preload" href="./assets/app/style.7f3d3808bd.css" as="style" fetchpriority="high">
-  <link rel="preload" href="./assets/app/script.08b7ddf309.js" as="script" fetchpriority="high">
-  <link rel="stylesheet" href="./assets/app/style.7f3d3808bd.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.7f3d3808bd.css"></noscript>
+  <link rel="preload" href="./assets/app/style.08c2e2e9d2.css" as="style" fetchpriority="high">
+  <link rel="preload" href="./assets/app/script.ec2f0a7438.js" as="script" fetchpriority="high">
+  <link rel="stylesheet" href="./assets/app/style.08c2e2e9d2.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.08c2e2e9d2.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -3006,6 +3006,16 @@ html.reduce-effects .site-gate__form-shell {
   </div>
   <header class="site-header">
     <div class="header-inner">
+      <div class="brand-block">
+        <p class="header-brand-kicker">
+          <span data-language="en">Kairos VIII</span>
+          <span data-language="ja" hidden>Kairos VIII</span>
+        </p>
+        <p class="header-brand-title">
+          <span data-language="en">Japan Escape Itinerary</span>
+          <span data-language="ja" hidden>Japan Escape Itinerary</span>
+        </p>
+      </div>
       <div class="header-actions">
         <nav
           class="section-nav"
@@ -3013,66 +3023,71 @@ html.reduce-effects .site-gate__form-shell {
           aria-label="Page sections"
           data-aria-label-en="Page sections"
           data-aria-label-ja="ページ内セクション">
-          <button
-            class="section-tab is-active"
-            type="button"
-            role="tab"
-            aria-selected="true"
-            aria-controls="overview"
-            data-panel-target="overview">
-            <span data-language="en">Overview</span>
-            <span data-language="ja" hidden>概要</span>
-          </button>
-          <button
-            class="section-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            aria-controls="checklist"
-            data-panel-target="checklist">
-            <span data-language="en">Checklist</span>
-            <span data-language="ja" hidden>チェックリスト</span>
-          </button>
-          <button
-            class="section-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            aria-controls="notes"
-            data-panel-target="notes">
-            <span data-language="en">Notes</span>
-            <span data-language="ja" hidden>メモ</span>
-          </button>
-          <button
-            class="section-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            aria-controls="budget"
-            data-panel-target="budget">
-            <span data-language="en">Budget</span>
-            <span data-language="ja" hidden>予算</span>
-          </button>
-          <button
-            class="section-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            aria-controls="route"
-            data-panel-target="route">
-            <span data-language="en">Route</span>
-            <span data-language="ja" hidden>地図</span>
-          </button>
-          <button
-            class="section-tab"
-            type="button"
-            role="tab"
-            aria-selected="false"
-            aria-controls="essentials"
-            data-panel-target="essentials">
-            <span data-language="en">Essentials</span>
-            <span data-language="ja" hidden>準備</span>
-          </button>
+          <div class="section-nav__viewport" data-section-nav-viewport>
+            <div class="section-nav__track" data-section-nav-track>
+              <span class="section-nav__indicator" data-section-nav-indicator aria-hidden="true"></span>
+              <button
+                class="section-tab is-active"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="overview"
+                data-panel-target="overview">
+                <span data-language="en">Overview</span>
+                <span data-language="ja" hidden>概要</span>
+              </button>
+              <button
+                class="section-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="checklist"
+                data-panel-target="checklist">
+                <span data-language="en">Checklist</span>
+                <span data-language="ja" hidden>チェックリスト</span>
+              </button>
+              <button
+                class="section-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="notes"
+                data-panel-target="notes">
+                <span data-language="en">Notes</span>
+                <span data-language="ja" hidden>メモ</span>
+              </button>
+              <button
+                class="section-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="budget"
+                data-panel-target="budget">
+                <span data-language="en">Budget</span>
+                <span data-language="ja" hidden>予算</span>
+              </button>
+              <button
+                class="section-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="route"
+                data-panel-target="route">
+                <span data-language="en">Route</span>
+                <span data-language="ja" hidden>地図</span>
+              </button>
+              <button
+                class="section-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="essentials"
+                data-panel-target="essentials">
+                <span data-language="en">Essentials</span>
+                <span data-language="ja" hidden>準備</span>
+              </button>
+            </div>
+          </div>
         </nav>
 
         <div class="header-controls">
@@ -3730,7 +3745,55 @@ html.reduce-effects .site-gate__form-shell {
       </div>
 
       <div class="notes-layout">
+        <section class="notes-studio card" aria-labelledby="notes-workspace-title">
+          <div class="notes-studio__head">
+            <div>
+              <p class="notes-studio__eyebrow">
+                <span data-language="en">Trip Workspace</span>
+                <span data-language="ja" hidden>旅のワークスペース</span>
+              </p>
+              <h3 id="notes-workspace-title">
+                <span data-language="en">Private itinerary notes</span>
+                <span data-language="ja" hidden>個人メモ</span>
+              </h3>
+            </div>
+            <div class="notes-studio__meta">
+              <span class="notes-studio__chip">
+                <span data-language="en">Editable</span>
+                <span data-language="ja" hidden>編集可</span>
+              </span>
+              <span class="notes-studio__chip">
+                <span data-language="en">Saved locally</span>
+                <span data-language="ja" hidden>端末に保存</span>
+              </span>
+            </div>
+          </div>
+          <label class="notes-editor" for="trip-notes-input">
+            <span class="notes-editor__label">
+              <span data-language="en">Keep booking refs, pivots, food stops, and reminders in one place.</span>
+              <span data-language="ja" hidden>予約情報、変更メモ、食事候補、リマインダーをひとつにまとめます。</span>
+            </span>
+            <textarea
+              id="trip-notes-input"
+              class="notes-editor__input"
+              data-trip-notes-input
+              rows="12"
+              data-placeholder-en="Capture anything you want at hand during the trip."
+              data-placeholder-ja="旅の途中ですぐ見返したいことを自由にメモしてください。"></textarea>
+          </label>
+          <p class="notes-editor__status" data-trip-notes-status aria-live="polite"></p>
+        </section>
         <section class="notes-block notes-block--trip">
+          <div class="notes-block__heading">
+            <h3>
+              <span data-language="en">Day-by-day reference cards</span>
+              <span data-language="ja" hidden>日ごとの参照カード</span>
+            </h3>
+            <p>
+              <span data-language="en">Quick context for each stop, ready to scan while moving.</span>
+              <span data-language="ja" hidden>移動中でもすぐ確認できる日別の要点をまとめています。</span>
+            </p>
+          </div>
           <div class="notes-grid" data-trip-notes-grid aria-live="polite"></div>
         </section>
       </div>
@@ -4467,10 +4530,10 @@ html.reduce-effects .site-gate__form-shell {
   </footer>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"backgroundLoopAudioPath":"./assets/app/page-background-loop.bcde8dff98.mp3","backgroundLoopAudioCssPath":"./page-background-loop.bcde8dff98.mp3","backgroundLoopAudioHash":"bcde8dff98","transitionAudioPath":"./assets/app/transition.9afc15ad27.mp3","transitionAudioCssPath":"./transition.9afc15ad27.mp3","transitionAudioHash":"9afc15ad27","stylePath":"./assets/app/style.7f3d3808bd.css","styleHash":"7f3d3808bd","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.08b7ddf309.js","scriptHash":"08b7ddf309","routeContentPath":"./assets/app/routeContent.1dc928afbe.js","routeContentHash":"1dc928afbe","budgetUiPath":"./assets/app/budgetUi.8fe1e14d4c.js","budgetUiHash":"8fe1e14d4c","budgetContentPath":"./assets/app/budgetContent.d91100f3c0.js","budgetContentHash":"d91100f3c0","essentialsContentPath":"./assets/app/essentialsContent.3fbb242831.js","essentialsContentHash":"3fbb242831","generatedAt":"2026-04-18T03:08:41.357Z","cacheVersion":"7f3d3808bd-2d8476cd59-08b7ddf309-1dc928afbe-8fe1e14d4c-d91100f3c0-3fbb242831-bcde8dff98-9afc15ad27"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"backgroundLoopAudioPath":"./assets/app/page-background-loop.bcde8dff98.mp3","backgroundLoopAudioCssPath":"./page-background-loop.bcde8dff98.mp3","backgroundLoopAudioHash":"bcde8dff98","transitionAudioPath":"./assets/app/transition.9afc15ad27.mp3","transitionAudioCssPath":"./transition.9afc15ad27.mp3","transitionAudioHash":"9afc15ad27","stylePath":"./assets/app/style.08c2e2e9d2.css","styleHash":"08c2e2e9d2","routeStylePath":"./assets/app/routeStyle.2d8476cd59.css","routeStyleHash":"2d8476cd59","scriptPath":"./assets/app/script.ec2f0a7438.js","scriptHash":"ec2f0a7438","routeContentPath":"./assets/app/routeContent.1dc928afbe.js","routeContentHash":"1dc928afbe","budgetUiPath":"./assets/app/budgetUi.8fe1e14d4c.js","budgetUiHash":"8fe1e14d4c","budgetContentPath":"./assets/app/budgetContent.d91100f3c0.js","budgetContentHash":"d91100f3c0","essentialsContentPath":"./assets/app/essentialsContent.3fbb242831.js","essentialsContentHash":"3fbb242831","generatedAt":"2026-04-18T17:18:05.987Z","cacheVersion":"08c2e2e9d2-2d8476cd59-ec2f0a7438-1dc928afbe-8fe1e14d4c-d91100f3c0-3fbb242831-bcde8dff98-9afc15ad27"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
-  <script src="./assets/app/script.08b7ddf309.js" defer></script>
+  <script src="./assets/app/script.ec2f0a7438.js" defer></script>
   <!-- build:inline-script:end -->
 </body>
 </html>

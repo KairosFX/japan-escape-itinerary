@@ -2,6 +2,10 @@ const languageButtons = document.querySelectorAll("[data-set-language]");
 const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const appleWebAppTitleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
 const sectionTabs = Array.from(document.querySelectorAll("[data-panel-target]"));
+const sectionNav = document.querySelector(".section-nav");
+const sectionNavViewport = document.querySelector("[data-section-nav-viewport]");
+const sectionNavTrack = document.querySelector("[data-section-nav-track]");
+const sectionNavIndicator = document.querySelector("[data-section-nav-indicator]");
 const contentPanels = Array.from(document.querySelectorAll("[data-panel]"));
 const siteHeader = document.querySelector(".site-header");
 const headerAccessoryGroups = Array.from(document.querySelectorAll(".language-switcher"));
@@ -38,6 +42,8 @@ const transitDetailContentNode = document.querySelector("[data-transit-detail-co
 const transitDetailActionLink = document.querySelector("[data-transit-detail-action]");
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
 const tripNotesGridNode = document.querySelector("[data-trip-notes-grid]");
+const tripNotesInput = document.querySelector("[data-trip-notes-input]");
+const tripNotesStatus = document.querySelector("[data-trip-notes-status]");
 const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-section]"));
 const checklistTab = sectionTabs.find((tab) => tab.dataset.panelTarget === "checklist") || null;
 const packingMarkAllButtons = Array.from(document.querySelectorAll("[data-packing-mark-all-global]"));
@@ -68,6 +74,7 @@ const activePanelStorageKey = `japan-trip-active-panel-${itineraryStateVersion}`
 const bookingTransitStorageKey = `japan-trip-bookings-transit-state-${itineraryStateVersion}`;
 const packingStorageKey = `japan-trip-packing-state-${itineraryStateVersion}`;
 const budgetNotesStorageKey = `japan-trip-budget-notes-${itineraryStateVersion}`;
+const tripNotesDraftStorageKey = `japan-trip-private-notes-${itineraryStateVersion}`;
 const fujiForecastSessionKey = `japan-trip-fuji-forecast-${itineraryStateVersion}`;
 const queuedStorageWrites = new Map();
 const headerReservedHeightFallbackPx = 156;
@@ -93,6 +100,7 @@ const routeContentFallbackScriptUrl = "./route-content.min.js";
 const routeStyleFallbackUrl = "./route.min.css";
 const backgroundLoopAudioFallbackUrl = "./assets/audio/page-background-loop.mp3";
 const transitionAudioFallbackUrl = "./assets/audio/transition.mp3";
+const gsapLibraryUrl = "https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js";
 const routeMapOriginUrl = "https://tiles.openfreemap.org";
 const routeMapStyleUrl = "https://tiles.openfreemap.org/styles/positron";
 const offlineSnapshotMode = root.hasAttribute("data-offline-snapshot");
@@ -129,6 +137,10 @@ let budgetSourceGroups = [];
 let budgetDayDefinitions = [];
 let tripNoteDefinitions = [];
 let tripNoteDefinitionMap = new Map();
+let tripNotesDraftState = { value: "", updatedAt: 0 };
+let tripNotesDraftInitialized = false;
+let panelTransitionToken = 0;
+let gsapLoadPromise = null;
 const fujiForecastCacheMaxAgeMs = 45 * 60 * 1000;
 const fujiForecastSourceUrl = "https://open-meteo.com/en/docs";
 const fujiForecastApiUrl = "https://api.open-meteo.com/v1/forecast";
@@ -3717,6 +3729,124 @@ function syncLocalizedDocumentTitle(language = root.lang) {
   }
 }
 
+function getDefaultTripNotesDraft() {
+  return {
+    value: "",
+    updatedAt: 0
+  };
+}
+
+function readStoredTripNotesDraft() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(tripNotesDraftStorageKey) || "null");
+    if (!parsed || typeof parsed !== "object") {
+      return getDefaultTripNotesDraft();
+    }
+
+    return {
+      value: typeof parsed.value === "string" ? parsed.value : "",
+      updatedAt: Number.isFinite(Number(parsed.updatedAt)) ? Number(parsed.updatedAt) : 0
+    };
+  } catch (error) {
+    return getDefaultTripNotesDraft();
+  }
+}
+
+function storeTripNotesDraft() {
+  try {
+    const nextValue = tripNotesDraftState.value.trim();
+    if (!nextValue && !tripNotesDraftState.updatedAt) {
+      queueStorageRemoval(tripNotesDraftStorageKey);
+      return;
+    }
+
+    queueStorageValue(
+      tripNotesDraftStorageKey,
+      JSON.stringify({
+        value: tripNotesDraftState.value,
+        updatedAt: tripNotesDraftState.updatedAt
+      })
+    );
+  } catch (error) {
+    // Ignore storage failures and keep editing available.
+  }
+}
+
+function formatTripNotesTimestamp(timestamp) {
+  if (!timestamp) {
+    return "";
+  }
+
+  try {
+    return new Intl.DateTimeFormat(root.lang === "ja" ? "ja-JP" : "en-CA", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit"
+    }).format(new Date(timestamp));
+  } catch (error) {
+    return "";
+  }
+}
+
+function syncTripNotesWorkspace() {
+  if (!tripNotesDraftInitialized) {
+    tripNotesDraftState = readStoredTripNotesDraft();
+    tripNotesDraftInitialized = true;
+  }
+
+  if (tripNotesInput) {
+    const placeholder =
+      root.lang === "ja"
+        ? tripNotesInput.dataset.placeholderJa
+        : tripNotesInput.dataset.placeholderEn;
+    tripNotesInput.setAttribute("placeholder", placeholder || "");
+
+    if (tripNotesInput.value !== tripNotesDraftState.value) {
+      tripNotesInput.value = tripNotesDraftState.value;
+    }
+  }
+
+  if (tripNotesStatus) {
+    const trimmedLength = tripNotesDraftState.value.trim().length;
+    const timestampLabel = formatTripNotesTimestamp(tripNotesDraftState.updatedAt);
+    tripNotesStatus.textContent = trimmedLength
+      ? root.lang === "ja"
+        ? `この端末に保存済み • ${trimmedLength}文字${timestampLabel ? ` • ${timestampLabel}` : ""}`
+        : `Saved locally on this device • ${trimmedLength} chars${timestampLabel ? ` • ${timestampLabel}` : ""}`
+      : root.lang === "ja"
+        ? "旅の途中で見返したいことをここに自由に書き留めておけます。"
+        : "Use this space for anything you want to keep close during the trip.";
+  }
+}
+
+function initializeTripNotesWorkspace() {
+  if (!tripNotesInput) {
+    return;
+  }
+
+  if (!tripNotesDraftInitialized) {
+    tripNotesDraftState = readStoredTripNotesDraft();
+    tripNotesDraftInitialized = true;
+  }
+
+  if (tripNotesInput.dataset.tripNotesBound !== "true") {
+    tripNotesInput.addEventListener("input", () => {
+      const nextValue = tripNotesInput.value;
+      tripNotesDraftState = {
+        value: nextValue,
+        updatedAt: nextValue.trim() ? Date.now() : 0
+      };
+      storeTripNotesDraft();
+      syncTripNotesWorkspace();
+    });
+
+    tripNotesInput.dataset.tripNotesBound = "true";
+  }
+
+  syncTripNotesWorkspace();
+}
+
 function renderTripNotes() {
   if (!tripNotesGridNode) {
     return;
@@ -3726,6 +3856,10 @@ function renderTripNotes() {
     .map(
       (definition) => `
         <article class="note-card note-card--trip card" data-trip-note-day="${definition.day}">
+          <div class="note-card__meta-row">
+            <span class="note-card__pill">${root.lang === "ja" ? `${definition.day}日目` : `Day ${definition.day}`}</span>
+            <span class="note-card__pill note-card__pill--route">${root.lang === "ja" ? "参照" : "Reference"}</span>
+          </div>
           <h3>${renderLocalizedContent(definition.title)}</h3>
           <p>${renderLocalizedContent(definition.summary)}</p>
         </article>
@@ -3735,6 +3869,7 @@ function renderTripNotes() {
 
   tripNotesGridNode.innerHTML = notesMarkup;
   syncLocalizedNodes(tripNotesGridNode);
+  syncTripNotesWorkspace();
 }
 
 function refreshTripNotesIfReady() {
@@ -5480,6 +5615,7 @@ async function initNotesSection() {
   }
 
   await ensureRouteContentLoaded();
+  initializeTripNotesWorkspace();
   renderTripNotes();
   registerRevealBlocks(panel);
 }
@@ -8717,6 +8853,7 @@ function setLanguage(language) {
   updateLanguageButtons(nextLanguage);
 
   storeLanguage(nextLanguage);
+  syncTripNotesWorkspace();
   refreshTripNotesIfReady();
   refreshBudgetNotesIfReady();
   refreshBookingTransitIfReady();
@@ -8771,6 +8908,9 @@ function setActivePanel(panelId) {
     tab.classList.toggle("is-active", isActive);
     tab.setAttribute("aria-selected", String(isActive));
   });
+
+  syncSectionNavIndicator();
+  scrollSectionTabIntoView();
 
   if (hasMatch) {
     if (initializedSections.has(panelId)) {
@@ -8981,6 +9121,8 @@ function unlockSiteGate() {
       siteGate.setAttribute("aria-hidden", "true");
     }
 
+    syncModalOpenState();
+
     if (siteGateUnlockResolver) {
       const resolve = siteGateUnlockResolver;
       siteGateUnlockResolver = null;
@@ -9068,6 +9210,157 @@ async function playSiteGate() {
   });
 }
 
+function getGsapRuntime() {
+  return window.gsap && typeof window.gsap.to === "function" ? window.gsap : null;
+}
+
+function ensureGsapLoaded() {
+  const runtime = getGsapRuntime();
+  if (runtime) {
+    return Promise.resolve(runtime);
+  }
+
+  if (gsapLoadPromise) {
+    return gsapLoadPromise;
+  }
+
+  gsapLoadPromise = new Promise((resolve) => {
+    const existingScript = document.querySelector(`script[src="${gsapLibraryUrl}"]`);
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(getGsapRuntime()), { once: true });
+      existingScript.addEventListener("error", () => resolve(null), { once: true });
+      return;
+    }
+
+    const scriptNode = document.createElement("script");
+    scriptNode.src = gsapLibraryUrl;
+    scriptNode.async = true;
+    scriptNode.onload = () => resolve(getGsapRuntime());
+    scriptNode.onerror = () => resolve(null);
+    document.head.appendChild(scriptNode);
+  });
+
+  return gsapLoadPromise;
+}
+
+function getPanelIndex(panelId) {
+  return sectionTabs.findIndex((tab) => tab.dataset.panelTarget === panelId);
+}
+
+function getActiveSectionTab() {
+  return sectionTabs.find((tab) => tab.classList.contains("is-active")) || null;
+}
+
+function scrollSectionTabIntoView(tab = getActiveSectionTab()) {
+  if (!sectionNavViewport || !tab) {
+    return;
+  }
+
+  tab.scrollIntoView({
+    behavior: reducedEffectsEnabled ? "auto" : "smooth",
+    block: "nearest",
+    inline: "center"
+  });
+}
+
+function syncSectionNavIndicator(options = {}) {
+  const { immediate = false } = options;
+  if (!sectionNavTrack || !sectionNavIndicator) {
+    return;
+  }
+
+  const activeTab = getActiveSectionTab();
+  if (!activeTab) {
+    sectionNavIndicator.style.opacity = "0";
+    return;
+  }
+
+  const nextX = activeTab.offsetLeft;
+  const nextWidth = activeTab.offsetWidth;
+  const gsapRuntime = getGsapRuntime();
+
+  if (!gsapRuntime || reducedEffectsEnabled || immediate) {
+    sectionNavIndicator.style.opacity = "1";
+    sectionNavIndicator.style.width = `${nextWidth}px`;
+    sectionNavIndicator.style.transform = `translate3d(${nextX}px, 0, 0)`;
+    return;
+  }
+
+  gsapRuntime.to(sectionNavIndicator, {
+    x: nextX,
+    width: nextWidth,
+    autoAlpha: 1,
+    duration: 0.46,
+    ease: "power3.out",
+    overwrite: "auto"
+  });
+}
+
+function animateSectionTabHover(tab, isActive) {
+  const gsapRuntime = getGsapRuntime();
+  if (!gsapRuntime || reducedEffectsEnabled || coarsePointerQuery.matches) {
+    return;
+  }
+
+  gsapRuntime.to(tab, {
+    y: isActive ? -2 : 0,
+    scale: isActive ? 1.018 : 1,
+    duration: isActive ? 0.2 : 0.26,
+    ease: "power2.out",
+    overwrite: "auto"
+  });
+}
+
+function pulseActiveSectionTab(tab) {
+  const gsapRuntime = getGsapRuntime();
+  if (!gsapRuntime || reducedEffectsEnabled || !tab) {
+    return;
+  }
+
+  gsapRuntime.fromTo(
+    tab,
+    { scale: 0.985 },
+    {
+      scale: 1.02,
+      duration: 0.18,
+      ease: "power2.out",
+      repeat: 1,
+      yoyo: true,
+      overwrite: "auto"
+    }
+  );
+}
+
+function bindSectionNavMotion() {
+  sectionTabs.forEach((tab) => {
+    if (tab.dataset.navMotionBound === "true") {
+      return;
+    }
+
+    tab.addEventListener("pointerenter", () => {
+      animateSectionTabHover(tab, true);
+    });
+
+    tab.addEventListener("pointerleave", () => {
+      animateSectionTabHover(tab, false);
+    });
+
+    tab.addEventListener("pointercancel", () => {
+      animateSectionTabHover(tab, false);
+    });
+
+    tab.addEventListener("pointerup", () => {
+      if (!tab.classList.contains("is-active")) {
+        animateSectionTabHover(tab, false);
+      }
+    });
+
+    tab.dataset.navMotionBound = "true";
+  });
+
+  syncSectionNavIndicator({ immediate: true });
+}
+
 function bindTabNavigation() {
   sectionTabs.forEach((tab) => {
     if (tab.dataset.navigationBound === "true") {
@@ -9080,7 +9373,10 @@ function bindTabNavigation() {
         return;
       }
 
-      await activatePanel(panelId);
+      const hasChanged = await activatePanel(panelId);
+      if (!hasChanged) {
+        pulseActiveSectionTab(tab);
+      }
       scrollToPanelStart(panelId);
     });
 
@@ -9092,6 +9388,84 @@ function clearSiteTransitionState() {
   delete root.dataset.siteTransitionDirection;
   delete root.dataset.siteTransitionMode;
 }
+
+async function animatePanelTransition(previousPanelId, nextPanelId) {
+  const nextPanel = getSectionPanel(nextPanelId);
+  if (!nextPanel) {
+    return;
+  }
+
+  const previousPanel = getSectionPanel(previousPanelId);
+  const gsapRuntime = getGsapRuntime();
+  const nextIndex = getPanelIndex(nextPanelId);
+  const previousIndex = getPanelIndex(previousPanelId);
+  const direction = nextIndex >= previousIndex ? 1 : -1;
+  const currentTransitionToken = ++panelTransitionToken;
+
+  if (!previousPanel || !gsapRuntime || reducedEffectsEnabled) {
+    setActivePanel(nextPanelId);
+    await ensureSectionInitialized(nextPanelId);
+    return;
+  }
+
+  if (mainContent) {
+    mainContent.style.setProperty("--panel-transition-height", `${Math.ceil(previousPanel.offsetHeight)}px`);
+  }
+
+  await new Promise((resolve) => {
+    gsapRuntime.to(previousPanel, {
+      autoAlpha: 0,
+      x: -26 * direction,
+      y: 10,
+      duration: 0.22,
+      ease: "power2.inOut",
+      overwrite: "auto",
+      onComplete: resolve
+    });
+  });
+
+  if (currentTransitionToken !== panelTransitionToken) {
+    mainContent?.style.removeProperty("--panel-transition-height");
+    return;
+  }
+
+  gsapRuntime.set(previousPanel, {
+    clearProps: "opacity,transform,visibility"
+  });
+
+  setActivePanel(nextPanelId);
+  await ensureSectionInitialized(nextPanelId);
+
+  if (currentTransitionToken !== panelTransitionToken) {
+    mainContent?.style.removeProperty("--panel-transition-height");
+    return;
+  }
+
+  gsapRuntime.set(nextPanel, {
+    autoAlpha: 0,
+    x: 28 * direction,
+    y: 14
+  });
+
+  await new Promise((resolve) => {
+    gsapRuntime.to(nextPanel, {
+      autoAlpha: 1,
+      x: 0,
+      y: 0,
+      duration: 0.34,
+      ease: "power3.out",
+      overwrite: "auto",
+      onComplete: resolve
+    });
+  });
+
+  gsapRuntime.set(nextPanel, {
+    clearProps: "opacity,transform,visibility"
+  });
+
+  mainContent?.style.removeProperty("--panel-transition-height");
+}
+
 async function activatePanel(panelId) {
   const currentPanelId = getActivePanelId();
   const hasChanged = panelId !== currentPanelId;
@@ -9099,8 +9473,18 @@ async function activatePanel(panelId) {
   await ensureSectionAssetsReady(panelId);
 
   lockHeaderState(hasChanged ? 620 : 520);
-  setActivePanel(panelId);
-  await ensureSectionInitialized(panelId);
+  if (!hasChanged) {
+    setActivePanel(panelId);
+    await ensureSectionInitialized(panelId);
+    return false;
+  }
+
+  const currentIndex = getPanelIndex(currentPanelId);
+  const nextIndex = getPanelIndex(panelId);
+  root.dataset.siteTransitionMode = "panel";
+  root.dataset.siteTransitionDirection = nextIndex >= currentIndex ? "forward" : "backward";
+  await animatePanelTransition(currentPanelId, panelId);
+  clearSiteTransitionState();
   return hasChanged;
 }
 
@@ -9122,6 +9506,12 @@ async function bootApp() {
     updateLanguageButtons("en");
   }
 
+  bindSectionNavMotion();
+  syncSectionNavIndicator({ immediate: true });
+  syncTripNotesWorkspace();
+  void ensureGsapLoaded().then(() => {
+    syncSectionNavIndicator();
+  });
   bootOfflineExperience();
   root.classList.remove("intro-pending", "intro-active", "intro-leaving");
   const gatePromise = playSiteGate();
@@ -9248,6 +9638,9 @@ if (transitDetailModal) {
 [reducedMotionQuery, coarsePointerQuery, compactViewportQuery].forEach((query) => {
   bindMediaQueryChange(query, () => {
     syncReducedEffectsMode({ force: true });
+    window.requestAnimationFrame(() => {
+      syncSectionNavIndicator({ immediate: true });
+    });
   });
 });
 
@@ -9349,6 +9742,7 @@ if (siteHeader) {
         scheduleReservedHeaderHeightSync({ forceReset: true });
       }
       updateMaxScrollableY();
+      syncSectionNavIndicator({ immediate: true });
       syncProgressTimeline();
       scheduleDayCardRowHeights();
       resizeRouteMapsIfReady();
