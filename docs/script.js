@@ -3834,7 +3834,7 @@ function renderBookingTransitAccommodationLinks(item) {
   return orderedLinks
     .map((link) =>
       renderBookingTransitPrimaryLink(link, {
-        label: link.label,
+        label: bookingTransitPrimaryCtaLabel,
         vendorLabel: bookingTransitHotelVendorLabel,
         note: link.note
       })
