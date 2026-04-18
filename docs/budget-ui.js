@@ -65,10 +65,10 @@ const budgetBucketDefinitions = [
   { id: "free", label: { en: "Free", ja: "無料" } }
 ];
 const budgetStayTypeDefinitions = [
-  { id: "hotel", label: { en: "Hotel", ja: "ホテル" } },
-  { id: "ryokan", label: { en: "Ryokan", ja: "旅館" } },
-  { id: "relative", label: { en: "Private / local stay", ja: "ローカル・プライベート滞在" } },
-  { id: "none", label: { en: "No paid accommodation", ja: "有料宿泊なし" } }
+  { id: "hotel", label: { en: "Hotel stay", ja: "ホテル泊" } },
+  { id: "ryokan", label: { en: "Ryokan stay", ja: "旅館泊" } },
+  { id: "relative", label: { en: "Private stay", ja: "プライベート滞在" } },
+  { id: "none", label: { en: "No hotel", ja: "ホテルなし" } }
 ];
 const budgetStayOptionOrder = {
   none: 0,
@@ -111,18 +111,17 @@ const itineraryBudgetLabels = {
   },
   stayLabel: { en: "Stay type", ja: "滞在タイプ" },
   stayCaption: {
-    en: "Choose the actual sleep base for this night.",
-    ja: "この日の実際の宿泊先を選びます。"
+    en: "Choose the stay option for this night.",
+    ja: "この日の滞在オプションを選びます。"
   },
-  stayAnchorLabel: { en: "Anchor stay", ja: "基準の宿" },
   travelersPerRoomLabel: { en: "Travellers per room", ja: "1室あたりの人数" },
   travelersPerRoomHint: {
     en: "Controls how many travellers split each hotel or ryokan room quote.",
     ja: "ホテルや旅館の1室見積りを何人で分けるかを設定します。"
   },
   stayHintFallback: {
-    en: "Switch between the real default stay and any cheaper or free fallback you actually have.",
-    ja: "実際の初期滞在と、実際に使える安い・無料の代替滞在を切り替えられます。"
+    en: "Switch between the listed stay and any private or no-hotel fallback you actually have.",
+    ja: "表示中の滞在と、実際に使えるプライベート滞在やホテルなしの代替を切り替えられます。"
   },
   statusLoading: {
     en: "Loading itinerary cost model...",
@@ -135,8 +134,8 @@ const itineraryBudgetLabels = {
   },
   dayViewerHint: { en: "", ja: "" },
   totalMeta: {
-    en: "Combined booked and required costs across every day in the Day Budget Viewer. Flexible and optional costs stay outside this trip total.",
-    ja: "Day Budget Viewer に表示される全日程のうち、予約前提と必須の費用だけを合計しています。変動費や任意の費用はこの旅全体の合計に含めません。"
+    en: "Combined booked and required costs across every day in the Day Budget Viewer.",
+    ja: "Day Budget Viewer に表示される全日程のうち、予約前提と必須の費用だけを合計しています。"
   },
   noPaidAccommodationMeta: {
     en: "No paid hotel or ryokan stays are selected right now.",
@@ -424,18 +423,6 @@ const itineraryBudgetLabels = {
 
     const sourceAssumption = getSourceCostConfig(stayDefinition.cost?.sourceCostId)?.assumption;
     return sourceAssumption || stayDefinition.assumption || itineraryBudgetLabels.stayHintFallback;
-  };
-  const getStayAnchorCopy = (stayDefinition) => {
-    if (!stayDefinition) {
-      return null;
-    }
-
-    if (stayDefinition.property && typeof stayDefinition.property === "object") {
-      return stayDefinition.property;
-    }
-
-    const sourceLabel = getSourceCostConfig(stayDefinition.cost?.sourceCostId)?.source?.label;
-    return sourceLabel && typeof sourceLabel === "object" ? sourceLabel : null;
   };
   const normalizeDayEntry = (definition, entry) => {
     const defaultStayId = definition?.defaultStayId || null;
@@ -946,7 +933,7 @@ const itineraryBudgetLabels = {
       visibleDayEstimates,
       total,
       totalRange,
-      mainTotal: bookedAndFixedTotal,
+      mainTotal: getBudgetRangeValue(bookedAndFixedTotalRange, "lean"),
       mainTotalRange: bookedAndFixedTotalRange,
       perPerson: getBudgetRangeValue(perPersonRange, "expected"),
       perPersonRange,
@@ -958,7 +945,7 @@ const itineraryBudgetLabels = {
       categoryTotalsRange
     };
   };
-  const getBudgetEstimateTotal = () => calculateEstimate().mainTotal;
+  const getBudgetEstimateTotal = () => getBudgetRangeValue(calculateEstimate().mainTotalRange, "lean");
   const renderSummaryMarkup = (estimate = calculateEstimate()) => {
     const summaryCard = {
       className:
@@ -1067,15 +1054,6 @@ const itineraryBudgetLabels = {
   const renderDayMarkup = (dayEstimate) => {
     const stayOptions = Array.isArray(dayEstimate.stayOptions) ? dayEstimate.stayOptions : [];
     const selectedStayId = dayEstimate.stayDefinition?.id || "";
-    const stayAnchorCopy = getStayAnchorCopy(dayEstimate.stayDefinition);
-    const stayAnchorMarkup = stayAnchorCopy
-      ? `
-        <p class="budget-day-card__stay-hint">
-          <strong>${renderLocalizedContent(itineraryBudgetLabels.stayAnchorLabel)}:</strong>
-          ${renderLocalizedContent(stayAnchorCopy)}
-        </p>
-      `
-      : "";
     const stayControlMarkup = stayOptions.length
       ? `
         <section class="budget-day-card__stay-field" aria-label="${escapeHtml(
@@ -1120,7 +1098,6 @@ const itineraryBudgetLabels = {
               })
               .join("")}
           </div>
-          ${stayAnchorMarkup}
           <p class="budget-day-card__stay-hint">${renderLocalizedContent(
             getStayHintCopy(dayEstimate.stayDefinition)
           )}</p>

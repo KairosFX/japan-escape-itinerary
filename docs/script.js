@@ -2299,6 +2299,68 @@ function renderChecklistDetail(item) {
   renderBookingTransitDetail(item, { tag: getChecklistDetailTag(item) });
 }
 
+async function openEssentialsReference(referenceId = "") {
+  await activatePanel("essentials");
+  await initializeBookingTransit();
+
+  const bookingTransitRoot = getBookingTransitRoot();
+  if (!bookingTransitRoot) {
+    scrollToPanelStart("essentials");
+    return;
+  }
+
+  setBookingTransitFilter("all");
+
+  if (!referenceId) {
+    scrollToPanelStart("essentials");
+    return;
+  }
+
+  const item =
+    bookingTransitItemMap.get(referenceId) || getBookingTransitItemByDetailId(referenceId);
+  if (!item) {
+    scrollToPanelStart("essentials");
+    return;
+  }
+
+  updateStoredBookingTransitItemState(item.id, { expanded: true });
+  updateBookingTransitUI();
+
+  const groupElement = bookingTransitRoot.querySelector(
+    `[data-booking-group-section="${item.group}"]`
+  );
+  if (groupElement) {
+    groupElement.hidden = false;
+    groupElement.open = true;
+  }
+
+  const itemElement = bookingTransitRoot.querySelector(`[data-booking-id="${item.id}"]`);
+  if (!itemElement) {
+    scrollToPanelStart("essentials");
+    return;
+  }
+
+  itemElement.hidden = false;
+  itemElement.open = true;
+  syncBookingTransitItemUI(itemElement);
+
+  itemElement.classList.remove("is-linked-target");
+  restartClassOnNextFrame(itemElement, "is-linked-target");
+  window.setTimeout(() => {
+    itemElement.classList.remove("is-linked-target");
+  }, 1400);
+
+  await new Promise((resolve) => {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(resolve);
+    });
+  });
+
+  const targetTop =
+    itemElement.getBoundingClientRect().top + window.scrollY - getHeaderScrollOffset(18);
+  await smoothlyScrollWindowTo(Math.max(targetTop, 0), { behavior: getScrollBehavior() });
+}
+
 function openChecklistDetail(detailId, triggerElement) {
   if (!transitDetailModal || !detailId) {
     return;
@@ -3834,9 +3896,7 @@ function renderBookingTransitAccommodationLinks(item) {
   return orderedLinks
     .map((link) =>
       renderBookingTransitPrimaryLink(link, {
-        label: bookingTransitPrimaryCtaLabel,
-        vendorLabel: bookingTransitHotelVendorLabel,
-        note: link.note
+        label: bookingTransitPrimaryCtaLabel
       })
     )
     .join("");
@@ -4949,6 +5009,22 @@ function initOverviewSection() {
 }
 
 function handleChecklistPanelClick(event) {
+  const transitTrigger = event.target.closest("[data-transit-detail-trigger]");
+  const checklistDetailTrigger = event.target.closest("[data-checklist-detail-trigger]");
+  const referenceTrigger = transitTrigger || checklistDetailTrigger;
+  const dayCard = event.target.closest(".day-card[data-day]");
+
+  if (referenceTrigger && isChecklistAccessLocked()) {
+    event.preventDefault();
+    event.stopPropagation();
+    void openEssentialsReference(
+      transitTrigger?.dataset.transitDetailTrigger ||
+        checklistDetailTrigger?.dataset.checklistDetailTrigger ||
+        ""
+    );
+    return;
+  }
+
   if (isChecklistAccessLocked()) {
     const lockedTarget = event.target.closest(".check-item, .transit-trigger--checklist");
     if (lockedTarget) {
@@ -4959,10 +5035,7 @@ function handleChecklistPanelClick(event) {
     }
   }
 
-  const transitTrigger = event.target.closest("[data-transit-detail-trigger]");
-  const checklistDetailTrigger = event.target.closest("[data-checklist-detail-trigger]");
-  const dayCard = event.target.closest(".day-card[data-day]");
-  if (transitTrigger || checklistDetailTrigger) {
+  if (referenceTrigger) {
     if (!dayCard) {
       return;
     }
@@ -4977,14 +5050,10 @@ function handleChecklistPanelClick(event) {
 
     event.preventDefault();
     event.stopPropagation();
-    if (transitTrigger) {
-      openTransitDetail(transitTrigger.dataset.transitDetailTrigger || "", transitTrigger);
-      return;
-    }
-
-    openChecklistDetail(
-      checklistDetailTrigger?.dataset.checklistDetailTrigger || "",
-      checklistDetailTrigger
+    void openEssentialsReference(
+      transitTrigger?.dataset.transitDetailTrigger ||
+        checklistDetailTrigger?.dataset.checklistDetailTrigger ||
+        ""
     );
     return;
   }
@@ -5173,9 +5242,130 @@ function syncChecklistProgressTransitions({
   }
 }
 
+const checklistItemIconMap = {
+  "day1-nightlife": "moon",
+  "day1-shinsaibashi": "shopping",
+  "day1-dinner": "food",
+  "day2-transfer-to-kyoto": "rail",
+  "day2-hotel-check-in": "hotel",
+  "day2-kiyomizu": "temple",
+  "day2-ninenzaka": "street",
+  "day2-yasaka": "pagoda",
+  "day2-gion": "lantern",
+  "day2-nanzenji": "garden",
+  "day3-arashiyama": "bamboo",
+  "day3-back-to-osaka": "return",
+  "day3-kaiyukan": "aquarium",
+  "day3-shinkansen-mishima": "shinkansen",
+  "day3-transfer-fujikawaguchiko": "bus",
+  "day3-onsen-check-in": "onsen",
+  "day4-chureito": "mountain",
+  "day4-kawaguchiko": "lake",
+  "day4-tokyo-transfer": "rail",
+  "day4-tokyo-hotel-check-in": "hotel",
+  "day5-shibuya-crossing": "crossing",
+  "day5-shibuya-food-walk": "food",
+  "day5-sky": "skyline",
+  "day6-skytree": "tower",
+  "day6-solamachi": "shopping",
+  "day6-akihabara": "tech",
+  "day7-palace": "palace",
+  "day7-shinjuku": "city",
+  "day7-bags": "luggage",
+  "day7-airport": "plane"
+};
+
+const checklistIconSvgMap = {
+  moon:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M20 14.5A7.5 7.5 0 0 1 10.5 5 8.5 8.5 0 1 0 20 14.5Z"></path></svg>',
+  shopping:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M7 9V7a5 5 0 0 1 10 0v2"></path><path d="M5 9h14l-1 10H6L5 9Z"></path></svg>',
+  food:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M4.5 4.5v5.5"></path><path d="M6.5 4.5v5.5"></path><path d="M8.5 4.5v5.5"></path><path d="M6.5 10v9"></path><path d="M14.5 4.5c2 0 3 1.8 3 4v10"></path><path d="M14.5 8.5h3"></path></svg>',
+  rail:
+    '<svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="4.5" width="14" height="12" rx="3"></rect><path d="M8 16.5l-2 3"></path><path d="M16 16.5l2 3"></path><path d="M8.5 12.5h7"></path><path d="M8 8.5h3"></path><path d="M13 8.5h3"></path></svg>',
+  hotel:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M4 17.5v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"></path><path d="M4 14.5h16"></path><path d="M7 9.5v-1.5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"></path><path d="M4 17.5v2"></path><path d="M20 17.5v2"></path></svg>',
+  temple:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M3.5 18.5h17"></path><path d="M6 18.5v-4"></path><path d="M12 18.5v-4"></path><path d="M18 18.5v-4"></path><path d="M4 14.5h16"></path><path d="M5 10.5h14"></path><path d="M7 6.5h10"></path><path d="M12 3.5v3"></path><path d="M4 10.5l8-4 8 4"></path><path d="M3.5 14.5l8.5-4 8.5 4"></path></svg>',
+  street:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M8 4.5v15"></path><path d="M8 5.5h8l-1.5 2 1.5 2H8"></path><path d="M8 11.5h6l-1.5 2 1.5 2H8"></path></svg>',
+  pagoda:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M12 4.5v2"></path><path d="M5 8.5h14"></path><path d="M7 12.5h10"></path><path d="M8.5 16.5h7"></path><path d="M10 8.5v10"></path><path d="M14 8.5v10"></path><path d="M4.5 18.5h15"></path><path d="M4 8.5l8-3 8 3"></path><path d="M6.5 12.5l5.5-2 5.5 2"></path><path d="M8 16.5l4-1.5 4 1.5"></path></svg>',
+  lantern:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M9 5.5a3 3 0 0 1 6 0"></path><path d="M8 7.5h8"></path><path d="M9 7.5v7a3 3 0 0 0 6 0v-7"></path><path d="M12 17.5v2"></path><path d="M10 19.5h4"></path></svg>',
+  garden:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M19.5 4.5C13 4 8 7.5 6 12c-1.5 3.3-.8 6.3.5 7.5 1.2 1.1 4.2 1.8 7.5.5 4.5-2 8-7 7.5-13.5Z"></path><path d="M8 16c2-1.8 4.5-4.3 8-6"></path></svg>',
+  bamboo:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M7 4.5v15"></path><path d="M12 3.5v17"></path><path d="M17 5.5v14"></path><path d="M5.5 8.5H8.5"></path><path d="M10.5 7.5H13.5"></path><path d="M15.5 10.5H18.5"></path><path d="M5.5 13.5H8.5"></path><path d="M10.5 12.5H13.5"></path><path d="M15.5 15.5H18.5"></path></svg>',
+  return:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M9 7.5 5 11.5l4 4"></path><path d="M19 11.5H5"></path><path d="M19 6.5v7a4 4 0 0 1-4 4h-4"></path></svg>',
+  aquarium:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M4.5 12c2.5-3.5 5.5-5 8.5-5 3.2 0 5.5 1.4 6.5 5-1 3.6-3.3 5-6.5 5-3 0-6-1.5-8.5-5Z"></path><path d="M16.5 9.5 20 7.5v9l-3.5-2"></path><circle cx="10" cy="11.5" r="0.6"></circle></svg>',
+  shinkansen:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M4 14.5c0-4.5 4.5-8 10-8h5.5v6c0 2.2-1.8 4-4 4H8.5c-2.5 0-4.5-.9-4.5-2Z"></path><path d="M9 9.5h5"></path><path d="M6.5 18.5h11"></path><path d="M9 16.5l-1.5 2"></path><path d="M15 16.5l1.5 2"></path></svg>',
+  bus:
+    '<svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="5" width="14" height="12" rx="2.5"></rect><path d="M8 17v2"></path><path d="M16 17v2"></path><path d="M8 9.5h8"></path><path d="M8 12.5h8"></path><circle cx="9" cy="16" r="1"></circle><circle cx="15" cy="16" r="1"></circle></svg>',
+  onsen:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M5 15.5c2 0 2-1 4-1s2 1 4 1 2-1 4-1 2 1 4 1"></path><path d="M6 18.5h12"></path><path d="M8.5 11.5c-1-1.5-.5-2.8.5-4"></path><path d="M12 10.5c-1-1.5-.5-2.8.5-4"></path><path d="M15.5 11.5c-1-1.5-.5-2.8.5-4"></path></svg>',
+  mountain:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M3.5 18.5 9.5 8.5l4 5 2-3 5 8"></path><path d="M13.5 18.5 9.5 12.5 5.5 18.5"></path><circle cx="17.5" cy="6.5" r="1.8"></circle></svg>',
+  lake:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M4 10.5h16"></path><path d="M4 14.5c1.5 1 2.5 1 4 0s2.5-1 4 0 2.5 1 4 0 2.5-1 4 0"></path><path d="M4 18c1.5 1 2.5 1 4 0s2.5-1 4 0 2.5 1 4 0 2.5-1 4 0"></path></svg>',
+  crossing:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M5 18.5h14"></path><path d="M7 15.5h10"></path><path d="M9 12.5h6"></path><path d="M8 18.5l-1.5-6"></path><path d="M12 18.5v-6"></path><path d="M16 18.5l1.5-6"></path></svg>',
+  skyline:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M4 18.5h16"></path><path d="M6 18.5v-6h4v6"></path><path d="M10 18.5V6.5h4v12"></path><path d="M14 18.5v-9h4v9"></path><path d="M7.5 14.5h1"></path><path d="M11.5 8.5h1"></path><path d="M15.5 11.5h1"></path></svg>',
+  tower:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M12 4.5v15"></path><path d="M7 18.5h10"></path><path d="M8.5 14.5h7"></path><path d="M9.5 10.5h5"></path><path d="M8 7.5l4-3 4 3"></path><path d="M10 10.5l-1 8"></path><path d="M14 10.5l1 8"></path></svg>',
+  tech:
+    '<svg viewBox="0 0 24 24" focusable="false"><rect x="7" y="7" width="10" height="10" rx="2"></rect><path d="M9 2.5v3"></path><path d="M15 2.5v3"></path><path d="M9 18.5v3"></path><path d="M15 18.5v3"></path><path d="M2.5 9h3"></path><path d="M2.5 15h3"></path><path d="M18.5 9h3"></path><path d="M18.5 15h3"></path></svg>',
+  palace:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M4 9.5h16"></path><path d="M6 9.5v8"></path><path d="M10 9.5v8"></path><path d="M14 9.5v8"></path><path d="M18 9.5v8"></path><path d="M3.5 18.5h17"></path><path d="M12 4.5 3.5 8h17L12 4.5Z"></path></svg>',
+  city:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M4 18.5h16"></path><path d="M5.5 18.5V10h4v8.5"></path><path d="M10.5 18.5V5.5h4v13"></path><path d="M15 18.5V9h3.5v9.5"></path><path d="M7 12.5h1"></path><path d="M12 8.5h1"></path><path d="M16.5 12h1"></path></svg>',
+  luggage:
+    '<svg viewBox="0 0 24 24" focusable="false"><rect x="6" y="6.5" width="12" height="12" rx="2"></rect><path d="M9 6.5v-1a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1"></path><path d="M9 11.5h6"></path></svg>',
+  plane:
+    '<svg viewBox="0 0 24 24" focusable="false"><path d="M21 11.5 3 7.5l4 4-4 4 18-4Z"></path><path d="M7 11.5h14"></path></svg>'
+};
+
+function decorateChecklistItems(panel = getSectionPanel("checklist")) {
+  if (!panel) {
+    return;
+  }
+
+  panel.querySelectorAll(".check-item").forEach((itemElement) => {
+    const itemId =
+      itemElement.getAttribute("for") || itemElement.querySelector('input[type="checkbox"]')?.id || "";
+    const iconId = checklistItemIconMap[itemId];
+    const existingIconNode = itemElement.querySelector(".check-item__icon");
+
+    if (!iconId || !checklistIconSvgMap[iconId]) {
+      itemElement.removeAttribute("data-check-icon");
+      existingIconNode?.remove();
+      return;
+    }
+
+    itemElement.dataset.checkIcon = iconId;
+    const iconNode = existingIconNode || document.createElement("span");
+    iconNode.className = "check-item__icon";
+    iconNode.setAttribute("aria-hidden", "true");
+
+    if (iconNode.dataset.iconId !== iconId) {
+      iconNode.dataset.iconId = iconId;
+      iconNode.innerHTML = checklistIconSvgMap[iconId];
+    }
+
+    if (!existingIconNode) {
+      itemElement.append(iconNode);
+    }
+  });
+}
+
 function markAllChecklistItemsChecked() {
   if (isChecklistAccessLocked()) {
-    showChecklistLockNotice();
+    void openEssentialsReference();
     return;
   }
 
@@ -5246,6 +5436,7 @@ function initChecklistSection() {
   }
 
   restoreChecklistState(panel);
+  decorateChecklistItems(panel);
 
   if (panel.dataset.checklistBound !== "true") {
     panel.addEventListener("click", handleChecklistPanelClick);
@@ -7165,7 +7356,51 @@ function updateRouteMapMarkerElement(entry, selectionState) {
 }
 
 function installRouteMapMarkers(map) {
-  return [];
+  if (!map || !window.maplibregl?.Marker) {
+    return [];
+  }
+
+  return routeExplorerStopDefinitions
+    .map((stop) => {
+      const lngLat =
+        Array.isArray(stop?.lngLat) &&
+        stop.lngLat.length === 2 &&
+        stop.lngLat.every((value) => Number.isFinite(Number(value)))
+          ? stop.lngLat
+          : null;
+      if (!lngLat) {
+        return null;
+      }
+
+      const { element, labelNode } = createRouteMapMarkerElement(stop);
+      const revealStop = (event) => {
+        event?.preventDefault?.();
+        event?.stopPropagation?.();
+        toggleRouteMapStopSelection(stop.id, {
+          updateCamera: true,
+          animateCamera: true,
+          revealDayRail: true
+        });
+      };
+
+      element.addEventListener("click", revealStop);
+
+      const marker = new window.maplibregl.Marker({
+        element,
+        anchor: "center"
+      })
+        .setLngLat(lngLat)
+        .addTo(map);
+
+      return {
+        marker,
+        element,
+        labelNode,
+        stop,
+        stateKey: ""
+      };
+    })
+    .filter(Boolean);
 }
 
 function setRouteMapInteractionState(map) {
@@ -8116,6 +8351,11 @@ function setTransitModalOpen(isOpen) {
 }
 
 function resetTripProgress() {
+  if (isChecklistAccessLocked()) {
+    void openEssentialsReference();
+    return;
+  }
+
   checklistState = {};
 
   if (initializedSections.has("checklist")) {

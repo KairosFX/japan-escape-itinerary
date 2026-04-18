@@ -343,8 +343,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       "id": "osaka-compact-hotel",
       "type": "hotel",
       "label": {
-        "en": "Osaka Minami route hotel",
-        "ja": "大阪ミナミ動線ホテル"
+        "en": "Osaka Hotel",
+        "ja": "大阪ホテル"
       },
       "bucket": "booked",
       "sourceGroup": "accommodation",
@@ -353,8 +353,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "ja": "四ツ橋・西心斎橋"
       },
       "property": {
-        "en": "Hotel Trend Nishi Shinsaibashi",
-        "ja": "Hotel Trend Nishi Shinsaibashi"
+        "en": "Osaka Hotel",
+        "ja": "大阪ホテル"
       },
       "routeReason": {
         "en": "Use this when you need a paid Osaka night. Yotsubashi / Nishi-Shinsaibashi keeps Day 1 Minami walking and Day 3 Osaka-side movement practical while cutting the fallback room cost.",
@@ -370,8 +370,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       "id": "kyoto-midrange-hotel",
       "type": "hotel",
       "label": {
-        "en": "Kyoto East-access hotel",
-        "ja": "京都東側アクセス向きホテル"
+        "en": "Kyoto Hotel",
+        "ja": "京都ホテル"
       },
       "bucket": "booked",
       "sourceGroup": "accommodation",
@@ -380,8 +380,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "ja": "京都・四条烏丸"
       },
       "property": {
-        "en": "Imu Hotel Kyoto",
-        "ja": "Imu Hotel Kyoto"
+        "en": "Kyoto Hotel",
+        "ja": "京都ホテル"
       },
       "routeReason": {
         "en": "Shijo / Karasuma works better than a generic Kyoto stay because it keeps the Day 2 Higashiyama side simple while giving cleaner subway, Hankyu, and JR options for Day 3 Arashiyama and the move back to Osaka.",
@@ -397,8 +397,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       "id": "kawaguchiko-base-hotel",
       "type": "hotel",
       "label": {
-        "en": "Mt. Fuji area lake-access hotel",
-        "ja": "富士エリアの湖アクセスホテル"
+        "en": "Mt. Fuji Hotel",
+        "ja": "富士ホテル"
       },
       "bucket": "booked",
       "sourceGroup": "accommodation",
@@ -407,8 +407,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "ja": "船津・河口湖動線"
       },
       "property": {
-        "en": "SUPER HOTEL Fujikawaguchiko Natural Hot Spring",
-        "ja": "SUPER HOTEL Fujikawaguchiko Natural Hot Spring"
+        "en": "Mt. Fuji Hotel",
+        "ja": "富士ホテル"
       },
       "routeReason": {
         "en": "This base keeps the Day 3 Mishima handoff, the hot-spring reset, and the Day 4 Chureito Shimoyoshida plus Lake Kawaguchiko block practical without paying for a remote resort location that fights the real station and bus flow.",
@@ -424,8 +424,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       "id": "tokyo-base-hotel",
       "type": "hotel",
       "label": {
-        "en": "Shibuya-access Tokyo hotel",
-        "ja": "渋谷アクセス重視の東京ホテル"
+        "en": "Tokyo Hotel",
+        "ja": "東京ホテル"
       },
       "bucket": "booked",
       "sourceGroup": "accommodation",
@@ -434,8 +434,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
         "ja": "渋谷中心部・神南"
       },
       "property": {
-        "en": "The OneFive Tokyo Shibuya",
-        "ja": "The OneFive Tokyo Shibuya"
+        "en": "Tokyo Hotel",
+        "ja": "東京ホテル"
       },
       "routeReason": {
         "en": "Shibuya is the Day 4 arrival focus, and the same central Shibuya base keeps the following Tokyo days cleaner than shifting districts mid-route.",
@@ -451,8 +451,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       "id": "relative-stay",
       "type": "relative",
       "label": {
-        "en": "Private / local stay",
-        "ja": "ローカル・プライベート滞在"
+        "en": "Private stay",
+        "ja": "プライベート滞在"
       },
       "bucket": "free",
       "sourceGroup": "assumptions",
@@ -481,8 +481,8 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       "id": "no-accommodation",
       "type": "none",
       "label": {
-        "en": "No paid accommodation",
-        "ja": "有料宿泊なし"
+        "en": "No hotel",
+        "ja": "ホテルなし"
       },
       "bucket": "free",
       "sourceGroup": "assumptions",

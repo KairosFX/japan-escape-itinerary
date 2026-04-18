@@ -7020,6 +7020,157 @@ html[data-theme="dark"] #checklist .day-card[data-feedback-state="unchecked"].is
     0 38px 80px rgba(2, 4, 8, 0.3);
 }
 
+.booking-item.is-linked-target {
+  border-color: rgba(47, 107, 69, 0.28);
+  box-shadow:
+    0 0 0 3px rgba(47, 107, 69, 0.12),
+    0 20px 38px rgba(6, 15, 9, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+#checklist .day-grid {
+  gap: 1.15rem;
+}
+
+#checklist .day-card {
+  padding: 0 0 1rem 1.38rem;
+  min-height: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(16, 21, 18, 0.08);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#checklist .day-card::before,
+#checklist .day-card::after {
+  left: 0;
+}
+
+#checklist .day-card::before {
+  top: 0.1rem;
+  bottom: 0.15rem;
+}
+
+#checklist .day-card::after {
+  bottom: 0.15rem;
+  box-shadow: none;
+}
+
+#checklist .day-card:hover,
+#checklist .day-card:focus-within,
+html.enhanced-effects #checklist .day-card:hover,
+html.enhanced-effects #checklist .day-card:focus-within {
+  transform: none;
+  box-shadow: none;
+}
+
+#checklist .day-card__header {
+  min-block-size: 0;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.62rem;
+}
+
+#checklist .checklist-list {
+  gap: 0.5rem;
+}
+
+#checklist .check-item {
+  grid-template-columns: 1.05rem minmax(0, 1fr) auto;
+  column-gap: 0.72rem;
+  align-items: center;
+  padding: 0.68rem 0.82rem;
+}
+
+#checklist .check-item input {
+  grid-column: 1;
+  align-self: center;
+}
+
+#checklist .check-copy {
+  grid-column: 2;
+  align-self: center;
+}
+
+#checklist .check-item__icon {
+  grid-column: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  color: rgba(47, 107, 69, 0.76);
+  opacity: 0.82;
+}
+
+#checklist .check-item__icon svg {
+  width: 1.12rem;
+  height: 1.12rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#checklist .check-item.is-pointer-active .check-item__icon,
+#checklist .check-item:focus-within .check-item__icon {
+  color: rgba(27, 74, 46, 0.92);
+  opacity: 1;
+}
+
+#checklist .check-item input:checked ~ .check-item__icon {
+  color: rgba(94, 112, 101, 0.76);
+  opacity: 0.78;
+}
+
+#checklist .day-card.is-check-feedback,
+#checklist .day-card[data-feedback-state="checked"].is-check-feedback,
+#checklist .day-card[data-feedback-state="unchecked"].is-check-feedback {
+  box-shadow: none;
+}
+
+@media (max-width: 720px) {
+  #checklist .day-card {
+    padding-left: 1.12rem;
+  }
+
+  #checklist .check-item {
+    column-gap: 0.64rem;
+  }
+
+  #checklist .check-item__icon {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+}
+
+html[data-theme="dark"] .booking-item.is-linked-target {
+  border-color: rgba(98, 176, 126, 0.34);
+  box-shadow:
+    0 0 0 3px rgba(98, 176, 126, 0.16),
+    0 20px 40px rgba(2, 4, 8, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+html[data-theme="dark"] #checklist .day-card {
+  border-bottom-color: rgba(255, 242, 228, 0.1);
+}
+
+html[data-theme="dark"] #checklist .check-item__icon {
+  color: rgba(117, 198, 144, 0.84);
+}
+
+html[data-theme="dark"] #checklist .check-item.is-pointer-active .check-item__icon,
+html[data-theme="dark"] #checklist .check-item:focus-within .check-item__icon {
+  color: rgba(152, 223, 175, 0.96);
+}
+
+html[data-theme="dark"] #checklist .check-item input:checked ~ .check-item__icon {
+  color: rgba(190, 206, 196, 0.72);
+}
+
 @keyframes checklistItemPulse {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
