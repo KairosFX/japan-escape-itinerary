@@ -42,8 +42,6 @@ const transitDetailContentNode = document.querySelector("[data-transit-detail-co
 const transitDetailActionLink = document.querySelector("[data-transit-detail-action]");
 const backToTopButtons = document.querySelectorAll("[data-back-to-top]");
 const tripNotesGridNode = document.querySelector("[data-trip-notes-grid]");
-const tripNotesInput = document.querySelector("[data-trip-notes-input]");
-const tripNotesStatus = document.querySelector("[data-trip-notes-status]");
 const packingSectionCards = Array.from(document.querySelectorAll("[data-packing-section]"));
 const checklistTab = sectionTabs.find((tab) => tab.dataset.panelTarget === "checklist") || null;
 const packingMarkAllButtons = Array.from(document.querySelectorAll("[data-packing-mark-all-global]"));
@@ -63,8 +61,8 @@ const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
 const compactViewportQuery = window.matchMedia("(max-width: 920px)");
 const pageTitles = {
-  en: "Kairos VIII",
-  ja: "Kairos VIII"
+  en: "Kairos VII Japan Escape Itinerary",
+  ja: "Kairos VII Japan Escape Itinerary"
 };
 const storageKey = "japan-trip-language";
 const itineraryStateVersion = "2026-04-09-checklist-shift-raf-v2";
@@ -74,7 +72,6 @@ const activePanelStorageKey = `japan-trip-active-panel-${itineraryStateVersion}`
 const bookingTransitStorageKey = `japan-trip-bookings-transit-state-${itineraryStateVersion}`;
 const packingStorageKey = `japan-trip-packing-state-${itineraryStateVersion}`;
 const budgetNotesStorageKey = `japan-trip-budget-notes-${itineraryStateVersion}`;
-const tripNotesDraftStorageKey = `japan-trip-private-notes-${itineraryStateVersion}`;
 const fujiForecastSessionKey = `japan-trip-fuji-forecast-${itineraryStateVersion}`;
 const queuedStorageWrites = new Map();
 const headerReservedHeightFallbackPx = 156;
@@ -114,12 +111,12 @@ const audioAmbientVolume = 0.085;
 const audioAmbientDuckVolume = 0.05;
 const audioTransitionVolume = 0.28;
 const audioTransitionCooldownMs = 320;
-const siteGatePassword = "kairosviii";
+const siteGatePasswords = new Set(["kairosvii", "kairosviii"]);
 const siteGateThemeColor = "#050806";
 const siteGateFeedbackCopy = {
   rejected: {
-    en: "The seal remains closed.",
-    ja: "封はまだ開きません。"
+    en: "Incorrect password. Try again.",
+    ja: "パスワードが違います。もう一度お試しください。"
   }
 };
 let siteGateUnlocked = !siteGate;
@@ -137,8 +134,6 @@ let budgetSourceGroups = [];
 let budgetDayDefinitions = [];
 let tripNoteDefinitions = [];
 let tripNoteDefinitionMap = new Map();
-let tripNotesDraftState = { value: "", updatedAt: 0 };
-let tripNotesDraftInitialized = false;
 let panelTransitionToken = 0;
 let gsapLoadPromise = null;
 const fujiForecastCacheMaxAgeMs = 45 * 60 * 1000;
@@ -170,9 +165,6 @@ const revealBlockSelector = [
   ".budget-panel",
   ".budget-day-card",
   ".route-map",
-  ".route-map__day-browser",
-  ".route-reference",
-  ".route-reference__day",
   ".journey-close",
   ".site-footer__lead",
   ".site-footer__aside"
@@ -460,8 +452,8 @@ const routeMapLabels = {
   tools: { en: "Quick tools", ja: "クイック操作" },
   checklistAction: { en: "Checklist", ja: "チェックリスト" },
   interactiveSurfaceLabel: {
-    en: "Interactive route map. Focus the map, then use the arrow keys to pan.",
-    ja: "インタラクティブなルート地図です。地図をフォーカスすると、矢印キーで移動できます。"
+    en: "Interactive route map. Use the map controls, markers, or highlighted route segments to inspect the journey.",
+    ja: "インタラクティブなルート地図です。地図操作、マーカー、強調されたルート区間で旅程を確認できます。"
   },
   sharedLoading: { en: "Preparing live route map...", ja: "ライブ ルート地図を準備中..." },
   sharedLoadingBody: {
@@ -482,7 +474,7 @@ const routeMapLabels = {
     ja: "ルート地図を使うときはライブサイトを開いてください。"
   }
 };
-const routeExplorerDefaultSelectionId = "day-1";
+const routeExplorerDefaultSelectionId = "overview";
 const routeMapInitialView = {
   center: [137.4, 35.1],
   zoom: 4.95
@@ -619,7 +611,31 @@ function initializeDecorativeMediaExperience() {
 }
 
 function buildRouteExplorerViewDefinitions(viewDefinitions = []) {
-  return viewDefinitions.map((viewDefinition) => {
+  const overviewView = {
+    id: routeExplorerDefaultSelectionId,
+    label: {
+      en: "Full route",
+      ja: "全体ルート"
+    },
+    title: {
+      en: "Japan route overview",
+      ja: "日本ルート全体"
+    },
+    summary: {
+      en: "See the full Osaka-to-Tokyo corridor first, then focus markers or route segments only when needed.",
+      ja: "まず大阪から東京までの全体ルートを見て、必要なときだけマーカーやルート区間に絞り込みます。"
+    },
+    badges: [
+      { en: "Overview", ja: "全体" },
+      { en: "Desktop map", ja: "デスクトップ地図" }
+    ],
+    transitActions: [],
+    dayLinks: [],
+    stopIds: routeExplorerStopDefinitions.map((stop) => stop.id),
+    segmentIds: routeExplorerPathDefinitions.map((segment) => segment.id)
+  };
+
+  const dayViews = viewDefinitions.map((viewDefinition) => {
     const tripNote = tripNoteDefinitionMap.get(viewDefinition.day) || null;
     const fallbackTitle = {
       en: `Day ${viewDefinition.day}`,
@@ -646,6 +662,8 @@ function buildRouteExplorerViewDefinitions(viewDefinitions = []) {
       segmentIds: viewDefinition.segmentIds
     };
   });
+
+  return [overviewView, ...dayViews];
 }
 
 function getLazyNode(cacheKey, selector) {
@@ -3729,122 +3747,14 @@ function syncLocalizedDocumentTitle(language = root.lang) {
   }
 }
 
-function getDefaultTripNotesDraft() {
-  return {
-    value: "",
-    updatedAt: 0
-  };
-}
-
-function readStoredTripNotesDraft() {
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(tripNotesDraftStorageKey) || "null");
-    if (!parsed || typeof parsed !== "object") {
-      return getDefaultTripNotesDraft();
-    }
-
-    return {
-      value: typeof parsed.value === "string" ? parsed.value : "",
-      updatedAt: Number.isFinite(Number(parsed.updatedAt)) ? Number(parsed.updatedAt) : 0
-    };
-  } catch (error) {
-    return getDefaultTripNotesDraft();
-  }
-}
-
-function storeTripNotesDraft() {
-  try {
-    const nextValue = tripNotesDraftState.value.trim();
-    if (!nextValue && !tripNotesDraftState.updatedAt) {
-      queueStorageRemoval(tripNotesDraftStorageKey);
-      return;
-    }
-
-    queueStorageValue(
-      tripNotesDraftStorageKey,
-      JSON.stringify({
-        value: tripNotesDraftState.value,
-        updatedAt: tripNotesDraftState.updatedAt
-      })
-    );
-  } catch (error) {
-    // Ignore storage failures and keep editing available.
-  }
-}
-
-function formatTripNotesTimestamp(timestamp) {
-  if (!timestamp) {
-    return "";
-  }
-
-  try {
-    return new Intl.DateTimeFormat(root.lang === "ja" ? "ja-JP" : "en-CA", {
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit"
-    }).format(new Date(timestamp));
-  } catch (error) {
-    return "";
-  }
-}
-
-function syncTripNotesWorkspace() {
-  if (!tripNotesDraftInitialized) {
-    tripNotesDraftState = readStoredTripNotesDraft();
-    tripNotesDraftInitialized = true;
-  }
-
-  if (tripNotesInput) {
-    const placeholder =
-      root.lang === "ja"
-        ? tripNotesInput.dataset.placeholderJa
-        : tripNotesInput.dataset.placeholderEn;
-    tripNotesInput.setAttribute("placeholder", placeholder || "");
-
-    if (tripNotesInput.value !== tripNotesDraftState.value) {
-      tripNotesInput.value = tripNotesDraftState.value;
-    }
-  }
-
-  if (tripNotesStatus) {
-    const trimmedLength = tripNotesDraftState.value.trim().length;
-    const timestampLabel = formatTripNotesTimestamp(tripNotesDraftState.updatedAt);
-    tripNotesStatus.textContent = trimmedLength
-      ? root.lang === "ja"
-        ? `この端末に保存済み • ${trimmedLength}文字${timestampLabel ? ` • ${timestampLabel}` : ""}`
-        : `Saved locally on this device • ${trimmedLength} chars${timestampLabel ? ` • ${timestampLabel}` : ""}`
-      : root.lang === "ja"
-        ? "旅の途中で見返したいことをここに自由に書き留めておけます。"
-        : "Use this space for anything you want to keep close during the trip.";
-  }
-}
-
-function initializeTripNotesWorkspace() {
-  if (!tripNotesInput) {
+function syncSiteGatePlaceholder(language = root.lang) {
+  if (!siteGateInput) {
     return;
   }
 
-  if (!tripNotesDraftInitialized) {
-    tripNotesDraftState = readStoredTripNotesDraft();
-    tripNotesDraftInitialized = true;
-  }
-
-  if (tripNotesInput.dataset.tripNotesBound !== "true") {
-    tripNotesInput.addEventListener("input", () => {
-      const nextValue = tripNotesInput.value;
-      tripNotesDraftState = {
-        value: nextValue,
-        updatedAt: nextValue.trim() ? Date.now() : 0
-      };
-      storeTripNotesDraft();
-      syncTripNotesWorkspace();
-    });
-
-    tripNotesInput.dataset.tripNotesBound = "true";
-  }
-
-  syncTripNotesWorkspace();
+  const placeholder =
+    language === "ja" ? siteGateInput.dataset.placeholderJa : siteGateInput.dataset.placeholderEn;
+  siteGateInput.setAttribute("placeholder", placeholder || "");
 }
 
 function renderTripNotes() {
@@ -3873,7 +3783,6 @@ function renderTripNotes() {
 
   tripNotesGridNode.innerHTML = notesMarkup;
   syncLocalizedNodes(tripNotesGridNode);
-  syncTripNotesWorkspace();
 }
 
 function renderTripNoteStopSummary(routeDay) {
@@ -5645,7 +5554,6 @@ async function initNotesSection() {
   }
 
   await ensureRouteContentLoaded();
-  initializeTripNotesWorkspace();
   renderTripNotes();
   registerRevealBlocks(panel);
 }
@@ -7537,8 +7445,51 @@ function updateRouteMapMarkerElement(entry, selectionState) {
 }
 
 function installRouteMapMarkers(map) {
-  void map;
-  return [];
+  if (!map || !window.maplibregl?.Marker) {
+    return [];
+  }
+
+  return routeExplorerStopDefinitions
+    .map((stop) => {
+      const lngLat = getRouteStopLngLat(stop.id);
+      if (!lngLat) {
+        return null;
+      }
+
+      const { element, labelNode } = createRouteMapMarkerElement(stop);
+      const marker = new window.maplibregl.Marker({
+        element,
+        anchor: "center"
+      })
+        .setLngLat(lngLat)
+        .addTo(map);
+
+      const focusStop = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleRouteMapStopSelection(stop.id, {
+          updateCamera: true,
+          animateCamera: true,
+          revealDayRail: false
+        });
+      };
+
+      element.addEventListener("click", focusStop);
+      element.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          focusStop(event);
+        }
+      });
+
+      return {
+        marker,
+        element,
+        labelNode,
+        stop,
+        stateKey: ""
+      };
+    })
+    .filter(Boolean);
 }
 
 function setRouteMapInteractionState(map) {
@@ -8033,16 +7984,20 @@ function requestRouteMapLiveView() {
 }
 
 function ensureRouteMapInitialized() {
+  const routeMapShellNode = getRouteMapShellNode();
   const routeMapExplorerNode = getRouteMapExplorerNode();
-  if (routeMapInitialized || !routeMapExplorerNode) {
+  if (routeMapInitialized || !routeMapShellNode) {
     return;
   }
 
-  routeMapExplorerNode.innerHTML = renderRouteMapExplorerShell();
-  localizedMarkupCache.set(routeMapExplorerNode, routeMapExplorerNode.innerHTML);
-  if (root.lang === "ja") {
-    syncLocalizedNodes(routeMapExplorerNode);
+  if (routeMapExplorerNode) {
+    routeMapExplorerNode.innerHTML = renderRouteMapExplorerShell();
+    localizedMarkupCache.set(routeMapExplorerNode, routeMapExplorerNode.innerHTML);
+    if (root.lang === "ja") {
+      syncLocalizedNodes(routeMapExplorerNode);
+    }
   }
+
   routeMapInitialized = true;
   if (!routeMapState.failed) {
     setRouteMapShellState("loading");
@@ -8881,9 +8836,9 @@ function setLanguage(language) {
   }
 
   updateLanguageButtons(nextLanguage);
+  syncSiteGatePlaceholder(nextLanguage);
 
   storeLanguage(nextLanguage);
-  syncTripNotesWorkspace();
   refreshTripNotesIfReady();
   refreshBudgetNotesIfReady();
   refreshBookingTransitIfReady();
@@ -9169,7 +9124,7 @@ function handleSiteGateSubmit(event) {
   }
 
   const submittedValue = siteGateInput.value.trim().toLowerCase();
-  if (submittedValue === siteGatePassword) {
+  if (siteGatePasswords.has(submittedValue)) {
     unlockSiteGate();
     return;
   }
@@ -9540,11 +9495,11 @@ async function bootApp() {
     root.lang = "en";
     syncLocalizedDocumentTitle("en");
     updateLanguageButtons("en");
+    syncSiteGatePlaceholder("en");
   }
 
   bindSectionNavMotion();
   syncSectionNavIndicator({ immediate: true });
-  syncTripNotesWorkspace();
   void ensureGsapLoaded().then(() => {
     syncSectionNavIndicator();
   });

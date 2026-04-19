@@ -1117,3 +1117,100 @@ html[data-theme="dark"] .route-reference__day {
 html[data-theme="dark"] .route-reference__day::before {
   background: linear-gradient(180deg, rgba(233, 163, 141, 0.88), rgba(233, 163, 141, 0.16));
 }
+
+/* April 2026 minimal route map cleanup */
+.route-map {
+  position: relative;
+  gap: 1.08rem;
+  padding: 1.16rem;
+}
+
+.route-map__header {
+  align-items: end;
+  gap: 0.9rem 1.2rem;
+}
+
+.route-map__copy {
+  gap: 0.38rem;
+  max-width: 42rem;
+}
+
+.route-map__copy h3 {
+  font-size: clamp(1.34rem, 1.08rem + 0.56vw, 1.76rem);
+}
+
+.route-map__meta {
+  max-width: 44rem;
+}
+
+.route-map__surface {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+.route-map__detail-panel,
+.route-map__stops,
+.route-map__explorer {
+  display: none !important;
+}
+
+.route-map__map-shell {
+  min-height: clamp(28rem, 40vw, 39rem);
+  border-radius: 1.9rem;
+}
+
+.route-map__loading-veil {
+  padding: 1.2rem;
+}
+
+.route-map__loading-copy {
+  width: min(100%, 22rem);
+  border-radius: 1.15rem;
+}
+
+.route-map__header-action {
+  min-height: 3rem;
+  padding-inline: 1.08rem;
+}
+
+.route-map-marker {
+  width: 1.18rem;
+  height: 1.18rem;
+}
+
+.route-map-marker__pin {
+  width: 1.18rem;
+  height: 1.18rem;
+}
+
+.route-map-marker__dot {
+  width: 0.42rem;
+  height: 0.42rem;
+}
+
+.route-map-marker__label {
+  min-height: 1.68rem;
+  max-width: 9.5rem;
+  padding: 0.22rem 0.56rem;
+  font-size: 0.72rem;
+}
+
+@media (max-width: 960px) {
+  .route-map__map-shell {
+    min-height: clamp(22rem, 64vw, 31rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .route-map {
+    padding: 1rem;
+  }
+
+  .route-map__header {
+    align-items: start;
+  }
+
+  .route-map__header-action {
+    width: 100%;
+  }
+}
