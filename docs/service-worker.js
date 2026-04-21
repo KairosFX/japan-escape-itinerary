@@ -1,5 +1,5 @@
-const OFFLINE_CACHE_VERSION = "967a83308b-a79b88b908-5bdf90fff9-33d7a8b223-c9b56d76dd-5290b65efc-be386f8a82-bcde8dff98-9afc15ad27";
-const CACHE_PREFIX = "japan-escape-itinerary-";
+const OFFLINE_CACHE_VERSION = "967a83308b-a79b88b908-16bd435d57-33d7a8b223-c9b56d76dd-5290b65efc-be386f8a82-bcde8dff98-9afc15ad27";
+const CACHE_PREFIX = "itinerary-";
 const APP_SHELL_CACHE_NAME = `${CACHE_PREFIX}shell-${OFFLINE_CACHE_VERSION}`;
 const RUNTIME_CACHE_NAME = `${CACHE_PREFIX}runtime-${OFFLINE_CACHE_VERSION}`;
 const APP_SCOPE_URL = new URL("./", self.location);
@@ -14,7 +14,7 @@ const APP_SHELL_PATHS = [
   "./assets/app/page-background-loop.bcde8dff98.mp3",
   "./assets/app/transition.9afc15ad27.mp3",
   "./assets/app/style.967a83308b.css",
-  "./assets/app/script.5bdf90fff9.js",
+  "./assets/app/script.16bd435d57.js",
   "./assets/app/routeStyle.a79b88b908.css",
   "./assets/app/routeContent.33d7a8b223.js",
   "./assets/app/budgetUi.c9b56d76dd.js",
@@ -25,7 +25,7 @@ const NETWORK_FIRST_PATHS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./japan-escape-itinerary-offline.html"
+  "./itinerary-offline.html"
 ];
 const APP_SHELL_URLS = APP_SHELL_PATHS.map((assetPath) => new URL(assetPath, self.location).toString());
 const NETWORK_FIRST_URLS = NETWORK_FIRST_PATHS.map((assetPath) =>

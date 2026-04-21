@@ -1,4 +1,5 @@
 {
+  "name": "itinerary",
   "private": true,
   "scripts": {
     "build:section-content": "node scripts/build-section-content.js",

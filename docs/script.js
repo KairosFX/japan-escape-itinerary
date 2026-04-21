@@ -61,8 +61,8 @@ const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
 const compactViewportQuery = window.matchMedia("(max-width: 920px)");
 const pageTitles = {
-  en: "Kairos VIII",
-  ja: "Kairos VIII"
+  en: "itinerary",
+  ja: "itinerary"
 };
 const storageKey = "japan-trip-language";
 const itineraryStateVersion = "2026-04-09-checklist-shift-raf-v2";
@@ -80,7 +80,7 @@ const timelineNodeSizeRem = 1.42;
 const timelineLinkOverlapPx = 1;
 const deferredGeometryReleaseDelayMs = 160;
 const deferredNonCriticalLayoutTimeoutMs = 700;
-const offlineSnapshotUrl = "./japan-escape-itinerary-offline.html";
+const offlineSnapshotUrl = "./itinerary-offline.html";
 const serviceWorkerUrl = "./service-worker.js";
 const offlineBundleVersion = "2026-03-28-offline-v23";
 const appAssetConfigRuntimeGlobal = "__JAPAN_APP_ASSETS__";

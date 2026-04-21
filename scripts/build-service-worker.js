@@ -32,7 +32,7 @@ const networkFirstPaths = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./japan-escape-itinerary-offline.html"
+  "./itinerary-offline.html"
 ];
 
 const cacheVersion = assetManifest.cacheVersion || assetManifest.generatedAt || "app-shell";
