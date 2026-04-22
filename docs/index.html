@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kairos VII Japan Escape Itinerary</title>
+  <title></title>
   <meta
     name="description"
     content="Simple bilingual Japan trip website for GitHub Pages with overview, checklist, notes, budget, routes, essentials, and a live route map from Osaka to Tokyo.">
@@ -24,11 +24,13 @@
 
       document.documentElement.dataset.theme = "dark";
       document.documentElement.style.colorScheme = "dark";
+      document.documentElement.classList.add("gate-active");
       document.documentElement.classList.toggle("reduce-effects", shouldReduceEffects);
       document.documentElement.classList.toggle("enhanced-effects", !shouldReduceEffects);
     } catch (error) {
       document.documentElement.dataset.theme = "dark";
       document.documentElement.style.colorScheme = "dark";
+      document.documentElement.classList.add("gate-active");
       document.documentElement.classList.add("reduce-effects");
     }
   </script>
@@ -2518,24 +2520,32 @@ html.gate-unlocking body {
 }
 
 html.gate-active .skip-link,
+html.gate-active .site-backdrop,
 html.gate-active .site-atmosphere,
 html.gate-active .site-header,
 html.gate-active #main-content,
 html.gate-active .modal-backdrop,
 html.gate-active .site-footer {
   opacity: 0;
+  visibility: hidden;
   filter: blur(18px);
   transform: translate3d(0, 0.85rem, 0);
   pointer-events: none;
 }
 
+html:not(.gate-active):not(.gate-unlocking) .skip-link {
+  display: none !important;
+}
+
 html.gate-unlocking .skip-link,
+html.gate-unlocking .site-backdrop,
 html.gate-unlocking .site-atmosphere,
 html.gate-unlocking .site-header,
 html.gate-unlocking #main-content,
 html.gate-unlocking .modal-backdrop,
 html.gate-unlocking .site-footer {
   opacity: 1;
+  visibility: visible;
   filter: none;
   transform: none;
   pointer-events: auto;
@@ -2922,10 +2932,10 @@ html.reduce-effects .site-gate__form-shell {
     min-height: 3.05rem;
   }
 }</style>
-  <link rel="preload" href="./assets/app/style.d4d7e40de3.css" as="style" fetchpriority="high">
-  <link rel="preload" href="./assets/app/script.c39063e2de.js" as="script" fetchpriority="high">
-  <link rel="stylesheet" href="./assets/app/style.d4d7e40de3.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="./assets/app/style.d4d7e40de3.css"></noscript>
+  <link rel="preload" href="./assets/app/style.a514504308.css" as="style" fetchpriority="high">
+  <link rel="preload" href="./assets/app/script.64695fbf4b.js" as="script" fetchpriority="high">
+  <link rel="stylesheet" href="./assets/app/style.a514504308.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./assets/app/style.a514504308.css"></noscript>
   <!-- build:inline-style:end -->
 </head>
 <body>
@@ -4451,10 +4461,10 @@ html.reduce-effects .site-gate__form-shell {
   </div>
 
   <!-- build:inline-data:start -->
-  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"backgroundLoopAudioPath":"./assets/app/page-background-loop.bcde8dff98.mp3","backgroundLoopAudioCssPath":"./page-background-loop.bcde8dff98.mp3","backgroundLoopAudioHash":"bcde8dff98","transitionAudioPath":"./assets/app/transition.9afc15ad27.mp3","transitionAudioCssPath":"./transition.9afc15ad27.mp3","transitionAudioHash":"9afc15ad27","stylePath":"./assets/app/style.d4d7e40de3.css","styleHash":"d4d7e40de3","routeStylePath":"./assets/app/routeStyle.a79b88b908.css","routeStyleHash":"a79b88b908","scriptPath":"./assets/app/script.c39063e2de.js","scriptHash":"c39063e2de","routeContentPath":"./assets/app/routeContent.570ee7ad5b.js","routeContentHash":"570ee7ad5b","budgetUiPath":"./assets/app/budgetUi.c9b56d76dd.js","budgetUiHash":"c9b56d76dd","budgetContentPath":"./assets/app/budgetContent.3764221ad3.js","budgetContentHash":"3764221ad3","essentialsContentPath":"./assets/app/essentialsContent.39e0d6ba11.js","essentialsContentHash":"39e0d6ba11","generatedAt":"2026-04-22T01:46:27.920Z","cacheVersion":"d4d7e40de3-a79b88b908-c39063e2de-570ee7ad5b-c9b56d76dd-3764221ad3-39e0d6ba11-bcde8dff98-9afc15ad27"};</script>
+  <script data-app-assets>window.__JAPAN_APP_ASSETS__ = {"backgroundLoopAudioPath":"./assets/app/page-background-loop.bcde8dff98.mp3","backgroundLoopAudioCssPath":"./page-background-loop.bcde8dff98.mp3","backgroundLoopAudioHash":"bcde8dff98","transitionAudioPath":"./assets/app/transition.9afc15ad27.mp3","transitionAudioCssPath":"./transition.9afc15ad27.mp3","transitionAudioHash":"9afc15ad27","stylePath":"./assets/app/style.a514504308.css","styleHash":"a514504308","routeStylePath":"./assets/app/routeStyle.a79b88b908.css","routeStyleHash":"a79b88b908","scriptPath":"./assets/app/script.64695fbf4b.js","scriptHash":"64695fbf4b","routeContentPath":"./assets/app/routeContent.570ee7ad5b.js","routeContentHash":"570ee7ad5b","budgetUiPath":"./assets/app/budgetUi.c9b56d76dd.js","budgetUiHash":"c9b56d76dd","budgetContentPath":"./assets/app/budgetContent.3764221ad3.js","budgetContentHash":"3764221ad3","essentialsContentPath":"./assets/app/essentialsContent.39e0d6ba11.js","essentialsContentHash":"39e0d6ba11","generatedAt":"2026-04-22T01:54:20.576Z","cacheVersion":"a514504308-a79b88b908-64695fbf4b-570ee7ad5b-c9b56d76dd-3764221ad3-39e0d6ba11-bcde8dff98-9afc15ad27"};</script>
   <!-- build:inline-data:end -->
   <!-- build:inline-script:start -->
-  <script src="./assets/app/script.c39063e2de.js" defer></script>
+  <script src="./assets/app/script.64695fbf4b.js" defer></script>
   <!-- build:inline-script:end -->
 </body>
 </html>

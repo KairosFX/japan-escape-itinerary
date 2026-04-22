@@ -61,8 +61,8 @@ const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
 const compactViewportQuery = window.matchMedia("(max-width: 920px)");
 const pageTitles = {
-  en: "Kairos VII Japan Escape Itinerary",
-  ja: "Kairos VII Japan Escape Itinerary"
+  en: "",
+  ja: ""
 };
 const storageKey = "japan-trip-language";
 const itineraryStateVersion = "2026-04-09-checklist-shift-raf-v2";

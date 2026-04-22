@@ -2483,24 +2483,32 @@ html.gate-unlocking body {
 }
 
 html.gate-active .skip-link,
+html.gate-active .site-backdrop,
 html.gate-active .site-atmosphere,
 html.gate-active .site-header,
 html.gate-active #main-content,
 html.gate-active .modal-backdrop,
 html.gate-active .site-footer {
   opacity: 0;
+  visibility: hidden;
   filter: blur(18px);
   transform: translate3d(0, 0.85rem, 0);
   pointer-events: none;
 }
 
+html:not(.gate-active):not(.gate-unlocking) .skip-link {
+  display: none !important;
+}
+
 html.gate-unlocking .skip-link,
+html.gate-unlocking .site-backdrop,
 html.gate-unlocking .site-atmosphere,
 html.gate-unlocking .site-header,
 html.gate-unlocking #main-content,
 html.gate-unlocking .modal-backdrop,
 html.gate-unlocking .site-footer {
   opacity: 1;
+  visibility: visible;
   filter: none;
   transform: none;
   pointer-events: auto;
