@@ -50,11 +50,11 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       }
     },
     "kyoto-midrange-hotel": {
-      "amount": 11476,
+      "amount": 9800,
       "range": {
-        "lean": 11476,
-        "expected": 11476,
-        "high": 14500
+        "lean": 8800,
+        "expected": 9800,
+        "high": 13500
       },
       "roomCapacity": 2,
       "area": {
@@ -82,11 +82,11 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       }
     },
     "kawaguchiko-base-hotel": {
-      "amount": 11544,
+      "amount": 9800,
       "range": {
-        "lean": 11544,
-        "expected": 11544,
-        "high": 15000
+        "lean": 9000,
+        "expected": 9800,
+        "high": 14000
       },
       "roomCapacity": 2,
       "area": {
@@ -114,11 +114,11 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       }
     },
     "tokyo-base-hotel": {
-      "amount": 13800,
+      "amount": 9800,
       "range": {
-        "lean": 13800,
-        "expected": 13800,
-        "high": 18700
+        "lean": 8800,
+        "expected": 9800,
+        "high": 15500
       },
       "roomCapacity": 2,
       "area": {
@@ -389,7 +389,7 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       },
       "cost": {
         "mode": "perGroup",
-        "amount": 11476,
+        "amount": 9800,
         "sourceCostId": "kyoto-midrange-hotel"
       }
     },
@@ -416,7 +416,7 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       },
       "cost": {
         "mode": "perGroup",
-        "amount": 11544,
+        "amount": 9800,
         "sourceCostId": "kawaguchiko-base-hotel"
       }
     },
@@ -443,7 +443,7 @@ window.__JAPAN_BUDGET_CONTENT__ = {
       },
       "cost": {
         "mode": "perGroup",
-        "amount": 13800,
+        "amount": 9800,
         "sourceCostId": "tokyo-base-hotel"
       }
     },

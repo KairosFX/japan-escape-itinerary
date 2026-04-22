@@ -13207,7 +13207,6 @@ html.reduce-effects .site-gate__form-shell {
   transform-origin: center center;
   transition:
     color 220ms ease,
-    text-shadow 220ms ease,
     transform 220ms ease;
 }
 
@@ -13234,7 +13233,7 @@ html.reduce-effects .site-gate__form-shell {
 .section-tab.is-active,
 .section-tab[aria-selected="true"] {
   color: #fbfffc !important;
-  text-shadow: 0 0 18px rgba(183, 230, 197, 0.28);
+  text-shadow: none;
 }
 
 .header-controls,
@@ -14557,6 +14556,126 @@ html[data-site-transition-mode="panel"] .hyperframe-panel.is-active {
   }
 
   .notes-layout--simple .notes-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Scroll, notes, checklist, and nav refinement pass */
+html,
+body,
+.page-shell,
+.content-panels,
+.content-panel {
+  scroll-snap-type: none !important;
+}
+
+.content-panel {
+  scroll-margin-top: calc(var(--header-reserved-height) + 1.1rem);
+}
+
+.section-tab,
+.section-tab:hover,
+.section-tab:focus-visible,
+.section-tab.is-active,
+.section-tab[aria-selected="true"],
+html[data-theme="dark"] .section-tab,
+html[data-theme="dark"] .section-tab:hover,
+html[data-theme="dark"] .section-tab:focus-visible,
+html[data-theme="dark"] .section-tab.is-active,
+html[data-theme="dark"] .section-tab[aria-selected="true"] {
+  text-shadow: none !important;
+}
+
+.reveal-block {
+  --reveal-translate-y: 1.25rem;
+  --reveal-scale: 0.985;
+  opacity: 0;
+  filter: blur(10px) saturate(0.92);
+  transform: translate3d(0, var(--reveal-translate-y), 0) scale(var(--reveal-scale));
+  transition:
+    opacity 540ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 720ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    filter 720ms cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+
+.reveal-block[data-reveal-direction="down"] {
+  --reveal-translate-y: -1rem;
+}
+
+.reveal-block[data-reveal-direction="up"] {
+  --reveal-translate-y: 1.25rem;
+}
+
+.reveal-block.is-visible {
+  opacity: 1;
+  filter: blur(0) saturate(1);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+html.reduce-effects .reveal-block,
+html.reduce-effects .reveal-block.is-visible {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+#checklist .day-card__main,
+#checklist .day-card__side,
+#checklist .checklist-list,
+#checklist .checklist-list > li,
+#checklist .checklist-list__item--with-detail,
+#checklist .check-item,
+#checklist .check-copy {
+  min-width: 0;
+}
+
+#checklist .day-card__body--with-aside {
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.78fr);
+}
+
+#checklist .check-copy {
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  hyphens: none;
+  white-space: normal;
+}
+
+@media (max-width: 1040px) {
+  #checklist .day-card__body--with-aside {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.notes-layout,
+.notes-layout--simple {
+  display: block;
+}
+
+.notes-layout--simple .notes-grid,
+.notes-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.note-card {
+  min-height: 0;
+}
+
+.note-card__head {
+  gap: 0.58rem;
+}
+
+.note-card__pill--route,
+.note-card__route-line,
+.notes-studio,
+.notes-block__heading {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  .notes-layout--simple .notes-grid,
+  .notes-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 }

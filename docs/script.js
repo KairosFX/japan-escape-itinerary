@@ -452,8 +452,8 @@ const routeMapLabels = {
   tools: { en: "Quick tools", ja: "クイック操作" },
   checklistAction: { en: "Checklist", ja: "チェックリスト" },
   interactiveSurfaceLabel: {
-    en: "Interactive route map. Use the map controls or highlighted route segments to inspect the journey.",
-    ja: "インタラクティブなルート地図です。地図操作と強調されたルート区間で旅程を確認できます。"
+    en: "Route map from Osaka through Kyoto and Mt. Fuji to Tokyo.",
+    ja: "大阪から京都、富士山エリアを経て東京へ進むルート地図です。"
   },
   sharedLoading: { en: "Preparing live route map...", ja: "ライブ ルート地図を準備中..." },
   sharedLoadingBody: {
@@ -622,8 +622,8 @@ function buildRouteExplorerViewDefinitions(viewDefinitions = []) {
       ja: "日本ルート全体"
     },
     summary: {
-      en: "See the full Osaka-to-Tokyo corridor first, then focus route segments only when needed.",
-      ja: "まず大阪から東京までの全体ルートを見て、必要なときだけルート区間に絞り込みます。"
+      en: "View the full route from Osaka through Kyoto and Mt. Fuji to Tokyo.",
+      ja: "大阪から京都、富士山エリアを経て東京へ進む全体ルートを確認します。"
     },
     badges: [
       { en: "Overview", ja: "全体" },
@@ -3765,17 +3765,14 @@ function renderTripNotes() {
 
   const notesMarkup = tripNoteDefinitions
     .map((definition) => {
-      const routeDay = getRouteDayReference(definition.day);
       return `
         <article class="note-card note-card--trip card" data-trip-note-day="${definition.day}">
           <div class="note-card__head">
             <div class="note-card__meta-row">
               <span class="note-card__pill">${root.lang === "ja" ? `${definition.day}日目` : `Day ${definition.day}`}</span>
-              <span class="note-card__pill note-card__pill--route">${root.lang === "ja" ? "順路" : "Sequence"}</span>
             </div>
             <h3>${renderLocalizedContent(definition.title)}</h3>
           </div>
-          ${renderTripNoteStopSummary(routeDay)}
           <p>${renderLocalizedContent(definition.summary)}</p>
         </article>
       `;
@@ -3784,32 +3781,6 @@ function renderTripNotes() {
 
   tripNotesGridNode.innerHTML = notesMarkup;
   syncLocalizedNodes(tripNotesGridNode);
-}
-
-function renderTripNoteStopSummary(routeDay) {
-  const stopSummary = getCompactRouteDayStops(routeDay);
-  if (!stopSummary?.length) {
-    return "";
-  }
-
-  const renderStops = (language) =>
-    stopSummary
-      .map((stop) => escapeHtml(stop?.[language] || ""))
-      .filter(Boolean)
-      .join(" · ");
-
-  return `
-    <p class="note-card__route-line">
-      <span class="note-card__route-label">${renderLocalizedContent({
-        en: "Flow",
-        ja: "流れ"
-      })}</span>
-      <span class="note-card__route-stops">
-        <span data-language="en">${renderStops("en")}</span>
-        <span data-language="ja" hidden>${renderStops("ja")}</span>
-      </span>
-    </p>
-  `;
 }
 
 function refreshTripNotesIfReady() {
@@ -9302,10 +9273,17 @@ function scrollSectionTabIntoView(tab = getActiveSectionTab()) {
     return;
   }
 
-  tab.scrollIntoView({
-    behavior: reducedEffectsEnabled ? "auto" : "smooth",
-    block: "nearest",
-    inline: "center"
+  const viewportRect = sectionNavViewport.getBoundingClientRect();
+  const tabRect = tab.getBoundingClientRect();
+  const nextLeft =
+    sectionNavViewport.scrollLeft +
+    tabRect.left -
+    viewportRect.left -
+    (viewportRect.width - tabRect.width) / 2;
+
+  sectionNavViewport.scrollTo({
+    left: Math.max(0, Math.round(nextLeft)),
+    behavior: reducedEffectsEnabled ? "auto" : "smooth"
   });
 }
 
