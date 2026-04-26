@@ -326,11 +326,11 @@ const checklistBookingDependencyDefinitions = {
 };
 const checklistBookingLockLabels = {
   itemMessage: {
-    en: "Mark {booking} booked in Pre-Trip Bookings first.",
+    en: "Complete {booking} in Pre-Trip Bookings first.",
     ja: "先に「{booking}」を事前予約で予約済みにしてください。"
   },
   toastMessage: {
-    en: "Mark {booking} booked in Pre-Trip Bookings before checking this item.",
+    en: "Complete {booking} in Pre-Trip Bookings before checking this item.",
     ja: "この項目をチェックする前に、事前予約で「{booking}」を予約済みにしてください。"
   }
 };
@@ -3796,6 +3796,16 @@ function getTrackedDayNumbers() {
   return getOrderedDayNumbers();
 }
 
+function getChecklistDayCard(day) {
+  const dayNumber = Number.parseInt(String(day), 10);
+  if (Number.isNaN(dayNumber)) {
+    return null;
+  }
+
+  const dayKey = String(dayNumber);
+  return document.getElementById(`checklist-day-${dayKey}`) || dayCardMap.get(dayKey) || null;
+}
+
 function readStoredDaySet(key) {
   try {
     const parsed = JSON.parse(window.localStorage.getItem(key) || "[]");
@@ -3812,10 +3822,47 @@ function readStoredDaySet(key) {
 function storeDaySet(key, daySet) {
   try {
     const sortedDays = Array.from(daySet).sort((left, right) => Number(left) - Number(right));
+    if (!sortedDays.length) {
+      queueStorageRemoval(key);
+      return;
+    }
+
     queueStorageValue(key, JSON.stringify(sortedDays));
   } catch (error) {
     // Ignore storage failures and keep the page usable.
   }
+}
+
+function queueStoragePrefixRemovals(prefixes = []) {
+  try {
+    for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
+      const key = window.localStorage.key(index);
+      if (key && prefixes.some((prefix) => key.startsWith(prefix))) {
+        queueStorageRemoval(key);
+      }
+    }
+  } catch (error) {
+    // Ignore storage failures and keep the page usable.
+  }
+}
+
+function clearStoredTripProgressState() {
+  queueStoragePrefixRemovals([
+    "japan-trip-checklist-state-",
+    "japan-trip-completed-history-",
+    "japan-trip-bookings-transit-state-"
+  ]);
+  [checklistStorageKey, completedHistoryStorageKey, bookingTransitStorageKey].forEach((key) => {
+    queueStorageRemoval(key);
+  });
+
+  try {
+    window.sessionStorage.removeItem(fujiForecastSessionKey);
+  } catch (error) {
+    // Ignore storage failures and keep the page usable.
+  }
+
+  flushQueuedStorageWrites();
 }
 
 function setsMatch(left, right) {
@@ -3910,6 +3957,11 @@ function readStoredChecklistState() {
 
 function storeChecklistState() {
   try {
+    if (!Object.keys(checklistState).length) {
+      queueStorageRemoval(checklistStorageKey);
+      return;
+    }
+
     queueStorageValue(checklistStorageKey, JSON.stringify(checklistState));
   } catch (error) {
     // Ignore storage failures and keep the checklist usable.
@@ -3935,6 +3987,15 @@ function readStoredBookingTransitState() {
 
 function storeBookingTransitState() {
   try {
+    const isDefaultState =
+      bookingTransitState.filter === "all" &&
+      !Object.keys(bookingTransitState.items || {}).length;
+
+    if (isDefaultState) {
+      queueStorageRemoval(bookingTransitStorageKey);
+      return;
+    }
+
     queueStorageValue(bookingTransitStorageKey, JSON.stringify(bookingTransitState));
   } catch (error) {
     // Ignore storage failures and keep the booking board usable.
@@ -4529,10 +4590,12 @@ function initializeBookingTransit() {
     });
 }
 
-function resetBookingTransitState() {
+function resetBookingTransitState({ persist = true } = {}) {
   const bookingTransitRoot = getBookingTransitRoot();
   bookingTransitState = { filter: "all", items: {} };
-  storeBookingTransitState();
+  if (persist) {
+    storeBookingTransitState();
+  }
   if (bookingTransitRoot && bookingTransitInitialized) {
     renderBookingTransitBoard();
     bindBookingTransitUI();
@@ -8833,7 +8896,7 @@ function setTransitModalOpen(isOpen) {
   }
 }
 
-function resetTripProgress() {
+async function resetTripProgress() {
   if (isChecklistAccessLocked()) {
     void openEssentialsReference();
     return;
@@ -8841,11 +8904,10 @@ function resetTripProgress() {
 
   checklistState = {};
 
-  if (initializedSections.has("checklist")) {
-    getChecklistInputs().forEach((input) => {
-      input.checked = false;
-    });
-  }
+  getChecklistInputs().forEach((input) => {
+    input.checked = false;
+    syncChecklistInputVisualState(input);
+  });
 
   completedDays = new Set();
   completedHistoryDays = new Set();
@@ -8855,9 +8917,8 @@ function resetTripProgress() {
   currentProgressDay = 1;
   lastTimelineFocusDay = null;
 
-  storeChecklistState();
-  storeDaySet(completedHistoryStorageKey, completedHistoryDays);
-  resetBookingTransitState();
+  resetBookingTransitState({ persist: false });
+  clearStoredTripProgressState();
 
   window.clearTimeout(sequenceNoticeTimer);
   if (sequenceNotice) {
@@ -8865,14 +8926,16 @@ function resetTripProgress() {
     sequenceNotice.classList.remove("is-visible");
   }
 
-  refreshChecklistProgressState({ syncDayCards: initializedSections.has("checklist") });
+  refreshChecklistProgressState({ syncDayCards: true });
   refreshRouteMapsIfReady({ updateCamera: true });
   syncProgressTimeline();
-  setActivePanel("checklist");
+  showToastNotice(
+    root.lang === "ja"
+      ? "チェックリストをリセットしました。"
+      : "Trip checklist reset."
+  );
 
-  window.requestAnimationFrame(() => {
-    void scrollToChecklistDay(1);
-  });
+  await scrollToChecklistDay(1);
 }
 
 function scheduleProgressTimelineLayout({ defer = false } = {}) {
@@ -9081,12 +9144,17 @@ async function scrollToChecklistDay(day, { emphasizeCurrentDay = false } = {}) {
     showChecklistLockNotice();
   }
 
-  const targetCard = dayCardMap.get(String(day));
+  await activatePanel("checklist");
+
+  if (emphasizeCurrentDay) {
+    refreshChecklistProgressState({ syncDayCards: true });
+    syncProgressTimeline();
+  }
+
+  const targetCard = getChecklistDayCard(emphasizeCurrentDay ? getCurrentProgressDay() : day);
   if (!targetCard) {
     return;
   }
-
-  await activatePanel("checklist");
 
   window.requestAnimationFrame(() => {
     window.requestAnimationFrame(() => {
@@ -9975,7 +10043,7 @@ if (checklistMarkAllButton) {
 
 resetProgressOpenButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    resetTripProgress();
+    void resetTripProgress();
   });
 });
 
